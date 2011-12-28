@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SABDroidEx</string>
+
+    <string name="setting_server_url">Server URL</string>
+    <string name="setting_server_url_summary">The SABnzbd server address</string>
+    <string name="setting_server_port">Server Port</string>
+    <string name="setting_server_port_summary">The SABnzbd server port</string>
+    <string name="setting_refresh_rate">Refresh Rate in milliseconds</string>
+    <string name="setting_refresh_rate_summary">Time between each refresh</string>
+    <string name="setting_api_key">Your SABnzbd API key</string>
+    <string name="setting_auth_username">Username</string>
+    <string name="setting_auth_password">Password</string>
+    
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="refresh">Refresh</string>
+    <string name="history">History</string>
+    <string name="add">Add...</string>
+    <string name="settings">Settings</string>
+    <string name="quit">Quit</string>
+    <string name="back">Back</string>
+    
+    <string name="adapter_done">Done</string>
+    
+    <string name="add_dialog_title">Add new NZB</string>
+    <string name="add_dialog_message">Enter the NZB url to be downloaded:</string>
+</resources>

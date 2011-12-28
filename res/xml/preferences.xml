@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="Server settings">
+
+		<EditTextPreference 
+            android:key="server_url"
+			android:title="@string/setting_server_url"
+			android:summary="@string/setting_server_url_summary"/>
+
+        <EditTextPreference 
+            android:key="server_port"
+            android:defaultValue="8080"
+            android:title="@string/setting_server_port"
+            android:summary="@string/setting_server_port_summary"/>
+
+        <EditTextPreference
+            android:key="refresh_rate"
+            android:defaultValue="5000"
+            android:title="@string/setting_refresh_rate"
+            android:summary="@string/setting_refresh_rate_summary"/>
+
+		<EditTextPreference 
+			android:title="Api Key"
+			android:summary="@string/setting_api_key" 
+			android:key="sabnzb_api_key"/>
+		
+		<CheckBoxPreference 
+            android:key="sabnzb_auth"
+			android:title="Authentication"/>
+			
+		<EditTextPreference 
+            android:key="sabnzb_auth_username"
+			android:title="Username" 
+			android:dependency="sabnzb_auth"
+			android:summary="@string/setting_auth_username"/>
+			
+		<EditTextPreference
+            android:dependency="sabnzb_auth"
+			android:key="sabnzb_auth_password"
+			android:password="true"
+			android:title="Password"			
+			android:summary="@string/setting_auth_password"/>
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

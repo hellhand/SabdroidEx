@@ -1,0 +1,19 @@
+1. INSTALLING
+-------------
+
+WItout ADT :
+Just copy the ".apk" file on your device and use a file manager to install
+the application.
+
+With ADT:
+Using a shell type "adb install SABDroidEx.apk".
+
+2. WORK ON THIS PROJECT
+-----------------------
+
+This is an Eclipse project for Android.
+
+If you don't have ADT in Eclipse install it first.
+Then simply import this project like any other
+Java project and everything should be fine
+
