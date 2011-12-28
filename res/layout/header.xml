@@ -51,11 +51,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="13dip" />
 
-                <TextView
+				<TextView
+                    android:id="@+id/headerSpeed"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13dip"
                     android:layout_weight="1" />
-
+                
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -135,7 +138,8 @@
                     android:layout_height="wrap_content"
                     android:text="--- / ---"
                     android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
+                    android:textSize="13dip" 
+                    android:layout_span="5"/>
             </TableRow>
         </TableLayout>
     </RelativeLayout>
@@ -148,8 +152,6 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

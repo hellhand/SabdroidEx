@@ -146,7 +146,8 @@ public class SABDroidEx extends FragmentActivity {
             String diskspace2 = jsonObject.getString("diskspace2");
 
             ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " GB");
-            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb)));
+            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb))
+                    + " MB");
             ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " KB/s");
             ((TextView) findViewById(R.id.headerEta)).setText(Calculator.calculateETA(mbleft, kbpersec));
         }
