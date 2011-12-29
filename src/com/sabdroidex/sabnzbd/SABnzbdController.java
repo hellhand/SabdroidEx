@@ -283,7 +283,10 @@ public final class SABnzbdController {
     public static String makeApiCall(String command, String... xTraParams) throws ServerConnectinoException {
 
         String url = URL_TEMPLATE;
-        url = url.replace("[SERVER_URL]", fixUrlFromPreferences(Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT)));
+        if (Preferences.SERVER_PORT == null || "".equals(Preferences.SERVER_PORT))
+            url = url.replace("[SERVER_URL]", fixUrlFromPreferences(Preferences.get(Preferences.SERVER_URL)));
+        else
+            url = url.replace("[SERVER_URL]", fixUrlFromPreferences(Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT)));
         String apiKey = Preferences.get(Preferences.API_KEY);
         if (!apiKey.trim().equals("")) {
             url = url + "&apikey=" + apiKey;

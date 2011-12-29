@@ -1,4 +1,4 @@
-package com.sabdroidex.activity.queue;
+package com.sabdroidex.activity.adapters;
 
 import java.util.ArrayList;
 

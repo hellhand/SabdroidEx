@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.sabdroidex.Preferences;
 import com.sabdroidex.R;
 import com.sabdroidex.SABDroidConstants;
-import com.sabdroidex.activity.queue.SABDroidExPagerAdapter;
+import com.sabdroidex.activity.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.sabdroidex.util.Calculator;
 import com.sabdroidex.util.Formatter;
@@ -58,6 +58,7 @@ public class SABDroidEx extends FragmentActivity {
      */
     private Queue queue;
     private History history;
+    private Search search;
 
     /**
      * Creating the elements of the screen
@@ -82,10 +83,12 @@ public class SABDroidEx extends FragmentActivity {
 
         queue = new Queue(this);
         history = new History(this);
+        search = new Search(this);
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(queue);
         pagerAdapter.addFragment(history);
+        pagerAdapter.addFragment(search);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
@@ -274,12 +277,12 @@ public class SABDroidEx extends FragmentActivity {
                 OnClickListener noListener = new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        System.out.println("cancel clicked.");
+
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
-                builder.setTitle("Would you like to configure SABnzb now?");
+                builder.setTitle(R.string.config);
                 builder.setPositiveButton(android.R.string.ok, okListener);
                 builder.setNegativeButton(android.R.string.cancel, noListener);
 

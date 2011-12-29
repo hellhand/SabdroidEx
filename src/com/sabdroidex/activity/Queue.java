@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +24,14 @@ import android.widget.ListView;
 import com.sabdroidex.Preferences;
 import com.sabdroidex.R;
 import com.sabdroidex.SABDroidConstants;
-import com.sabdroidex.activity.queue.QueueListRowAdapter;
+import com.sabdroidex.SABDFragment;
+import com.sabdroidex.activity.adapters.QueueListRowAdapter;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 
 /**
  * Main SABDroid Activity
  */
-public class Queue extends Fragment implements OnItemLongClickListener {
+public class Queue extends SABDFragment implements OnItemLongClickListener {
 
     private static JSONObject backupJsonObject;
 
@@ -207,5 +207,10 @@ public class Queue extends Fragment implements OnItemLongClickListener {
         }
 
         SABnzbdController.refreshQueue(messageHandler);
+    }
+
+    @Override
+    public String getTitle() {
+        return mParent.getString(R.string.queue);
     }
 }

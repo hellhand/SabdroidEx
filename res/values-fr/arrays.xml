@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="optionsdialog">
+        <item>Pause</item>
+        <item>Effacer</item>
+    </string-array>
+</resources>
