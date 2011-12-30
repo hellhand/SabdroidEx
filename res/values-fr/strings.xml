@@ -12,6 +12,7 @@
 	<string name="setting_auth">Authentication</string>
     <string name="setting_auth_username">Nom Utilisateur</string>
     <string name="setting_auth_password">Mot de Passe</string>
+    <string name="setting_nzbs_org_auth">Authentification NZBS.org</string>
     <string name="setting_nzbs_org_uid">UID NZBS.org</string>
     <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
 	<string name="setting_nzbs_org_hash">Hash NZBS.org</string>

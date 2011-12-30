@@ -44,7 +44,7 @@
 
 		<CheckBoxPreference 
             android:key="nzbs_org_auth"
-			android:title="Authentication"/>
+			android:title="@string/setting_nzbs_org_auth"/>
 		
 		<EditTextPreference 
             android:key="nzbs_org_uid"

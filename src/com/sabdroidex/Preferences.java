@@ -10,8 +10,8 @@ public class Preferences {
     public static final String SERVER_USERNAME = "sabnzb_auth_username";
     public static final String SERVER_PASSWORD = "sabnzb_auth_password";
     public static final String SERVER_API_KEY = "sabnzb_api_key";
-    public static final String NZBS_ORG_UID = "67080";// "nzbs_org_uid";
-    public static final String NZBS_ORG_HASH = "ac01cdc4dfb69d2d80c73775cd69fc88";// "nzbs_org_hash";
+    public static final String NZBS_ORG_UID = "nzbs_ord_uid";// "nzbs_org_uid";
+    public static final String NZBS_ORG_HASH = "nzbs_org_hash";// "nzbs_org_hash";
 
     private static SharedPreferences preferences;
 
