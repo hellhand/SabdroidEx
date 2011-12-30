@@ -23,8 +23,8 @@ import android.widget.ListView;
 
 import com.sabdroidex.Preferences;
 import com.sabdroidex.R;
-import com.sabdroidex.SABDroidConstants;
 import com.sabdroidex.SABDFragment;
+import com.sabdroidex.SABDroidConstants;
 import com.sabdroidex.activity.adapters.QueueListRowAdapter;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 
@@ -212,5 +212,10 @@ public class Queue extends SABDFragment implements OnItemLongClickListener {
     @Override
     public String getTitle() {
         return mParent.getString(R.string.queue);
+    }
+
+    @Override
+    public void onFragmentActivated() {
+        manualRefreshQueue();
     }
 }

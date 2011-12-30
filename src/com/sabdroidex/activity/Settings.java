@@ -9,7 +9,7 @@ import com.sabdroidex.Preferences;
 import com.sabdroidex.R;
 import com.sabdroidex.SABDroidConstants;
 
-public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
+public class Settings extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,9 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         setSummaryChangeListener(Preferences.SERVER_PORT, R.string.setting_server_port);
         setSummaryChangeListener(Preferences.SERVER_USERNAME, R.string.setting_auth_username);
         setSummaryChangeListener(Preferences.SERVER_PASSWORD, R.string.setting_auth_password);
-        setSummaryChangeListener(Preferences.API_KEY, R.string.setting_api_key);
+        setSummaryChangeListener(Preferences.SERVER_API_KEY, R.string.setting_api_key);
+        setSummaryChangeListener(Preferences.NZBS_ORG_UID, R.string.setting_nzbs_org_uid);
+        setSummaryChangeListener(Preferences.NZBS_ORG_HASH, R.string.setting_nzbs_org_hash);
     }
 
     private final void setSummaryChangeListener(String prefKey, final int resId) {

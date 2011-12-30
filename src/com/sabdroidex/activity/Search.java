@@ -29,4 +29,9 @@ public class Search extends SABDFragment {
 
         return new EditText(mParent);
     }
+
+    @Override
+    public void onFragmentActivated() {
+
+    }
 }

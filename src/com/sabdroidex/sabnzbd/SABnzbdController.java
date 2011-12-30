@@ -287,7 +287,7 @@ public final class SABnzbdController {
             url = url.replace("[SERVER_URL]", fixUrlFromPreferences(Preferences.get(Preferences.SERVER_URL)));
         else
             url = url.replace("[SERVER_URL]", fixUrlFromPreferences(Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT)));
-        String apiKey = Preferences.get(Preferences.API_KEY);
+        String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
         if (!apiKey.trim().equals("")) {
             url = url + "&apikey=" + apiKey;
         }

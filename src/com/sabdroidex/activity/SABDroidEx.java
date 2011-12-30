@@ -256,7 +256,7 @@ public class SABDroidEx extends FragmentActivity {
      * Displaying the application settings
      */
     private void showSettings() {
-        startActivity(new Intent(this, SettingsActivity.class));
+        startActivity(new Intent(this, Settings.class));
     }
 
     /**

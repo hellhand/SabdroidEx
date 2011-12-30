@@ -18,8 +18,8 @@ import android.widget.ListView;
 
 import com.sabdroidex.Preferences;
 import com.sabdroidex.R;
-import com.sabdroidex.SABDroidConstants;
 import com.sabdroidex.SABDFragment;
+import com.sabdroidex.SABDroidConstants;
 import com.sabdroidex.activity.adapters.HistoryListRowAdapter;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 
@@ -129,5 +129,10 @@ public class History extends SABDFragment {
     @Override
     public String getTitle() {
         return mParent.getString(R.string.history);
+    }
+
+    @Override
+    public void onFragmentActivated() {
+        manualRefreshHistory();
     }
 }
