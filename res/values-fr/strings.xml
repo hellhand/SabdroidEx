@@ -9,9 +9,14 @@
     <string name="setting_refresh_rate">Taux de Rafraichissements</string>
     <string name="setting_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
     <string name="setting_api_key">Clef d\'API de SABnzbd</string>
+	<string name="setting_auth">Authentication</string>
     <string name="setting_auth_username">Nom Utilisateur</string>
     <string name="setting_auth_password">Mot de Passe</string>
-    
+    <string name="setting_nzbs_org_uid">UID NZBS.org</string>
+    <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
+	<string name="setting_nzbs_org_hash">Hash NZBS.org</string>
+	<string name="setting_nzbs_org_hash_summary">Le Hash liné to votre compte NZBS.org</string>
+
     <string name="pause">Pause</string>
     <string name="resume">Reprendre</string>
     <string name="refresh">Rafraichir</string>

@@ -21,17 +21,17 @@
             android:summary="@string/setting_refresh_rate_summary"/>
 
 		<EditTextPreference 
-			android:title="Api Key"
+			android:title="@string/setting_api_key"
 			android:summary="@string/setting_api_key" 
 			android:key="sabnzb_api_key"/>
 		
 		<CheckBoxPreference 
             android:key="sabnzb_auth"
-			android:title="Authentication"/>
+			android:title="@string/setting_auth"/>
 			
 		<EditTextPreference 
             android:key="sabnzb_auth_username"
-			android:title="Username" 
+			android:title="@string/setting_auth_username" 
 			android:dependency="sabnzb_auth"
 			android:summary="@string/setting_auth_username"/>
 			
@@ -39,9 +39,26 @@
             android:dependency="sabnzb_auth"
 			android:key="sabnzb_auth_password"
 			android:password="true"
-			android:title="Password"			
+			android:title="@string/setting_auth_password"
 			android:summary="@string/setting_auth_password"/>
 
+		<CheckBoxPreference 
+            android:key="nzbs_org_auth"
+			android:title="Authentication"/>
+		
+		<EditTextPreference 
+            android:key="nzbs_org_uid"
+			android:title="@string/setting_nzbs_org_uid" 
+			android:dependency="nzbs_org_auth"
+			android:summary="@string/setting_nzbs_org_uid_summary"/>
+		
+		<EditTextPreference 
+            android:key="nzbs_org_hash"
+			android:title="@string/setting_nzbs_org_hash" 
+			android:dependency="nzbs_org_auth"
+			android:summary="@string/setting_nzbs_org_hash_summary"/>
+				
+		
 	</PreferenceCategory>
 
 </PreferenceScreen>
