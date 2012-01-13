@@ -18,17 +18,20 @@
 	<string name="setting_nzbs_org_hash">Hash NZBS.org</string>
 	<string name="setting_nzbs_org_hash_summary">Le Hash liné to votre compte NZBS.org</string>
 
-    <string name="pause">Pause</string>
-    <string name="resume">Reprendre</string>
-    <string name="refresh">Rafraichir</string>
-    <string name="history">Historique</string>
-    <string name="add">Ajouter...</string>
-    <string name="settings">Préférences</string>
-    <string name="quit">Quitter</string>
-    <string name="back">Retour</string>
-    <string name="queue">Liste</string>
-	<string name="search">Recherche</string>
-	    
+	<string name="menu_play">Play</string>
+    <string name="menu_pause">Pause</string>
+    <string name="menu_resume">Reprendre</string>
+    <string name="menu_refresh">Rafraichir</string>
+    <string name="menu_add">Ajouter...</string>
+    <string name="menu_settings">Préférences</string>
+    <string name="menu_quit">Quitter</string>
+    <string name="menu_back">Retour</string>
+	<string name="menu_search">Recherche</string>
+
+    <string name="tab_history">Historique</string>
+    <string name="tab_queue">Liste</string>
+	<string name="tab_search">Recherche</string>
+        	    	    
     <string name="adapter_done">Terminé</string>
     
     <string name="add_dialog_title">Ajouter nouveau NZB</string>

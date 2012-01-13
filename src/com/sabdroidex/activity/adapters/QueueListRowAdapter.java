@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.sabnzbd.SABnzbdController;
-import com.sabdroidex.util.Calculator;
-import com.sabdroidex.util.Formatter;
+import com.utils.Calculator;
+import com.utils.Formatter;
 
 public class QueueListRowAdapter extends ArrayAdapter<String> {
 
@@ -28,7 +28,7 @@ public class QueueListRowAdapter extends ArrayAdapter<String> {
     }
 
     public QueueListRowAdapter(Context context, ArrayList<String> items) {
-        super(context, R.layout.queue_list_item, items);
+        super(context, R.layout.list_item, items);
         this.mContext = context;
         this.mItems = items;
         this.mInflater = LayoutInflater.from(this.mContext);
@@ -36,7 +36,7 @@ public class QueueListRowAdapter extends ArrayAdapter<String> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.queue_list_item, null);
+            convertView = mInflater.inflate(R.layout.list_item, null);
             mQueueListItem = new QueueListItem();
             mQueueListItem.filemame = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
             mQueueListItem.eta = (TextView) convertView.findViewById(R.id.queueRowLabelEta);

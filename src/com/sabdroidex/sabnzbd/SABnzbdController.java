@@ -10,9 +10,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.sabdroidex.Preferences;
-import com.sabdroidex.util.HttpUtil;
-import com.sabdroidex.util.HttpUtil.ServerConnectinoException;
+import com.sabdroidex.utils.Preferences;
+import com.utils.HttpUtil;
+import com.utils.HttpUtil.ServerConnectinoException;
 
 public final class SABnzbdController {
 
@@ -157,7 +157,10 @@ public final class SABnzbdController {
                     rows.clear();
 
                     for (int i = 0; i < jobs.length(); i++) {
-                        String rowValues = jobs.getJSONObject(i).get("filename").toString();
+                        /**
+                         * This is done to prevent having # in the filename which would then cause some problems when splitting in the display
+                         */
+                        String rowValues = jobs.getJSONObject(i).get("filename").toString().replace('#', ' ');
                         rowValues = rowValues + "#" + jobs.getJSONObject(i).getDouble("mb");
                         rowValues = rowValues + "#" + jobs.getJSONObject(i).getDouble("mbleft");
                         rowValues = rowValues + "#" + jobs.getJSONObject(i).getString("status");
@@ -230,7 +233,7 @@ public final class SABnzbdController {
                     rows.clear();
 
                     for (int i = 0; i < jobs.length(); i++) {
-                        String rowValues = jobs.getJSONObject(i).get("name").toString();
+                        String rowValues = jobs.getJSONObject(i).get("name").toString().replace('#', ' ');
                         rowValues = rowValues + "#" + jobs.getJSONObject(i).getString("size");
                         rowValues = rowValues + "#" + jobs.getJSONObject(i).getString("status");
                         rowValues = rowValues + "#" + jobs.getJSONObject(i).getString("nzo_id");

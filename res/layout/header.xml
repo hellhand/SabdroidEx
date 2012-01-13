@@ -1,148 +1,140 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#eee"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/headerLayout"
+    <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="60dip">
+        android:layout_height="40dip"
+        android:background="#dddddd"
+        android:paddingBottom="2dip"
+        android:paddingTop="1dip" >
 
-        <ImageView
-            android:id="@+id/countIcon"
-            android:layout_width="56dip"
-            android:layout_height="56dip"
-            android:layout_alignParentLeft="true"
-            android:paddingTop="1dip"
-            android:src="@drawable/icon" />
+        <TableRow
+            android:id="@+id/statusTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/countIcon"
-            android:paddingTop="1dip" >
-
-            <TableRow
-                android:id="@+id/statusTop"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dip"
+                android:text="Speed"
+                android:textColor="#000000"
+                android:textSize="12dip" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="Speed"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" : "
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-                <TextView
-                    android:id="@+id/headerSpeed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="--- KB/s"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-				<TextView
-                    android:id="@+id/headerSpeed"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip"
-                    android:layout_weight="1" />
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Free"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" : "
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-                <TextView
-                    android:id="@+id/freeSpace"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-- GB"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/statusMiddle"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent" >
+                android:layout_height="wrap_content"
+                android:text=" : "
+                android:textColor="#000000"
+                android:textSize="12dip" />
 
-                <TextView
-                    android:id="@+id/textTimeleft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="Time Left"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" : "
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-
-                <TextView
-                    android:id="@+id/headerEta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-:--:--"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/statusBottom"
+            <TextView
+                android:id="@+id/headerSpeed"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:text="--- KB/s"
+                android:textColor="#000000"
+                android:textSize="12dip" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="Queue"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
+            <TextView
+                android:id="@+id/headerSpeed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:textSize="12dip" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" : "
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Free"
+                android:textColor="#000000"
+                android:textSize="12dip" />
 
-                <TextView
-                    android:id="@+id/headerDownloaded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="--- / ---"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13dip" 
-                    android:layout_span="5"/>
-            </TableRow>
-        </TableLayout>
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" : "
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:id="@+id/freeSpace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-- GB"
+                android:textColor="#000000"
+                android:textSize="12dip" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/statusMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent" >
+
+            <TextView
+                android:id="@+id/textTimeleft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dip"
+                android:text="Time Left"
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" : "
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:id="@+id/headerEta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-:--:--"
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:id="@+id/headerSpeed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Queue"
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" : "
+                android:textColor="#000000"
+                android:textSize="12dip" />
+
+            <TextView
+                android:id="@+id/headerDownloaded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--- / ---"
+                android:textColor="#000000"
+                android:textSize="12dip" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/actionbar_shadow" />
 
     <com.viewpagerindicator.TabPageIndicator
         android:id="@+id/indicator"
@@ -152,6 +144,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/vpi__tab_selected_holo" />
 
 </LinearLayout>

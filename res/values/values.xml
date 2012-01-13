@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="default_title_indicator_footer_indicator_style">2</integer>
+    <bool name="default_title_indicator_selected_bold">true</bool>
+</resources>

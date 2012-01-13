@@ -11,39 +11,29 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sabdroidex.Preferences;
+import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
-import com.sabdroidex.SABDroidConstants;
 import com.sabdroidex.activity.adapters.SABDroidExPagerAdapter;
+import com.sabdroidex.fragments.HistoryFragment;
+import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.sabnzbd.SABnzbdController;
-import com.sabdroidex.util.Calculator;
-import com.sabdroidex.util.Formatter;
+import com.sabdroidex.utils.Preferences;
+import com.sabdroidex.utils.SABDroidConstants;
+import com.utils.Calculator;
+import com.utils.Formatter;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
  * Main SABDroid Activity
  */
-public class SABDroidEx extends FragmentActivity {
-
-    /**
-     * Menu IDentifiers
-     */
-    private static final int MENU_REFRESH = 1;
-    private static final int MENU_SETTINGS = 2;
-    private static final int MENU_QUIT = 3;
-    private static final int MENU_PLAY_PAUSE = 4;
-    private static final int MENU_ADD_NZB = 5;
-
-    final static int DIALOG_SETUP_PROMPT = 999;
+public class SABDroidEx extends ActionBarActivity {
 
     /**
      * This is the data that will be retrieved and saved each time the application starts and stops is is used as cache.
@@ -56,9 +46,8 @@ public class SABDroidEx extends FragmentActivity {
     /**
      * The two Fragments that will take place in the ViewPager
      */
-    private Queue queue;
-    private History history;
-    private Search search;
+    private QueueFragment queue;
+    private HistoryFragment history;
 
     /**
      * Creating the elements of the screen
@@ -66,7 +55,6 @@ public class SABDroidEx extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.header);
 
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
@@ -81,18 +69,16 @@ public class SABDroidEx extends FragmentActivity {
      */
     private void createLists() {
 
-        queue = new Queue(this);
-        history = new History(this);
-        search = new Search(this);
+        queue = new QueueFragment(this);
+        history = new HistoryFragment(this);
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(queue);
         pagerAdapter.addFragment(history);
-        pagerAdapter.addFragment(search);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
-        pager.setPageMargin(10);
+        pager.setPageMargin(5);
 
         TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
         tabPageIndicator.setViewPager(pager);
@@ -110,28 +96,15 @@ public class SABDroidEx extends FragmentActivity {
         return (ArrayList<String>) data[position];
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        paused = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        paused = false;
-    }
-
     /**
      * Refreshing the queue during startup or on user request. Asks to configure if still not done
      */
     void manualRefreshQueue() {
         // First run setup
         if (!Preferences.isSet("server_url")) {
-            showDialog(DIALOG_SETUP_PROMPT);
+            showDialog(R.id.dialog_setup_prompt);
             return;
         }
-
         queue.manualRefreshQueue();
         history.manualRefreshHistory();
     }
@@ -141,7 +114,7 @@ public class SABDroidEx extends FragmentActivity {
      * 
      * @param jsonObject The object which contains the updated data to display
      */
-    void updateLabels(JSONObject jsonObject) {
+    public void updateLabels(JSONObject jsonObject) {
         try {
             Double mbleft = jsonObject.getDouble("mbleft");
             Double kbpersec = jsonObject.getDouble("kbpersec");
@@ -165,11 +138,8 @@ public class SABDroidEx extends FragmentActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, MENU_REFRESH, 0, R.string.refresh).setIcon(android.R.drawable.ic_menu_share);
-        menu.add(0, MENU_PLAY_PAUSE, 0, R.string.resume).setIcon(android.R.drawable.ic_media_play);
-        menu.add(0, MENU_ADD_NZB, 0, R.string.add).setIcon(android.R.drawable.ic_menu_add);
-        menu.add(0, MENU_SETTINGS, 0, R.string.settings).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(0, MENU_QUIT, 0, R.string.quit).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -179,12 +149,12 @@ public class SABDroidEx extends FragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (SABnzbdController.paused == true) {
-            menu.findItem(MENU_PLAY_PAUSE).setTitle(R.string.resume);
-            menu.findItem(MENU_PLAY_PAUSE).setIcon(android.R.drawable.ic_media_play);
+            menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_resume);
+            menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_play);
         }
         else {
-            menu.findItem(MENU_PLAY_PAUSE).setTitle(R.string.pause);
-            menu.findItem(MENU_PLAY_PAUSE).setIcon(android.R.drawable.ic_media_pause);
+            menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_resume);
+            menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -195,19 +165,19 @@ public class SABDroidEx extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_REFRESH:
+            case R.id.menu_refresh:
                 manualRefreshQueue();
                 return true;
-            case MENU_QUIT:
+            case R.id.menu_quit:
                 System.exit(1);
                 return true;
-            case MENU_SETTINGS:
+            case R.id.menu_settings:
                 showSettings();
                 return true;
-            case MENU_PLAY_PAUSE:
+            case R.id.menu_play_pause:
                 SABnzbdController.pauseResumeQueue(queue.getMessageHandler());
                 return true;
-            case MENU_ADD_NZB:
+            case R.id.menu_add_nzb:
                 addDownloadPrompt();
                 return true;
         }
@@ -222,7 +192,7 @@ public class SABDroidEx extends FragmentActivity {
          * If nothing is configured we display the configuration pop-up
          */
         if (!Preferences.isSet("server_url")) {
-            showDialog(DIALOG_SETUP_PROMPT);
+            showDialog(R.id.dialog_setup_prompt);
             return;
         }
 
@@ -256,7 +226,7 @@ public class SABDroidEx extends FragmentActivity {
      * Displaying the application settings
      */
     private void showSettings() {
-        startActivity(new Intent(this, Settings.class));
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     /**
@@ -264,7 +234,7 @@ public class SABDroidEx extends FragmentActivity {
      */
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-            case DIALOG_SETUP_PROMPT:
+            case R.id.dialog_setup_prompt:
 
                 OnClickListener okListener = new DialogInterface.OnClickListener() {
 
@@ -308,18 +278,12 @@ public class SABDroidEx extends FragmentActivity {
      * 
      * @param message
      */
-    void updateStatus(String message) {
+    public void updateStatus(String message) {
         if (message.equals(SABnzbdController.MESSAGE.UPDATING.toString())) {
-            ImageView status = (ImageView) findViewById(R.id.countIcon);
-            status.setImageResource(R.drawable.icon_green);
+            getActionBarHelper().setRefreshActionItemState(true);
         }
-        else if (SABnzbdController.paused == true) {
-            ImageView status = (ImageView) findViewById(R.id.countIcon);
-            status.setImageResource(R.drawable.icon_grey);
-        }
-        else if (message.equals("")) {
-            ImageView status = (ImageView) findViewById(R.id.countIcon);
-            status.setImageResource(R.drawable.icon);
+        else {
+            getActionBarHelper().setRefreshActionItemState(false);
         }
     }
 }

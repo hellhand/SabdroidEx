@@ -17,7 +17,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<String> {
     private Context mContext;
     private LayoutInflater mInflater;
     private QueueListItem mQueueListItem;
-    private ArrayList<String> mItems = new ArrayList<String>();
+    private ArrayList<String> mItems;
 
     @Override
     public int getCount() {
@@ -25,7 +25,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<String> {
     }
 
     public HistoryListRowAdapter(Context context, ArrayList<String> items) {
-        super(context, R.layout.queue_list_item, items);
+        super(context, R.layout.list_item, items);
         this.mContext = context;
         this.mItems = items;
         this.mInflater = LayoutInflater.from(this.mContext);
@@ -33,7 +33,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<String> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.queue_list_item, null);
+            convertView = mInflater.inflate(R.layout.list_item, null);
             mQueueListItem = new QueueListItem();
             mQueueListItem.filemame = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
             mQueueListItem.eta = (TextView) convertView.findViewById(R.id.queueRowLabelEta);
@@ -49,7 +49,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<String> {
 
         mQueueListItem.filemame.setText(values[0]);
         mQueueListItem.eta.setText(R.string.adapter_done);
-        mQueueListItem.completed.setText(completed + " MB");
+        mQueueListItem.completed.setText(completed);
         mQueueListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
 
         convertView.setId(position);
