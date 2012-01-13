@@ -28,7 +28,7 @@ public class HistoryFragment extends SABDFragment {
 
     private static JSONObject backupJsonObject;
 
-    private static ArrayList<String> rows = new ArrayList<String>();
+    private static ArrayList<String> rows;
     final static int DIALOG_SETUP_PROMPT = 999;
     private ListView listView;
 
@@ -82,6 +82,11 @@ public class HistoryFragment extends SABDFragment {
         mParent = fragmentActivity;
     }
 
+    public HistoryFragment(SABDroidEx sabDroidEx, ArrayList<String> historyRows) {
+        this(sabDroidEx);
+        rows = historyRows;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -97,7 +102,7 @@ public class HistoryFragment extends SABDFragment {
 
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
-        if (data != null) {
+        if (data != null && extracted(data, 1) != null) {
             rows = extracted(data, 1);
             backupJsonObject = (JSONObject) data[2];
             ((SABDroidEx) mParent).updateLabels(backupJsonObject);

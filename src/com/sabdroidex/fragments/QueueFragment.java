@@ -36,8 +36,8 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
     private static JSONObject backupJsonObject;
 
-    private static ArrayList<String> rows = new ArrayList<String>();
-    final static int DIALOG_SETUP_PROMPT = 999;
+    private static ArrayList<String> rows;
+
     private ListView listView;
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -80,6 +80,11 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         mParent = fragmentActivity;
     }
 
+    public QueueFragment(SABDroidEx sabDroidEx, ArrayList<String> downloadRows) {
+        this(sabDroidEx);
+        rows = downloadRows;
+    }
+
     public Handler getMessageHandler() {
         return messageHandler;
     }
@@ -100,7 +105,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
-        if (data != null) {
+        if (data != null && extracted(data, 0) != null) {
             rows = extracted(data, 0);
             backupJsonObject = (JSONObject) data[2];
             ((SABDroidEx) mParent).updateLabels(backupJsonObject);
@@ -203,7 +208,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     public void manualRefreshQueue() {
         // First run setup
         if (!Preferences.isSet("server_url")) {
-            mParent.showDialog(DIALOG_SETUP_PROMPT);
+            mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
 

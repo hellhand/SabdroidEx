@@ -69,8 +69,8 @@ public class SABDroidEx extends ActionBarActivity {
      */
     private void createLists() {
 
-        queue = new QueueFragment(this);
-        history = new HistoryFragment(this);
+        queue = new QueueFragment(this, downloadRows);
+        history = new HistoryFragment(this, historyRows);
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(queue);
@@ -153,7 +153,7 @@ public class SABDroidEx extends ActionBarActivity {
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_play);
         }
         else {
-            menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_resume);
+            menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
         }
         return super.onPrepareOptionsMenu(menu);
