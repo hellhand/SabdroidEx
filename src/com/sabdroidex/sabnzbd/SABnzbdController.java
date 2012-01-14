@@ -56,8 +56,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    // Ignore for now
-                    // TODO do something different
+                    Log.w("ERROR", e);
                 }
                 finally {
                     executingCommand = false;
@@ -101,8 +100,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    // Ignore for now
-                    // TODO do something different
+                    Log.w("ERROR", e);
                 }
                 finally {
                     executingCommand = false;
@@ -345,6 +343,7 @@ public final class SABnzbdController {
                     makeApiCall("addurl", "name=" + value);
                 }
                 catch (Throwable e) {
+                    Log.w("ERROR", e);
                 }
                 finally {
                     sendUpdateMessageStatus(messageHandler, "");
@@ -378,6 +377,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
+                    Log.w("ERROR", e);
                 }
                 finally {
                     executingCommand = false;

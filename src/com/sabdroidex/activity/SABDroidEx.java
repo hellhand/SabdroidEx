@@ -61,7 +61,6 @@ public class SABDroidEx extends ActionBarActivity {
         Preferences.update(preferences);
 
         createLists();
-        manualRefreshQueue();
     }
 
     /**
@@ -117,6 +116,8 @@ public class SABDroidEx extends ActionBarActivity {
      * @param jsonObject The object which contains the updated data to display
      */
     public void updateLabels(JSONObject jsonObject) {
+        if (jsonObject == null)
+            return;
         try {
             Double mbleft = jsonObject.getDouble("mbleft");
             Double kbpersec = jsonObject.getDouble("kbpersec");

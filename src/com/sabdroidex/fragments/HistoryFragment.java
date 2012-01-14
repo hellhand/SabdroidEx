@@ -30,7 +30,6 @@ public class HistoryFragment extends SABDFragment {
     private static JSONObject backupJsonObject;
 
     private static ArrayList<String> rows;
-    final static int DIALOG_SETUP_PROMPT = 999;
     private ListView listView;
 
     // Instantiating the Handler associated with the main thread.
@@ -40,7 +39,7 @@ public class HistoryFragment extends SABDFragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SABnzbdController.MESSAGE_UPDATE_HISTORY:
-
+                    System.out.println("SABnzbdController.MESSAGE_UPDATE_HISTORY");
                     Object result[] = (Object[]) msg.obj;
                     // Updating rows
                     rows.clear();
@@ -49,11 +48,10 @@ public class HistoryFragment extends SABDFragment {
                     /**
                      * This might happens if a rotation occurs
                      */
-                    if (listView == null) {
-                        return;
+                    if (listView != null || getAdapter(listView) != null) {
+                        ArrayAdapter<String> adapter = getAdapter(listView);
+                        adapter.notifyDataSetChanged();
                     }
-                    ArrayAdapter<String> adapter = getAdapter(listView);
-                    adapter.notifyDataSetChanged();
 
                     // Updating the header
                     JSONObject jsonObject = (JSONObject) result[0];
@@ -73,16 +71,6 @@ public class HistoryFragment extends SABDFragment {
         }
     };
 
-    @SuppressWarnings("unchecked")
-    private ArrayAdapter<String> getAdapter(ListView listView) {
-        return listView == null ? null : (ArrayAdapter<String>) listView.getAdapter();
-    }
-
-    @SuppressWarnings("unchecked")
-    ArrayList<String> extracted(Object[] data, int position) {
-        return data == null ? null : (ArrayList<String>) data[position];
-    }
-
     private FragmentActivity mParent;
 
     public HistoryFragment() {
@@ -95,6 +83,34 @@ public class HistoryFragment extends SABDFragment {
     public HistoryFragment(SABDroidEx sabDroidEx, ArrayList<String> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
+    }
+
+    @SuppressWarnings("unchecked")
+    ArrayList<String> extracted(Object[] data, int position) {
+        return data == null ? null : (ArrayList<String>) data[position];
+    }
+
+    @SuppressWarnings("unchecked")
+    private ArrayAdapter<String> getAdapter(ListView listView) {
+        return listView == null ? null : (ArrayAdapter<String>) listView.getAdapter();
+    }
+
+    @Override
+    public String getTitle() {
+        return mParent.getString(R.string.tab_history);
+    }
+
+    /**
+     * Refreshing the queue during startup or on user request. Asks to configure if still not done
+     */
+    public void manualRefreshHistory() {
+        // First run setup
+        if (!Preferences.isSet("server_url")) {
+            mParent.showDialog(R.id.dialog_setup_prompt);
+            return;
+        }
+
+        SABnzbdController.refreshHistory(messageHandler);
     }
 
     @Override
@@ -133,24 +149,6 @@ public class HistoryFragment extends SABDFragment {
         }
 
         return listView;
-    }
-
-    /**
-     * Refreshing the queue during startup or on user request. Asks to configure if still not done
-     */
-    public void manualRefreshHistory() {
-        // First run setup
-        if (!Preferences.isSet("server_url")) {
-            mParent.showDialog(DIALOG_SETUP_PROMPT);
-            return;
-        }
-
-        SABnzbdController.refreshHistory(messageHandler);
-    }
-
-    @Override
-    public String getTitle() {
-        return mParent.getString(R.string.tab_history);
     }
 
     @Override

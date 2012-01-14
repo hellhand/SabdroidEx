@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     private static JSONObject backupJsonObject;
 
     private static ArrayList<String> rows;
-
+    private static Thread updater;
     private ListView listView;
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -47,15 +49,16 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SABnzbdController.MESSAGE_UPDATE_QUEUE:
-
+                    System.out.println("SABnzbdController.MESSAGE_UPDATE_QUEUE");
                     Object result[] = (Object[]) msg.obj;
                     // Updating rows
                     rows.clear();
                     rows.addAll((ArrayList<String>) result[1]);
 
-                    ArrayAdapter<String> adapter = getAdapter(listView);
-                    adapter.notifyDataSetChanged();
-
+                    if (listView != null || getAdapter(listView) != null) {
+                        ArrayAdapter<String> adapter = getAdapter(listView);
+                        adapter.notifyDataSetChanged();
+                    }
                     // Updating the header
                     JSONObject jsonObject = (JSONObject) result[0];
                     backupJsonObject = jsonObject;
@@ -119,6 +122,12 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        mParent = (FragmentActivity) activity;
+        super.onAttach(activity);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
@@ -148,7 +157,8 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             manualRefreshQueue();
         }
 
-        startAutomaticUpdater();
+        if (updater == null || updater.isInterrupted())
+            startAutomaticUpdater();
 
         return listView;
     }
@@ -208,23 +218,23 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
      * Fires up a new Thread to update the queue every X minutes TODO add configuration to controll the auto updates
      */
     private void startAutomaticUpdater() {
-        Thread t = new Thread() {
+        updater = new Thread() {
 
             @Override
             public void run() {
-                for (;;) {
+                for (; !isInterrupted();) {
+                    if (!paused)
+                        SABnzbdController.refreshQueue(messageHandler);
                     try {
                         int rate = Integer.valueOf(Preferences.get("refresh_rate", "5000"));
                         Thread.sleep(rate);
                     }
                     catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Log.e("ERROR", e.getLocalizedMessage());
                     }
-                    if (!paused)
-                        SABnzbdController.refreshQueue(messageHandler);
                 }
             }
         };
-        t.start();
+        updater.start();
     }
 }
