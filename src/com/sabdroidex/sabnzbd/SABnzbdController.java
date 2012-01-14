@@ -301,7 +301,6 @@ public final class SABnzbdController {
                 url = url + "&" + xTraParam;
             }
         }
-        // System.out.println(url);
         return HttpUtil.instance().getData(url);
     }
 

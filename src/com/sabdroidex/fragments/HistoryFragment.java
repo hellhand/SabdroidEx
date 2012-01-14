@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,7 +46,13 @@ public class HistoryFragment extends SABDFragment {
                     rows.clear();
                     rows.addAll((ArrayList<String>) result[1]);
 
-                    ArrayAdapter<String> adapter = extracted(listView);
+                    /**
+                     * This might happens if a rotation occurs
+                     */
+                    if (listView == null) {
+                        return;
+                    }
+                    ArrayAdapter<String> adapter = getAdapter(listView);
                     adapter.notifyDataSetChanged();
 
                     // Updating the header
@@ -67,16 +74,19 @@ public class HistoryFragment extends SABDFragment {
     };
 
     @SuppressWarnings("unchecked")
-    private ArrayAdapter<String> extracted(ListView listView) {
-        return (ArrayAdapter<String>) listView.getAdapter();
+    private ArrayAdapter<String> getAdapter(ListView listView) {
+        return listView == null ? null : (ArrayAdapter<String>) listView.getAdapter();
     }
 
     @SuppressWarnings("unchecked")
     ArrayList<String> extracted(Object[] data, int position) {
-        return (ArrayList<String>) data[position];
+        return data == null ? null : (ArrayList<String>) data[position];
     }
 
     private FragmentActivity mParent;
+
+    public HistoryFragment() {
+    }
 
     public HistoryFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
@@ -85,6 +95,12 @@ public class HistoryFragment extends SABDFragment {
     public HistoryFragment(SABDroidEx sabDroidEx, ArrayList<String> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        mParent = (FragmentActivity) activity;
+        super.onAttach(activity);
     }
 
     @Override
@@ -109,7 +125,7 @@ public class HistoryFragment extends SABDFragment {
         }
 
         if (rows.size() > 0) {
-            ArrayAdapter<String> adapter = extracted(listView);
+            ArrayAdapter<String> adapter = getAdapter(listView);
             adapter.notifyDataSetChanged();
         }
         else {

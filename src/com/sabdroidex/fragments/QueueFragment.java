@@ -42,6 +42,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
 
+        @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -52,7 +53,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                     rows.clear();
                     rows.addAll((ArrayList<String>) result[1]);
 
-                    ArrayAdapter<String> adapter = extracted(listView);
+                    ArrayAdapter<String> adapter = getAdapter(listView);
                     adapter.notifyDataSetChanged();
 
                     // Updating the header
@@ -85,8 +86,36 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         rows = downloadRows;
     }
 
+    @SuppressWarnings("unchecked")
+    ArrayList<String> extracted(Object[] data, int position) {
+        return data == null ? null : (ArrayList<String>) data[position];
+    }
+
+    @SuppressWarnings("unchecked")
+    private ArrayAdapter<String> getAdapter(ListView listView) {
+        return listView == null ? null : (ArrayAdapter<String>) listView.getAdapter();
+    }
+
     public Handler getMessageHandler() {
         return messageHandler;
+    }
+
+    @Override
+    public String getTitle() {
+        return mParent.getString(R.string.tab_queue);
+    }
+
+    /**
+     * Refreshing the queue during startup or on user request. Asks to configure if still not done
+     */
+    public void manualRefreshQueue() {
+        // First run setup
+        if (!Preferences.isSet("server_url")) {
+            mParent.showDialog(R.id.dialog_setup_prompt);
+            return;
+        }
+
+        SABnzbdController.refreshQueue(messageHandler);
     }
 
     @Override
@@ -112,7 +141,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         }
 
         if (rows.size() > 0) {
-            ArrayAdapter<String> adapter = extracted(listView);
+            ArrayAdapter<String> adapter = getAdapter(listView);
             adapter.notifyDataSetChanged();
         }
         else {
@@ -125,11 +154,17 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     }
 
     @Override
+    public void onFragmentActivated() {
+        manualRefreshQueue();
+    }
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
 
         AlertDialog dialog = null;
         OnClickListener noListener = new DialogInterface.OnClickListener() {
 
+            @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
@@ -169,17 +204,13 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         paused = false;
     }
 
-    @SuppressWarnings("unchecked")
-    private ArrayAdapter<String> extracted(ListView listView) {
-        return (ArrayAdapter<String>) listView.getAdapter();
-    }
-
     /**
      * Fires up a new Thread to update the queue every X minutes TODO add configuration to controll the auto updates
      */
     private void startAutomaticUpdater() {
         Thread t = new Thread() {
 
+            @Override
             public void run() {
                 for (;;) {
                     try {
@@ -195,33 +226,5 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             }
         };
         t.start();
-    }
-
-    @SuppressWarnings("unchecked")
-    ArrayList<String> extracted(Object[] data, int position) {
-        return (ArrayList<String>) data[position];
-    }
-
-    /**
-     * Refreshing the queue during startup or on user request. Asks to configure if still not done
-     */
-    public void manualRefreshQueue() {
-        // First run setup
-        if (!Preferences.isSet("server_url")) {
-            mParent.showDialog(R.id.dialog_setup_prompt);
-            return;
-        }
-
-        SABnzbdController.refreshQueue(messageHandler);
-    }
-
-    @Override
-    public String getTitle() {
-        return mParent.getString(R.string.tab_queue);
-    }
-
-    @Override
-    public void onFragmentActivated() {
-        manualRefreshQueue();
     }
 }

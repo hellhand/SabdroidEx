@@ -70,7 +70,9 @@ public class SABDroidEx extends ActionBarActivity {
     private void createLists() {
 
         queue = new QueueFragment(this, downloadRows);
+        queue.setRetainInstance(true);
         history = new HistoryFragment(this, historyRows);
+        history.setRetainInstance(true);
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(queue);
@@ -129,7 +131,6 @@ public class SABDroidEx extends ActionBarActivity {
         }
         catch (Throwable e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
@@ -266,7 +267,7 @@ public class SABDroidEx extends ActionBarActivity {
      */
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
-        Object data[] = new Object[2];
+        Object data[] = new Object[3];
         data[0] = downloadRows;
         data[1] = historyRows;
         data[2] = backupJsonObject;
