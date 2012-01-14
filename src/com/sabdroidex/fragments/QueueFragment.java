@@ -39,7 +39,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     private static JSONObject backupJsonObject;
 
     private static ArrayList<String> rows;
-    private static Thread updater;
+    private Thread updater;
     private ListView listView;
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -223,15 +223,15 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             @Override
             public void run() {
                 for (; !isInterrupted();) {
-                    if (!paused)
-                        SABnzbdController.refreshQueue(messageHandler);
                     try {
                         int rate = Integer.valueOf(Preferences.get("refresh_rate", "5000"));
                         Thread.sleep(rate);
                     }
                     catch (InterruptedException e) {
-                        Log.e("ERROR", e.getLocalizedMessage());
+                        Log.w("ERROR", e.getLocalizedMessage());
                     }
+                    if (!paused)
+                        SABnzbdController.refreshQueue(messageHandler);
                 }
             }
         };

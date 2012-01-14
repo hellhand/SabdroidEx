@@ -56,7 +56,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -100,7 +100,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -177,11 +177,11 @@ public final class SABnzbdController {
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 catch (ServerConnectinoException e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, e.getMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 finally {
@@ -249,11 +249,11 @@ public final class SABnzbdController {
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 catch (ServerConnectinoException e) {
-                    Log.w("ERROR", e);
-                    sendUpdateMessageStatus(messageHandler, e.getMessage());
+                    Log.w("ERROR", e.getLocalizedMessage());
+                    sendUpdateMessageStatus(messageHandler, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 finally {
@@ -343,7 +343,7 @@ public final class SABnzbdController {
                     makeApiCall("addurl", "name=" + value);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                 }
                 finally {
                     sendUpdateMessageStatus(messageHandler, "");
@@ -377,7 +377,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e);
+                    Log.w("ERROR", e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;

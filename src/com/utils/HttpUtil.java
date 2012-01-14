@@ -37,7 +37,7 @@ public class HttpUtil {
      * 
      * @throws ServerConnectinoException
      */
-    public String getData(String url) throws ServerConnectinoException {
+    public synchronized String getData(String url) throws ServerConnectinoException {
         try {
             HttpGet request = new HttpGet(url);
 
