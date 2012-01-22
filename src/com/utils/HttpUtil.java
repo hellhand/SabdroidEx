@@ -1,23 +1,32 @@
 package com.utils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
+
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.util.Log;
-
 public class HttpUtil {
 
-    private static HttpUtil _instance;
+    private static HttpUtil _instance = null;
     private static DefaultHttpClient httpClient = new DefaultHttpClient();
+    private static URLConnection urlc;
 
     private HttpUtil() {
         HttpParams params = httpClient.getParams();
@@ -25,7 +34,7 @@ public class HttpUtil {
         HttpConnectionParams.setSoTimeout(params, 60000);
     }
 
-    public static HttpUtil instance() {
+    public static HttpUtil getInstance() {
         if (_instance == null)
             _instance = new HttpUtil();
 
@@ -33,60 +42,164 @@ public class HttpUtil {
     }
 
     /**
-     * Gets data from URL throws {@link RuntimeException} If anything goes wrong
+     * Gets data from URL as String throws {@link RuntimeException} If anything goes wrong
      * 
+     * @return The content of the URL as a String
      * @throws ServerConnectinoException
      */
-    public synchronized String getData(String url) throws ServerConnectinoException {
+    public synchronized String getDataAsString(String url) throws RuntimeException {
         try {
-            HttpGet request = new HttpGet(url);
+            String responseBody = "";
 
-            HttpResponse response = httpClient.execute(request);
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 
-            int status = response.getStatusLine().getStatusCode();
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[] { new X509TrustManager() {
 
-            if (status != HttpStatus.SC_OK) {
-                throw new ServerConnectinoException("Connection Error: " + response.getStatusLine().getReasonPhrase());
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            } }, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+
+            Object connection = new URL(url).openConnection();
+            if (connection instanceof HttpsURLConnection) {
+                urlc = (HttpsURLConnection) connection;
             }
-            else {
-                InputStream content = response.getEntity().getContent();
-
-                return inputStreamAsString(content);
+            else if (connection instanceof HttpURLConnection) {
+                urlc = (HttpURLConnection) connection;
             }
+            // urlc.setDoOutput(true);
+            urlc.setUseCaches(false);
+            // urlc.setRequestMethod("POST");
+            urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
+            urlc.setRequestProperty("Accept-Encoding", "gzip");
+
+            // OutputStreamWriter wr = new OutputStreamWriter(urlc.getOutputStream());
+            // wr.flush();
+            // wr.close();
+            InputStreamReader re = new InputStreamReader(urlc.getInputStream());
+            BufferedReader rd = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                responseBody += line;
+                responseBody += "\n";
+            }
+            rd.close();
+            re.close();
+
+            return responseBody;
         }
-        catch (ServerConnectinoException e) {
-            throw new ServerConnectinoException(e.getMessage());
-        }
-        catch (IOException e) {
-            throw new ServerConnectinoException("Connection timeout!");
-        }
-        catch (Throwable e) {
-            Log.w("HTTP", "Failed to connect to server", e);
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String inputStreamAsString(InputStream stream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
+    /**
+     * Gets data from URL as byte[] throws {@link RuntimeException} If anything goes wrong
+     * 
+     * @return The content of the URL as a byte[]
+     * @throws ServerConnectinoException
+     */
+    public synchronized byte[] getDataAsByteArray(String url) {
+        try {
+            byte[] dat = null;
 
-        while ((line = br.readLine()) != null) {
-            sb.append(line + "\n");
+            urlc = (HttpURLConnection) new URL(url).openConnection();
+            urlc.setDoOutput(true);
+            urlc.setUseCaches(false);
+            ((HttpURLConnection) urlc).setRequestMethod("POST");
+            urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
+            urlc.setRequestProperty("Accept-Encoding", "gzip");
+
+            InputStream is = urlc.getInputStream();
+            int len = urlc.getContentLength();
+            if (len < 0) {
+                ByteArrayOutputStream bao = new ByteArrayOutputStream();
+                byte[] buf = new byte[4096];
+                for (;;) {
+                    int nb = is.read(buf);
+                    if (nb <= 0)
+                        break;
+                    bao.write(buf, 0, nb);
+                }
+                dat = bao.toByteArray();
+                bao.close();
+            }
+            else {
+                dat = new byte[len];
+                int i = 0;
+                while (i < len) {
+                    int n = is.read(dat, i, len - i);
+                    if (n <= 0)
+                        break;
+                    i += n;
+                }
+            }
+            is.close();
+            return dat;
         }
-
-        br.close();
-        String result = sb.toString();
-        stream.close();
-        return result.substring(0, result.length() - 1);
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public class ServerConnectinoException extends Exception {
+    /**
+     * Gets data from URL as char[] throws {@link RuntimeException} If anything goes wrong
+     * 
+     * @return The content of the URL as a char[]
+     * @throws ServerConnectinoException
+     */
+    public synchronized char[] getDataAsCharArray(String url) {
+        try {
+            char[] dat = null;
 
-        private static final long serialVersionUID = -7812290125811215338L;
+            urlc = (HttpURLConnection) new URL(url).openConnection();
+            urlc.setDoOutput(true);
+            urlc.setUseCaches(false);
+            ((HttpURLConnection) urlc).setRequestMethod("POST");
+            urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
+            urlc.setRequestProperty("Accept-Encoding", "gzip");
 
-        public ServerConnectinoException(String message) {
-            super(message);
+            InputStream is = urlc.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()));
+
+            int len = urlc.getContentLength();
+
+            dat = new char[len];
+            int i = 0;
+            int c;
+            while ((c = reader.read()) != -1) {
+                char character = (char) c;
+                dat[i] = character;
+                i++;
+            }
+
+            is.close();
+            return dat;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

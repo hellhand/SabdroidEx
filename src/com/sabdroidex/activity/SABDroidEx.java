@@ -61,6 +61,7 @@ public class SABDroidEx extends ActionBarActivity {
         Preferences.update(preferences);
 
         createLists();
+        manualRefresh();
     }
 
     /**
@@ -100,7 +101,7 @@ public class SABDroidEx extends ActionBarActivity {
     /**
      * Refreshing the queue during startup or on user request. Asks to configure if still not done
      */
-    void manualRefreshQueue() {
+    void manualRefresh() {
         // First run setup
         if (!Preferences.isSet("server_url")) {
             showDialog(R.id.dialog_setup_prompt);
@@ -168,7 +169,7 @@ public class SABDroidEx extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                manualRefreshQueue();
+                manualRefresh();
                 return true;
             case R.id.menu_quit:
                 System.exit(1);
@@ -242,7 +243,7 @@ public class SABDroidEx extends ActionBarActivity {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         showSettings();
-                        manualRefreshQueue();
+                        manualRefresh();
                     }
                 };
 
@@ -287,5 +288,10 @@ public class SABDroidEx extends ActionBarActivity {
         else {
             getActionBarHelper().setRefreshActionItemState(false);
         }
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        return super.onSearchRequested();
     }
 }

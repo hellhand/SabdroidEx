@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.sabdroidex.utils.Preferences;
 import com.utils.HttpUtil;
-import com.utils.HttpUtil.ServerConnectinoException;
 
 public final class SABnzbdController {
 
@@ -27,7 +26,7 @@ public final class SABnzbdController {
     private static boolean executingRefreshHistory = false;
     private static boolean executingCommand = false;
 
-    private static final String URL_TEMPLATE = "http://[SERVER_URL]/api?mode=[COMMAND]&output=json";
+    private static final String URL_TEMPLATE = "[SERVER_URL]/api?mode=[COMMAND]&output=json";
 
     public static enum MESSAGE {
         UPDATING, PAUSING, RESUMING, ADDING, REMOVING
@@ -176,12 +175,12 @@ public final class SABnzbdController {
 
                     sendUpdateMessageStatus(messageHandler, "");
                 }
-                catch (ServerConnectinoException e) {
+                catch (RuntimeException e) {
                     Log.w("ERROR", e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, e.getMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e.getLocalizedMessage());
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 finally {
@@ -248,12 +247,12 @@ public final class SABnzbdController {
 
                     sendUpdateMessageStatus(messageHandler, "");
                 }
-                catch (ServerConnectinoException e) {
+                catch (RuntimeException e) {
                     Log.w("ERROR", e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e.getLocalizedMessage());
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 finally {
@@ -281,7 +280,7 @@ public final class SABnzbdController {
         message.sendToTarget();
     }
 
-    public static String makeApiCall(String command, String... xTraParams) throws ServerConnectinoException {
+    public static String makeApiCall(String command, String... xTraParams) throws RuntimeException {
 
         String url = URL_TEMPLATE;
         if (Preferences.SERVER_PORT == null || "".equals(Preferences.SERVER_PORT))
@@ -299,7 +298,7 @@ public final class SABnzbdController {
                 url = url + "&" + xTraParam;
             }
         }
-        return HttpUtil.instance().getData(url);
+        return HttpUtil.getInstance().getDataAsString(url);
     }
 
     /**
@@ -309,10 +308,10 @@ public final class SABnzbdController {
      * @return
      */
     private static CharSequence fixUrlFromPreferences(String url) {
-        if (url.toUpperCase().startsWith("HTTP://")) {
-            return url.substring(7);
+        if (url.toUpperCase().startsWith("HTTP://") || url.toUpperCase().startsWith("HTTPS://")) {
+            return url;
         }
-        return url;
+        return "http://" + url;
     }
 
     private static String getPreferencesParams() {
@@ -326,7 +325,7 @@ public final class SABnzbdController {
         return "";
     }
 
-    public static String makeApiCall(String command) throws ServerConnectinoException {
+    public static String makeApiCall(String command) throws RuntimeException {
         return makeApiCall(command, "");
     }
 
