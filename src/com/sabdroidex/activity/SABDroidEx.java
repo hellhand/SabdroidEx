@@ -207,7 +207,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
      */
     private void setupSearchView(Menu menu) {
         // Place an action bar item for searching.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             MenuItem searchItem = menu.findItem(R.id.menu_search);
             searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         }
