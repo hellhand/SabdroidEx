@@ -12,6 +12,16 @@
 	<string name="setting_auth">Authentication</string>
     <string name="setting_auth_username">Username</string>
     <string name="setting_auth_password">Password</string>
+    
+	<string name="setting_sickbeard">Use Sickbeard</string>
+	<string name="setting_sickbeard_url">Server URL</string>
+    <string name="setting_sickbeard_url_summary">The Sickbeard server address</string>
+    <string name="setting_sickbeard_port">Server Port</string>
+    <string name="setting_sickbeard_port_summary">The Sickbeard server port</string>
+    <string name="setting_sickbeard_refresh_rate">Refresh Rate in milliseconds</string>
+    <string name="setting_sickbeard_refresh_rate_summary">Time between each refresh</string>
+	<string name="setting_sickbeard_api_key">Your Sickbeard API key</string>
+    
 	<string name="setting_nzbs_org_auth">NZBS.org Identification</string>
     <string name="setting_nzbs_org_uid">NZBS.org UID</string>
     <string name="setting_nzbs_org_uid_summary">The UID linked to you NZBS.org account</string>
@@ -22,7 +32,7 @@
     <string name="menu_pause">Pause</string>
     <string name="menu_resume">Resume</string>
     <string name="menu_refresh">Refresh</string>
-    <string name="menu_add">Add...</string>
+    <string name="menu_add">Add</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_back">Back</string>
@@ -31,9 +41,17 @@
     <string name="tab_history">History</string>
 	<string name="tab_queue">Queue</string>
 	<string name="tab_search">Search</string>
-    	    	    
+	<string name="tab_shows">Shows</string>
+    <string name="tab_coming">Coming</string>
+
     <string name="adapter_done">Done</string>
-    
+
+	<string name="show_banner">Banner</string>
+    <string name="show_poster">Poster</string>    
+	<string name="show_name">Name : </string>
+    <string name="show_status">Status : </string>
+    <string name="show_quality">Quality : </string>
+    	
     <string name="add_dialog_title">Add new NZB</string>
     <string name="add_dialog_message">Enter the NZB url to be downloaded:</string>
     

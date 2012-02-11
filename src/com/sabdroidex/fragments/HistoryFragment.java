@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class HistoryFragment extends SABDFragment {
 
     private static JSONObject backupJsonObject;
 
-    private static ArrayList<String> rows;
+    private static ArrayList<Object[]> rows;
     private ListView listView;
 
     // Instantiating the Handler associated with the main thread.
@@ -39,17 +40,17 @@ public class HistoryFragment extends SABDFragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SABnzbdController.MESSAGE_UPDATE_HISTORY:
-                    System.out.println("SABnzbdController.MESSAGE_UPDATE_HISTORY");
+
                     Object result[] = (Object[]) msg.obj;
                     // Updating rows
                     rows.clear();
-                    rows.addAll((ArrayList<String>) result[1]);
+                    rows.addAll((ArrayList<Object[]>) result[1]);
 
                     /**
                      * This might happens if a rotation occurs
                      */
                     if (listView != null || getAdapter(listView) != null) {
-                        ArrayAdapter<String> adapter = getAdapter(listView);
+                        ArrayAdapter<Object[]> adapter = getAdapter(listView);
                         adapter.notifyDataSetChanged();
                     }
 
@@ -57,12 +58,22 @@ public class HistoryFragment extends SABDFragment {
                     JSONObject jsonObject = (JSONObject) result[0];
                     backupJsonObject = jsonObject;
 
-                    ((SABDroidEx) mParent).updateLabels(jsonObject);
-                    ((SABDroidEx) mParent).updateStatus("");
+                    try {
+                        ((SABDroidEx) mParent).updateLabels(jsonObject);
+                        ((SABDroidEx) mParent).updateStatus("");
+                    }
+                    catch (Exception e) {
+                        Log.w("ERROR", " " + e.getLocalizedMessage());
+                    }
                     break;
 
                 case SABnzbdController.MESSAGE_STATUS_UPDATE:
-                    ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
+                    try {
+                        ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
+                    }
+                    catch (Exception e) {
+                        Log.w("ERROR", " " + e.getLocalizedMessage());
+                    }
                     break;
 
                 default:
@@ -80,19 +91,19 @@ public class HistoryFragment extends SABDFragment {
         mParent = fragmentActivity;
     }
 
-    public HistoryFragment(SABDroidEx sabDroidEx, ArrayList<String> historyRows) {
+    public HistoryFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
     }
 
     @SuppressWarnings("unchecked")
-    ArrayList<String> extracted(Object[] data, int position) {
-        return data == null ? null : (ArrayList<String>) data[position];
+    ArrayList<Object[]> extracted(Object[] data, int position) {
+        return data == null ? null : (ArrayList<Object[]>) data[position];
     }
 
     @SuppressWarnings("unchecked")
-    private ArrayAdapter<String> getAdapter(ListView listView) {
-        return listView == null ? null : (ArrayAdapter<String>) listView.getAdapter();
+    private ArrayAdapter<Object[]> getAdapter(ListView listView) {
+        return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
     }
 
     @Override
@@ -136,12 +147,12 @@ public class HistoryFragment extends SABDFragment {
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
         if (data != null && extracted(data, 1) != null) {
             rows = extracted(data, 1);
-            backupJsonObject = (JSONObject) data[2];
+            backupJsonObject = (JSONObject) data[3];
             ((SABDroidEx) mParent).updateLabels(backupJsonObject);
         }
 
         if (rows.size() > 0) {
-            ArrayAdapter<String> adapter = getAdapter(listView);
+            ArrayAdapter<Object[]> adapter = getAdapter(listView);
             adapter.notifyDataSetChanged();
         }
         else {

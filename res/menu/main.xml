@@ -26,7 +26,7 @@
         android:title="@string/menu_search"
         android:icon="@drawable/ic_action_search"
         android:orderInCategory="0"
-        android:showAsAction="always" />
+        android:showAsAction="always"/>
 
 	<item android:id="@+id/menu_play_pause"
         android:title="@string/menu_play"

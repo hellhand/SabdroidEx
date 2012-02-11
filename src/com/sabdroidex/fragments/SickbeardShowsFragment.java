@@ -2,8 +2,6 @@ package com.sabdroidex.fragments;
 
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,72 +11,51 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
-import com.sabdroidex.activity.adapters.QueueListRowAdapter;
-import com.sabdroidex.sabnzbd.SABnzbdController;
+import com.sabdroidex.activity.adapters.SickBeardShowsListRowAdapter;
+import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 
-/**
- * Main SABDroid Activity
- */
-public class QueueFragment extends SABDFragment implements OnItemLongClickListener {
-
-    private static JSONObject backupJsonObject;
+public class SickbeardShowsFragment extends SABDFragment implements OnItemLongClickListener {
 
     private static ArrayList<Object[]> rows;
-    private Thread updater;
     private ListView listView;
+
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
 
-        @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SABnzbdController.MESSAGE_UPDATE_QUEUE:
+                case SickBeardController.MESSAGE_UPDATE:
 
                     Object result[] = (Object[]) msg.obj;
                     // Updating rows
                     rows.clear();
                     rows.addAll((ArrayList<Object[]>) result[1]);
 
+                    /**
+                     * This might happens if a rotation occurs
+                     */
                     if (listView != null || getAdapter(listView) != null) {
                         ArrayAdapter<Object[]> adapter = getAdapter(listView);
                         adapter.notifyDataSetChanged();
                     }
-                    // Updating the header
-                    JSONObject jsonObject = (JSONObject) result[0];
-                    backupJsonObject = jsonObject;
 
-                    try {
-                        ((SABDroidEx) mParent).updateLabels(jsonObject);
-                        ((SABDroidEx) mParent).updateStatus("");
-                    }
-                    catch (Exception e) {
-                        Log.w("ERROR", " " + e.getLocalizedMessage());
-                    }
-                    break;
-
-                case SABnzbdController.MESSAGE_STATUS_UPDATE:
-                    try {
-                        ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
-                    }
-                    catch (Exception e) {
-                        Log.w("ERROR", " " + e.getLocalizedMessage());
-                    }
                     break;
 
                 default:
@@ -86,17 +63,19 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             }
         }
     };
+
     private FragmentActivity mParent;
 
-    protected boolean paused = false;
+    public SickbeardShowsFragment() {
+    }
 
-    public QueueFragment(FragmentActivity fragmentActivity) {
+    public SickbeardShowsFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
     }
 
-    public QueueFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> downloadRows) {
+    public SickbeardShowsFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> historyRows) {
         this(sabDroidEx);
-        rows = downloadRows;
+        rows = historyRows;
     }
 
     @SuppressWarnings("unchecked")
@@ -109,26 +88,20 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
     }
 
-    public Handler getMessageHandler() {
-        return messageHandler;
-    }
-
     @Override
     public String getTitle() {
-        return mParent.getString(R.string.tab_queue);
+        return mParent.getString(R.string.tab_shows);
     }
 
     /**
      * Refreshing the queue during startup or on user request. Asks to configure if still not done
      */
-    public void manualRefreshQueue() {
+    public void manualRefreshShows() {
         // First run setup
-        if (!Preferences.isSet("server_url")) {
-            mParent.showDialog(R.id.dialog_setup_prompt);
+        if (!Preferences.isEnabled(Preferences.SICKBEARD)) {
             return;
         }
-
-        SABnzbdController.refreshQueue(messageHandler);
+        SickBeardController.refreshShows(messageHandler);
     }
 
     @Override
@@ -148,15 +121,13 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         listView = (ListView) downloadView.findViewById(R.id.queueList);
         downloadView.removeAllViews();
 
-        listView.setAdapter(new QueueListRowAdapter(mParent, rows));
+        listView.setAdapter(new SickBeardShowsListRowAdapter(mParent, rows));
         listView.setOnItemLongClickListener(this);
 
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
-        if (data != null && extracted(data, 0) != null) {
-            rows = extracted(data, 0);
-            backupJsonObject = (JSONObject) data[3];
-            ((SABDroidEx) mParent).updateLabels(backupJsonObject);
+        if (data != null && extracted(data, 2) != null) {
+            rows = extracted(data, 2);
         }
 
         if (rows.size() > 0) {
@@ -164,18 +135,15 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             adapter.notifyDataSetChanged();
         }
         else {
-            manualRefreshQueue();
+            manualRefreshShows();
         }
-
-        if (updater == null || updater.isInterrupted())
-            startAutomaticUpdater();
 
         return listView;
     }
 
     @Override
     public void onFragmentActivated() {
-        manualRefreshQueue();
+        manualRefreshShows();
     }
 
     @Override
@@ -189,62 +157,19 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                 dialog.dismiss();
             }
         };
+        LayoutInflater inflater = LayoutInflater.from(mParent);
+        LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.show_status, null);
+        ImageView showPoster = (ImageView) showView.findViewById(R.id.showPoster);
+        TextView showName = (TextView) showView.findViewById(R.id.show_name);
+
+        showPoster.setImageResource(R.drawable.temp_poster);
+        showName.setText((CharSequence) rows.get(position)[0]);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(android.R.string.cancel, noListener);
-        builder.setItems(R.array.optionsdialog, new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        SABnzbdController.pauseResumeItem(messageHandler, rows.get(position));
-                        break;
-                    case 1:
-                        SABnzbdController.removeQueueItem(messageHandler, rows.get(position));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
+        builder.setView(showView);
         dialog = builder.create();
         dialog.show();
         return true;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        paused = true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        paused = false;
-    }
-
-    /**
-     * Fires up a new Thread to update the queue every X minutes TODO add configuration to controll the auto updates
-     */
-    private void startAutomaticUpdater() {
-        updater = new Thread() {
-
-            @Override
-            public void run() {
-                for (; !isInterrupted();) {
-                    try {
-                        int rate = Integer.valueOf(Preferences.get("refresh_rate", "5000"));
-                        Thread.sleep(rate);
-                    }
-                    catch (InterruptedException e) {
-                        Log.w("ERROR", e.getLocalizedMessage());
-                    }
-                    if (!paused)
-                        SABnzbdController.refreshQueue(messageHandler);
-                }
-            }
-        };
-        updater.start();
     }
 }

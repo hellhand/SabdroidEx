@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/show_list_body_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="60dip"
+    android:background="@drawable/list_item_bg"
+    android:gravity="center_vertical"
+    android:paddingLeft="4dip"
+    android:paddingRight="12dip" >
+
+    <ImageView
+        android:id="@+id/showBanner"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:contentDescription="@string/show_banner"
+        android:gravity="center_vertical"
+        android:scaleType="fitCenter" />
+
+</LinearLayout>

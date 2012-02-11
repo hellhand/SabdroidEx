@@ -3,15 +3,25 @@
     <string name="app_name">SABDroidEx</string>
 
     <string name="setting_server_url">URL Serveur</string>
-    <string name="setting_server_url_summary">IP Serveur SABnzbd</string>
-    <string name="setting_server_port">Port Serveur</string>
-    <string name="setting_server_port_summary">Port du serveur SABnzbd</string>
+    <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
+    <string name="setting_server_port">Port du Serveur</string>
+    <string name="setting_server_port_summary">Port du Serveur à utiliser pour SABnzbd</string>
     <string name="setting_refresh_rate">Taux de Rafraichissements</string>
     <string name="setting_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
     <string name="setting_api_key">Clef d\'API de SABnzbd</string>
 	<string name="setting_auth">Authentication</string>
     <string name="setting_auth_username">Nom Utilisateur</string>
     <string name="setting_auth_password">Mot de Passe</string>
+
+	<string name="setting_sickbeard">Utiliser Sickbeard</string>
+	<string name="setting_sickbeard_url">URL Serveur</string>
+    <string name="setting_sickbeard_url_summary">URL Serveur à utiliser pour SickBeard</string>
+    <string name="setting_sickbeard_port">Port du Serveur</string>
+    <string name="setting_sickbeard_port_summary">Port du Serveur à utiliser pour SickBeard</string>
+    <string name="setting_sickbeard_refresh_rate">Taux de Rafraichissements</string>
+    <string name="setting_sickbeard_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
+	<string name="setting_sickbeard_api_key">Clef d\'API de Sickbeard</string>
+    
     <string name="setting_nzbs_org_auth">Authentification NZBS.org</string>
     <string name="setting_nzbs_org_uid">UID NZBS.org</string>
     <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
@@ -22,7 +32,7 @@
     <string name="menu_pause">Pause</string>
     <string name="menu_resume">Reprendre</string>
     <string name="menu_refresh">Rafraichir</string>
-    <string name="menu_add">Ajouter...</string>
+    <string name="menu_add">Ajouter</string>
     <string name="menu_settings">Préférences</string>
     <string name="menu_quit">Quitter</string>
     <string name="menu_back">Retour</string>
@@ -31,8 +41,16 @@
     <string name="tab_history">Historique</string>
     <string name="tab_queue">Liste</string>
 	<string name="tab_search">Recherche</string>
-        	    	    
-    <string name="adapter_done">Terminé</string>
+    <string name="tab_shows">Shows</string>
+    <string name="tab_coming">A venir</string>
+	
+	<string name="adapter_done">Terminé</string>
+	
+	<string name="show_banner">Bannière</string>
+    <string name="show_poster">Poster</string>	    	    
+    <string name="show_name">Name : </string>
+    <string name="show_status">Statut : </string>
+    <string name="show_quality">Qualité : </string>
     
     <string name="add_dialog_title">Ajouter nouveau NZB</string>
     <string name="add_dialog_message">Entez l\'URL du NZB a être téléchargé : </string>

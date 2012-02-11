@@ -21,11 +21,16 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         setSummaryChangeListener(Preferences.SERVER_URL, R.string.setting_server_url);
         setSummaryChangeListener(Preferences.SERVER_PORT, R.string.setting_server_port);
+        setSummaryChangeListener(Preferences.SERVER_RATE, R.string.setting_refresh_rate);
         setSummaryChangeListener(Preferences.SERVER_USERNAME, R.string.setting_auth_username);
         setSummaryChangeListener(Preferences.SERVER_PASSWORD, R.string.setting_auth_password);
         setSummaryChangeListener(Preferences.SERVER_API_KEY, R.string.setting_api_key);
-        // setSummaryChangeListener(Preferences.NZBS_ORG_UID, R.string.setting_nzbs_org_uid);
-        // setSummaryChangeListener(Preferences.NZBS_ORG_HASH, R.string.setting_nzbs_org_hash);
+
+        setSummaryChangeListener(Preferences.SICKBEARD_URL, R.string.setting_sickbeard_url);
+        setSummaryChangeListener(Preferences.SICKBEARD_PORT, R.string.setting_sickbeard_port);
+        setSummaryChangeListener(Preferences.SICKBEARD_RATE, R.string.setting_refresh_rate);
+        setSummaryChangeListener(Preferences.SICKBEARD_API_KEY, R.string.setting_sickbeard_api_key);
+
     }
 
     private final void setSummaryChangeListener(String prefKey, final int resId) {

@@ -1,6 +1,7 @@
 package com.sabdroidex.activity;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.json.JSONObject;
 
@@ -10,11 +11,16 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,6 +29,7 @@ import com.sabdroidex.R;
 import com.sabdroidex.activity.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.QueueFragment;
+import com.sabdroidex.fragments.SickbeardShowsFragment;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -33,13 +40,14 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * Main SABDroid Activity
  */
-public class SABDroidEx extends ActionBarActivity {
+public class SABDroidEx extends ActionBarActivity implements android.view.View.OnClickListener {
 
     /**
      * This is the data that will be retrieved and saved each time the application starts and stops is is used as cache.
      */
-    private static ArrayList<String> downloadRows = new ArrayList<String>();
-    private static ArrayList<String> historyRows = new ArrayList<String>();
+    private static ArrayList<Object[]> downloadRows = new ArrayList<Object[]>();
+    private static ArrayList<Object[]> historyRows = new ArrayList<Object[]>();
+    private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
     private static JSONObject backupJsonObject;
     protected boolean paused = false;
 
@@ -48,6 +56,24 @@ public class SABDroidEx extends ActionBarActivity {
      */
     private QueueFragment queue;
     private HistoryFragment history;
+    private SickbeardShowsFragment sickberdShows;
+
+    SearchViewCompat.OnQueryTextListenerCompat onQueryTextListenerCompat = new SearchViewCompat.OnQueryTextListenerCompat() {
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            // TODO Auto-generated method stub
+            System.out.println("Typed text : " + newText);
+            return super.onQueryTextChange(newText);
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            // TODO Auto-generated method stub
+            System.out.println("Query text : " + query);
+            return super.onQueryTextSubmit(query);
+        }
+    };
 
     /**
      * Creating the elements of the screen
@@ -64,6 +90,21 @@ public class SABDroidEx extends ActionBarActivity {
         manualRefresh();
     }
 
+    @Override
+    public void onNewIntent(final Intent newIntent) {
+        super.onNewIntent(newIntent);
+        final String queryAction = newIntent.getAction();
+        if (Intent.ACTION_SEARCH.equals(queryAction)) {
+            doSearchQuery(newIntent, "onNewIntent()");
+        }
+    }
+
+    private void doSearchQuery(final Intent queryIntent, final String entryPoint) {
+        Bundle bundle = queryIntent.getExtras();
+        Set<String> keySet = bundle.keySet();
+        System.out.println((String) bundle.get((String) keySet.toArray()[1]));
+    }
+
     /**
      * Creating the whole ViewPager content
      */
@@ -73,10 +114,17 @@ public class SABDroidEx extends ActionBarActivity {
         queue.setRetainInstance(true);
         history = new HistoryFragment(this, historyRows);
         history.setRetainInstance(true);
+        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+            sickberdShows = new SickbeardShowsFragment(this, showsRows);
+            sickberdShows.setRetainInstance(true);
+        }
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(queue);
         pagerAdapter.addFragment(history);
+        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+            pagerAdapter.addFragment(sickberdShows);
+        }
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
@@ -107,8 +155,11 @@ public class SABDroidEx extends ActionBarActivity {
             showDialog(R.id.dialog_setup_prompt);
             return;
         }
-        queue.manualRefreshQueue();
-        history.manualRefreshHistory();
+        // queue.manualRefreshQueue();
+        // history.manualRefreshHistory();
+        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+            sickberdShows.manualRefreshShows();
+        }
     }
 
     /**
@@ -136,6 +187,8 @@ public class SABDroidEx extends ActionBarActivity {
         }
     }
 
+    View searchItemView;
+
     /**
      * This creates the menu items as they will be by default
      */
@@ -143,8 +196,43 @@ public class SABDroidEx extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
+        setupSearchView(menu);
+        return true;
     }
+
+    /**
+     * Setting up the Search View
+     * 
+     * @param menu
+     */
+    private void setupSearchView(Menu menu) {
+        // Place an action bar item for searching.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            MenuItem searchItem = menu.findItem(R.id.menu_search);
+            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        }
+        View searchView = SearchViewCompat.newSearchView(this);
+        if (searchView != null) {
+            SearchViewCompat.setOnQueryTextListener(searchView, queryTextListener);
+            MenuItem item = menu.findItem(R.id.menu_search);
+            MenuItemCompat.setActionView(item, searchView);
+        }
+    }
+
+    OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            System.out.println(newText);
+            return super.onQueryTextChange(newText);
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            System.out.println(query);
+            return super.onQueryTextSubmit(query);
+        }
+    };
 
     /**
      * This is called each time the Menu Button or Menu UI Element is pressed. It allows to update the menu according to what we need
@@ -183,8 +271,11 @@ public class SABDroidEx extends ActionBarActivity {
             case R.id.menu_add_nzb:
                 addDownloadPrompt();
                 return true;
+            case R.id.menu_search:
+                onSearchRequested();
+                return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -269,10 +360,11 @@ public class SABDroidEx extends ActionBarActivity {
      */
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
-        Object data[] = new Object[3];
+        Object data[] = new Object[4];
         data[0] = downloadRows;
         data[1] = historyRows;
-        data[2] = backupJsonObject;
+        data[2] = sickberdShows;
+        data[3] = backupJsonObject;
         return data;
     }
 
@@ -282,7 +374,7 @@ public class SABDroidEx extends ActionBarActivity {
      * @param message
      */
     public void updateStatus(String message) {
-        if (message.equals(SABnzbdController.MESSAGE.UPDATING.toString())) {
+        if (message.equals(SABnzbdController.MESSAGE.UPDATE.toString())) {
             getActionBarHelper().setRefreshActionItemState(true);
         }
         else {
@@ -291,7 +383,9 @@ public class SABDroidEx extends ActionBarActivity {
     }
 
     @Override
-    public boolean onSearchRequested() {
-        return super.onSearchRequested();
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+
     }
+
 }

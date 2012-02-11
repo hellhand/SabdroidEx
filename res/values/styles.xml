@@ -16,7 +16,7 @@
 
 <resources>
 
-    <style name="AppTheme" parent="android:style/Theme">
+    <style name="AppTheme" parent="android:style/Theme.Black">
         <item name="android:windowTitleSize">@dimen/actionbar_compat_height</item>
         <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
@@ -27,7 +27,7 @@
         <item name="actionbarCompatItemHomeStyle">@style/ActionBarCompatHomeItem</item>
         <item name="actionbarCompatProgressIndicatorStyle">@style/ActionBarCompatProgressIndicator</item>
     </style>
-
+        
     <style name="ActionBarCompat">
         <item name="android:background">#eee</item>
     </style>
@@ -67,7 +67,7 @@
         <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator</item>
         <item name="vpiTabTextStyle">@style/Widget.TabPageIndicator.Text</item>
     </style>
-
+        
     <style name="Widget"></style>
 
     <style name="Widget.TitlePageIndicator" parent="Widget">
@@ -97,7 +97,7 @@
 
     <style name="Widget.TabPageIndicator.Text" parent="Widget">
         <item name="android:textAppearance">@style/TextAppearance.TabPageIndicator</item>
-        <item name="android:textColor">@color/dark_theme</item>
+        <item name="android:textColor">@color/light_theme</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>

@@ -22,23 +22,61 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import android.util.Log;
+
 public class HttpUtil {
 
     private static HttpUtil _instance = null;
-    private static DefaultHttpClient httpClient = new DefaultHttpClient();
-    private static URLConnection urlc;
 
     private HttpUtil() {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpParams params = httpClient.getParams();
         HttpConnectionParams.setConnectionTimeout(params, 60000);
         HttpConnectionParams.setSoTimeout(params, 60000);
     }
 
-    public static HttpUtil getInstance() {
+    public synchronized static HttpUtil getInstance() {
         if (_instance == null)
             _instance = new HttpUtil();
 
         return _instance;
+    }
+
+    static {
+        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
+        try {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[] { new X509TrustManager() {
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    /**
+                     * We accept all certificates as Sickbeard's is self signed and cannot be verified
+                     */
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    /**
+                     * We accept all certificates as Sickbeard's is self signed and cannot be verified
+                     */
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            } }, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        }
+        catch (Exception e) {
+            Log.w("ERROR", " " + e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -49,59 +87,29 @@ public class HttpUtil {
      */
     public synchronized String getDataAsString(String url) throws RuntimeException {
         try {
+
             String responseBody = "";
+            URLConnection urlc;
 
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-            SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[] { new X509TrustManager() {
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            } }, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-
-            Object connection = new URL(url).openConnection();
-            if (connection instanceof HttpsURLConnection) {
-                urlc = (HttpsURLConnection) connection;
+            if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
+                urlc = tryOpenConnection(url);
             }
-            else if (connection instanceof HttpURLConnection) {
-                urlc = (HttpURLConnection) connection;
+            else {
+                urlc = new URL(url).openConnection();
             }
-            // urlc.setDoOutput(true);
+
             urlc.setUseCaches(false);
-            // urlc.setRequestMethod("POST");
             urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
             urlc.setRequestProperty("Accept-Encoding", "gzip");
 
-            // OutputStreamWriter wr = new OutputStreamWriter(urlc.getOutputStream());
-            // wr.flush();
-            // wr.close();
             InputStreamReader re = new InputStreamReader(urlc.getInputStream());
-            BufferedReader rd = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+            BufferedReader rd = new BufferedReader(re);
             String line = "";
             while ((line = rd.readLine()) != null) {
                 responseBody += line;
                 responseBody += "\n";
+                line = null;
             }
             rd.close();
             re.close();
@@ -113,6 +121,29 @@ public class HttpUtil {
         }
     }
 
+    private synchronized URLConnection tryOpenConnection(String url) throws RuntimeException {
+        URLConnection connection = null;
+        try {
+            connection = new URL("https://" + url).openConnection();
+            connection.getInputStream();
+            connection = new URL("https://" + url).openConnection();
+            return connection;
+        }
+        catch (Exception e) {
+            Log.w("ERROR", " " + e.getStackTrace()[0]);
+        }
+        try {
+            connection = new URL("http://" + url).openConnection();
+            connection.getInputStream();
+            connection = new URL("http://" + url).openConnection();
+            return connection;
+        }
+        catch (Exception e) {
+            Log.w("ERROR", " " + e.getStackTrace()[0]);
+        }
+        return null;
+    }
+
     /**
      * Gets data from URL as byte[] throws {@link RuntimeException} If anything goes wrong
      * 
@@ -122,8 +153,15 @@ public class HttpUtil {
     public synchronized byte[] getDataAsByteArray(String url) {
         try {
             byte[] dat = null;
+            URLConnection urlc;
 
-            urlc = (HttpURLConnection) new URL(url).openConnection();
+            if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
+                urlc = tryOpenConnection(url);
+            }
+            else {
+                urlc = new URL(url).openConnection();
+            }
+
             urlc.setDoOutput(true);
             urlc.setUseCaches(false);
             ((HttpURLConnection) urlc).setRequestMethod("POST");
@@ -172,8 +210,15 @@ public class HttpUtil {
     public synchronized char[] getDataAsCharArray(String url) {
         try {
             char[] dat = null;
+            URLConnection urlc;
 
-            urlc = (HttpURLConnection) new URL(url).openConnection();
+            if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
+                urlc = tryOpenConnection(url);
+            }
+            else {
+                urlc = new URL(url).openConnection();
+            }
+
             urlc.setDoOutput(true);
             urlc.setUseCaches(false);
             ((HttpURLConnection) urlc).setRequestMethod("POST");

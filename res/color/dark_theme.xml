@@ -19,5 +19,5 @@
     <item android:state_window_focused="false" android:color="@color/vpi__background_holo_light"/>
     <item android:state_pressed="true" android:color="@color/vpi__background_holo_light"/>
     <item android:state_selected="true" android:color="@color/vpi__background_holo_light"/>
-    <item android:color="@color/vpi__background_holo_light"/> <!-- not selected -->
+    <item android:color="@color/vpi__background_holo_light"/>
 </selector>

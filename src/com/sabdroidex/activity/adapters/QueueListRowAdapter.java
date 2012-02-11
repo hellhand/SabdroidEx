@@ -15,19 +15,19 @@ import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.utils.Calculator;
 import com.utils.Formatter;
 
-public class QueueListRowAdapter extends ArrayAdapter<String> {
+public class QueueListRowAdapter extends ArrayAdapter<Object[]> {
 
     private Context mContext;
     private LayoutInflater mInflater;
     private QueueListItem mQueueListItem;
-    private ArrayList<String> mItems;
+    private ArrayList<Object[]> mItems;
 
     @Override
     public int getCount() {
         return mItems.size();
     }
 
-    public QueueListRowAdapter(Context context, ArrayList<String> items) {
+    public QueueListRowAdapter(Context context, ArrayList<Object[]> items) {
         super(context, R.layout.list_item, items);
         this.mContext = context;
         this.mItems = items;
@@ -47,15 +47,16 @@ public class QueueListRowAdapter extends ArrayAdapter<String> {
             mQueueListItem = (QueueListItem) convertView.getTag();
         }
 
-        String[] values = mItems.get(position).split("#");
-        String eta = Calculator.calculateETA(Double.parseDouble(values[2]), SABnzbdController.speed);
-        String completed = Formatter.formatShort(values[2]) + " / " + Formatter.formatShort(values[1]) + " MB";
-        String status = values[3];
+        Object[] values = mItems.get(position);
+        String eta = Calculator.calculateETA(((Double) values[2]), SABnzbdController.speed);
+        String completed = Formatter.formatShort(((Double) values[2])) + " / " + Formatter.formatShort(((Double) values[1])) + " MB";
+        String status = (String) values[3];
+        String fileName = (String) values[0];
 
-        mQueueListItem.filemame.setText(values[0]);
+        mQueueListItem.filemame.setText(fileName);
         mQueueListItem.eta.setText(eta);
         mQueueListItem.completed.setText(completed);
-        if (status.equals("Paused"))
+        if ("Paused".equals(status))
             mQueueListItem.status.setImageResource(android.R.drawable.ic_media_pause);
         else
             mQueueListItem.status.setImageResource(android.R.drawable.ic_media_play);

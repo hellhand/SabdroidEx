@@ -12,19 +12,19 @@ import android.widget.TextView;
 
 import com.sabdroidex.R;
 
-public class HistoryListRowAdapter extends ArrayAdapter<String> {
+public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private QueueListItem mQueueListItem;
-    private ArrayList<String> mItems;
+    private HistoryListItem mQueueListItem;
+    private ArrayList<Object[]> mItems;
 
     @Override
     public int getCount() {
         return mItems.size();
     }
 
-    public HistoryListRowAdapter(Context context, ArrayList<String> items) {
+    public HistoryListRowAdapter(Context context, ArrayList<Object[]> items) {
         super(context, R.layout.list_item, items);
         this.mContext = context;
         this.mItems = items;
@@ -34,20 +34,20 @@ public class HistoryListRowAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item, null);
-            mQueueListItem = new QueueListItem();
+            mQueueListItem = new HistoryListItem();
             mQueueListItem.filemame = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
             mQueueListItem.eta = (TextView) convertView.findViewById(R.id.queueRowLabelEta);
             mQueueListItem.completed = (TextView) convertView.findViewById(R.id.queueRowLabelCompleted);
             mQueueListItem.status = (ImageView) convertView.findViewById(R.id.queueRowStatus);
         }
         else {
-            mQueueListItem = (QueueListItem) convertView.getTag();
+            mQueueListItem = (HistoryListItem) convertView.getTag();
         }
 
-        String[] values = mItems.get(position).split("#");
-        String completed = values[1];
+        Object[] values = mItems.get(position);
+        String completed = (String) values[1];
 
-        mQueueListItem.filemame.setText(values[0]);
+        mQueueListItem.filemame.setText((String) values[0]);
         mQueueListItem.eta.setText(R.string.adapter_done);
         mQueueListItem.completed.setText(completed);
         mQueueListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
@@ -57,7 +57,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<String> {
         return (convertView);
     }
 
-    class QueueListItem {
+    class HistoryListItem {
 
         TextView filemame;
         TextView eta;
