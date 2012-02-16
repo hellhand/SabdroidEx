@@ -48,15 +48,15 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
     private static ArrayList<Object[]> downloadRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> historyRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
-    private static JSONObject backupJsonObject;
+    private static JSONObject backupJsonObject = null;
     protected boolean paused = false;
 
     /**
-     * The two Fragments that will take place in the ViewPager
+     * The Fragments that will take place in the ViewPager
      */
     private QueueFragment queue;
     private HistoryFragment history;
-    private SickbeardShowsFragment sickberdShows;
+    private SickbeardShowsFragment shows;
 
     SearchViewCompat.OnQueryTextListenerCompat onQueryTextListenerCompat = new SearchViewCompat.OnQueryTextListenerCompat() {
 
@@ -99,6 +99,39 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         }
     }
 
+    @Override
+    protected void onResume() {
+        /**
+         * Checking if SickBeard has been just been disabled
+         */
+        if (!Preferences.isEnabled(Preferences.SICKBEARD) && shows != null) {
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
+            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
+            if (pagerAdapter.contains(shows)) {
+                pagerAdapter.removeFragment(shows);
+                shows = null;
+            }
+            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+            tabPageIndicator.notifyDataSetChanged();
+            tabPageIndicator.setCurrentItem(0);
+            pager.refreshDrawableState();
+        }
+        if (Preferences.isEnabled(Preferences.SICKBEARD) && shows == null) {
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
+            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
+            shows = new SickbeardShowsFragment(this, showsRows);
+            shows.setRetainInstance(true);
+            if (!pagerAdapter.contains(shows)) {
+                pagerAdapter.addFragment(shows);
+            }
+            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+            tabPageIndicator.notifyDataSetChanged();
+            tabPageIndicator.setCurrentItem(0);
+            pager.refreshDrawableState();
+        }
+        super.onResume();
+    }
+
     private void doSearchQuery(final Intent queryIntent, final String entryPoint) {
         Bundle bundle = queryIntent.getExtras();
         Set<String> keySet = bundle.keySet();
@@ -115,15 +148,15 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         history = new HistoryFragment(this, historyRows);
         history.setRetainInstance(true);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            sickberdShows = new SickbeardShowsFragment(this, showsRows);
-            sickberdShows.setRetainInstance(true);
+            shows = new SickbeardShowsFragment(this, showsRows);
+            shows.setRetainInstance(true);
         }
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(queue);
         pagerAdapter.addFragment(history);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            pagerAdapter.addFragment(sickberdShows);
+            pagerAdapter.addFragment(shows);
         }
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -155,10 +188,10 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
             showDialog(R.id.dialog_setup_prompt);
             return;
         }
-        // queue.manualRefreshQueue();
-        // history.manualRefreshHistory();
+        queue.manualRefreshQueue();
+        history.manualRefreshHistory();
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            sickberdShows.manualRefreshShows();
+            shows.manualRefreshShows();
         }
     }
 
@@ -324,31 +357,26 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
     }
 
     /**
-     * Creating of the Settup Dialog
+     * Creating of the global Dialogs Specific dialogs can be handled here too if possible
      */
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case R.id.dialog_setup_prompt:
 
-                OnClickListener okListener = new DialogInterface.OnClickListener() {
+                OnClickListener clickListener = new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        showSettings();
-                        manualRefresh();
-                    }
-                };
-
-                OnClickListener noListener = new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
+                        if (whichButton == 0) {
+                            showSettings();
+                            manualRefresh();
+                        }
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
                 builder.setTitle(R.string.config);
-                builder.setPositiveButton(android.R.string.ok, okListener);
-                builder.setNegativeButton(android.R.string.cancel, noListener);
+                builder.setPositiveButton(android.R.string.ok, clickListener);
+                builder.setNegativeButton(android.R.string.cancel, clickListener);
 
                 return builder.create();
         }
@@ -363,7 +391,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         Object data[] = new Object[4];
         data[0] = downloadRows;
         data[1] = historyRows;
-        data[2] = sickberdShows;
+        data[2] = showsRows;
         data[3] = backupJsonObject;
         return data;
     }

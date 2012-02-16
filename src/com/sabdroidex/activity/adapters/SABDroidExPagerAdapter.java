@@ -21,6 +21,14 @@ public class SABDroidExPagerAdapter extends FragmentPagerAdapter implements Titl
         fragments.add((SABDFragment) fragment);
     }
 
+    public void removeFragment(Fragment fragment) {
+        fragments.remove((SABDFragment) fragment);
+    }
+
+    public boolean contains(Fragment fragment) {
+        return fragments.contains(fragment);
+    }
+
     @Override
     public int getCount() {
         return fragments.size();

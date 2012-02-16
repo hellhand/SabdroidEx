@@ -26,7 +26,7 @@ import android.util.Log;
 
 public class HttpUtil {
 
-    private static HttpUtil _instance = null;
+    private static final HttpUtil _instance = new HttpUtil();
 
     private HttpUtil() {
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -35,10 +35,7 @@ public class HttpUtil {
         HttpConnectionParams.setSoTimeout(params, 60000);
     }
 
-    public synchronized static HttpUtil getInstance() {
-        if (_instance == null)
-            _instance = new HttpUtil();
-
+    public static HttpUtil getInstance() {
         return _instance;
     }
 

@@ -20,4 +20,6 @@
 
     <provider android:name=".search.SearchProvider" android:authorities="com.sabdroidex.SearchProvider" />
 
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest> 

@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
@@ -158,11 +159,11 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
             }
         };
         LayoutInflater inflater = LayoutInflater.from(mParent);
-        LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.show_status, null);
+        ScrollView showView = (ScrollView) inflater.inflate(R.layout.show_status, null);
         ImageView showPoster = (ImageView) showView.findViewById(R.id.showPoster);
         TextView showName = (TextView) showView.findViewById(R.id.show_name);
 
-        showPoster.setImageResource(R.drawable.temp_poster);
+        showPoster.setBackgroundResource(R.drawable.temp_poster);
         showName.setText((CharSequence) rows.get(position)[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);

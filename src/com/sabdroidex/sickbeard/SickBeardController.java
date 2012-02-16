@@ -59,7 +59,10 @@ public final class SickBeardController {
                     rows.clear();
 
                     for (int i = 0; i < sortKey.size(); i++) {
-                        Object[] rowValues = new Object[6];
+                        /**
+                         * The seventh item will be the banner The eighth item will be the poster
+                         */
+                        Object[] rowValues = new Object[8];
                         JSONObject current = jsonObject.getJSONObject(sortKey.get(i));
                         rowValues[0] = sortKey.get(i);
                         rowValues[1] = current.getString("status");
@@ -169,7 +172,6 @@ public final class SickBeardController {
         return url;
     }
 
-    @SuppressWarnings("unused")
     private static String getPreferencesParams() {
         String username = Preferences.get(Preferences.SERVER_USERNAME);
         String password = Preferences.get(Preferences.SERVER_PASSWORD);
