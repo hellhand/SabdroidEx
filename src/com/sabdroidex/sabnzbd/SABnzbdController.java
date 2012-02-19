@@ -307,7 +307,8 @@ public final class SABnzbdController {
                 url = url + "&" + xTraParam;
             }
         }
-        return HttpUtil.getInstance().getDataAsString(url);
+        String result = new String(HttpUtil.getInstance().getDataAsString(url));
+        return result;
     }
 
     private static String getPreferencesParams() {

@@ -37,6 +37,7 @@
     <string name="menu_quit">Quit</string>
     <string name="menu_back">Back</string>
 	<string name="menu_search">Search</string>
+	<string name="menu_delete">Delete</string>
 
     <string name="tab_history">History</string>
 	<string name="tab_queue">Queue</string>
@@ -46,6 +47,8 @@
 
     <string name="adapter_done">Done</string>
 
+    <string name="no_poster">No poster found</string>
+    
 	<string name="show_banner">Banner</string>
     <string name="show_poster">Poster</string>    
 	<string name="show_name">Name : </string>

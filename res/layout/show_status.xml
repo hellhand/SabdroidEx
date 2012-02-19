@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dip">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -10,70 +11,90 @@
 
         <ImageView
             android:id="@+id/showPoster"
-			android:scaleType="fitCenter" 
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-			android:layout_marginTop="2dip"
-            android:layout_marginBottom="2dip"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
+            android:layout_height="0dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dip"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/show_poster"
-            android:gravity="center_horizontal"/>
+            android:scaleType="fitStart" />
 
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginBottom="5dip" >
 
-            <TableRow
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dip"
+                android:text="@string/show_name" />
+
+            <TextView
+                android:id="@+id/show_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:background="@drawable/rounded_edges"
+                android:gravity="left" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginBottom="5dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dip"
+                android:text="@string/show_status" />
+
+            <TextView
+                android:id="@+id/show_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edges"
+                android:contentDescription="@string/show_status"
+                android:gravity="left" />
+
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip" >
+                android:layout_weight="1"
+                android:gravity="left" />
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginBottom="5dip" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/show_name" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dip"
+                android:text="@string/show_quality" />
 
-                <TextView
-                    android:id="@+id/show_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </TableRow>
+            <TextView
+                android:id="@+id/show_quality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edges"
+                android:contentDescription="@string/show_quality"
+                android:gravity="left" />
 
-            <TableRow
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/show_status" />
-
-                <ImageView
-                    android:id="@+id/show_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/show_status" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/show_quality" />
-
-                <ImageView
-                    android:id="@+id/show_quality"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/show_quality" />
-            </TableRow>
-        </TableLayout>
+                android:layout_weight="1"
+                android:gravity="left" />
+        </TableRow>
     </LinearLayout>
-
 </ScrollView>

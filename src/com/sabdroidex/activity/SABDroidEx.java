@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
-import com.sabdroidex.activity.adapters.SABDroidExPagerAdapter;
+import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.SickbeardShowsFragment;
@@ -193,6 +193,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             shows.manualRefreshShows();
         }
+        getActionBarHelper().setRefreshActionItemState(true);
     }
 
     /**
@@ -293,7 +294,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
                 manualRefresh();
                 return true;
             case R.id.menu_quit:
-                System.exit(1);
+                finish();
                 return true;
             case R.id.menu_settings:
                 showSettings();
@@ -396,12 +397,19 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         return data;
     }
 
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+    }
+
     /**
      * This function updates the Icon on the screen according to the message received
      * 
      * @param message
      */
     public void updateStatus(String message) {
+        System.out.println(message);
         if (message.equals(SABnzbdController.MESSAGE.UPDATE.toString())) {
             getActionBarHelper().setRefreshActionItemState(true);
         }

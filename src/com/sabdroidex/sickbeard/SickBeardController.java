@@ -22,6 +22,7 @@ public final class SickBeardController {
     private static boolean executingCommand = false;
 
     private static final String URL_TEMPLATE = "[SICKBEARD_SERVER_URL]/api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
+    private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
 
     public static enum MESSAGE {
         SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, ADD
@@ -62,7 +63,7 @@ public final class SickBeardController {
                         /**
                          * The seventh item will be the banner The eighth item will be the poster
                          */
-                        Object[] rowValues = new Object[8];
+                        Object[] rowValues = new Object[7];
                         JSONObject current = jsonObject.getJSONObject(sortKey.get(i));
                         rowValues[0] = sortKey.get(i);
                         rowValues[1] = current.getString("status");
@@ -70,6 +71,7 @@ public final class SickBeardController {
                         rowValues[3] = current.getString("next_ep_airdate");
                         rowValues[4] = current.getString("network");
                         rowValues[5] = current.getInt("tvdbid");
+                        rowValues[6] = current.getString("language");
                         rows.add(rowValues);
                     }
 
@@ -83,11 +85,9 @@ public final class SickBeardController {
                 }
                 catch (RuntimeException e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
-                    e.printStackTrace();
                 }
                 catch (Throwable e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
-                    e.printStackTrace();
                 }
                 finally {
                     executingRefresh = false;
@@ -135,10 +135,11 @@ public final class SickBeardController {
                 url = url + "&" + xTraParam;
             }
         }
-        return HttpUtil.getInstance().getDataAsString(url);
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
+        return result;
     }
 
-    public static String getImageURL(String command, Integer tvdbid) {
+    public static String getBannerURL(String command, Integer tvdbid) {
 
         /**
          * Correcting the command names to be understood by SickBeard
@@ -168,6 +169,13 @@ public final class SickBeardController {
 
         url = url.replace("[COMMAND]", command);
         url = url + "&tvdbid=" + tvdbid;
+
+        return url;
+    }
+
+    public static String getPosterURL(String command, Integer tvdbid) {
+        String url = URL_TVDB;
+        url = url.replace("[TVDBID]", tvdbid + "-1.jpg");
 
         return url;
     }

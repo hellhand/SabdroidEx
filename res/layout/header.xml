@@ -40,7 +40,6 @@
                 android:textSize="12dip" />
 
             <TextView
-                android:id="@+id/headerSpeed"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -100,7 +99,6 @@
                 android:textSize="12dip" />
 
             <TextView
-                android:id="@+id/headerSpeed"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

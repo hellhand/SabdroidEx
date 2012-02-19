@@ -25,7 +25,7 @@ import android.widget.ListView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
-import com.sabdroidex.activity.adapters.QueueListRowAdapter;
+import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
@@ -41,6 +41,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     private static ArrayList<Object[]> rows;
     private Thread updater;
     private ListView listView;
+
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
 
@@ -182,7 +183,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
         AlertDialog dialog = null;
-        OnClickListener noListener = new DialogInterface.OnClickListener() {
+        OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -190,8 +191,18 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
-        builder.setNegativeButton(android.R.string.cancel, noListener);
-        builder.setItems(R.array.optionsdialog, new OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, onClickListener);
+
+        String[] options = new String[2];
+        if ("Paused".equals(rows.get(position)[3])) {
+            options[0] = getActivity().getResources().getString(R.string.menu_resume);
+        }
+        else {
+            options[0] = getActivity().getResources().getString(R.string.menu_pause);
+        }
+        options[1] = getActivity().getResources().getString(R.string.menu_delete);
+
+        builder.setItems(options, new OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

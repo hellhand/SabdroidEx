@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -159,9 +158,7 @@ public class HttpUtil {
                 urlc = new URL(url).openConnection();
             }
 
-            urlc.setDoOutput(true);
             urlc.setUseCaches(false);
-            ((HttpURLConnection) urlc).setRequestMethod("POST");
             urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
             urlc.setRequestProperty("Accept-Encoding", "gzip");
@@ -216,9 +213,7 @@ public class HttpUtil {
                 urlc = new URL(url).openConnection();
             }
 
-            urlc.setDoOutput(true);
             urlc.setUseCaches(false);
-            ((HttpURLConnection) urlc).setRequestMethod("POST");
             urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
             urlc.setRequestProperty("Accept-Encoding", "gzip");

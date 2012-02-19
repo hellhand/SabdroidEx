@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.activity.adapters.SearchListRowAdapter;
+import com.sabdroidex.adapters.SearchListRowAdapter;
 import com.sabdroidex.utils.SABDFragment;
 
 public class SearchFragment extends SABDFragment {

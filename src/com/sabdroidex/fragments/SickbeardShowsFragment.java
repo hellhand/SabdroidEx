@@ -1,5 +1,7 @@
 package com.sabdroidex.fragments;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -7,10 +9,18 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +32,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
-import com.sabdroidex.activity.adapters.SickBeardShowsListRowAdapter;
+import com.sabdroidex.adapters.SickBeardShowsListRowAdapter;
 import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
+import com.utils.HttpUtil;
 
 public class SickbeardShowsFragment extends SABDFragment implements OnItemLongClickListener {
 
+    private static File mExtFolder = Environment.getExternalStorageDirectory();
     private static ArrayList<Object[]> rows;
-    private ListView listView;
+    private ListView mListView;
+    private ScrollView mShowView;
+    private AsyncImage mAsyncImage;
 
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -52,8 +67,8 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
                     /**
                      * This might happens if a rotation occurs
                      */
-                    if (listView != null || getAdapter(listView) != null) {
-                        ArrayAdapter<Object[]> adapter = getAdapter(listView);
+                    if (mListView != null || getAdapter(mListView) != null) {
+                        ArrayAdapter<Object[]> adapter = getAdapter(mListView);
                         adapter.notifyDataSetChanged();
                     }
 
@@ -119,11 +134,11 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
 
         LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
-        listView = (ListView) downloadView.findViewById(R.id.queueList);
+        mListView = (ListView) downloadView.findViewById(R.id.queueList);
         downloadView.removeAllViews();
 
-        listView.setAdapter(new SickBeardShowsListRowAdapter(mParent, rows));
-        listView.setOnItemLongClickListener(this);
+        mListView.setAdapter(new SickBeardShowsListRowAdapter(mParent, rows));
+        mListView.setOnItemLongClickListener(this);
 
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
@@ -132,14 +147,14 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         }
 
         if (rows.size() > 0) {
-            ArrayAdapter<Object[]> adapter = getAdapter(listView);
+            ArrayAdapter<Object[]> adapter = getAdapter(mListView);
             adapter.notifyDataSetChanged();
         }
         else {
             manualRefreshShows();
         }
 
-        return listView;
+        return mListView;
     }
 
     @Override
@@ -151,26 +166,148 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
         AlertDialog dialog = null;
-        OnClickListener noListener = new DialogInterface.OnClickListener() {
+        OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
+                if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
+                    mAsyncImage.cancel(true);
+                }
+                mAsyncImage = null;
                 dialog.dismiss();
             }
         };
         LayoutInflater inflater = LayoutInflater.from(mParent);
-        ScrollView showView = (ScrollView) inflater.inflate(R.layout.show_status, null);
-        ImageView showPoster = (ImageView) showView.findViewById(R.id.showPoster);
-        TextView showName = (TextView) showView.findViewById(R.id.show_name);
+        mShowView = (ScrollView) inflater.inflate(R.layout.show_status, null);
 
-        showPoster.setBackgroundResource(R.drawable.temp_poster);
+        ImageView showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
+        showPoster.setImageResource(R.drawable.temp_poster);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+        gradientDrawable.setColor(Color.TRANSPARENT);
+
+        TextView showName = (TextView) mShowView.findViewById(R.id.show_name);
         showName.setText((CharSequence) rows.get(position)[0]);
+        showName.setBackgroundDrawable(gradientDrawable);
+
+        TextView showStatus = (TextView) mShowView.findViewById(R.id.show_status);
+        showStatus.setText((CharSequence) rows.get(position)[1]);
+        if ("Ended".equals(rows.get(position)[1])) {
+            gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+            gradientDrawable.setColor(Color.rgb(255, 50, 50));
+            showStatus.setBackgroundDrawable(gradientDrawable);
+            showStatus.setTextColor(Color.WHITE);
+        }
+        else {
+            gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+            gradientDrawable.setColor(Color.TRANSPARENT);
+            showStatus.setBackgroundDrawable(gradientDrawable);
+            showStatus.setTextColor(Color.BLACK);
+        }
+
+        TextView showQuality = (TextView) mShowView.findViewById(R.id.show_quality);
+        showQuality.setText((CharSequence) rows.get(position)[2]);
+        showQuality.setTextColor(Color.WHITE);
+        gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+        if ("Any".equals(rows.get(position)[2])) {
+            gradientDrawable.setColor(Color.rgb(68, 68, 68));
+        }
+        if ("SD".equals(rows.get(position)[2])) {
+            gradientDrawable.setColor(Color.rgb(153, 68, 68));
+        }
+        if ("HD".equals(rows.get(position)[2])) {
+            gradientDrawable.setColor(Color.rgb(68, 153, 68));
+        }
+        showQuality.setBackgroundDrawable(gradientDrawable);
+
+        if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
+            mAsyncImage.cancel(true);
+        }
+        mAsyncImage = new AsyncImage();
+        mAsyncImage.execute(0, rows.get(position)[5], rows.get(position)[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
-        builder.setNegativeButton(android.R.string.cancel, noListener);
-        builder.setView(showView);
+        builder.setNegativeButton(android.R.string.cancel, onClickListener);
+        builder.setView(mShowView);
         dialog = builder.create();
         dialog.show();
         return true;
+    }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            Bitmap bitmap = (Bitmap) msg.obj;
+            if (bitmap != null) {
+                ImageView showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
+                showPoster.setImageBitmap(bitmap);
+                showPoster.invalidate();
+            }
+            else {
+                Toast.makeText(mParent, R.string.no_poster, Toast.LENGTH_LONG);
+            }
+        }
+    };
+
+    // TODO: merge wit the same function in SickBeardShowsListRowAdapter
+    private class AsyncImage extends AsyncTask<Object, Void, Bitmap> {
+
+        /**
+         * 
+         * @param params [1] Is the IMDB id of the TV show, [2] Is the name of the TV Show
+         * @return
+         */
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+
+            /**
+             * Trying to find Image on Local System
+             */
+            String folderPath = mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[2] + File.separator;
+            folderPath = folderPath.replace(":", "");
+            File folder = new File(folderPath);
+            folder.mkdirs();
+
+            Options BgOptions = new Options();
+            BgOptions.inPurgeable = true;
+            Bitmap bitmap = BitmapFactory.decodeFile(folderPath + File.separator + "poster.jpg", BgOptions);
+
+            /**
+             * The bitmap object is null if the BitmapFactory has been unable to decode the file. Hopefully this won't happen often
+             */
+            if (bitmap == null) {
+
+                try {
+                    /**
+                     * We get the banner from the server
+                     */
+                    String url = SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[1]);
+                    byte[] data = HttpUtil.getInstance().getDataAsByteArray(url);
+                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+                    /**
+                     * And save it in the cache
+                     */
+                    FileOutputStream fileOutputStream;
+                    fileOutputStream = new FileOutputStream(folderPath + File.separator + "poster.jpg");
+                    fileOutputStream.write(data);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+                catch (Exception e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+            }
+
+            /**
+             * Waking up the main Thread
+             */
+            Message msg = new Message();
+            msg.obj = bitmap;
+            handler.sendMessage(msg);
+
+            return bitmap;
+        }
     }
 }

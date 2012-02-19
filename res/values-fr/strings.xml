@@ -37,6 +37,7 @@
     <string name="menu_quit">Quitter</string>
     <string name="menu_back">Retour</string>
 	<string name="menu_search">Recherche</string>
+	<string name="menu_delete">Effacer</string>
 
     <string name="tab_history">Historique</string>
     <string name="tab_queue">Liste</string>
@@ -45,6 +46,8 @@
     <string name="tab_coming">A venir</string>
 	
 	<string name="adapter_done">Terminé</string>
+	
+	<string name="no_poster">Pas de poster trouvé</string>
 	
 	<string name="show_banner">Bannière</string>
     <string name="show_poster">Poster</string>	    	    
