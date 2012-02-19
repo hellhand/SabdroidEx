@@ -1,4 +1,4 @@
-package com.sabdroidex.activity.adapters;
+package com.sabdroidex.adapters;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.sickbeard.SickBeardController;
@@ -32,16 +33,16 @@ public class SickBeardShowsListRowAdapter extends ArrayAdapter<Object[]> {
     private Context mContext;
     private LayoutInflater mInflater;
     private ShowsListItem mQueueListItem;
-    private ArrayList<Object[]> mItems;
-    private Vector<ShowsListItem> mListItems;
+    private ArrayList<Object[]> rows;
+    private Vector<Bitmap> mListItems;
     private Vector<AsyncImage> mAsyncImages;
 
-    public SickBeardShowsListRowAdapter(Context context, ArrayList<Object[]> items) {
-        super(context, R.layout.list_item, items);
+    public SickBeardShowsListRowAdapter(Context context, ArrayList<Object[]> rows) {
+        super(context, R.layout.list_item, rows);
         this.mContext = context;
-        this.mItems = items;
+        this.rows = rows;
         this.mInflater = LayoutInflater.from(this.mContext);
-        this.mListItems = new Vector<ShowsListItem>();
+        this.mListItems = new Vector<Bitmap>();
         this.mAsyncImages = new Vector<AsyncImage>();
     }
 
@@ -54,17 +55,15 @@ public class SickBeardShowsListRowAdapter extends ArrayAdapter<Object[]> {
         else {
             mQueueListItem = (ShowsListItem) convertView.getTag();
         }
-        this.mListItems.setSize(mItems.size());
-        this.mAsyncImages.setSize(mItems.size());
+        this.mListItems.setSize(rows.size());
+        this.mAsyncImages.setSize(rows.size());
 
-        mListItems.set(position, mQueueListItem);
-
-        if (mItems.size() != 0 && mAsyncImages.size() != mItems.size()) {
+        if (rows.size() != 0 && mAsyncImages.size() != rows.size()) {
             this.mAsyncImages.clear();
-            this.mAsyncImages.setSize(mItems.size());
+            this.mAsyncImages.setSize(rows.size());
         }
 
-        if (mItems.get(position)[6] == null) {
+        if (mListItems.get(position) == null) {
             mQueueListItem.banner.setImageResource(R.drawable.temp_banner);
 
             if (mAsyncImages.get(position) == null) {
@@ -72,11 +71,11 @@ public class SickBeardShowsListRowAdapter extends ArrayAdapter<Object[]> {
             }
 
             if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                mAsyncImages.get(position).execute(position, mItems.get(position)[5], mItems.get(position)[0]);
+                mAsyncImages.get(position).execute(position, rows.get(position)[5], rows.get(position)[0]);
             }
         }
         else {
-            mQueueListItem.banner.setImageBitmap((Bitmap) mItems.get(position)[6]);
+            mQueueListItem.banner.setImageBitmap(mListItems.get(position));
         }
         convertView.setId(position);
         convertView.setTag(mQueueListItem);
@@ -93,11 +92,17 @@ public class SickBeardShowsListRowAdapter extends ArrayAdapter<Object[]> {
         @Override
         public void handleMessage(Message msg) {
             Bitmap bitmap = (Bitmap) msg.obj;
-            mItems.get(msg.what)[6] = bitmap;
-            notifyDataSetChanged();
+            if (bitmap != null) {
+                mListItems.set(msg.what, bitmap);
+                notifyDataSetChanged();
+            }
+            else {
+                Toast.makeText(getContext(), R.string.no_poster + " : " + rows.get(msg.what)[0], Toast.LENGTH_LONG);
+            }
         }
     };
 
+    // TODO: merge wit the same function in SickbeardShowsFragment
     private class AsyncImage extends AsyncTask<Object, Void, Bitmap> {
 
         /**
@@ -107,7 +112,7 @@ public class SickBeardShowsListRowAdapter extends ArrayAdapter<Object[]> {
          */
         @Override
         protected Bitmap doInBackground(Object... params) {
-
+            // http://thetvdb.com/banners/posters/73255-26.jpg
             /**
              * Trying to find Image on Local System
              */
@@ -127,7 +132,7 @@ public class SickBeardShowsListRowAdapter extends ArrayAdapter<Object[]> {
                 /**
                  * We get the banner from the server
                  */
-                String url = SickBeardController.getImageURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[1]);
+                String url = SickBeardController.getBannerURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[1]);
                 byte[] data = HttpUtil.getInstance().getDataAsByteArray(url);
                 bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
