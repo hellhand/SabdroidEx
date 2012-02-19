@@ -409,7 +409,6 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
      * @param message
      */
     public void updateStatus(String message) {
-        System.out.println(message);
         if (message.equals(SABnzbdController.MESSAGE.UPDATE.toString())) {
             getActionBarHelper().setRefreshActionItemState(true);
         }

@@ -15,21 +15,143 @@ import com.utils.HttpUtil;
 
 public final class SABnzbdController {
 
-    public static double speed = 0.0;
-    public static boolean paused = false;
+    public static enum MESSAGE {
+        ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, UPDATE;
+    }
+    private static boolean executingCommand = false;
 
-    public static final int MESSAGE_UPDATE_QUEUE = 1;
-    public static final int MESSAGE_UPDATE_HISTORY = 2;
+    private static boolean executingRefreshHistory = false;
+    private static boolean executingRefreshQuery = false;
     public static final int MESSAGE_STATUS_UPDATE = 3;
 
-    private static boolean executingRefreshQuery = false;
-    private static boolean executingRefreshHistory = false;
-    private static boolean executingCommand = false;
+    public static final int MESSAGE_UPDATE_HISTORY = 2;
+    public static final int MESSAGE_UPDATE_QUEUE = 1;
+    public static boolean paused = false;
+
+    public static double speed = 0.0;
 
     private static final String URL_TEMPLATE = "[SERVER_URL]/api?mode=[COMMAND]&output=json";
 
-    public static enum MESSAGE {
-        UPDATE, PAUSE, RESUME, ADDURL, REMOVE, QUEUE, HISTORY;
+    public static void addFile(final Handler messageHandler, final String value) {
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+            return;
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    makeApiCall(MESSAGE.ADDURL.toString().toLowerCase(), "name=" + value);
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        sendUpdateMessageStatus(messageHandler, MESSAGE.ADDURL.toString());
+
+        thread.start();
+    }
+
+    private static String getPreferencesParams() {
+        String username = Preferences.get(Preferences.SERVER_USERNAME);
+        String password = Preferences.get(Preferences.SERVER_PASSWORD);
+
+        String credentials = "";
+        if (username != null && !"".equals(username)) {
+            credentials += "&ma_username=" + username;
+        }
+        if (password != null && !"".equals(password)) {
+            credentials += "&ma_password=" + password;
+        }
+        return credentials;
+    }
+
+    public static String makeApiCall(String command) throws RuntimeException {
+        return makeApiCall(command, "");
+    }
+
+    public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
+
+        String url = URL_TEMPLATE;
+
+        /**
+         * Checking if there is a port to concatenate to the URL
+         */
+        if ("".equals(Preferences.get(Preferences.SERVER_PORT))) {
+            url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL));
+        }
+        else {
+            url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT));
+        }
+
+        url = url.replace("[COMMAND]", command);
+        url = url + getPreferencesParams();
+        for (String xTraParam : extraParams) {
+            if (xTraParam != null && !xTraParam.trim().equals("")) {
+                url = url + "&" + xTraParam;
+            }
+        }
+
+        /**
+         * Checking if there is an API Key from SickBeard to concatenate to the URL
+         */
+        String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
+        if (!apiKey.trim().equals("")) {
+            url = url + "&apikey=" + apiKey;
+        }
+
+        System.out.println(url);
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
+        return result;
+    }
+
+    /**
+     * Pauses or resumes a queue item depending on the current status
+     */
+    public static void pauseResumeItem(final Handler messageHandler, final Object[] item) {
+
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+            return;
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    if ("Paused".equals(item[3])) {
+                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=resume", "value=" + item[4]);
+                    }
+                    else {
+                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=pause", "value=" + item[4]);
+                    }
+                    Thread.sleep(100);
+                    SABnzbdController.refreshQueue(messageHandler);
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+        executingCommand = true;
+
+        if (paused)
+            sendUpdateMessageStatus(messageHandler, MESSAGE.RESUME.toString());
+        else
+            sendUpdateMessageStatus(messageHandler, MESSAGE.PAUSE.toString());
+
+        thread.start();
     }
 
     /**
@@ -74,45 +196,75 @@ public final class SABnzbdController {
         thread.start();
     }
 
-    /**
-     * Pauses or resumes a queue item depending on the current status
-     */
-    public static void pauseResumeItem(final Handler messageHandler, final Object[] item) {
-
+    public static void refreshHistory(final Handler messageHandler) {
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingRefreshHistory || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
         Thread thread = new Thread() {
 
-            @Override
             public void run() {
+
                 try {
-                    if ("Paused".equals(item[3])) {
-                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=resume", "value=" + item[4]);
-                    }
+                    Object results[] = new Object[2];
+
+                    String queueData = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
+                    // Removing unnecessary top tag in server answer
+                    queueData = queueData.substring(11, queueData.length() - 1);
+                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
+
+                    JSONObject jsonObject = new JSONObject(queueData);
+                    speed = jsonObject.optLong("kbpersec", 0);
+                    if (jsonObject.get("paused") == null)
+                        paused = false;
                     else {
-                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=pause", "value=" + item[4]);
+                        // Due to a bug(?) on sabnzbd right after a restart this
+                        // field is "null" as a string
+                        // parseBoolean should take care of that since anything
+                        // but "true" is considered false
+                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
                     }
-                    Thread.sleep(100);
-                    SABnzbdController.refreshQueue(messageHandler);
-                }
-                catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
-                }
-                finally {
-                    executingCommand = false;
+
+                    results[0] = jsonObject;
+
+                    JSONArray jobs = jsonObject.getJSONArray("slots");
+                    rows.clear();
+
+                    for (int i = 0; i < jobs.length(); i++) {
+                        Object[] rowValues = new Object[4];
+                        rowValues[0] = jobs.getJSONObject(i).getString("name");
+                        rowValues[1] = jobs.getJSONObject(i).getString("size");
+                        rowValues[2] = jobs.getJSONObject(i).getString("status");
+                        rowValues[3] = jobs.getJSONObject(i).getString("nzo_id");
+                        rows.add(rowValues);
+                    }
+
+                    results[1] = rows;
+
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE_UPDATE_HISTORY;
+                    message.obj = results;
+                    message.sendToTarget();
 
                     sendUpdateMessageStatus(messageHandler, "");
                 }
+                catch (RuntimeException e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    sendUpdateMessageStatus(messageHandler, e.getLocalizedMessage());
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+                finally {
+                    executingRefreshHistory = false;
+                }
             }
         };
-        executingCommand = true;
 
-        if (paused)
-            sendUpdateMessageStatus(messageHandler, MESSAGE.RESUME.toString());
-        else
-            sendUpdateMessageStatus(messageHandler, MESSAGE.PAUSE.toString());
+        executingRefreshHistory = true;
+
+        sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
 
         thread.start();
     }
@@ -193,145 +345,11 @@ public final class SABnzbdController {
         thread.start();
     }
 
-    public static void refreshHistory(final Handler messageHandler) {
-        // Already running or settings not ready
-        if (executingRefreshHistory || !Preferences.isSet(Preferences.SERVER_URL))
-            return;
-        Thread thread = new Thread() {
-
-            public void run() {
-
-                try {
-                    Object results[] = new Object[2];
-
-                    String queueData = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
-                    // Removing unnecessary top tag in server answer
-                    queueData = queueData.substring(11, queueData.length() - 1);
-                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
-
-                    JSONObject jsonObject = new JSONObject(queueData);
-                    speed = jsonObject.optLong("kbpersec", 0);
-                    if (jsonObject.get("paused") == null)
-                        paused = false;
-                    else {
-                        // Due to a bug(?) on sabnzbd right after a restart this
-                        // field is "null" as a string
-                        // parseBoolean should take care of that since anything
-                        // but "true" is considered false
-                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
-                    }
-
-                    results[0] = jsonObject;
-
-                    JSONArray jobs = jsonObject.getJSONArray("slots");
-                    rows.clear();
-
-                    for (int i = 0; i < jobs.length(); i++) {
-                        Object[] rowValues = new Object[4];
-                        rowValues[0] = jobs.getJSONObject(i).getString("name");
-                        rowValues[1] = jobs.getJSONObject(i).getString("size");
-                        rowValues[2] = jobs.getJSONObject(i).getString("status");
-                        rowValues[3] = jobs.getJSONObject(i).getString("nzo_id");
-                        rows.add(rowValues);
-                    }
-
-                    results[1] = rows;
-
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE_UPDATE_HISTORY;
-                    message.obj = results;
-                    message.sendToTarget();
-
-                    sendUpdateMessageStatus(messageHandler, "");
-                }
-                catch (RuntimeException e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
-                    sendUpdateMessageStatus(messageHandler, e.getLocalizedMessage());
-                }
-                catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
-                    sendUpdateMessageStatus(messageHandler, "");
-                }
-                finally {
-                    executingRefreshHistory = false;
-                }
-            }
-        };
-
-        executingRefreshHistory = true;
-
-        sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
-
-        thread.start();
-    }
-
     /**
-     * Sends a message to the calling {@link Activity} to update it's status bar
+     * Removes a history item
      */
-    private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
+    public static void removeHistoryItem(final Handler messageHandler, final Object[] item) {
 
-        Message message = new Message();
-        message.setTarget(messageHandler);
-        message.what = MESSAGE_STATUS_UPDATE;
-        message.obj = text;
-        message.sendToTarget();
-    }
-
-    public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
-
-        String url = URL_TEMPLATE;
-
-        /**
-         * Checking if there is a port to concatenate to the URL
-         */
-        if ("".equals(Preferences.get(Preferences.SERVER_PORT))) {
-            url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL));
-        }
-        else {
-            url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT));
-        }
-
-        url = url.replace("[COMMAND]", command);
-        url = url + getPreferencesParams();
-        for (String xTraParam : extraParams) {
-            if (xTraParam != null && !xTraParam.trim().equals("")) {
-                url = url + "&" + xTraParam;
-            }
-        }
-
-        /**
-         * Checking if there is an API Key from SickBeard to concatenate to the URL
-         */
-        String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
-        if (!apiKey.trim().equals("")) {
-            url = url + "&apikey=" + apiKey;
-        }
-
-        System.out.println(url);
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
-        return result;
-    }
-
-    private static String getPreferencesParams() {
-        String username = Preferences.get(Preferences.SERVER_USERNAME);
-        String password = Preferences.get(Preferences.SERVER_PASSWORD);
-
-        String credentials = "";
-        if (username != null && !"".equals(username)) {
-            credentials += "&ma_username=" + username;
-        }
-        if (password != null && !"".equals(password)) {
-            credentials += "&ma_password=" + password;
-        }
-        return credentials;
-    }
-
-    public static String makeApiCall(String command) throws RuntimeException {
-        return makeApiCall(command, "");
-    }
-
-    public static void addFile(final Handler messageHandler, final String value) {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
@@ -340,20 +358,23 @@ public final class SABnzbdController {
 
             @Override
             public void run() {
+
                 try {
-                    makeApiCall(MESSAGE.ADDURL.toString().toLowerCase(), "name=" + value);
+                    makeApiCall(MESSAGE.HISTORY.toString().toLowerCase(), "name=delete", "value=" + item[3]);
+                    Thread.sleep(250);
+                    SABnzbdController.refreshHistory(messageHandler);
                 }
                 catch (Throwable e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
                 }
                 finally {
+                    executingCommand = false;
                     sendUpdateMessageStatus(messageHandler, "");
                 }
             }
         };
-
-        sendUpdateMessageStatus(messageHandler, MESSAGE.ADDURL.toString());
-
+        executingCommand = true;
+        sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
 
@@ -391,35 +412,14 @@ public final class SABnzbdController {
     }
 
     /**
-     * Removes a history item
+     * Sends a message to the calling {@link Activity} to update it's status bar
      */
-    public static void removeHistoryItem(final Handler messageHandler, final Object[] item) {
+    private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
 
-        // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
-            return;
-
-        Thread thread = new Thread() {
-
-            @Override
-            public void run() {
-
-                try {
-                    makeApiCall(MESSAGE.HISTORY.toString().toLowerCase(), "name=delete", "value=" + item[3]);
-                    Thread.sleep(250);
-                    SABnzbdController.refreshHistory(messageHandler);
-                }
-                catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
-                }
-                finally {
-                    executingCommand = false;
-                    sendUpdateMessageStatus(messageHandler, "");
-                }
-            }
-        };
-        executingCommand = true;
-        sendUpdateMessageStatus(messageHandler, "");
-        thread.start();
+        Message message = new Message();
+        message.setTarget(messageHandler);
+        message.what = MESSAGE_STATUS_UPDATE;
+        message.obj = text;
+        message.sendToTarget();
     }
 }

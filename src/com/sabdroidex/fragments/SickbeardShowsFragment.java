@@ -183,12 +183,11 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         ImageView showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
         showPoster.setImageResource(R.drawable.temp_poster);
 
-        GradientDrawable gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
-        gradientDrawable.setColor(Color.TRANSPARENT);
-
         TextView showName = (TextView) mShowView.findViewById(R.id.show_name);
         showName.setText((CharSequence) rows.get(position)[0]);
-        showName.setBackgroundDrawable(gradientDrawable);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+        gradientDrawable.setColor(Color.TRANSPARENT);
 
         TextView showStatus = (TextView) mShowView.findViewById(R.id.show_status);
         showStatus.setText((CharSequence) rows.get(position)[1]);
@@ -220,6 +219,15 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         }
         showQuality.setBackgroundDrawable(gradientDrawable);
 
+        TextView showNextEpisode = (TextView) mShowView.findViewById(R.id.show_next_episode);
+        showNextEpisode.setText((CharSequence) rows.get(position)[3]);
+
+        TextView showNetwork = (TextView) mShowView.findViewById(R.id.show_network);
+        showNetwork.setText((CharSequence) rows.get(position)[4]);
+
+        TextView showLanguage = (TextView) mShowView.findViewById(R.id.show_language);
+        showLanguage.setText((CharSequence) rows.get(position)[6]);
+
         if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
             mAsyncImage.cancel(true);
         }
@@ -227,7 +235,7 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         mAsyncImage.execute(0, rows.get(position)[5], rows.get(position)[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
-        builder.setNegativeButton(android.R.string.cancel, onClickListener);
+        builder.setNegativeButton(R.string.close, onClickListener);
         builder.setView(mShowView);
         dialog = builder.create();
         dialog.show();

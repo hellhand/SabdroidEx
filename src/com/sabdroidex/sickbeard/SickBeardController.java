@@ -135,6 +135,7 @@ public final class SickBeardController {
                 url = url + "&" + xTraParam;
             }
         }
+        System.out.println(url);
         String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
         return result;
     }
