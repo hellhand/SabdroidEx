@@ -40,7 +40,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
     private static ArrayList<Object[]> rows;
     private Thread updater;
-    private ListView listView;
+    private ListView mQueueList;
 
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -56,8 +56,8 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                     rows.clear();
                     rows.addAll((ArrayList<Object[]>) result[1]);
 
-                    if (listView != null || getAdapter(listView) != null) {
-                        ArrayAdapter<Object[]> adapter = getAdapter(listView);
+                    if (mQueueList != null || getAdapter(mQueueList) != null) {
+                        ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
                         adapter.notifyDataSetChanged();
                     }
                     // Updating the header
@@ -146,11 +146,11 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
         LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
-        listView = (ListView) downloadView.findViewById(R.id.queueList);
+        mQueueList = (ListView) downloadView.findViewById(R.id.queueList);
         downloadView.removeAllViews();
 
-        listView.setAdapter(new QueueListRowAdapter(mParent, rows));
-        listView.setOnItemLongClickListener(this);
+        mQueueList.setAdapter(new QueueListRowAdapter(mParent, rows));
+        mQueueList.setOnItemLongClickListener(this);
 
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
@@ -161,7 +161,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         }
 
         if (rows.size() > 0) {
-            ArrayAdapter<Object[]> adapter = getAdapter(listView);
+            ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
             adapter.notifyDataSetChanged();
         }
         else {
@@ -171,7 +171,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         if (updater == null || updater.isInterrupted())
             startAutomaticUpdater();
 
-        return listView;
+        return mQueueList;
     }
 
     @Override

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -26,12 +31,12 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 
-public class HistoryFragment extends SABDFragment {
+public class HistoryFragment extends SABDFragment implements OnItemLongClickListener {
 
     private static JSONObject backupJsonObject;
 
     private static ArrayList<Object[]> rows;
-    private ListView listView;
+    private ListView mHistoryList;
 
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -49,8 +54,8 @@ public class HistoryFragment extends SABDFragment {
                     /**
                      * This might happens if a rotation occurs
                      */
-                    if (listView != null || getAdapter(listView) != null) {
-                        ArrayAdapter<Object[]> adapter = getAdapter(listView);
+                    if (mHistoryList != null || getAdapter(mHistoryList) != null) {
+                        ArrayAdapter<Object[]> adapter = getAdapter(mHistoryList);
                         adapter.notifyDataSetChanged();
                     }
 
@@ -136,12 +141,13 @@ public class HistoryFragment extends SABDFragment {
         SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
-        LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
+        LinearLayout historyView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
-        listView = (ListView) downloadView.findViewById(R.id.queueList);
-        downloadView.removeAllViews();
+        mHistoryList = (ListView) historyView.findViewById(R.id.queueList);
+        historyView.removeAllViews();
+        mHistoryList.setOnItemLongClickListener(this);
 
-        listView.setAdapter(new HistoryListRowAdapter(mParent, rows));
+        mHistoryList.setAdapter(new HistoryListRowAdapter(mParent, rows));
 
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
@@ -152,18 +158,53 @@ public class HistoryFragment extends SABDFragment {
         }
 
         if (rows.size() > 0) {
-            ArrayAdapter<Object[]> adapter = getAdapter(listView);
+            ArrayAdapter<Object[]> adapter = getAdapter(mHistoryList);
             adapter.notifyDataSetChanged();
         }
         else {
             manualRefreshHistory();
         }
 
-        return listView;
+        return mHistoryList;
     }
 
     @Override
     public void onFragmentActivated() {
         manualRefreshHistory();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+        AlertDialog dialog = null;
+        OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
+        builder.setNegativeButton(android.R.string.cancel, onClickListener);
+
+        String[] options = new String[1];
+        options[0] = getActivity().getResources().getString(R.string.menu_delete);
+
+        builder.setItems(options, new OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        SABnzbdController.removeHistoryItem(messageHandler, rows.get(position));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        dialog = builder.create();
+        dialog.show();
+        return true;
     }
 }

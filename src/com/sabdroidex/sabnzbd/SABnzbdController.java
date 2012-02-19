@@ -292,6 +292,14 @@ public final class SABnzbdController {
             url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT));
         }
 
+        url = url.replace("[COMMAND]", command);
+        url = url + getPreferencesParams();
+        for (String xTraParam : extraParams) {
+            if (xTraParam != null && !xTraParam.trim().equals("")) {
+                url = url + "&" + xTraParam;
+            }
+        }
+
         /**
          * Checking if there is an API Key from SickBeard to concatenate to the URL
          */
@@ -300,14 +308,8 @@ public final class SABnzbdController {
             url = url + "&apikey=" + apiKey;
         }
 
-        url = url.replace("[COMMAND]", command);
-        url = url + getPreferencesParams();
-        for (String xTraParam : extraParams) {
-            if (xTraParam != null && !xTraParam.trim().equals("")) {
-                url = url + "&" + xTraParam;
-            }
-        }
-        String result = new String(HttpUtil.getInstance().getDataAsString(url));
+        System.out.println(url);
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
         return result;
     }
 
@@ -371,7 +373,7 @@ public final class SABnzbdController {
 
                 try {
                     makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=delete", "value=" + item[4]);
-                    Thread.sleep(100);
+                    Thread.sleep(250);
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
@@ -384,12 +386,40 @@ public final class SABnzbdController {
             }
         };
         executingCommand = true;
+        sendUpdateMessageStatus(messageHandler, "");
+        thread.start();
+    }
 
-        if (paused)
-            sendUpdateMessageStatus(messageHandler, MESSAGE.RESUME.toString());
-        else
-            sendUpdateMessageStatus(messageHandler, MESSAGE.PAUSE.toString());
+    /**
+     * Removes a history item
+     */
+    public static void removeHistoryItem(final Handler messageHandler, final Object[] item) {
 
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+            return;
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    makeApiCall(MESSAGE.HISTORY.toString().toLowerCase(), "name=delete", "value=" + item[3]);
+                    Thread.sleep(250);
+                    SABnzbdController.refreshHistory(messageHandler);
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+        executingCommand = true;
+        sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
 }
