@@ -19,10 +19,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dip"
+                android:paddingLeft="10dip"
                 android:text="@string/header_speed"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_marginRight="2dip"
                 android:text="@string/separator"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:id="@+id/headerSpeed"
@@ -39,21 +39,21 @@
                 android:layout_height="wrap_content"
                 android:text="@string/header_speed_format"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/header_free"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,16 +62,16 @@
                 android:layout_marginRight="2dip"
                 android:text="@string/separator"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:id="@+id/freeSpace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dip"
+                android:layout_marginRight="10dip"
                 android:text="@string/header_free_format"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
         </TableRow>
 
         <TableRow
@@ -83,10 +83,10 @@
                 android:id="@+id/textTimeleft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dip"
+                android:paddingLeft="10dip"
                 android:text="@string/header_time_left"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
                 android:layout_marginRight="2dip"
                 android:text="@string/separator"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:id="@+id/headerEta"
@@ -103,21 +103,21 @@
                 android:layout_height="wrap_content"
                 android:text="@string/header_time_left_format"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/header_queue"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,16 +126,16 @@
                 android:layout_marginRight="2dip"
                 android:text="@string/separator"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
 
             <TextView
                 android:id="@+id/headerDownloaded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dip"
+                android:layout_marginRight="10dip"
                 android:text="@string/header_queue_format"
                 android:textColor="#000000"
-                android:textSize="12dip" />
+                android:textSize="14dip" />
         </TableRow>
     </TableLayout>
 

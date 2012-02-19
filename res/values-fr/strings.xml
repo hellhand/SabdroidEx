@@ -2,6 +2,18 @@
 <resources>
     <string name="app_name">SABDroidEx</string>
 
+	<string name="header_speed">Vitesse </string>
+	<string name="header_time_left">Temps restant </string>
+	<string name="header_free">Libre </string>
+	<string name="header_queue">Total </string>
+	
+	<string name="header_speed_format">--- KO/s</string>
+	<string name="header_time_left_format">--:--:--</string>
+	<string name="header_free_format">-- GO</string>
+	<string name="header_queue_format">--- / ---</string>
+
+	<string name="separator"> : </string>
+	
     <string name="setting_server_url">URL Serveur</string>
     <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
     <string name="setting_server_port">Port du Serveur</string>
@@ -47,13 +59,18 @@
 	
 	<string name="adapter_done">Terminé</string>
 	
+	<string name="close">Fermer</string>
+	
 	<string name="no_poster">Pas de poster trouvé</string>
 	
 	<string name="show_banner">Bannière</string>
     <string name="show_poster">Poster</string>	    	    
-    <string name="show_name">Name : </string>
+    <string name="show_name">Nom : </string>
     <string name="show_status">Statut : </string>
     <string name="show_quality">Qualité : </string>
+    <string name="show_network">Réseau : </string>
+    <string name="show_next_episode">Prochain Épisode : </string>
+	<string name="show_language">Langue : </string>
     
     <string name="add_dialog_title">Ajouter nouveau NZB</string>
     <string name="add_dialog_message">Entez l\'URL du NZB a être téléchargé : </string>
