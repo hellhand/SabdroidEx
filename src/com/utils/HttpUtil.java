@@ -30,8 +30,8 @@ public class HttpUtil {
     private HttpUtil() {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 60000);
-        HttpConnectionParams.setSoTimeout(params, 60000);
+        HttpConnectionParams.setConnectionTimeout(params, 5000);
+        HttpConnectionParams.setSoTimeout(params, 5000);
     }
 
     public static HttpUtil getInstance() {
@@ -81,7 +81,7 @@ public class HttpUtil {
      * @return The content of the URL as a String
      * @throws ServerConnectinoException
      */
-    public synchronized String getDataAsString(String url) throws RuntimeException {
+    public String getDataAsString(String url) throws RuntimeException {
         try {
 
             String responseBody = "";
@@ -117,7 +117,7 @@ public class HttpUtil {
         }
     }
 
-    private synchronized URLConnection tryOpenConnection(String url) throws RuntimeException {
+    private URLConnection tryOpenConnection(String url) throws RuntimeException {
         URLConnection connection = null;
         try {
             connection = new URL("https://" + url).openConnection();
@@ -146,7 +146,7 @@ public class HttpUtil {
      * @return The content of the URL as a byte[]
      * @throws ServerConnectinoException
      */
-    public synchronized byte[] getDataAsByteArray(String url) {
+    public byte[] getDataAsByteArray(String url) {
         try {
             byte[] dat = null;
             URLConnection urlc;
@@ -201,7 +201,7 @@ public class HttpUtil {
      * @return The content of the URL as a char[]
      * @throws ServerConnectinoException
      */
-    public synchronized char[] getDataAsCharArray(String url) {
+    public char[] getDataAsCharArray(String url) {
         try {
             char[] dat = null;
             URLConnection urlc;

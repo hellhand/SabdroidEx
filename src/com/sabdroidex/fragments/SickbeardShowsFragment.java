@@ -132,10 +132,10 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
-        LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
+        LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
-        mListView = (ListView) downloadView.findViewById(R.id.queueList);
-        downloadView.removeAllViews();
+        mListView = (ListView) showView.findViewById(R.id.queueList);
+        showView.removeAllViews();
 
         mListView.setAdapter(new SickBeardShowsListRowAdapter(mParent, rows));
         mListView.setOnItemLongClickListener(this);

@@ -91,6 +91,10 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
     protected boolean paused = false;
 
+    public QueueFragment() {
+
+    }
+
     public QueueFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
     }

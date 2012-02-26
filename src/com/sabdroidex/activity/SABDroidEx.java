@@ -367,7 +367,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
                 OnClickListener clickListener = new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if (whichButton == 0) {
+                        if (whichButton == Dialog.BUTTON1) {
                             showSettings();
                             manualRefresh();
                         }
