@@ -15,23 +15,28 @@ import com.utils.HttpUtil;
 
 public final class SABnzbdController {
 
-    public static enum MESSAGE {
-        ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, UPDATE;
-    }
-    private static boolean executingCommand = false;
-
-    private static boolean executingRefreshHistory = false;
-    private static boolean executingRefreshQuery = false;
+    public static final int MESSAGE_UPDATE_QUEUE = 1;
+    public static final int MESSAGE_UPDATE_HISTORY = 2;
     public static final int MESSAGE_STATUS_UPDATE = 3;
 
-    public static final int MESSAGE_UPDATE_HISTORY = 2;
-    public static final int MESSAGE_UPDATE_QUEUE = 1;
-    public static boolean paused = false;
+    private static boolean executingCommand = false;
+    private static boolean executingRefreshHistory = false;
+    private static boolean executingRefreshQuery = false;
 
+    public static boolean paused = false;
     public static double speed = 0.0;
 
     private static final String URL_TEMPLATE = "[SERVER_URL]/api?mode=[COMMAND]&output=json";
 
+    public static enum MESSAGE {
+        ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, UPDATE;
+    }
+
+    /**
+     * 
+     * @param messageHandler
+     * @param value
+     */
     public static void addFile(final Handler messageHandler, final String value) {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
@@ -58,6 +63,10 @@ public final class SABnzbdController {
         thread.start();
     }
 
+    /**
+     * 
+     * @return
+     */
     private static String getPreferencesParams() {
         String username = Preferences.get(Preferences.SERVER_USERNAME);
         String password = Preferences.get(Preferences.SERVER_PASSWORD);
@@ -72,10 +81,25 @@ public final class SABnzbdController {
         return credentials;
     }
 
+    /**
+     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * 
+     * @param command The type of command that will be sent to SickBeard
+     * @return The result of the API call
+     * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
+     */
     public static String makeApiCall(String command) throws RuntimeException {
         return makeApiCall(command, "");
     }
 
+    /**
+     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * 
+     * @param command The type of command that will be sent to SickBeard
+     * @param extraParams Any parameter that will have to be part of the URL
+     * @return The result of the API call
+     * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
+     */
     public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
 
         String url = URL_TEMPLATE;
@@ -113,6 +137,9 @@ public final class SABnzbdController {
 
     /**
      * Pauses or resumes a queue item depending on the current status
+     * 
+     * @param messageHandler
+     * @param item
      */
     public static void pauseResumeItem(final Handler messageHandler, final Object[] item) {
 
@@ -156,6 +183,8 @@ public final class SABnzbdController {
 
     /**
      * Pauses or resumes the queue depending on the current status
+     * 
+     * @param messageHandler
      */
     public static void pauseResumeQueue(final Handler messageHandler) {
         // Already running or settings not ready
@@ -196,6 +225,10 @@ public final class SABnzbdController {
         thread.start();
     }
 
+    /**
+     * 
+     * @param messageHandler
+     */
     public static void refreshHistory(final Handler messageHandler) {
         // Already running or settings not ready
         if (executingRefreshHistory || !Preferences.isSet(Preferences.SERVER_URL))
@@ -269,6 +302,10 @@ public final class SABnzbdController {
         thread.start();
     }
 
+    /**
+     * 
+     * @param messageHandler
+     */
     public static void refreshQueue(final Handler messageHandler) {
 
         // Already running or settings not ready
@@ -347,6 +384,9 @@ public final class SABnzbdController {
 
     /**
      * Removes a history item
+     * 
+     * @param messageHandler
+     * @param item
      */
     public static void removeHistoryItem(final Handler messageHandler, final Object[] item) {
 
@@ -380,6 +420,9 @@ public final class SABnzbdController {
 
     /**
      * Removes a queue item
+     * 
+     * @param messageHandler
+     * @param item
      */
     public static void removeQueueItem(final Handler messageHandler, final Object[] item) {
 
@@ -413,6 +456,9 @@ public final class SABnzbdController {
 
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar
+     * 
+     * @param messageHandler The message handler to be notified
+     * @param text The text to write in the message
      */
     private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
 

@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,6 +19,8 @@ import com.utils.HttpUtil;
 public final class SickBeardController {
 
     public static final int MESSAGE_UPDATE = 1;
+    public static final int MESSAGE_STATUS_UPDATE = 3;
+    public static final int MESSAGE_SEARCH = 4;
 
     private static boolean executingRefresh = false;
     private static boolean executingCommand = false;
@@ -25,9 +29,122 @@ public final class SickBeardController {
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
 
     public static enum MESSAGE {
-        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, ADD
+        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB
     }
 
+    /**
+     * Adds a show to SickBeard. For the location the config setting (default) is used -- if valid
+     * 
+     * @param messageHandler The message handler to be notified
+     * @param value The value which will be used to perform the action
+     */
+    public static void addShow(final Handler messageHandler, final String value) {
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+            return;
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Object results[] = new Object[2];
+                    String addData = makeApiCall(MESSAGE.SHOW_ADDNEW.toString().toLowerCase(), "tvdbid=" + value);
+
+                    /**
+                     * Getting the values from the JSON Object
+                     */
+                    JSONObject jsonObject = new JSONObject(addData);
+
+                    results[0] = jsonObject;
+                    results[1] = jsonObject.getString("result");
+
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE_UPDATE;
+                    message.obj = results;
+                    message.sendToTarget();
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        sendUpdateMessageStatus(messageHandler, MESSAGE.SHOW_ADDNEW.toString());
+
+        thread.start();
+    }
+
+    /**
+     * Search for a show to add to SickBeard.
+     * 
+     * @param messageHandler The message handler to be notified
+     * @param value The value which will be used to perform the action
+     */
+    public static void searchShow(final Handler messageHandler, final String value) {
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+            return;
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Object results[] = new Object[2];
+                    String searchData = makeApiCall(MESSAGE.SB_SEARCHTVDB.toString().toLowerCase(), "name=" + value, "lang=en");
+
+                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
+
+                    /**
+                     * Getting the values from the JSON Object
+                     */
+                    JSONObject jsonObject = new JSONObject(searchData);
+                    jsonObject = jsonObject.getJSONObject("data");
+                    results[0] = jsonObject;
+
+                    JSONArray jobs = jsonObject.getJSONArray("results");
+                    rows.clear();
+
+                    for (int i = 0; i < jobs.length(); i++) {
+                        Object[] rowValues = new Object[3];
+                        rowValues[0] = jobs.getJSONObject(i).getString("first_aired");
+                        rowValues[1] = jobs.getJSONObject(i).getString("name");
+                        rowValues[2] = jobs.getJSONObject(i).getString("tvdbid");
+                        rows.add(rowValues);
+                    }
+
+                    results[1] = rows;
+
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE_SEARCH;
+                    message.obj = results;
+                    message.sendToTarget();
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        sendUpdateMessageStatus(messageHandler, MESSAGE.SB_SEARCHTVDB.toString());
+
+        thread.start();
+    }
+
+    /**
+     * Refresh the shows that are in SickBeard
+     * 
+     * @param messageHandler The message handler to be notified
+     */
     public static void refreshShows(final Handler messageHandler) {
 
         // Already running or settings not ready
@@ -100,6 +217,14 @@ public final class SickBeardController {
         thread.start();
     }
 
+    /**
+     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * 
+     * @param command The type of command that will be sent to SickBeard
+     * @param extraParams Any parameter that will have to be part of the URL
+     * @return The result of the API call
+     * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
+     */
     public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
 
         /**
@@ -140,6 +265,13 @@ public final class SickBeardController {
         return result;
     }
 
+    /**
+     * This function returns the URL of the banner for a given show
+     * 
+     * @param command command The type of command that will be sent to SickBeard
+     * @param tvdbid The TvDBid of the show to get the banner for
+     * @return The URL of the banner
+     */
     public static String getBannerURL(String command, Integer tvdbid) {
 
         /**
@@ -174,6 +306,13 @@ public final class SickBeardController {
         return url;
     }
 
+    /**
+     * This function returns the URL of the poster for a given show
+     * 
+     * @param command command The type of command that will be sent to SickBeard
+     * @param tvdbid The TvDBid of the show to get the poster for
+     * @return The URL of the poster
+     */
     public static String getPosterURL(String command, Integer tvdbid) {
         String url = URL_TVDB;
         url = url.replace("[TVDBID]", tvdbid + "-1.jpg");
@@ -181,6 +320,11 @@ public final class SickBeardController {
         return url;
     }
 
+    /**
+     * 
+     * @return
+     */
+    @SuppressWarnings("unused")
     private static String getPreferencesParams() {
         String username = Preferences.get(Preferences.SERVER_USERNAME);
         String password = Preferences.get(Preferences.SERVER_PASSWORD);
@@ -195,7 +339,29 @@ public final class SickBeardController {
         return credentials;
     }
 
+    /**
+     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * 
+     * @param command The type of command that will be sent to SickBeard
+     * @return The result of the API call
+     * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
+     */
     public static String makeApiCall(String command) throws RuntimeException {
         return makeApiCall(command, "");
+    }
+
+    /**
+     * Sends a message to the calling {@link Activity} to update it's status bar
+     * 
+     * @param messageHandler The message handler to be notified
+     * @param text The text to write in the message
+     */
+    private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
+
+        Message message = new Message();
+        message.setTarget(messageHandler);
+        message.what = MESSAGE_STATUS_UPDATE;
+        message.obj = text;
+        message.sendToTarget();
     }
 }

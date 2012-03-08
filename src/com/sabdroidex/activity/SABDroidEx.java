@@ -132,6 +132,11 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         super.onResume();
     }
 
+    /**
+     * 
+     * @param queryIntent
+     * @param entryPoint
+     */
     private void doSearchQuery(final Intent queryIntent, final String entryPoint) {
         Bundle bundle = queryIntent.getExtras();
         Set<String> keySet = bundle.keySet();
@@ -395,12 +400,6 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         data[2] = showsRows;
         data[3] = backupJsonObject;
         return data;
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onPause();
     }
 
     /**

@@ -9,9 +9,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -47,9 +48,11 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
 
     private static File mExtFolder = Environment.getExternalStorageDirectory();
     private static ArrayList<Object[]> rows;
+    private static Bitmap mEmptyPoster;
     private ListView mListView;
     private ScrollView mShowView;
     private AsyncImage mAsyncImage;
+    private SickBeardShowsListRowAdapter mSickBeardShowsListRowAdapter;
 
     // Instantiating the Handler associated with the main thread.
     private Handler messageHandler = new Handler() {
@@ -87,6 +90,9 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
 
     public SickbeardShowsFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
+        if (mEmptyPoster == null) {
+            mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster);
+        }
     }
 
     public SickbeardShowsFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> historyRows) {
@@ -137,7 +143,8 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         mListView = (ListView) showView.findViewById(R.id.queueList);
         showView.removeAllViews();
 
-        mListView.setAdapter(new SickBeardShowsListRowAdapter(mParent, rows));
+        mSickBeardShowsListRowAdapter = new SickBeardShowsListRowAdapter(mParent, rows);
+        mListView.setAdapter(mSickBeardShowsListRowAdapter);
         mListView.setOnItemLongClickListener(this);
 
         // Tries to fetch recoverable data
@@ -155,6 +162,42 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         }
 
         return mListView;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        mSickBeardShowsListRowAdapter.clearBitmaps();
+        super.finalize();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mSickBeardShowsListRowAdapter.clearBitmaps();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        mSickBeardShowsListRowAdapter.clearBitmaps();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        mSickBeardShowsListRowAdapter.clearBitmaps();
+        super.onDetach();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        mSickBeardShowsListRowAdapter.clearBitmaps();
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onPause() {
+        mSickBeardShowsListRowAdapter.clearBitmaps();
+        super.onPause();
     }
 
     @Override
@@ -181,7 +224,7 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         mShowView = (ScrollView) inflater.inflate(R.layout.show_status, null);
 
         ImageView showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
-        showPoster.setImageResource(R.drawable.temp_poster);
+        showPoster.setImageBitmap(mEmptyPoster);
 
         TextView showName = (TextView) mShowView.findViewById(R.id.show_name);
         showName.setText((CharSequence) rows.get(position)[0]);
@@ -277,9 +320,16 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
             File folder = new File(folderPath);
             folder.mkdirs();
 
-            Options BgOptions = new Options();
+            BitmapFactory.Options BgOptions = new BitmapFactory.Options();
             BgOptions.inPurgeable = true;
-            Bitmap bitmap = BitmapFactory.decodeFile(folderPath + File.separator + "poster.jpg", BgOptions);
+            BgOptions.inPreferredConfig = Config.RGB_565;
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeFile(folderPath + File.separator + "poster.jpg", BgOptions);
+            }
+            catch (Exception e) {
+                Log.w("ERROR", " " + e.getLocalizedMessage());
+            }
 
             /**
              * The bitmap object is null if the BitmapFactory has been unable to decode the file. Hopefully this won't happen often
