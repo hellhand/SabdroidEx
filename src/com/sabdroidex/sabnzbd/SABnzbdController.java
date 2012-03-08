@@ -17,7 +17,7 @@ public final class SABnzbdController {
 
     public static final int MESSAGE_UPDATE_QUEUE = 1;
     public static final int MESSAGE_UPDATE_HISTORY = 2;
-    public static final int MESSAGE_STATUS_UPDATE = 3;
+    public static final int MESSAGE_UPDATE_STATUS = 3;
 
     private static boolean executingCommand = false;
     private static boolean executingRefreshHistory = false;
@@ -58,8 +58,7 @@ public final class SABnzbdController {
             }
         };
 
-        sendUpdateMessageStatus(messageHandler, MESSAGE.ADDURL.toString());
-
+        sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
         thread.start();
     }
 
@@ -166,7 +165,6 @@ public final class SABnzbdController {
                 }
                 finally {
                     executingCommand = false;
-
                     sendUpdateMessageStatus(messageHandler, "");
                 }
             }
@@ -210,7 +208,6 @@ public final class SABnzbdController {
                 }
                 finally {
                     executingCommand = false;
-
                     sendUpdateMessageStatus(messageHandler, "");
                 }
             }
@@ -235,6 +232,7 @@ public final class SABnzbdController {
             return;
         Thread thread = new Thread() {
 
+            @Override
             public void run() {
 
                 try {
@@ -296,9 +294,7 @@ public final class SABnzbdController {
         };
 
         executingRefreshHistory = true;
-
         sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
-
         thread.start();
     }
 
@@ -314,6 +310,7 @@ public final class SABnzbdController {
 
         Thread thread = new Thread() {
 
+            @Override
             public void run() {
 
                 try {
@@ -376,9 +373,7 @@ public final class SABnzbdController {
         };
 
         executingRefreshQuery = true;
-
         sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
-
         thread.start();
     }
 
@@ -413,6 +408,7 @@ public final class SABnzbdController {
                 }
             }
         };
+
         executingCommand = true;
         sendUpdateMessageStatus(messageHandler, "");
         thread.start();
@@ -464,7 +460,7 @@ public final class SABnzbdController {
 
         Message message = new Message();
         message.setTarget(messageHandler);
-        message.what = MESSAGE_STATUS_UPDATE;
+        message.what = MESSAGE_UPDATE_STATUS;
         message.obj = text;
         message.sendToTarget();
     }

@@ -31,6 +31,7 @@ import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.SickbeardShowsFragment;
 import com.sabdroidex.sabnzbd.SABnzbdController;
+import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
@@ -308,13 +309,96 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
                 SABnzbdController.pauseResumeQueue(queue.getMessageHandler());
                 return true;
             case R.id.menu_add_nzb:
-                addDownloadPrompt();
+                addPrompt();
                 return true;
             case R.id.menu_search:
                 onSearchRequested();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addPrompt() {
+
+        AlertDialog dialog = null;
+        OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setNegativeButton(android.R.string.cancel, onClickListener);
+
+        String[] options = null;
+        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+            options = new String[2];
+            options[0] = getResources().getString(R.string.add_nzb_dialog_title);
+            options[1] = getResources().getString(R.string.add_show_dialog_title);
+        }
+        else {
+            options = new String[1];
+            options[0] = getResources().getString(R.string.add_nzb_dialog_title);
+        }
+        builder.setItems(options, new OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        addDownloadPrompt();
+                        break;
+                    case 1:
+                        addShowPrompt();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Displays the Props dialog when the user wants to add a download
+     */
+    private void addShowPrompt() {
+        /**
+         * If nothing is configured we display the configuration pop-up
+         */
+        if (!Preferences.isSet("server_url")) {
+            showDialog(R.id.dialog_setup_prompt);
+            return;
+        }
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle(R.string.add_show_dialog_title);
+        alert.setMessage(R.string.add_show_dialog_message);
+
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                SickBeardController.searchShow(shows.getMessageHandler(), value);
+            }
+        });
+
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 
     /**
@@ -331,14 +415,15 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle(R.string.add_dialog_title);
-        alert.setMessage(R.string.add_dialog_message);
+        alert.setTitle(R.string.add_nzb_dialog_title);
+        alert.setMessage(R.string.add_nzb_dialog_message);
 
         final EditText input = new EditText(this);
         alert.setView(input);
 
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
+            @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 SABnzbdController.addFile(queue.getMessageHandler(), value);
@@ -347,6 +432,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
 
         alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
+            @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
@@ -365,12 +451,14 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
     /**
      * Creating of the global Dialogs Specific dialogs can be handled here too if possible
      */
+    @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case R.id.dialog_setup_prompt:
 
                 OnClickListener clickListener = new DialogInterface.OnClickListener() {
 
+                    @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
                         if (whichButton == Dialog.BUTTON1) {
                             showSettings();

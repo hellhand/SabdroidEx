@@ -39,10 +39,12 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
     private ListView mHistoryList;
 
     // Instantiating the Handler associated with the main thread.
-    private Handler messageHandler = new Handler() {
+    private final Handler messageHandler = new Handler() {
 
+        @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
+            System.out.println("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[=>" + msg.what);
             switch (msg.what) {
                 case SABnzbdController.MESSAGE_UPDATE_HISTORY:
 
@@ -72,7 +74,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
                     }
                     break;
 
-                case SABnzbdController.MESSAGE_STATUS_UPDATE:
+                case SABnzbdController.MESSAGE_UPDATE_STATUS:
                     try {
                         ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
                     }
@@ -96,7 +98,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         mParent = fragmentActivity;
     }
 
-    public HistoryFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> historyRows) {
+    public HistoryFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
     }

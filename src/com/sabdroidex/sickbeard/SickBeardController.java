@@ -33,7 +33,8 @@ public final class SickBeardController {
     }
 
     /**
-     * Adds a show to SickBeard. For the location the config setting (default) is used -- if valid
+     * Adds a show to SickBeard. For the location the configuration setting (default) is used -- if valid. The result sent to the {@link Handler} will be a
+     * {@link String} containing the status.
      * 
      * @param messageHandler The message handler to be notified
      * @param value The value which will be used to perform the action
@@ -80,7 +81,8 @@ public final class SickBeardController {
     }
 
     /**
-     * Search for a show to add to SickBeard.
+     * Search for a show to add to SickBeard. The result sent to the {@link Handler} will be an array of all the shows matching. Each of these shows is
+     * presented in the form of an {@link Object[]} with the following informations : First Time Aired, Name, TvDBid.
      * 
      * @param messageHandler The message handler to be notified
      * @param value The value which will be used to perform the action
@@ -141,7 +143,7 @@ public final class SickBeardController {
     }
 
     /**
-     * Refresh the shows that are in SickBeard
+     * Refresh the shows that are in SickBeard. The result sent to the {@link Handler} will be an array of all the shows.
      * 
      * @param messageHandler The message handler to be notified
      */
@@ -153,6 +155,7 @@ public final class SickBeardController {
 
         Thread thread = new Thread() {
 
+            @Override
             public void run() {
 
                 try {

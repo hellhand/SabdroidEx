@@ -71,9 +71,14 @@
     <string name="show_network">Network : </string>
     <string name="show_next_episode">Next Episode : </string>
 	<string name="show_language">Language : </string>
-    	    
-    <string name="add_dialog_title">Add new NZB</string>
-    <string name="add_dialog_message">Enter the NZB url to be downloaded:</string>
+    
+	<string name="add_dialog_title">Add</string>
+	
+	<string name="add_show_dialog_title">Add new Show</string>
+	<string name="add_show_dialog_message">Enter the Name of the Show to add to Sickbeard:</string>
+	    
+    <string name="add_nzb_dialog_title">Add new NZB</string>
+    <string name="add_nzb_dialog_message">Enter the URL of the NZB to download via SABnzbd:</string>
     
 	<string name="config">Would you like to configure SABDroidEx now ?</string>
 </resources>

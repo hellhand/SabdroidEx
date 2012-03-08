@@ -43,11 +43,12 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     private ListView mQueueList;
 
     // Instantiating the Handler associated with the main thread.
-    private Handler messageHandler = new Handler() {
+    private final Handler messageHandler = new Handler() {
 
         @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
+            System.out.println("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[=>" + msg.what);
             switch (msg.what) {
                 case SABnzbdController.MESSAGE_UPDATE_QUEUE:
 
@@ -73,7 +74,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                     }
                     break;
 
-                case SABnzbdController.MESSAGE_STATUS_UPDATE:
+                case SABnzbdController.MESSAGE_UPDATE_STATUS:
                     try {
                         ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
                     }
@@ -99,7 +100,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         mParent = fragmentActivity;
     }
 
-    public QueueFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> downloadRows) {
+    public QueueFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> downloadRows) {
         this(sabDroidEx);
         rows = downloadRows;
     }
@@ -132,7 +133,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
-
+        System.out.println("manualRefreshQueue()");
         SABnzbdController.refreshQueue(messageHandler);
     }
 

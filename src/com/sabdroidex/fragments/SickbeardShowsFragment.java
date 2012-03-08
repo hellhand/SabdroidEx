@@ -36,7 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
-import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.SickBeardShowsListRowAdapter;
 import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
@@ -55,14 +54,16 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
     private SickBeardShowsListRowAdapter mSickBeardShowsListRowAdapter;
 
     // Instantiating the Handler associated with the main thread.
-    private Handler messageHandler = new Handler() {
+    private final Handler messageHandler = new Handler() {
 
+        @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
+            Object result[];
             switch (msg.what) {
                 case SickBeardController.MESSAGE_UPDATE:
 
-                    Object result[] = (Object[]) msg.obj;
+                    result = (Object[]) msg.obj;
                     // Updating rows
                     rows.clear();
                     rows.addAll((ArrayList<Object[]>) result[1]);
@@ -77,6 +78,10 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
 
                     break;
 
+                case SickBeardController.MESSAGE_SEARCH:
+                    result = (Object[]) msg.obj;
+                    selectShowPrompt(result);
+                    break;
                 default:
                     break;
             }
@@ -95,9 +100,13 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         }
     }
 
-    public SickbeardShowsFragment(SABDroidEx sabDroidEx, ArrayList<Object[]> historyRows) {
+    public SickbeardShowsFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
+    }
+
+    public Handler getMessageHandler() {
+        return messageHandler;
     }
 
     @SuppressWarnings("unchecked")
@@ -285,7 +294,7 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         return true;
     }
 
-    private Handler handler = new Handler() {
+    private final Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
@@ -367,5 +376,30 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
 
             return bitmap;
         }
+    }
+
+    /**
+     * Displays the Props dialog when the user wants to add a download
+     */
+    public void selectShowPrompt(Object[] shows) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
+
+        alert.setTitle(R.string.add_show_dialog_title);
+        alert.setMessage(R.string.add_show_dialog_message);
+
+        final ListView listView = new ListView(mParent);
+        listView.setAdapter(new ArrayAdapter<Object>(mParent, 0, shows));
+        alert.setView(listView);
+
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 }
