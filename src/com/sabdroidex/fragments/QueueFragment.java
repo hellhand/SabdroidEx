@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -48,43 +49,36 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
-            System.out.println("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[=>" + msg.what);
-            switch (msg.what) {
-                case SABnzbdController.MESSAGE_UPDATE_QUEUE:
+            if (msg.what == SABnzbdController.MESSAGE.QUEUE.ordinal()) {
 
-                    Object result[] = (Object[]) msg.obj;
-                    // Updating rows
-                    rows.clear();
-                    rows.addAll((ArrayList<Object[]>) result[1]);
+                Object result[] = (Object[]) msg.obj;
+                // Updating rows
+                rows.clear();
+                rows.addAll((ArrayList<Object[]>) result[1]);
 
-                    if (mQueueList != null || getAdapter(mQueueList) != null) {
-                        ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
-                        adapter.notifyDataSetChanged();
-                    }
-                    // Updating the header
-                    JSONObject jsonObject = (JSONObject) result[0];
-                    backupJsonObject = jsonObject;
+                if (mQueueList != null || getAdapter(mQueueList) != null) {
+                    ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
+                    adapter.notifyDataSetChanged();
+                }
+                // Updating the header
+                JSONObject jsonObject = (JSONObject) result[0];
+                backupJsonObject = jsonObject;
 
-                    try {
-                        ((SABDroidEx) mParent).updateLabels(jsonObject);
-                        ((SABDroidEx) mParent).updateStatus("");
-                    }
-                    catch (Exception e) {
-                        Log.w("ERROR", " " + e.getLocalizedMessage());
-                    }
-                    break;
-
-                case SABnzbdController.MESSAGE_UPDATE_STATUS:
-                    try {
-                        ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
-                    }
-                    catch (Exception e) {
-                        Log.w("ERROR", " " + e.getLocalizedMessage());
-                    }
-                    break;
-
-                default:
-                    break;
+                try {
+                    ((SABDroidEx) mParent).updateLabels(jsonObject);
+                    ((SABDroidEx) mParent).updateStatus(true);
+                }
+                catch (Exception e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+            }
+            if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
+                try {
+                    ((SABDroidEx) mParent).updateStatus(false);
+                }
+                catch (Exception e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
             }
         }
     };
@@ -129,11 +123,10 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
      */
     public void manualRefreshQueue() {
         // First run setup
-        if (!Preferences.isSet("server_url")) {
+        if (!Preferences.isSet(Preferences.SERVER_URL)) {
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
-        System.out.println("manualRefreshQueue()");
         SABnzbdController.refreshQueue(messageHandler);
     }
 
@@ -262,5 +255,45 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             }
         };
         updater.start();
+    }
+
+    /**
+     * Displays the Props dialog when the user wants to add a download
+     */
+    public void addDownloadPrompt() {
+        /**
+         * If nothing is configured we display the configuration pop-up
+         */
+        if (!Preferences.isSet(Preferences.SERVER_URL)) {
+            mParent.showDialog(R.id.dialog_setup_prompt);
+            return;
+        }
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
+
+        alert.setTitle(R.string.add_nzb_dialog_title);
+        alert.setMessage(R.string.add_nzb_dialog_message);
+
+        final EditText input = new EditText(mParent);
+        alert.setView(input);
+
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                SABnzbdController.addByURL(getMessageHandler(), value);
+            }
+        });
+
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 }

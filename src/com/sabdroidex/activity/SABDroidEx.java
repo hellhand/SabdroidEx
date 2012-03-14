@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.actionbarcompat.ActionBarActivity;
@@ -29,9 +28,8 @@ import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.QueueFragment;
-import com.sabdroidex.fragments.SickbeardShowsFragment;
+import com.sabdroidex.fragments.ShowsFragment;
 import com.sabdroidex.sabnzbd.SABnzbdController;
-import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
@@ -41,7 +39,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * Main SABDroid Activity
  */
-public class SABDroidEx extends ActionBarActivity implements android.view.View.OnClickListener {
+public class SABDroidEx extends ActionBarActivity {
 
     /**
      * This is the data that will be retrieved and saved each time the application starts and stops is is used as cache.
@@ -57,24 +55,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
      */
     private QueueFragment queue;
     private HistoryFragment history;
-    private SickbeardShowsFragment shows;
-
-    SearchViewCompat.OnQueryTextListenerCompat onQueryTextListenerCompat = new SearchViewCompat.OnQueryTextListenerCompat() {
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            // TODO Auto-generated method stub
-            System.out.println("Typed text : " + newText);
-            return super.onQueryTextChange(newText);
-        }
-
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            // TODO Auto-generated method stub
-            System.out.println("Query text : " + query);
-            return super.onQueryTextSubmit(query);
-        }
-    };
+    private ShowsFragment shows;
 
     /**
      * Creating the elements of the screen
@@ -120,7 +101,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         if (Preferences.isEnabled(Preferences.SICKBEARD) && shows == null) {
             ViewPager pager = (ViewPager) findViewById(R.id.pager);
             SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
-            shows = new SickbeardShowsFragment(this, showsRows);
+            shows = new ShowsFragment(this, showsRows);
             shows.setRetainInstance(true);
             if (!pagerAdapter.contains(shows)) {
                 pagerAdapter.addFragment(shows);
@@ -131,6 +112,12 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
             pager.refreshDrawableState();
         }
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        // TODO
+        super.onStop();
     }
 
     /**
@@ -154,7 +141,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         history = new HistoryFragment(this, historyRows);
         history.setRetainInstance(true);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            shows = new SickbeardShowsFragment(this, showsRows);
+            shows = new ShowsFragment(this, showsRows);
             shows.setRetainInstance(true);
         }
 
@@ -190,13 +177,13 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
      */
     void manualRefresh() {
         // First run setup
-        if (!Preferences.isSet("server_url")) {
+        if (!Preferences.isSet(Preferences.SERVER_URL)) {
             showDialog(R.id.dialog_setup_prompt);
             return;
         }
         queue.manualRefreshQueue();
         history.manualRefreshHistory();
-        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+        if (Preferences.isSet(Preferences.SICKBEARD_URL) && Preferences.isEnabled(Preferences.SICKBEARD)) {
             shows.manualRefreshShows();
         }
         getActionBarHelper().setRefreshActionItemState(true);
@@ -237,7 +224,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
         setupSearchView(menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     /**
@@ -263,7 +250,6 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            System.out.println(newText);
             return super.onQueryTextChange(newText);
         }
 
@@ -347,10 +333,10 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        addDownloadPrompt();
+                        queue.addDownloadPrompt();
                         break;
                     case 1:
-                        addShowPrompt();
+                        shows.addShowPrompt();
                         break;
                     default:
                         break;
@@ -359,86 +345,6 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
         });
         dialog = builder.create();
         dialog.show();
-    }
-
-    /**
-     * Displays the Props dialog when the user wants to add a download
-     */
-    private void addShowPrompt() {
-        /**
-         * If nothing is configured we display the configuration pop-up
-         */
-        if (!Preferences.isSet("server_url")) {
-            showDialog(R.id.dialog_setup_prompt);
-            return;
-        }
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle(R.string.add_show_dialog_title);
-        alert.setMessage(R.string.add_show_dialog_message);
-
-        final EditText input = new EditText(this);
-        alert.setView(input);
-
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                SickBeardController.searchShow(shows.getMessageHandler(), value);
-            }
-        });
-
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
-    }
-
-    /**
-     * Displays the Props dialog when the user wants to add a download
-     */
-    private void addDownloadPrompt() {
-        /**
-         * If nothing is configured we display the configuration pop-up
-         */
-        if (!Preferences.isSet("server_url")) {
-            showDialog(R.id.dialog_setup_prompt);
-            return;
-        }
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle(R.string.add_nzb_dialog_title);
-        alert.setMessage(R.string.add_nzb_dialog_message);
-
-        final EditText input = new EditText(this);
-        alert.setView(input);
-
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                SABnzbdController.addFile(queue.getMessageHandler(), value);
-            }
-        });
-
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
     }
 
     /**
@@ -478,7 +384,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
     }
 
     /**
-     * This function will Serialize the current data for reuse the next time it is restarted
+     * This function will Serialise the current data for reuse the next time it is restarted
      */
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
@@ -495,19 +401,7 @@ public class SABDroidEx extends ActionBarActivity implements android.view.View.O
      * 
      * @param message
      */
-    public void updateStatus(String message) {
-        if (message.equals(SABnzbdController.MESSAGE.UPDATE.toString())) {
-            getActionBarHelper().setRefreshActionItemState(true);
-        }
-        else {
-            getActionBarHelper().setRefreshActionItemState(false);
-        }
+    public void updateStatus(boolean showAsUpdate) {
+        getActionBarHelper().setRefreshActionItemState(showAsUpdate);
     }
-
-    @Override
-    public void onClick(View v) {
-        // TODO Auto-generated method stub
-
-    }
-
 }

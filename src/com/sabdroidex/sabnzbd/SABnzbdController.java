@@ -15,10 +15,6 @@ import com.utils.HttpUtil;
 
 public final class SABnzbdController {
 
-    public static final int MESSAGE_UPDATE_QUEUE = 1;
-    public static final int MESSAGE_UPDATE_HISTORY = 2;
-    public static final int MESSAGE_UPDATE_STATUS = 3;
-
     private static boolean executingCommand = false;
     private static boolean executingRefreshHistory = false;
     private static boolean executingRefreshQuery = false;
@@ -37,7 +33,7 @@ public final class SABnzbdController {
      * @param messageHandler
      * @param value
      */
-    public static void addFile(final Handler messageHandler, final String value) {
+    public static void addByURL(final Handler messageHandler, final String value) {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
@@ -58,7 +54,7 @@ public final class SABnzbdController {
             }
         };
 
-        sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
+        sendUpdateMessageStatus(messageHandler, MESSAGE.ADDURL.toString());
         thread.start();
     }
 
@@ -129,7 +125,6 @@ public final class SABnzbdController {
             url = url + "&apikey=" + apiKey;
         }
 
-        System.out.println(url);
         String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
         return result;
     }
@@ -273,7 +268,7 @@ public final class SABnzbdController {
 
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE_UPDATE_HISTORY;
+                    message.what = MESSAGE.HISTORY.ordinal();
                     message.obj = results;
                     message.sendToTarget();
 
@@ -294,7 +289,7 @@ public final class SABnzbdController {
         };
 
         executingRefreshHistory = true;
-        sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
+        sendUpdateMessageStatus(messageHandler, MESSAGE.HISTORY.toString());
         thread.start();
     }
 
@@ -352,7 +347,7 @@ public final class SABnzbdController {
 
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE_UPDATE_QUEUE;
+                    message.what = MESSAGE.QUEUE.ordinal();
                     message.obj = results;
                     message.sendToTarget();
 
@@ -373,7 +368,7 @@ public final class SABnzbdController {
         };
 
         executingRefreshQuery = true;
-        sendUpdateMessageStatus(messageHandler, MESSAGE.UPDATE.toString());
+        sendUpdateMessageStatus(messageHandler, MESSAGE.QUEUE.toString());
         thread.start();
     }
 
@@ -460,7 +455,7 @@ public final class SABnzbdController {
 
         Message message = new Message();
         message.setTarget(messageHandler);
-        message.what = MESSAGE_UPDATE_STATUS;
+        message.what = MESSAGE.UPDATE.ordinal();
         message.obj = text;
         message.sendToTarget();
     }

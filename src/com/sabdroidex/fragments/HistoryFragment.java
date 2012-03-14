@@ -44,47 +44,41 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
-            System.out.println("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[=>" + msg.what);
-            switch (msg.what) {
-                case SABnzbdController.MESSAGE_UPDATE_HISTORY:
+            if (msg.what == SABnzbdController.MESSAGE.HISTORY.ordinal()) {
 
-                    Object result[] = (Object[]) msg.obj;
-                    // Updating rows
-                    rows.clear();
-                    rows.addAll((ArrayList<Object[]>) result[1]);
+                Object result[] = (Object[]) msg.obj;
+                // Updating rows
+                rows.clear();
+                rows.addAll((ArrayList<Object[]>) result[1]);
 
-                    /**
-                     * This might happens if a rotation occurs
-                     */
-                    if (mHistoryList != null || getAdapter(mHistoryList) != null) {
-                        ArrayAdapter<Object[]> adapter = getAdapter(mHistoryList);
-                        adapter.notifyDataSetChanged();
-                    }
+                /**
+                 * This might happens if a rotation occurs
+                 */
+                if (mHistoryList != null || getAdapter(mHistoryList) != null) {
+                    ArrayAdapter<Object[]> adapter = getAdapter(mHistoryList);
+                    adapter.notifyDataSetChanged();
+                }
 
-                    // Updating the header
-                    JSONObject jsonObject = (JSONObject) result[0];
-                    backupJsonObject = jsonObject;
+                // Updating the header
+                JSONObject jsonObject = (JSONObject) result[0];
+                backupJsonObject = jsonObject;
 
-                    try {
-                        ((SABDroidEx) mParent).updateLabels(jsonObject);
-                        ((SABDroidEx) mParent).updateStatus("");
-                    }
-                    catch (Exception e) {
-                        Log.w("ERROR", " " + e.getLocalizedMessage());
-                    }
-                    break;
+                try {
+                    ((SABDroidEx) mParent).updateLabels(jsonObject);
+                    ((SABDroidEx) mParent).updateStatus(true);
+                }
+                catch (Exception e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+            }
 
-                case SABnzbdController.MESSAGE_UPDATE_STATUS:
-                    try {
-                        ((SABDroidEx) mParent).updateStatus(msg.obj.toString());
-                    }
-                    catch (Exception e) {
-                        Log.w("ERROR", " " + e.getLocalizedMessage());
-                    }
-                    break;
-
-                default:
-                    break;
+            if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
+                try {
+                    ((SABDroidEx) mParent).updateStatus(false);
+                }
+                catch (Exception e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
             }
         }
     };

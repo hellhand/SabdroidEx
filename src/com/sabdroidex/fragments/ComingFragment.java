@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
+import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.SickBeardShowsListRowAdapter;
 import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
@@ -43,7 +45,7 @@ import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.HttpUtil;
 
-public class SickbeardShowsFragment extends SABDFragment implements OnItemLongClickListener {
+public class ComingFragment extends SABDFragment implements OnItemLongClickListener {
 
     private static File mExtFolder = Environment.getExternalStorageDirectory();
     private static ArrayList<Object[]> rows;
@@ -60,47 +62,41 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             Object result[];
-            switch (msg.what) {
-                case SickBeardController.MESSAGE_UPDATE:
+            if (msg.what == SickBeardController.MESSAGE.SHOWS.ordinal()) {
+                result = (Object[]) msg.obj;
+                // Updating rows
+                rows.clear();
+                rows.addAll((ArrayList<Object[]>) result[1]);
 
-                    result = (Object[]) msg.obj;
-                    // Updating rows
-                    rows.clear();
-                    rows.addAll((ArrayList<Object[]>) result[1]);
-
-                    /**
-                     * This might happens if a rotation occurs
-                     */
-                    if (mListView != null || getAdapter(mListView) != null) {
-                        ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-                        adapter.notifyDataSetChanged();
-                    }
-
-                    break;
-
-                case SickBeardController.MESSAGE_SEARCH:
-                    result = (Object[]) msg.obj;
-                    selectShowPrompt(result);
-                    break;
-                default:
-                    break;
+                /**
+                 * This might happens if a rotation occurs
+                 */
+                if (mListView != null || getAdapter(mListView) != null) {
+                    ArrayAdapter<Object[]> adapter = getAdapter(mListView);
+                    adapter.notifyDataSetChanged();
+                    ((SABDroidEx) mParent).updateStatus(true);
+                }
+            }
+            if (msg.what == SickBeardController.MESSAGE.SB_SEARCHTVDB.ordinal()) {
+                result = (Object[]) msg.obj;
+                selectShowPrompt((ArrayList<Object[]>) result[1]);
             }
         }
     };
 
     private FragmentActivity mParent;
 
-    public SickbeardShowsFragment() {
+    public ComingFragment() {
     }
 
-    public SickbeardShowsFragment(FragmentActivity fragmentActivity) {
+    public ComingFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
         if (mEmptyPoster == null) {
             mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster);
         }
     }
 
-    public SickbeardShowsFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
+    public ComingFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
     }
@@ -294,6 +290,9 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         return true;
     }
 
+    /**
+     * Handler used to notify the this Fragment that an image has been downloaded and that it should be refreshed to display it.
+     */
     private final Handler handler = new Handler() {
 
         @Override
@@ -310,7 +309,12 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
         }
     };
 
-    // TODO: merge wit the same function in SickBeardShowsListRowAdapter
+    /**
+     * This class is used to download the images needed by SickbeardShowsFragment when displaying the show list and the show informations.
+     * 
+     * @author Marc
+     * 
+     */
     private class AsyncImage extends AsyncTask<Object, Void, Bitmap> {
 
         /**
@@ -381,16 +385,68 @@ public class SickbeardShowsFragment extends SABDFragment implements OnItemLongCl
     /**
      * Displays the Props dialog when the user wants to add a download
      */
-    public void selectShowPrompt(Object[] shows) {
+    public void addShowPrompt() {
+        /**
+         * If nothing is configured we display the configuration pop-up
+         */
+        if (!Preferences.isSet(Preferences.SICKBEARD_URL)) {
+            mParent.showDialog(R.id.dialog_setup_prompt);
+            return;
+        }
 
         AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
 
         alert.setTitle(R.string.add_show_dialog_title);
         alert.setMessage(R.string.add_show_dialog_message);
 
-        final ListView listView = new ListView(mParent);
-        listView.setAdapter(new ArrayAdapter<Object>(mParent, 0, shows));
-        alert.setView(listView);
+        final EditText input = new EditText(mParent);
+        alert.setView(input);
+
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                SickBeardController.searchShow(getMessageHandler(), value);
+            }
+        });
+
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    /**
+     * Displays the propositions dialog with the resulting show names found after a user search to add a show to Sickbeard.
+     * 
+     * @param result The result of the search query
+     */
+    private void selectShowPrompt(final ArrayList<Object[]> result) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
+
+        alert.setTitle(R.string.add_show_selection_dialog_title);
+
+        ArrayList<String> shows = new ArrayList<String>();
+        for (Object[] show : result) {
+            shows.add(show[1] + "");
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mParent, android.R.layout.simple_list_item_1, shows);
+        alert.setAdapter(adapter, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Object[] selected = result.get(which);
+                SickBeardController.addShow(messageHandler, ((String) selected[2]));
+                dialog.dismiss();
+            }
+        });
 
         alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 

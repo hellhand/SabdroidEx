@@ -76,7 +76,9 @@
 	
 	<string name="add_show_dialog_title">Add new Show</string>
 	<string name="add_show_dialog_message">Enter the Name of the Show to add to Sickbeard:</string>
-	    
+	
+	<string name="add_show_selection_dialog_title">Select the Show to add to Sickbeard</string>
+	
     <string name="add_nzb_dialog_title">Add new NZB</string>
     <string name="add_nzb_dialog_message">Enter the URL of the NZB to download via SABnzbd:</string>
     

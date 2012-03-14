@@ -18,10 +18,6 @@ import com.utils.HttpUtil;
 
 public final class SickBeardController {
 
-    public static final int MESSAGE_UPDATE = 1;
-    public static final int MESSAGE_STATUS_UPDATE = 3;
-    public static final int MESSAGE_SEARCH = 4;
-
     private static boolean executingRefresh = false;
     private static boolean executingCommand = false;
 
@@ -29,7 +25,7 @@ public final class SickBeardController {
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
 
     public static enum MESSAGE {
-        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB
+        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE
     }
 
     /**
@@ -62,9 +58,12 @@ public final class SickBeardController {
 
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE_UPDATE;
+                    message.what = MESSAGE.SHOW_ADDNEW.ordinal();
                     message.obj = results;
                     message.sendToTarget();
+
+                    Thread.sleep(250);
+                    SickBeardController.refreshShows(messageHandler);
                 }
                 catch (Throwable e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
@@ -124,7 +123,7 @@ public final class SickBeardController {
 
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE_SEARCH;
+                    message.what = MESSAGE.SB_SEARCHTVDB.ordinal();
                     message.obj = results;
                     message.sendToTarget();
                 }
@@ -199,7 +198,89 @@ public final class SickBeardController {
 
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE_UPDATE;
+                    message.what = MESSAGE.SHOWS.ordinal();
+                    message.obj = results;
+                    message.sendToTarget();
+                }
+                catch (RuntimeException e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingRefresh = false;
+                }
+            }
+        };
+
+        executingRefresh = true;
+
+        thread.start();
+    }
+
+    /**
+     * Refresh the shows that are in SickBeard. The result sent to the {@link Handler} will be an array of all the shows.
+     * 
+     * @param messageHandler The message handler to be notified
+     */
+    public static void refreshFuture(final Handler messageHandler) {
+
+        // Already running or settings not ready
+        if (executingRefresh || !Preferences.isSet(Preferences.SICKBEARD_URL))
+            return;
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    Object results[] = new Object[2];
+                    String queueData = makeApiCall(MESSAGE.FUTURE.toString().toLowerCase(), "sort=date");
+
+                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
+
+                    /**
+                     * Getting the values from the JSON Object
+                     */
+                    JSONObject jsonObject = new JSONObject(queueData);
+                    jsonObject = jsonObject.getJSONObject("data");
+                    results[0] = jsonObject;
+
+                    Iterator<?> iterator = jsonObject.keys();
+                    while (iterator.hasNext()) {
+                        String when = (String) iterator.next();
+                        JSONArray group = jsonObject.getJSONArray(when);
+                        for (int i = 0; i < group.length(); i++) {
+                            /**
+                             * The seventh item will be the banner The eighth item will be the poster
+                             */
+                            Object[] rowValues = new Object[9];
+                            JSONObject current = group.getJSONObject(i);
+                            rowValues[0] = when;
+                            rowValues[1] = current.getString("show_name");
+
+                            rowValues[2] = current.getInt("season");
+                            rowValues[3] = current.getInt("episode");
+                            rowValues[4] = current.getString("ep_name");
+                            rowValues[5] = current.getString("airdate");
+
+                            rowValues[6] = current.getString("airs");
+                            rowValues[7] = current.getString("network");
+                            rowValues[8] = current.getString("quality");
+                            rows.add(rowValues);
+                        }
+                    }
+
+                    for (int i = 0; i < rows.size(); i++) {
+                        System.out.println(rows.get(i));
+                    }
+                    results[1] = rows;
+
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.SHOWS.ordinal();
                     message.obj = results;
                     message.sendToTarget();
                 }
@@ -263,7 +344,7 @@ public final class SickBeardController {
                 url = url + "&" + xTraParam;
             }
         }
-        System.out.println(url);
+
         String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
         return result;
     }
@@ -363,7 +444,7 @@ public final class SickBeardController {
 
         Message message = new Message();
         message.setTarget(messageHandler);
-        message.what = MESSAGE_STATUS_UPDATE;
+        message.what = MESSAGE.UPDATE.ordinal();
         message.obj = text;
         message.sendToTarget();
     }
