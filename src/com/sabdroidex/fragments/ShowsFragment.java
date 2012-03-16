@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -38,7 +39,7 @@ import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
-import com.sabdroidex.adapters.SickBeardShowsListRowAdapter;
+import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
@@ -53,7 +54,7 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
     private ListView mListView;
     private ScrollView mShowView;
     private AsyncImage mAsyncImage;
-    private SickBeardShowsListRowAdapter mSickBeardShowsListRowAdapter;
+    private ShowsListRowAdapter mShowsListRowAdapter;
 
     // Instantiating the Handler associated with the main thread.
     private final Handler messageHandler = new Handler() {
@@ -92,7 +93,16 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
     public ShowsFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
         if (mEmptyPoster == null) {
-            mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster);
+            Options BgOptions = new Options();
+            BgOptions.inPurgeable = true;
+            BgOptions.inPreferredConfig = Config.RGB_565;
+            if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+                BgOptions.inSampleSize = 1;
+            }
+            else {
+                BgOptions.inSampleSize = 2;
+            }
+            mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster, BgOptions);
         }
     }
 
@@ -129,7 +139,6 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
             return;
         }
         SickBeardController.refreshShows(messageHandler);
-        SickBeardController.refreshFuture(messageHandler);
     }
 
     @Override
@@ -149,8 +158,8 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
         mListView = (ListView) showView.findViewById(R.id.queueList);
         showView.removeAllViews();
 
-        mSickBeardShowsListRowAdapter = new SickBeardShowsListRowAdapter(mParent, rows);
-        mListView.setAdapter(mSickBeardShowsListRowAdapter);
+        mShowsListRowAdapter = new ShowsListRowAdapter(mParent, rows);
+        mListView.setAdapter(mShowsListRowAdapter);
         mListView.setOnItemLongClickListener(this);
 
         // Tries to fetch recoverable data
@@ -172,37 +181,37 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
 
     @Override
     protected void finalize() throws Throwable {
-        mSickBeardShowsListRowAdapter.clearBitmaps();
+        mShowsListRowAdapter.clearBitmaps();
         super.finalize();
     }
 
     @Override
     public void onDestroyView() {
-        mSickBeardShowsListRowAdapter.clearBitmaps();
+        mShowsListRowAdapter.clearBitmaps();
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        mSickBeardShowsListRowAdapter.clearBitmaps();
+        mShowsListRowAdapter.clearBitmaps();
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        mSickBeardShowsListRowAdapter.clearBitmaps();
+        mShowsListRowAdapter.clearBitmaps();
         super.onDetach();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        mSickBeardShowsListRowAdapter.clearBitmaps();
+        mShowsListRowAdapter.clearBitmaps();
         super.onConfigurationChanged(newConfig);
     }
 
     @Override
     public void onPause() {
-        mSickBeardShowsListRowAdapter.clearBitmaps();
+        mShowsListRowAdapter.clearBitmaps();
         super.onPause();
     }
 
@@ -337,7 +346,7 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
             BitmapFactory.Options BgOptions = new BitmapFactory.Options();
             BgOptions.inPurgeable = true;
             BgOptions.inPreferredConfig = Config.RGB_565;
-            if (getActivity().getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE) {
                 BgOptions.inSampleSize = 1;
             }
             else {

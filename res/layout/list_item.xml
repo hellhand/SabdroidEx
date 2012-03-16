@@ -18,7 +18,6 @@
         android:paddingBottom="2dip"
         android:textSize="16dip"
         android:textColor="#000000"
-        android:text="Test test test test.txt"
         android:maxLines="1"
         android:gravity="center_vertical"/>
 
@@ -26,6 +25,7 @@
 		android:id="@+id/queueRowStatus"
         android:layout_below="@id/queueRowLabelFilename"
        	android:src="@android:drawable/ic_media_play"
+       	android:contentDescription="@string/app_name"
         android:scaleType="matrix"
        	android:layout_width="32dip"
         android:layout_height="32dip"
@@ -41,8 +41,7 @@
         android:gravity="center_vertical"
         android:textSize="12dip"
         android:textColor="#6a6a6a"
-        android:singleLine="true"
-        android:text="0:01:17 > 02:33 Wed 12 Aug"/>
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/queueRowLabelCompleted"
@@ -53,7 +52,6 @@
         android:gravity="center_vertical"
         android:textSize="12dip"
         android:textColor="#6a6a6a"
-        android:singleLine="true"
-        android:text="104 / 344mb"/>
+        android:singleLine="true"/>
 	
 </RelativeLayout>
