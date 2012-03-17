@@ -17,6 +17,8 @@ public class Preferences {
     public static final String SICKBEARD_PORT = "sickbeard_port";
     public static final String SICKBEARD_RATE = "sickbeard_rate";
     public static final String SICKBEARD_API_KEY = "sickbeard_api_key";
+    public static final String SICKBEARD_CACHE = "sickbeard_cache";
+    public static final String SICKBEARD_LOWRES = "sickbeard_lowres";
 
     public static final String NZBS_ORG_UID = "nzbs_org_uid";
     public static final String NZBS_ORG_HASH = "nzbs_org_hash";

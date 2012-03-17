@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="4dip"
-    android:paddingRight="12dip"
+    android:paddingRight="10dip"
     android:gravity="center_vertical"
     android:background="@drawable/list_item_bg">
     

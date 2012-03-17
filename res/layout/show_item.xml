@@ -5,8 +5,8 @@
     android:layout_height="60dip"
     android:background="@drawable/list_item_bg"
     android:gravity="center_vertical"
-    android:paddingLeft="4dip"
-    android:paddingRight="12dip" >
+    android:paddingLeft="1dip"
+    android:paddingRight="1dip" >
 
     <ImageView
         android:id="@+id/showBanner"

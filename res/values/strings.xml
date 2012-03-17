@@ -33,6 +33,10 @@
     <string name="setting_sickbeard_refresh_rate">Refresh Rate in milliseconds</string>
     <string name="setting_sickbeard_refresh_rate_summary">Time between each refresh</string>
 	<string name="setting_sickbeard_api_key">Your Sickbeard API key</string>
+	<string name="setting_sickbeard_cache">Image Cache</string>
+	<string name="setting_sickbeard_cache_summary">Use local cache for Images</string>
+	<string name="setting_sickbeard_lowres">Lowres Images</string>
+	<string name="setting_sickbeard_lowres_summary">Use low resolution Images</string>
     
 	<string name="setting_nzbs_org_auth">NZBS.org Identification</string>
     <string name="setting_nzbs_org_uid">NZBS.org UID</string>
@@ -72,6 +76,9 @@
     <string name="show_next_episode">Next Episode : </string>
 	<string name="show_language">Language : </string>
     
+	<string name="comming_next">Next Episode : </string>
+	<string name="comming_airs">Airs : </string>
+		
 	<string name="add_dialog_title">Add</string>
 	
 	<string name="add_show_dialog_title">Add new Show</string>

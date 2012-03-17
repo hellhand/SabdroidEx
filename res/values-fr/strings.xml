@@ -33,7 +33,11 @@
     <string name="setting_sickbeard_refresh_rate">Taux de Rafraichissements</string>
     <string name="setting_sickbeard_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
 	<string name="setting_sickbeard_api_key">Clef d\'API de Sickbeard</string>
-    
+	<string name="setting_sickbeard_cache">Cache Images</string>
+	<string name="setting_sickbeard_cache_summary">Mettre les images en cache local</string>
+	<string name="setting_sickbeard_lowres">Images Basse Qualité</string>
+	<string name="setting_sickbeard_lowres_summary">Utiliser les images basse résolution</string>
+    		
     <string name="setting_nzbs_org_auth">Authentification NZBS.org</string>
     <string name="setting_nzbs_org_uid">UID NZBS.org</string>
     <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
@@ -71,9 +75,19 @@
     <string name="show_network">Réseau : </string>
     <string name="show_next_episode">Prochain Épisode : </string>
 	<string name="show_language">Langue : </string>
+	
+	<string name="comming_next">Prochain Episode : </string>
+	<string name="comming_airs">Sur les ondes : </string>
     
-    <string name="add_dialog_title">Ajouter nouveau NZB</string>
-    <string name="add_dialog_message">Entez l\'URL du NZB a être téléchargé : </string>
+	<string name="add_dialog_title">Ajouter</string>
+	
+	<string name="add_show_dialog_title">Ajouter nouvelle série</string>
+	<string name="add_show_dialog_message">Entrez le nom de la série a ajouter à Sickbeard:</string>
+	
+	<string name="add_show_selection_dialog_title">Selectionnez la série a ajouter à Sickbeard</string>	
+	
+    <string name="add_nzb_dialog_title">Ajouter nouveau NZB</string>
+    <string name="add_nzb_dialog_message">Entez l\'URL du NZB a être téléchargé : </string>
     
 	<string name="config">Voulez-vous configurer SABDroidEx maintenant ?</string>
 </resources>

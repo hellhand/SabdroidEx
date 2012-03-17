@@ -1,7 +1,5 @@
 package com.sabdroidex.fragments;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -18,11 +16,9 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,14 +37,13 @@ import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.sickbeard.SickBeardController;
+import com.sabdroidex.utils.AsyncImage;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
-import com.utils.HttpUtil;
 
 public class ShowsFragment extends SABDFragment implements OnItemLongClickListener {
 
-    private static File mExtFolder = Environment.getExternalStorageDirectory();
     private static ArrayList<Object[]> rows;
     private static Bitmap mEmptyPoster;
     private ListView mListView;
@@ -96,12 +91,12 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
             Options BgOptions = new Options();
             BgOptions.inPurgeable = true;
             BgOptions.inPreferredConfig = Config.RGB_565;
-            if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-                BgOptions.inSampleSize = 1;
-            }
-            else {
-                BgOptions.inSampleSize = 2;
-            }
+            // if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            // BgOptions.inSampleSize = 1;
+            // }
+            // else {
+            // BgOptions.inSampleSize = 2;
+            // }
             mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster, BgOptions);
         }
     }
@@ -156,6 +151,7 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
         LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
         mListView = (ListView) showView.findViewById(R.id.queueList);
+        mListView.setDividerHeight(0);
         showView.removeAllViews();
 
         mShowsListRowAdapter = new ShowsListRowAdapter(mParent, rows);
@@ -290,7 +286,7 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
             mAsyncImage.cancel(true);
         }
         mAsyncImage = new AsyncImage();
-        mAsyncImage.execute(0, rows.get(position)[5], rows.get(position)[0]);
+        mAsyncImage.execute(getActivity(), handler, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER, 0);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(R.string.close, onClickListener);
@@ -318,85 +314,6 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
             }
         }
     };
-
-    /**
-     * This class is used to download the images needed by SickbeardShowsFragment when displaying the show list and the show informations.
-     * 
-     * @author Marc
-     * 
-     */
-    private class AsyncImage extends AsyncTask<Object, Void, Bitmap> {
-
-        /**
-         * 
-         * @param params [1] Is the IMDB id of the TV show, [2] Is the name of the TV Show
-         * @return
-         */
-        @Override
-        protected Bitmap doInBackground(Object... params) {
-
-            /**
-             * Trying to find Image on Local System
-             */
-            String folderPath = mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[2] + File.separator;
-            folderPath = folderPath.replace(":", "");
-            File folder = new File(folderPath);
-            folder.mkdirs();
-
-            BitmapFactory.Options BgOptions = new BitmapFactory.Options();
-            BgOptions.inPurgeable = true;
-            BgOptions.inPreferredConfig = Config.RGB_565;
-            if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-                BgOptions.inSampleSize = 1;
-            }
-            else {
-                BgOptions.inSampleSize = 2;
-            }
-            Bitmap bitmap = null;
-            try {
-                bitmap = BitmapFactory.decodeFile(folderPath + File.separator + "poster.jpg", BgOptions);
-            }
-            catch (Exception e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
-            }
-
-            /**
-             * The bitmap object is null if the BitmapFactory has been unable to decode the file. Hopefully this won't happen often
-             */
-            if (bitmap == null) {
-
-                try {
-                    /**
-                     * We get the banner from the server
-                     */
-                    String url = SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[1]);
-                    byte[] data = HttpUtil.getInstance().getDataAsByteArray(url);
-                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-                    /**
-                     * And save it in the cache
-                     */
-                    FileOutputStream fileOutputStream;
-                    fileOutputStream = new FileOutputStream(folderPath + File.separator + "poster.jpg");
-                    fileOutputStream.write(data);
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                }
-                catch (Exception e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
-                }
-            }
-
-            /**
-             * Waking up the main Thread
-             */
-            Message msg = new Message();
-            msg.obj = bitmap;
-            handler.sendMessage(msg);
-
-            return bitmap;
-        }
-    }
 
     /**
      * Displays the Props dialog when the user wants to add a download

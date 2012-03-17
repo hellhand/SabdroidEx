@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
+import com.sabdroidex.fragments.ComingFragment;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.ShowsFragment;
@@ -47,6 +48,7 @@ public class SABDroidEx extends ActionBarActivity {
     private static ArrayList<Object[]> downloadRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> historyRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
+    private static ArrayList<Object[]> comingRows = new ArrayList<Object[]>();
     private static JSONObject backupJsonObject = null;
     protected boolean paused = false;
 
@@ -56,6 +58,7 @@ public class SABDroidEx extends ActionBarActivity {
     private QueueFragment queue;
     private HistoryFragment history;
     private ShowsFragment shows;
+    private ComingFragment coming;
 
     /**
      * Creating the elements of the screen
@@ -98,6 +101,18 @@ public class SABDroidEx extends ActionBarActivity {
             tabPageIndicator.setCurrentItem(0);
             pager.refreshDrawableState();
         }
+        if (!Preferences.isEnabled(Preferences.SICKBEARD) && coming != null) {
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
+            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
+            if (pagerAdapter.contains(coming)) {
+                pagerAdapter.removeFragment(coming);
+                coming = null;
+            }
+            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+            tabPageIndicator.notifyDataSetChanged();
+            tabPageIndicator.setCurrentItem(0);
+            pager.refreshDrawableState();
+        }
         if (Preferences.isEnabled(Preferences.SICKBEARD) && shows == null) {
             ViewPager pager = (ViewPager) findViewById(R.id.pager);
             SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
@@ -105,6 +120,19 @@ public class SABDroidEx extends ActionBarActivity {
             shows.setRetainInstance(true);
             if (!pagerAdapter.contains(shows)) {
                 pagerAdapter.addFragment(shows);
+            }
+            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+            tabPageIndicator.notifyDataSetChanged();
+            tabPageIndicator.setCurrentItem(0);
+            pager.refreshDrawableState();
+        }
+        if (Preferences.isEnabled(Preferences.SICKBEARD) && coming == null) {
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
+            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
+            coming = new ComingFragment(this, comingRows);
+            coming.setRetainInstance(true);
+            if (!pagerAdapter.contains(coming)) {
+                pagerAdapter.addFragment(coming);
             }
             TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
             tabPageIndicator.notifyDataSetChanged();
@@ -143,6 +171,8 @@ public class SABDroidEx extends ActionBarActivity {
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             shows = new ShowsFragment(this, showsRows);
             shows.setRetainInstance(true);
+            coming = new ComingFragment(this, comingRows);
+            coming.setRetainInstance(true);
         }
 
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
@@ -150,6 +180,7 @@ public class SABDroidEx extends ActionBarActivity {
         pagerAdapter.addFragment(history);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             pagerAdapter.addFragment(shows);
+            pagerAdapter.addFragment(coming);
         }
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -185,6 +216,7 @@ public class SABDroidEx extends ActionBarActivity {
         history.manualRefreshHistory();
         if (Preferences.isSet(Preferences.SICKBEARD_URL) && Preferences.isEnabled(Preferences.SICKBEARD)) {
             shows.manualRefreshShows();
+            coming.manualRefreshComing();
         }
         getActionBarHelper().setRefreshActionItemState(true);
     }
@@ -388,11 +420,12 @@ public class SABDroidEx extends ActionBarActivity {
      */
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
-        Object data[] = new Object[4];
+        Object data[] = new Object[5];
         data[0] = downloadRows;
         data[1] = historyRows;
         data[2] = showsRows;
-        data[3] = backupJsonObject;
+        data[3] = comingRows;
+        data[4] = backupJsonObject;
         return data;
     }
 

@@ -251,36 +251,34 @@ public final class SickBeardController {
                     Iterator<?> iterator = jsonObject.keys();
                     while (iterator.hasNext()) {
                         String when = (String) iterator.next();
+                        rows.add(new Object[] { when });
                         JSONArray group = jsonObject.getJSONArray(when);
                         for (int i = 0; i < group.length(); i++) {
                             /**
                              * The seventh item will be the banner The eighth item will be the poster
                              */
-                            Object[] rowValues = new Object[9];
+                            Object[] rowValues = new Object[10];
                             JSONObject current = group.getJSONObject(i);
                             rowValues[0] = when;
-                            rowValues[1] = current.getString("show_name");
+                            rowValues[1] = current.getInt("tvdbid");
+                            rowValues[2] = current.getString("show_name");
 
-                            rowValues[2] = current.getInt("season");
-                            rowValues[3] = current.getInt("episode");
-                            rowValues[4] = current.getString("ep_name");
-                            rowValues[5] = current.getString("airdate");
+                            rowValues[3] = current.getInt("season");
+                            rowValues[4] = current.getInt("episode");
+                            rowValues[5] = current.getString("ep_name");
+                            rowValues[6] = current.getString("airdate");
 
-                            rowValues[6] = current.getString("airs");
-                            rowValues[7] = current.getString("network");
-                            rowValues[8] = current.getString("quality");
+                            rowValues[7] = current.getString("airs");
+                            rowValues[8] = current.getString("network");
+                            rowValues[9] = current.getString("quality");
                             rows.add(rowValues);
                         }
-                    }
-
-                    for (int i = 0; i < rows.size(); i++) {
-                        System.out.println(rows.get(i));
                     }
                     results[1] = rows;
 
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOWS.ordinal();
+                    message.what = MESSAGE.FUTURE.ordinal();
                     message.obj = results;
                     message.sendToTarget();
                 }

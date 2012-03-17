@@ -74,6 +74,16 @@
             android:key="sickbeard_api_key"
             android:title="@string/setting_sickbeard_api_key" />
         
+		<CheckBoxPreference
+            android:key="sickbeard_cache"
+            android:summary="@string/setting_sickbeard_cache_summary"
+            android:title="@string/setting_sickbeard_cache" />
+        
+		<CheckBoxPreference
+            android:key="sickbeard_lowres"
+			android:summary="@string/setting_sickbeard_lowres_summary"
+            android:title="@string/setting_sickbeard_lowres" />
+		
     </PreferenceCategory>
     
     

@@ -154,7 +154,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
         if (data != null && extracted(data, 0) != null) {
             rows = extracted(data, 0);
-            backupJsonObject = (JSONObject) data[3];
+            backupJsonObject = (JSONObject) data[4];
             ((SABDroidEx) mParent).updateLabels(backupJsonObject);
         }
 

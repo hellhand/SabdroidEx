@@ -149,7 +149,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
         if (data != null && extracted(data, 1) != null) {
             rows = extracted(data, 1);
-            backupJsonObject = (JSONObject) data[3];
+            backupJsonObject = (JSONObject) data[4];
             ((SABDroidEx) mParent).updateLabels(backupJsonObject);
         }
 
