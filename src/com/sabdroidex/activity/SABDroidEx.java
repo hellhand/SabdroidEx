@@ -1,5 +1,9 @@
 package com.sabdroidex.activity;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -7,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -17,6 +22,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,6 +69,7 @@ public class SABDroidEx extends ActionBarActivity {
     /**
      * Creating the elements of the screen
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +78,25 @@ public class SABDroidEx extends ActionBarActivity {
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
+        if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
+            /**
+             * Restoring data.
+             */
+            String FILENAME = Preferences.DATA_CACHE;
+
+            FileInputStream fis = null;
+            try {
+                fis = openFileInput(FILENAME);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                downloadRows = (ArrayList<Object[]>) ois.readObject();
+                historyRows = (ArrayList<Object[]>) ois.readObject();
+                showsRows = (ArrayList<Object[]>) ois.readObject();
+                comingRows = (ArrayList<Object[]>) ois.readObject();
+            }
+            catch (Exception e) {
+                Log.w("ERROR", " " + e.getLocalizedMessage());
+            }
+        }
         createLists();
         manualRefresh();
     }
@@ -141,10 +167,27 @@ public class SABDroidEx extends ActionBarActivity {
         }
         super.onResume();
     }
-
+    
     @Override
     protected void onStop() {
-        // TODO
+        if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
+            /**
+             * Saving data for offline use.
+             */
+            String FILENAME = Preferences.DATA_CACHE;
+            FileOutputStream fos = null;
+            try {
+                fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(downloadRows);
+                oos.writeObject(historyRows);
+                oos.writeObject(showsRows);
+                oos.writeObject(comingRows);
+            }
+            catch (Exception e) {
+                Log.w("ERROR", " " + e.getLocalizedMessage());
+            }
+        }
         super.onStop();
     }
 

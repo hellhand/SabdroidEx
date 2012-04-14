@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:orientation="horizontal" >
+
+    <ListView
+        android:id="@+id/queueList"
+        android:layout_width="540dip"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="16dip"
+        android:background="#FFFFFF"
+        android:cacheColorHint="#FFFFFF"
+        android:divider="#A0A0A0"
+        android:dividerHeight="1px"
+        android:fadingEdge="vertical"
+        android:fadingEdgeLength="6dip"
+        android:scrollingCache="false" >
+    </ListView>
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="2dip"
+        layout="@layout/show_status" />
+
+</LinearLayout>

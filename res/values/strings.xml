@@ -37,13 +37,18 @@
 	<string name="setting_sickbeard_cache_summary">Use local cache for Images</string>
 	<string name="setting_sickbeard_lowres">Lowres Images</string>
 	<string name="setting_sickbeard_lowres_summary">Use low resolution Images</string>
-    
+	<string name="setting_sickbeard_nomedia">.Nomedia</string>
+	<string name="setting_sickbeard_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
+
 	<string name="setting_nzbs_org_auth">NZBS.org Identification</string>
     <string name="setting_nzbs_org_uid">NZBS.org UID</string>
     <string name="setting_nzbs_org_uid_summary">The UID linked to you NZBS.org account</string>
 	<string name="setting_nzbs_org_hash">NZBS.org Hash</string>
 	<string name="setting_nzbs_org_hash_summary">The Hash linked to you NZBS.org account</string>
-    
+
+	<string name="setting_data_cache">Enable data cache</string>
+	<string name="setting_data_cache_summary">Allows to keep the content of the tabs even if being offline</string>
+	
     <string name="menu_play">Play</string>
     <string name="menu_pause">Pause</string>
     <string name="menu_resume">Resume</string>

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="8dip"
-    android:fillViewport="true" >
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/list_item_bg"
+    android:paddingBottom="12dip"
+    android:paddingTop="12dip" >
+    
+    <ImageView
+        android:id="@+id/showPoster"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="8dip"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/show_poster" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/showPoster"
-            android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dip"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/show_poster" />
 
         <TableRow
             android:layout_width="wrap_content"
@@ -149,4 +149,4 @@
         </TableRow>
     </LinearLayout>
 
-</ScrollView>
+</LinearLayout>

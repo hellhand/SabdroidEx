@@ -37,13 +37,18 @@
 	<string name="setting_sickbeard_cache_summary">Mettre les images en cache local</string>
 	<string name="setting_sickbeard_lowres">Images Basse Qualité</string>
 	<string name="setting_sickbeard_lowres_summary">Utiliser les images basse résolution</string>
-    		
+	<string name="setting_sickbeard_nomedia">.Nomedia</string>
+	<string name="setting_sickbeard_nomedia_summary">Empécher les images de se retrouver dans la Galerie</string>
+
     <string name="setting_nzbs_org_auth">Authentification NZBS.org</string>
     <string name="setting_nzbs_org_uid">UID NZBS.org</string>
     <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
 	<string name="setting_nzbs_org_hash">Hash NZBS.org</string>
 	<string name="setting_nzbs_org_hash_summary">Le Hash liné to votre compte NZBS.org</string>
-
+	
+	<string name="setting_data_cache">Activer le cache des données</string>
+	<string name="setting_data_cache_summary">Permets de garder le contenu des Onglets même en étant hors ligne</string>
+	
 	<string name="menu_play">Play</string>
     <string name="menu_pause">Pause</string>
     <string name="menu_resume">Reprendre</string>

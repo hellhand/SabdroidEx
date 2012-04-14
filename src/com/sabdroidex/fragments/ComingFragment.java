@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,159 +30,173 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class ComingFragment extends SABDFragment {
 
-    private static ArrayList<Object[]> rows;
-    private static Bitmap mEmptyPoster;
-    private ListView mListView;
-    private ComingListRowAdapter mComingRowAdapter;
+	private static ArrayList<Object[]> rows;
+	private static Bitmap mEmptyPoster;
+	private ListView mListView;
+	private ComingListRowAdapter mComingRowAdapter;
 
-    // Instantiating the Handler associated with the main thread.
-    private final Handler messageHandler = new Handler() {
+	// Instantiating the Handler associated with the main thread.
+	private final Handler messageHandler = new Handler() {
 
-        @Override
-        @SuppressWarnings("unchecked")
-        public void handleMessage(Message msg) {
-            Object result[];
-            if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
-                result = (Object[]) msg.obj;
-                // Updating rows
-                rows.clear();
-                rows.addAll((ArrayList<Object[]>) result[1]);
+		@Override
+		@SuppressWarnings("unchecked")
+		public void handleMessage(Message msg) {
+			Object result[];
+			if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
+				result = (Object[]) msg.obj;
+				// Updating rows
+				rows.clear();
+				rows.addAll((ArrayList<Object[]>) result[1]);
 
-                /**
-                 * This might happens if a rotation occurs
-                 */
-                if (mListView != null || getAdapter(mListView) != null) {
-                    ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-                    adapter.notifyDataSetChanged();
-                    ((SABDroidEx) mParent).updateStatus(true);
-                }
-            }
-        }
-    };
+				/**
+				 * This might happens if a rotation occurs
+				 */
+				if (mListView != null || getAdapter(mListView) != null) {
+					ArrayAdapter<Object[]> adapter = getAdapter(mListView);
+					adapter.notifyDataSetChanged();
+					((SABDroidEx) mParent).updateStatus(true);
+				}
+			}
+		}
+	};
 
-    private FragmentActivity mParent;
+	private FragmentActivity mParent;
 
-    public ComingFragment() {
-    }
+	public ComingFragment() {
+	}
 
-    public ComingFragment(FragmentActivity fragmentActivity) {
-        mParent = fragmentActivity;
-        if (mEmptyPoster == null) {
-            mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster);
-        }
-    }
+	public ComingFragment(FragmentActivity fragmentActivity) {
+		mParent = fragmentActivity;
+		if (mEmptyPoster == null) {
+			mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(),R.drawable.temp_poster);
+		}
+	}
 
-    public ComingFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
-        this(sabDroidEx);
-        rows = historyRows;
-    }
+	public ComingFragment(FragmentActivity sabDroidEx,
+			ArrayList<Object[]> historyRows) {
+		this(sabDroidEx);
+		rows = historyRows;
+	}
 
-    public Handler getMessageHandler() {
-        return messageHandler;
-    }
+	public Handler getMessageHandler() {
+		return messageHandler;
+	}
 
-    @SuppressWarnings("unchecked")
-    ArrayList<Object[]> extracted(Object[] data, int position) {
-        return data == null ? null : (ArrayList<Object[]>) data[position];
-    }
+	@SuppressWarnings("unchecked")
+	ArrayList<Object[]> extracted(Object[] data, int position) {
+		return data == null ? null : (ArrayList<Object[]>) data[position];
+	}
 
-    @SuppressWarnings("unchecked")
-    private ArrayAdapter<Object[]> getAdapter(ListView listView) {
-        return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
-    }
+	@SuppressWarnings("unchecked")
+	private ArrayAdapter<Object[]> getAdapter(ListView listView) {
+		return listView == null ? null : (ArrayAdapter<Object[]>) listView
+				.getAdapter();
+	}
 
-    @Override
-    public String getTitle() {
-        return mParent.getString(R.string.tab_coming);
-    }
+	@Override
+	public String getTitle() {
+		return mParent.getString(R.string.tab_coming);
+	}
 
-    /**
-     * Refreshing the queue during startup or on user request. Asks to configure if still not done
-     */
-    public void manualRefreshComing() {
-        // First run setup
-        if (!Preferences.isEnabled(Preferences.SICKBEARD)) {
-            return;
-        }
-        SickBeardController.refreshFuture(messageHandler);
-    }
+	/**
+	 * Refreshing the queue during startup or on user request. Asks to configure
+	 * if still not done
+	 */
+	public void manualRefreshComing() {
+		// First run setup
+		if (!Preferences.isEnabled(Preferences.SICKBEARD)) {
+			return;
+		}
+		SickBeardController.refreshFuture(messageHandler);
+	}
 
-    @Override
-    public void onAttach(Activity activity) {
-        mParent = (FragmentActivity) activity;
-        super.onAttach(activity);
-    }
+	@Override
+	public void onAttach(Activity activity) {
+		mParent = (FragmentActivity) activity;
+		super.onAttach(activity);
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
-        Preferences.update(preferences);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		SharedPreferences preferences = mParent.getSharedPreferences(
+				SABDroidConstants.PREFERENCES_KEY, 0);
+		Preferences.update(preferences);
 
-        LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.list, null);
+		LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.list,
+				null);
 
-        mListView = (ListView) showView.findViewById(R.id.queueList);
-        mListView.setDividerHeight(0);
-        showView.removeAllViews();
+		mListView = (ListView) showView.findViewById(R.id.queueList);
+		mListView.setDivider(new PaintDrawable(Color.TRANSPARENT));
+		mListView.setDividerHeight(1);
+		showView.removeAllViews();
 
-        mComingRowAdapter = new ComingListRowAdapter(mParent, rows);
-        mListView.setAdapter(mComingRowAdapter);
+		mComingRowAdapter = new ComingListRowAdapter(mParent, rows);
+		mListView.setAdapter(mComingRowAdapter);
 
-        // Tries to fetch recoverable data
-        Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
-        if (data != null && extracted(data, 3) != null) {
-            rows = extracted(data, 3);
-        }
+		// Tries to fetch recoverable data
+		Object data[] = (Object[]) mParent
+				.getLastCustomNonConfigurationInstance();
+		if (data != null && extracted(data, 3) != null) {
+			rows = extracted(data, 3);
+		}
 
-        if (rows.size() > 0) {
-            ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            manualRefreshComing();
-        }
+		if (rows.size() > 0) {
+			ArrayAdapter<Object[]> adapter = getAdapter(mListView);
+			adapter.notifyDataSetChanged();
+		} 
+		else {
+			manualRefreshComing();
+		}
 
-        return mListView;
-    }
+		return mListView;
+	}
 
-    @Override
-    protected void finalize() throws Throwable {
-        mComingRowAdapter.clearBitmaps();
-        super.finalize();
-    }
+	@Override
+	protected void finalize() throws Throwable {
+		if (mComingRowAdapter != null)
+			mComingRowAdapter.clearBitmaps();
+		super.finalize();
+	}
 
-    @Override
-    public void onDestroyView() {
-        mComingRowAdapter.clearBitmaps();
-        super.onDestroyView();
-    }
+	@Override
+	public void onDestroyView() {
+		if (mComingRowAdapter != null)
+			mComingRowAdapter.clearBitmaps();
+		super.onDestroyView();
+	}
 
-    @Override
-    public void onDestroy() {
-        mComingRowAdapter.clearBitmaps();
-        super.onDestroy();
-    }
+	@Override
+	public void onDestroy() {
+		if (mComingRowAdapter != null)
+			mComingRowAdapter.clearBitmaps();
+		super.onDestroy();
+	}
 
-    @Override
-    public void onDetach() {
-        mComingRowAdapter.clearBitmaps();
-        super.onDetach();
-    }
+	@Override
+	public void onDetach() {
+		if (mComingRowAdapter != null)
+			mComingRowAdapter.clearBitmaps();
+		super.onDetach();
+	}
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        mComingRowAdapter.clearBitmaps();
-        super.onConfigurationChanged(newConfig);
-    }
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		if (mComingRowAdapter != null)
+			mComingRowAdapter.clearBitmaps();
+		super.onConfigurationChanged(newConfig);
+	}
 
-    @Override
-    public void onPause() {
-        mComingRowAdapter.clearBitmaps();
-        super.onPause();
-    }
+	@Override
+	public void onPause() {
+		if (mComingRowAdapter != null)
+			mComingRowAdapter.clearBitmaps();
+		super.onPause();
+	}
 
-    @Override
-    public void onFragmentActivated() {
-        manualRefreshComing();
-    }
+	@Override
+	public void onFragmentActivated() {
+		manualRefreshComing();
+	}
 }

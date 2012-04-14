@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="Server settings" >
+    <PreferenceCategory android:title="Sabnzbd+ settings" >
 
         <EditTextPreference
             android:key="server_url"
@@ -77,15 +77,21 @@
 		<CheckBoxPreference
             android:key="sickbeard_cache"
             android:summary="@string/setting_sickbeard_cache_summary"
-            android:title="@string/setting_sickbeard_cache" />
+            android:title="@string/setting_sickbeard_cache"
+            android:defaultValue="true" />
         
 		<CheckBoxPreference
             android:key="sickbeard_lowres"
 			android:summary="@string/setting_sickbeard_lowres_summary"
             android:title="@string/setting_sickbeard_lowres" />
-		
+
+		<CheckBoxPreference
+            android:key="sickbeard_nomedia"
+			android:summary="@string/setting_sickbeard_nomedia_summary"
+            android:title="@string/setting_sickbeard_nomedia"
+            android:defaultValue="true" />
+				
     </PreferenceCategory>
-    
     
     <PreferenceCategory android:title="Nzbs.org settings" >
 
@@ -105,5 +111,15 @@
             android:summary="@string/setting_nzbs_org_hash_summary"
             android:title="@string/setting_nzbs_org_hash" />
     </PreferenceCategory>
+
+	<PreferenceCategory android:title="Global settings" >
+	    
+        <CheckBoxPreference
+            android:key="data.cache"
+            android:title="@string/setting_data_cache"
+            android:summary="@string/setting_data_cache_summary"
+            android:defaultValue="true" />
+        
+	</PreferenceCategory>    
 
 </PreferenceScreen>

@@ -19,12 +19,15 @@ public class Preferences {
     public static final String SICKBEARD_API_KEY = "sickbeard_api_key";
     public static final String SICKBEARD_CACHE = "sickbeard_cache";
     public static final String SICKBEARD_LOWRES = "sickbeard_lowres";
+    public static final String SICKBEARD_NOMEDIA = "sickbeard_nomedia";
 
     public static final String NZBS_ORG_UID = "nzbs_org_uid";
     public static final String NZBS_ORG_HASH = "nzbs_org_hash";
 
     public static final String NZBMATRIX_UID = "nzbmatrix_uid";
     public static final String NZBMATRIX_HASH = "nzbmatrix_hash";
+
+    public static final String DATA_CACHE = "data.cache";
 
     private static SharedPreferences preferences;
 

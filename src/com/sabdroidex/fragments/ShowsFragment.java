@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.PaintDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -42,7 +44,7 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 
-public class ShowsFragment extends SABDFragment implements OnItemLongClickListener {
+public class ShowsFragment extends SABDFragment implements OnItemClickListener, OnItemLongClickListener {
 
     private static ArrayList<Object[]> rows;
     private static Bitmap mEmptyPoster;
@@ -148,16 +150,29 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
         SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
-        LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.list, null);
+        LinearLayout showView;
+        if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+                && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            showView = (LinearLayout) inflater.inflate(R.layout.show_list, null);
+        }
+        else {
+            showView = (LinearLayout) inflater.inflate(R.layout.list, null);
+        }
 
         mListView = (ListView) showView.findViewById(R.id.queueList);
-        mListView.setDividerHeight(0);
-        showView.removeAllViews();
+        mListView.setDivider(new PaintDrawable(Color.TRANSPARENT));
+        mListView.setDividerHeight(1);
 
         mShowsListRowAdapter = new ShowsListRowAdapter(mParent, rows);
         mListView.setAdapter(mShowsListRowAdapter);
-        mListView.setOnItemLongClickListener(this);
-
+        if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+                && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            mListView.setOnItemClickListener(this);
+        }
+        else {
+            mListView.setOnItemLongClickListener(this);
+        }
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
         if (data != null && extracted(data, 2) != null) {
@@ -172,48 +187,113 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
             manualRefreshShows();
         }
 
-        return mListView;
+        return showView;
     }
 
     @Override
     protected void finalize() throws Throwable {
+    	if (mShowsListRowAdapter != null)
         mShowsListRowAdapter.clearBitmaps();
         super.finalize();
     }
 
     @Override
     public void onDestroyView() {
+    	if (mShowsListRowAdapter != null)
         mShowsListRowAdapter.clearBitmaps();
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
+    	if (mShowsListRowAdapter != null)
         mShowsListRowAdapter.clearBitmaps();
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
+    	if (mShowsListRowAdapter != null)
         mShowsListRowAdapter.clearBitmaps();
         super.onDetach();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+    	if (mShowsListRowAdapter != null)
         mShowsListRowAdapter.clearBitmaps();
         super.onConfigurationChanged(newConfig);
     }
 
     @Override
     public void onPause() {
-        mShowsListRowAdapter.clearBitmaps();
+    	if (mShowsListRowAdapter != null)
+    	mShowsListRowAdapter.clearBitmaps();
         super.onPause();
     }
 
     @Override
     public void onFragmentActivated() {
         manualRefreshShows();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mShowsListRowAdapter.setSelectedItem(position);
+
+        ImageView showPoster = (ImageView) getView().findViewById(R.id.showPoster);
+        showPoster.setImageBitmap(mEmptyPoster);
+
+        TextView showName = (TextView) getView().findViewById(R.id.show_name);
+        showName.setText((CharSequence) rows.get(position)[0]);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+        gradientDrawable.setColor(Color.TRANSPARENT);
+
+        TextView showStatus = (TextView) getView().findViewById(R.id.show_status);
+        showStatus.setText((CharSequence) rows.get(position)[1]);
+        if ("Ended".equals(rows.get(position)[1])) {
+            gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+            gradientDrawable.setColor(Color.rgb(255, 50, 50));
+            showStatus.setBackgroundDrawable(gradientDrawable);
+            showStatus.setTextColor(Color.WHITE);
+        }
+        else {
+            gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+            gradientDrawable.setColor(Color.TRANSPARENT);
+            showStatus.setBackgroundDrawable(gradientDrawable);
+            showStatus.setTextColor(Color.BLACK);
+        }
+
+        TextView showQuality = (TextView) getView().findViewById(R.id.show_quality);
+        showQuality.setText((CharSequence) rows.get(position)[2]);
+        showQuality.setTextColor(Color.WHITE);
+        gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
+        if ("Any".equals(rows.get(position)[2])) {
+            gradientDrawable.setColor(Color.rgb(68, 68, 68));
+        }
+        if ("SD".equals(rows.get(position)[2])) {
+            gradientDrawable.setColor(Color.rgb(153, 68, 68));
+        }
+        if ("HD".equals(rows.get(position)[2])) {
+            gradientDrawable.setColor(Color.rgb(68, 153, 68));
+        }
+        showQuality.setBackgroundDrawable(gradientDrawable);
+
+        TextView showNextEpisode = (TextView) getView().findViewById(R.id.show_next_episode);
+        showNextEpisode.setText((CharSequence) rows.get(position)[3]);
+
+        TextView showNetwork = (TextView) getView().findViewById(R.id.show_network);
+        showNetwork.setText((CharSequence) rows.get(position)[4]);
+
+        TextView showLanguage = (TextView) getView().findViewById(R.id.show_language);
+        showLanguage.setText((CharSequence) rows.get(position)[6]);
+
+        if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
+            mAsyncImage.cancel(true);
+        }
+        mAsyncImage = new AsyncImage();
+        mAsyncImage.execute(getActivity(), handler, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER, 0);
     }
 
     @Override
@@ -305,7 +385,14 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
         public void handleMessage(Message msg) {
             Bitmap bitmap = (Bitmap) msg.obj;
             if (bitmap != null) {
-                ImageView showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
+                ImageView showPoster;
+                if (mParent.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+                        && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    showPoster = (ImageView) getView().findViewById(R.id.showPoster);
+                }
+                else {
+                    showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
+                }
                 showPoster.setImageBitmap(bitmap);
                 showPoster.invalidate();
             }
@@ -373,6 +460,7 @@ public class ShowsFragment extends SABDFragment implements OnItemLongClickListen
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mParent, android.R.layout.simple_list_item_1, shows);
         alert.setAdapter(adapter, new OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Object[] selected = result.get(which);

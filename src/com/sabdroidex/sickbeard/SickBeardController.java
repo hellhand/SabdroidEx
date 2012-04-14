@@ -18,7 +18,8 @@ import com.utils.HttpUtil;
 
 public final class SickBeardController {
 
-    private static boolean executingRefresh = false;
+    private static boolean executingRefreshShows = false;
+    private static boolean executingRefreshComing = false;
     private static boolean executingCommand = false;
 
     private static final String URL_TEMPLATE = "[SICKBEARD_SERVER_URL]/api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
@@ -149,7 +150,7 @@ public final class SickBeardController {
     public static void refreshShows(final Handler messageHandler) {
 
         // Already running or settings not ready
-        if (executingRefresh || !Preferences.isSet(Preferences.SICKBEARD_URL))
+        if (executingRefreshShows || !Preferences.isSet(Preferences.SICKBEARD_URL))
             return;
 
         Thread thread = new Thread() {
@@ -209,12 +210,12 @@ public final class SickBeardController {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
                 }
                 finally {
-                    executingRefresh = false;
+                    executingRefreshShows = false;
                 }
             }
         };
 
-        executingRefresh = true;
+        executingRefreshShows = true;
 
         thread.start();
     }
@@ -227,7 +228,7 @@ public final class SickBeardController {
     public static void refreshFuture(final Handler messageHandler) {
 
         // Already running or settings not ready
-        if (executingRefresh || !Preferences.isSet(Preferences.SICKBEARD_URL))
+        if (executingRefreshComing || !Preferences.isSet(Preferences.SICKBEARD_URL))
             return;
 
         Thread thread = new Thread() {
@@ -289,12 +290,12 @@ public final class SickBeardController {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
                 }
                 finally {
-                    executingRefresh = false;
+                    executingRefreshComing = false;
                 }
             }
         };
 
-        executingRefresh = true;
+        executingRefreshComing = true;
 
         thread.start();
     }

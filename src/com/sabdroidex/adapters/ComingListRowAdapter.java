@@ -31,7 +31,7 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
     private final Vector<Bitmap> mListBanners;
     private final Vector<AsyncImage> mAsyncImages;
     private final Bitmap mEmptyBanner;
-    private ShowsListItem mQueueListItem;
+    private ShowsListItem mComingListItem;
 
     public ComingListRowAdapter(Context context, ArrayList<Object[]> rows) {
         super(context, R.layout.coming_item, rows);
@@ -52,16 +52,16 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.coming_item, null);
-            mQueueListItem = new ShowsListItem();
-            mQueueListItem.title = (TextView) convertView.findViewById(R.id.coming_show_name);
-            mQueueListItem.banner = (ImageView) convertView.findViewById(R.id.coming_show_banner);
-            mQueueListItem.next_ = (TextView) convertView.findViewById(R.id.coming_next_episode_);
-            mQueueListItem.next = (TextView) convertView.findViewById(R.id.coming_next_episode);
-            mQueueListItem.airs_ = (TextView) convertView.findViewById(R.id.coming_airs_);
-            mQueueListItem.airs = (TextView) convertView.findViewById(R.id.coming_airs);
+            mComingListItem = new ShowsListItem();
+            mComingListItem.title = (TextView) convertView.findViewById(R.id.coming_show_name);
+            mComingListItem.banner = (ImageView) convertView.findViewById(R.id.coming_show_banner);
+            mComingListItem.next_ = (TextView) convertView.findViewById(R.id.coming_next_episode_);
+            mComingListItem.next = (TextView) convertView.findViewById(R.id.coming_next_episode);
+            mComingListItem.airs_ = (TextView) convertView.findViewById(R.id.coming_airs_);
+            mComingListItem.airs = (TextView) convertView.findViewById(R.id.coming_airs);
         }
         else {
-            mQueueListItem = (ShowsListItem) convertView.getTag();
+            mComingListItem = (ShowsListItem) convertView.getTag();
         }
 
         this.mListBanners.setSize(rows.size());
@@ -72,24 +72,24 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
          */
         if (rows.get(position).length == 1) {
             convertView.setPadding(1, 0, 1, 0);
-            mQueueListItem.banner.setVisibility(View.GONE);
-            mQueueListItem.next_.setVisibility(View.GONE);
-            mQueueListItem.next.setVisibility(View.GONE);
-            mQueueListItem.airs_.setVisibility(View.GONE);
-            mQueueListItem.airs.setVisibility(View.GONE);
+            mComingListItem.banner.setVisibility(View.GONE);
+            mComingListItem.next_.setVisibility(View.GONE);
+            mComingListItem.next.setVisibility(View.GONE);
+            mComingListItem.airs_.setVisibility(View.GONE);
+            mComingListItem.airs.setVisibility(View.GONE);
 
-            mQueueListItem.title.setTextColor(Color.BLACK);
-            mQueueListItem.title.setBackgroundColor(Color.rgb(156, 181, 207));
-            mQueueListItem.title.setGravity(Gravity.CENTER);
-            mQueueListItem.title.setText(rows.get(position)[0] + " ");
+            mComingListItem.title.setTextColor(Color.BLACK);
+            mComingListItem.title.setBackgroundColor(Color.rgb(156, 181, 207));
+            mComingListItem.title.setGravity(Gravity.CENTER);
+            mComingListItem.title.setText(rows.get(position)[0] + " ");
         }
         else {
             convertView.setPadding(10, 4, 10, 0);
-            mQueueListItem.banner.setVisibility(View.VISIBLE);
-            mQueueListItem.next_.setVisibility(View.VISIBLE);
-            mQueueListItem.next.setVisibility(View.VISIBLE);
-            mQueueListItem.airs_.setVisibility(View.VISIBLE);
-            mQueueListItem.airs.setVisibility(View.VISIBLE);
+            mComingListItem.banner.setVisibility(View.VISIBLE);
+            mComingListItem.next_.setVisibility(View.VISIBLE);
+            mComingListItem.next.setVisibility(View.VISIBLE);
+            mComingListItem.airs_.setVisibility(View.VISIBLE);
+            mComingListItem.airs.setVisibility(View.VISIBLE);
 
             if (rows.size() != 0 && mAsyncImages.size() != rows.size()) {
                 this.mAsyncImages.clear();
@@ -97,7 +97,7 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
             }
 
             if (mListBanners.get(position) == null) {
-                mQueueListItem.banner.setImageBitmap(mEmptyBanner);
+                mComingListItem.banner.setImageBitmap(mEmptyBanner);
 
                 if (mAsyncImages.get(position) == null) {
                     mAsyncImages.add(position, new AsyncImage());
@@ -109,22 +109,22 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
                 }
             }
             else {
-                mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
+                mComingListItem.banner.setImageBitmap(mListBanners.get(position));
             }
 
-            mQueueListItem.title.setTextColor(Color.WHITE);
-            mQueueListItem.title.setBackgroundColor(Color.rgb(128, 128, 128));
-            mQueueListItem.title.setGravity(Gravity.LEFT);
-            mQueueListItem.title.setText(rows.get(position)[2] + " ");
+            mComingListItem.title.setTextColor(Color.WHITE);
+            mComingListItem.title.setBackgroundColor(Color.rgb(128, 128, 128));
+            mComingListItem.title.setGravity(Gravity.LEFT);
+            mComingListItem.title.setText(rows.get(position)[2] + " ");
 
             String next = rows.get(position)[3] + "x" + rows.get(position)[4] + " - " + rows.get(position)[5] + " (" + rows.get(position)[6] + ")";
             String airs = rows.get(position)[7] + " " + rows.get(position)[8] + " [" + rows.get(position)[9] + "]";
 
-            mQueueListItem.next.setText(next);
-            mQueueListItem.airs.setText(airs);
+            mComingListItem.next.setText(next);
+            mComingListItem.airs.setText(airs);
         }
         convertView.setId(position);
-        convertView.setTag(mQueueListItem);
+        convertView.setTag(mComingListItem);
         return (convertView);
     }
 

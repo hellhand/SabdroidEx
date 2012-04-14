@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/track_list_body_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:layout_marginLeft="25dip"
+    android:background="@drawable/list_item_bg"
     android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:paddingLeft="10dip"
-    android:paddingRight="10dip" >
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/coming_show_name"
         android:layout_width="fill_parent"
-        android:layout_height="20dip"
+        android:layout_height="24dip"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
         android:layout_marginTop="8dip"
         android:background="#333333"
         android:maxLines="1"
         android:paddingLeft="4dip"
         android:paddingTop="2dip"
         android:textColor="#FFFFFF"
-        android:textSize="12dip"
+        android:textSize="16dip"
         android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/coming_show_banner"
         android:layout_width="fill_parent"
-        android:layout_height="60dip"
+        android:layout_height="137dip"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
         android:contentDescription="@string/show_banner"
         android:gravity="center_vertical"
         android:scaleType="fitCenter" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip" >
 
         <TextView
             android:id="@+id/coming_next_episode_"
@@ -42,7 +47,7 @@
             android:singleLine="true"
             android:text="@string/comming_next"
             android:textColor="#6a6a6a"
-            android:textSize="12dip"
+            android:textSize="14dip"
             android:textStyle="bold" />
 
         <TextView
@@ -52,12 +57,14 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="#6a6a6a"
-            android:textSize="12dip" />
+            android:textSize="14dip" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
         android:paddingBottom="6dip" >
 
         <TextView
@@ -68,7 +75,7 @@
             android:singleLine="true"
             android:text="@string/comming_airs"
             android:textColor="#6a6a6a"
-            android:textSize="12dip"
+            android:textSize="14dip"
             android:textStyle="bold" />
 
         <TextView
@@ -78,7 +85,7 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="#6a6a6a"
-            android:textSize="12dip" />
+            android:textSize="14dip" />
     </LinearLayout>
 
-</LinearLayout>
+</TableLayout>

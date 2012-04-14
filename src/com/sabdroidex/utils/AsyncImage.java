@@ -2,6 +2,7 @@ package com.sabdroidex.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -33,6 +34,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
         Options BgOptions = new Options();
         BgOptions.inPurgeable = true;
         BgOptions.inPreferredConfig = Config.RGB_565;
+
         String folderPath = mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[3] + File.separator;
         folderPath = folderPath.replace(":", "");
 
@@ -47,6 +49,23 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
         }
 
         if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
+            File noMedia = new File(mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + ".Nomedia");
+            try {
+                if (Preferences.isEnabled(Preferences.SICKBEARD_NOMEDIA)) {
+                    if (!noMedia.exists()) {
+                        noMedia.createNewFile();
+                    }
+                }
+                else {
+                    if (noMedia.exists()) {
+                        noMedia.delete();
+                    }
+                }
+            }
+            catch (IOException e) {
+                Log.w("ERROR", " " + e.getLocalizedMessage());
+            }
+
             /**
              * Trying to find Image on Local System
              */

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask.Status;
@@ -29,6 +30,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
     private final Vector<AsyncImage> mAsyncImages;
     private final Bitmap mEmptyBanner;
     private ShowsListItem mQueueListItem;
+    private int mSelectedIndex;
 
     public ShowsListRowAdapter(Context context, ArrayList<Object[]> rows) {
         super(context, R.layout.show_item, rows);
@@ -46,6 +48,11 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
             convertView = mInflater.inflate(R.layout.show_item, null);
             mQueueListItem = new ShowsListItem();
             mQueueListItem.banner = (ImageView) convertView.findViewById(R.id.showBanner);
+            mQueueListItem.overlay = (ImageView) convertView.findViewById(R.id.showOverlay);
+            if (mContext.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+                    && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                mQueueListItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
+            }
         }
         else {
             mQueueListItem = (ShowsListItem) convertView.getTag();
@@ -74,9 +81,30 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
         else {
             mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
         }
+
+        if (mContext.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+                && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (position == mSelectedIndex) {
+                mQueueListItem.overlay.getLayoutParams().height = convertView.getHeight();
+                mQueueListItem.overlay.setVisibility(View.VISIBLE);
+            }
+            else {
+                mQueueListItem.overlay.setVisibility(View.GONE);
+            }
+        }
+
         convertView.setId(position);
         convertView.setTag(mQueueListItem);
         return (convertView);
+    }
+
+    public void setSelectedItem(int position) {
+        mSelectedIndex = position;
+        notifyDataSetChanged();
+    }
+
+    public int getSelectedIndex() {
+        return mSelectedIndex;
     }
 
     /**
@@ -85,6 +113,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
     class ShowsListItem {
 
         ImageView banner;
+        ImageView overlay;
     }
 
     /**
