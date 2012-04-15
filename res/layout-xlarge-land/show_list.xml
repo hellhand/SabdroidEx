@@ -4,21 +4,15 @@
     android:background="#FFFFFF"
     android:orientation="horizontal" >
 
-    <ListView
-        android:id="@+id/queueList"
+    <include
+        android:id="@+id/show_list_left_pane"
         android:layout_width="540dip"
-        android:layout_height="fill_parent"
-        android:layout_marginRight="16dip"
-        android:background="#FFFFFF"
-        android:cacheColorHint="#FFFFFF"
-        android:divider="#A0A0A0"
-        android:dividerHeight="1px"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="6dip"
-        android:scrollingCache="false" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:layout_marginRight="1dip"
+        layout="@layout/simplelist" />
 
     <include
+        android:id="@+id/show_list_right_pane"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="2dip"

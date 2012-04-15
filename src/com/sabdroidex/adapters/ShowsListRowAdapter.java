@@ -49,7 +49,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
             mQueueListItem = new ShowsListItem();
             mQueueListItem.banner = (ImageView) convertView.findViewById(R.id.showBanner);
             mQueueListItem.overlay = (ImageView) convertView.findViewById(R.id.showOverlay);
-            if (mContext.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+            if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
                     && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 mQueueListItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
             }
@@ -82,7 +82,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
             mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
         }
 
-        if (mContext.getResources().getConfiguration().screenLayout >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+        if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
                 && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (position == mSelectedIndex) {
                 mQueueListItem.overlay.getLayoutParams().height = convertView.getHeight();

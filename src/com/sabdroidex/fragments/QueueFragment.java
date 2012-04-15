@@ -283,6 +283,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 SABnzbdController.addByURL(getMessageHandler(), value);
+                dialog.dismiss();
             }
         });
 
@@ -290,7 +291,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
+                dialog.dismiss();
             }
         });
 

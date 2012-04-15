@@ -23,6 +23,8 @@ import org.apache.http.params.HttpParams;
 
 import android.util.Log;
 
+import com.sabdroidex.utils.Preferences;
+
 public class HttpUtil {
 
     private static final HttpUtil _instance = new HttpUtil();
@@ -119,9 +121,18 @@ public class HttpUtil {
     }
 
     private URLConnection tryOpenConnection(String url) throws RuntimeException {
+        
         URLConnection connection = null;
+        String testUrl;
+        if ("".equals(Preferences.get(Preferences.SERVER_PORT))) {
+            testUrl = Preferences.get(Preferences.SERVER_URL);
+        }
+        else {
+            testUrl = Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT);
+        }
+                
         try {
-            connection = new URL("https://" + url).openConnection();
+            connection = new URL("https://" + testUrl).openConnection();
             connection.getInputStream();
             connection = new URL("https://" + url).openConnection();
             return connection;
@@ -130,7 +141,7 @@ public class HttpUtil {
             Log.w("ERROR", " " + e.getStackTrace()[0]);
         }
         try {
-            connection = new URL("http://" + url).openConnection();
+            connection = new URL("http://" + testUrl).openConnection();
             connection.getInputStream();
             connection = new URL("http://" + url).openConnection();
             return connection;
@@ -204,6 +215,7 @@ public class HttpUtil {
      */
     public char[] getDataAsCharArray(String url) {
         try {
+            System.out.println(url);
             char[] dat = null;
             URLConnection urlc;
 

@@ -77,9 +77,9 @@ public final class SABnzbdController {
     }
 
     /**
-     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * This functions handle the API calls to Sabnzbd to define the URL and parameters
      * 
-     * @param command The type of command that will be sent to SickBeard
+     * @param command The type of command that will be sent to Sabnzbd
      * @return The result of the API call
      * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
      */
@@ -88,9 +88,9 @@ public final class SABnzbdController {
     }
 
     /**
-     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * This functions handle the API calls to Sabnzbd to define the URL and parameters
      * 
-     * @param command The type of command that will be sent to SickBeard
+     * @param command The type of command that will be sent to Sabnzbd
      * @param extraParams Any parameter that will have to be part of the URL
      * @return The result of the API call
      * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
@@ -111,18 +111,19 @@ public final class SABnzbdController {
 
         url = url.replace("[COMMAND]", command);
         url = url + getPreferencesParams();
-        for (String xTraParam : extraParams) {
-            if (xTraParam != null && !xTraParam.trim().equals("")) {
-                url = url + "&" + xTraParam;
-            }
-        }
-
+        
         /**
-         * Checking if there is an API Key from SickBeard to concatenate to the URL
+         * Checking if there is an API Key from Sabnzbd to concatenate to the URL
          */
         String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
         if (!apiKey.trim().equals("")) {
             url = url + "&apikey=" + apiKey;
+        }
+        
+        for (String xTraParam : extraParams) {
+            if (xTraParam != null && !xTraParam.trim().equals("")) {
+                url = url + "&" + xTraParam;
+            }
         }
 
         String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
