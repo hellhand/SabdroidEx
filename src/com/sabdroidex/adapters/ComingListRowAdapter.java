@@ -71,7 +71,7 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
          * If the size is 1, this means this is a time descriptor
          */
         if (rows.get(position).length == 1) {
-            convertView.setPadding(1, 0, 1, 0);
+            convertView.setPadding(0, 0, 0, 0);
             mComingListItem.banner.setVisibility(View.GONE);
             mComingListItem.next_.setVisibility(View.GONE);
             mComingListItem.next.setVisibility(View.GONE);

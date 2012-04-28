@@ -128,8 +128,7 @@ public class ComingFragment extends SABDFragment {
 				null);
 
 		mListView = (ListView) showView.findViewById(R.id.queueList);
-		mListView.setDivider(new PaintDrawable(Color.TRANSPARENT));
-		mListView.setDividerHeight(1);
+		mListView.setDividerHeight(0);
 		showView.removeAllViews();
 
 		mComingRowAdapter = new ComingListRowAdapter(mParent, rows);

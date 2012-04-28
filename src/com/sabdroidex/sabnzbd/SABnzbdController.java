@@ -14,20 +14,20 @@ import com.sabdroidex.utils.Preferences;
 import com.utils.HttpUtil;
 
 public final class SABnzbdController {
-
+    
     private static boolean executingCommand = false;
     private static boolean executingRefreshHistory = false;
     private static boolean executingRefreshQuery = false;
-
+    
     public static boolean paused = false;
     public static double speed = 0.0;
-
+    
     private static final String URL_TEMPLATE = "[SERVER_URL]/api?mode=[COMMAND]&output=json";
-
+    
     public static enum MESSAGE {
         ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, UPDATE;
     }
-
+    
     /**
      * 
      * @param messageHandler
@@ -37,9 +37,9 @@ public final class SABnzbdController {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
+        
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
                 try {
@@ -53,11 +53,11 @@ public final class SABnzbdController {
                 }
             }
         };
-
+        
         sendUpdateMessageStatus(messageHandler, MESSAGE.ADDURL.toString());
         thread.start();
     }
-
+    
     /**
      * 
      * @return
@@ -65,7 +65,7 @@ public final class SABnzbdController {
     private static String getPreferencesParams() {
         String username = Preferences.get(Preferences.SERVER_USERNAME);
         String password = Preferences.get(Preferences.SERVER_PASSWORD);
-
+        
         String credentials = "";
         if (username != null && !"".equals(username)) {
             credentials += "&ma_username=" + username;
@@ -75,30 +75,68 @@ public final class SABnzbdController {
         }
         return credentials;
     }
-
+    
     /**
-     * This functions handle the API calls to Sabnzbd to define the URL and parameters
+     * This functions handle the API calls to Sabnzbd to define the URL and
+     * parameters
      * 
-     * @param command The type of command that will be sent to Sabnzbd
+     * @param command
+     *            The type of command that will be sent to Sabnzbd
      * @return The result of the API call
-     * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
+     * @throws RuntimeException
+     *             Thrown if there is any unexpected problem during the
+     *             communication with the server
      */
     public static String makeApiCall(String command) throws RuntimeException {
         return makeApiCall(command, "");
     }
-
+    
     /**
-     * This functions handle the API calls to Sabnzbd to define the URL and parameters
+     * This functions handle the API calls to Sabnzbd to define the URL and
+     * parameters
      * 
-     * @param command The type of command that will be sent to Sabnzbd
-     * @param extraParams Any parameter that will have to be part of the URL
+     * @param command
+     *            The type of command that will be sent to Sabnzbd
+     * @param extraParams
+     *            Any parameter that will have to be part of the URL
      * @return The result of the API call
-     * @throws RuntimeException Thrown if there is any unexpected problem during the communication with the server
+     * @throws RuntimeException
+     *             Thrown if there is any unexpected problem during the
+     *             communication with the server
      */
     public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
-
+        
+        String url = getFormattedUrl();
+        
+        /**
+         * Checking if there is an API Key from Sabnzbd to concatenate to the
+         * URL
+         */
+        String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
+        if (!apiKey.trim().equals("")) {
+            url = url + "&apikey=" + apiKey;
+        }
+        
+        url = url.replace("[COMMAND]", command);
+        url = url + getPreferencesParams();
+        
+        for (String xTraParam : extraParams) {
+            if (xTraParam != null && !xTraParam.trim().equals("")) {
+                url = url + "&" + xTraParam;
+            }
+        }
+        
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
+        return result;
+    }
+    
+    /**
+     * This function gets the URL used to connect to the Sabnzbd server
+     * 
+     * @return url A {@link String} containing the URL of the Sabnzbd server
+     */
+    private static String getFormattedUrl() {
         String url = URL_TEMPLATE;
-
         /**
          * Checking if there is a port to concatenate to the URL
          */
@@ -108,28 +146,19 @@ public final class SABnzbdController {
         else {
             url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT));
         }
-
-        url = url.replace("[COMMAND]", command);
-        url = url + getPreferencesParams();
         
-        /**
-         * Checking if there is an API Key from Sabnzbd to concatenate to the URL
-         */
-        String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
-        if (!apiKey.trim().equals("")) {
-            url = url + "&apikey=" + apiKey;
-        }
-        
-        for (String xTraParam : extraParams) {
-            if (xTraParam != null && !xTraParam.trim().equals("")) {
-                url = url + "&" + xTraParam;
+        if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
+            if (Preferences.isEnabled(Preferences.SERVER_SSL)) {
+                url = "https://" + url;
             }
+//            else {
+//                url = "http://" + url;
+//            }
         }
-
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
-        return result;
+        
+        return url;
     }
-
+    
     /**
      * Pauses or resumes a queue item depending on the current status
      * 
@@ -137,13 +166,13 @@ public final class SABnzbdController {
      * @param item
      */
     public static void pauseResumeItem(final Handler messageHandler, final Object[] item) {
-
+        
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
+        
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
                 try {
@@ -166,15 +195,15 @@ public final class SABnzbdController {
             }
         };
         executingCommand = true;
-
+        
         if (paused)
             sendUpdateMessageStatus(messageHandler, MESSAGE.RESUME.toString());
         else
             sendUpdateMessageStatus(messageHandler, MESSAGE.PAUSE.toString());
-
+        
         thread.start();
     }
-
+    
     /**
      * Pauses or resumes the queue depending on the current status
      * 
@@ -184,9 +213,9 @@ public final class SABnzbdController {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
+        
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
                 try {
@@ -209,15 +238,15 @@ public final class SABnzbdController {
             }
         };
         executingCommand = true;
-
+        
         if (paused)
             sendUpdateMessageStatus(messageHandler, MESSAGE.RESUME.toString());
         else
             sendUpdateMessageStatus(messageHandler, MESSAGE.PAUSE.toString());
-
+        
         thread.start();
     }
-
+    
     /**
      * 
      * @param messageHandler
@@ -227,18 +256,18 @@ public final class SABnzbdController {
         if (executingRefreshHistory || !Preferences.isSet(Preferences.SERVER_URL))
             return;
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
-
+                
                 try {
                     Object results[] = new Object[2];
-
+                    
                     String queueData = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
                     // Removing unnecessary top tag in server answer
                     queueData = queueData.substring(11, queueData.length() - 1);
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
-
+                    
                     JSONObject jsonObject = new JSONObject(queueData);
                     speed = jsonObject.optLong("kbpersec", 0);
                     if (jsonObject.get("paused") == null)
@@ -250,12 +279,12 @@ public final class SABnzbdController {
                         // but "true" is considered false
                         paused = Boolean.parseBoolean(jsonObject.getString("paused"));
                     }
-
+                    
                     results[0] = jsonObject;
-
+                    
                     JSONArray jobs = jsonObject.getJSONArray("slots");
                     rows.clear();
-
+                    
                     for (int i = 0; i < jobs.length(); i++) {
                         Object[] rowValues = new Object[4];
                         rowValues[0] = jobs.getJSONObject(i).getString("name");
@@ -264,15 +293,15 @@ public final class SABnzbdController {
                         rowValues[3] = jobs.getJSONObject(i).getString("nzo_id");
                         rows.add(rowValues);
                     }
-
+                    
                     results[1] = rows;
-
+                    
                     Message message = new Message();
                     message.setTarget(messageHandler);
                     message.what = MESSAGE.HISTORY.ordinal();
                     message.obj = results;
                     message.sendToTarget();
-
+                    
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 catch (RuntimeException e) {
@@ -288,35 +317,35 @@ public final class SABnzbdController {
                 }
             }
         };
-
+        
         executingRefreshHistory = true;
         sendUpdateMessageStatus(messageHandler, MESSAGE.HISTORY.toString());
         thread.start();
     }
-
+    
     /**
      * 
      * @param messageHandler
      */
     public static void refreshQueue(final Handler messageHandler) {
-
+        
         // Already running or settings not ready
         if (executingRefreshQuery || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
+        
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
-
+                
                 try {
                     Object results[] = new Object[2];
-
+                    
                     String queueData = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
                     // Removing unnecessary top tag in server answer
                     queueData = queueData.substring(9, queueData.length() - 1);
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
-
+                    
                     JSONObject jsonObject = new JSONObject(queueData);
                     speed = jsonObject.optLong("kbpersec", 0);
                     if (jsonObject.get("paused") == null)
@@ -328,12 +357,12 @@ public final class SABnzbdController {
                         // but "true" is considered false
                         paused = Boolean.parseBoolean(jsonObject.getString("paused"));
                     }
-
+                    
                     results[0] = jsonObject;
-
+                    
                     JSONArray jobs = jsonObject.getJSONArray("slots");
                     rows.clear();
-
+                    
                     for (int i = 0; i < jobs.length(); i++) {
                         Object[] rowValues = new Object[5];
                         rowValues[0] = jobs.getJSONObject(i).getString("filename");
@@ -343,15 +372,15 @@ public final class SABnzbdController {
                         rowValues[4] = jobs.getJSONObject(i).getString("nzo_id");
                         rows.add(rowValues);
                     }
-
+                    
                     results[1] = rows;
-
+                    
                     Message message = new Message();
                     message.setTarget(messageHandler);
                     message.what = MESSAGE.QUEUE.ordinal();
                     message.obj = results;
                     message.sendToTarget();
-
+                    
                     sendUpdateMessageStatus(messageHandler, "");
                 }
                 catch (RuntimeException e) {
@@ -367,12 +396,12 @@ public final class SABnzbdController {
                 }
             }
         };
-
+        
         executingRefreshQuery = true;
         sendUpdateMessageStatus(messageHandler, MESSAGE.QUEUE.toString());
         thread.start();
     }
-
+    
     /**
      * Removes a history item
      * 
@@ -380,16 +409,16 @@ public final class SABnzbdController {
      * @param item
      */
     public static void removeHistoryItem(final Handler messageHandler, final Object[] item) {
-
+        
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
+        
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
-
+                
                 try {
                     makeApiCall(MESSAGE.HISTORY.toString().toLowerCase(), "name=delete", "value=" + item[3]);
                     Thread.sleep(250);
@@ -404,12 +433,12 @@ public final class SABnzbdController {
                 }
             }
         };
-
+        
         executingCommand = true;
         sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
-
+    
     /**
      * Removes a queue item
      * 
@@ -417,16 +446,16 @@ public final class SABnzbdController {
      * @param item
      */
     public static void removeQueueItem(final Handler messageHandler, final Object[] item) {
-
+        
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-
+        
         Thread thread = new Thread() {
-
+            
             @Override
             public void run() {
-
+                
                 try {
                     makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=delete", "value=" + item[4]);
                     Thread.sleep(250);
@@ -445,15 +474,17 @@ public final class SABnzbdController {
         sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
-
+    
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar
      * 
-     * @param messageHandler The message handler to be notified
-     * @param text The text to write in the message
+     * @param messageHandler
+     *            The message handler to be notified
+     * @param text
+     *            The text to write in the message
      */
     private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
-
+        
         Message message = new Message();
         message.setTarget(messageHandler);
         message.what = MESSAGE.UPDATE.ordinal();

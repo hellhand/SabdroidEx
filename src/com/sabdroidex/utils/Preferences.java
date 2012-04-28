@@ -6,6 +6,7 @@ public class Preferences {
 
     public static final String SERVER_URL = "server_url";
     public static final String SERVER_PORT = "server_port";
+    public static final String SERVER_SSL = "server_ssl";
     public static final String SERVER_RATE = "refresh_rate";
     public static final String SERVER_HTTP_AUTH = "server_http_auth";
     public static final String SERVER_USERNAME = "sabnzb_auth_username";
@@ -15,6 +16,7 @@ public class Preferences {
     public static final String SICKBEARD = "sickbeard";
     public static final String SICKBEARD_URL = "sickbeard_url";
     public static final String SICKBEARD_PORT = "sickbeard_port";
+    public static final String SICKBEARD_SSL = "sickbeard_ssl";
     public static final String SICKBEARD_RATE = "sickbeard_rate";
     public static final String SICKBEARD_API_KEY = "sickbeard_api_key";
     public static final String SICKBEARD_CACHE = "sickbeard_cache";

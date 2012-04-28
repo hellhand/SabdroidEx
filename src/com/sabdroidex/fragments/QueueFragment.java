@@ -246,7 +246,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                         int rate = Integer.valueOf(Preferences.get("refresh_rate", "5000"));
                         Thread.sleep(rate);
                     }
-                    catch (InterruptedException e) {
+                    catch (Exception e) {
                         Log.w("ERROR", e.getLocalizedMessage());
                     }
                     if (!paused)
