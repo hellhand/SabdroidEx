@@ -16,13 +16,16 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +41,7 @@ import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.ShowsFragment;
 import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
+import com.sabdroidex.utils.RawReader;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
 import com.utils.Formatter;
@@ -56,6 +60,7 @@ public class SABDroidEx extends ActionBarActivity {
     private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> comingRows = new ArrayList<Object[]>();
     private static JSONObject backupJsonObject = null;
+    private static String application_version;
     protected boolean paused = false;
 
     /**
@@ -78,15 +83,30 @@ public class SABDroidEx extends ActionBarActivity {
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
+        try
+        {
+            application_version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+        }
+        catch (NameNotFoundException e)
+        {
+            Log.v("ERROR", e.getMessage());
+        }
+        
+        if (!Preferences.get(Preferences.VERSION).equals(application_version)) {
+            deleteFile(Preferences.DATA_CACHE);
+            showUpdatePopUp();
+            Preferences.put(Preferences.VERSION, application_version);
+        }
+        
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
+            
             /**
              * Restoring data.
              */
-            String FILENAME = Preferences.DATA_CACHE;
 
             FileInputStream fis = null;
             try {
-                fis = openFileInput(FILENAME);
+                fis = openFileInput(Preferences.DATA_CACHE);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 downloadRows = (ArrayList<Object[]>) ois.readObject();
                 historyRows = (ArrayList<Object[]>) ois.readObject();
@@ -348,6 +368,10 @@ public class SABDroidEx extends ActionBarActivity {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
         }
+        if (!Debug.isDebuggerConnected())
+        {
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -359,29 +383,35 @@ public class SABDroidEx extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 manualRefresh();
-                return true;
+                break;
             case R.id.menu_quit:
                 finish();
-                return true;
+                break;
             case R.id.menu_settings:
                 showSettings();
-                return true;
+                break;
             case R.id.menu_play_pause:
                 SABnzbdController.pauseResumeQueue(queue.getMessageHandler());
-                return true;
+                break;
             case R.id.menu_add_nzb:
                 addPrompt();
-                return true;
+                break;
             case R.id.menu_search:
                 onSearchRequested();
-                return true;
+                break;
+            case R.id.menu_clear:
+                clearVersion();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void clearVersion() {
+        Preferences.put(Preferences.VERSION, "");
+    }
+
     private void addPrompt() {
 
-        AlertDialog dialog = null;
         OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 
             @Override
@@ -418,6 +448,8 @@ public class SABDroidEx extends ActionBarActivity {
                 }
             }
         });
+        
+        AlertDialog dialog = null;
         dialog = builder.create();
         dialog.show();
     }
@@ -441,7 +473,7 @@ public class SABDroidEx extends ActionBarActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if (whichButton == Dialog.BUTTON1) {
+                        if (whichButton == Dialog.BUTTON_POSITIVE) {
                             showSettings();
                             manualRefresh();
                         }
@@ -457,9 +489,36 @@ public class SABDroidEx extends ActionBarActivity {
         }
         return null;
     }
-
+    
     /**
-     * This function will Serialise the current data for reuse the next time it is restarted
+     * This method creates the pop-up that is displayed when a new version of the application is installed
+     */
+    private void showUpdatePopUp() {
+        OnClickListener clickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        };
+        
+        String versionInfo = RawReader.readTextRaw(getApplicationContext(), R.raw.version_info);
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
+        builder.setTitle(R.string.new_version);
+        builder.setPositiveButton(android.R.string.ok, clickListener);
+        builder.setMessage(versionInfo);
+        
+        AlertDialog dialog = null;
+        dialog = builder.create();
+        dialog.show();
+        
+        TextView messageView = (TextView)dialog.findViewById(android.R.id.message);
+        messageView.setGravity(Gravity.LEFT);
+    }
+    
+    /**
+     * This function will Serialize the current data for reuse the next time the application is reopened
      */
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
@@ -473,7 +532,7 @@ public class SABDroidEx extends ActionBarActivity {
     }
 
     /**
-     * This function updates the Icon on the screen according to the message received
+     * This function updates the Refresh Icon on the screen according to the message received
      * 
      * @param message
      */

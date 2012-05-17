@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
@@ -75,6 +76,9 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
                 try {
                     ((SABDroidEx) mParent).updateStatus(false);
+                    if (msg.obj instanceof String && !"".equals((String)msg.obj)) {
+                        Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
+                    }
                 }
                 catch (Exception e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
@@ -234,7 +238,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     }
 
     /**
-     * Fires up a new Thread to update the queue every X minutes TODO add configuration to controll the auto updates
+     * Fires up a new Thread to update the queue every X minutes
      */
     private void startAutomaticUpdater() {
         updater = new Thread() {

@@ -20,7 +20,6 @@ public final class SABnzbdController {
     private static boolean executingRefreshQuery = false;
     
     public static boolean paused = false;
-    public static double speed = 0.0;
     
     private static final String URL_TEMPLATE = "[SERVER_URL]/api?mode=[COMMAND]&output=json";
     
@@ -151,9 +150,9 @@ public final class SABnzbdController {
             if (Preferences.isEnabled(Preferences.SERVER_SSL)) {
                 url = "https://" + url;
             }
-//            else {
-//                url = "http://" + url;
-//            }
+            else {
+                url = "http://" + url;
+            }
         }
         
         return url;
@@ -264,62 +263,66 @@ public final class SABnzbdController {
                     Object results[] = new Object[2];
                     
                     String queueData = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
-                    // Removing unnecessary top tag in server answer
-                    queueData = queueData.substring(11, queueData.length() - 1);
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
                     
                     JSONObject jsonObject = new JSONObject(queueData);
-                    speed = jsonObject.optLong("kbpersec", 0);
-                    if (jsonObject.get("paused") == null)
-                        paused = false;
+                    
+                    if (!jsonObject.isNull("error")) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    }
                     else {
-                        // Due to a bug(?) on sabnzbd right after a restart this
-                        // field is "null" as a string
-                        // parseBoolean should take care of that since anything
-                        // but "true" is considered false
-                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
+                        jsonObject = jsonObject.getJSONObject("history");
+                        
+                        if (jsonObject.get("paused") == null) {
+                            paused = false;
+                        }
+                        else {
+                            // Due to a bug(?) on sabnzbd right after a restart this
+                            // field is "null" as a string
+                            // parseBoolean should take care of that since anything
+                            // but "true" is considered false
+                            paused = Boolean.parseBoolean(jsonObject.getString("paused"));
+                        }
+                        
+                        results[0] = jsonObject;
+                        
+                        JSONArray jobs = jsonObject.getJSONArray("slots");
+                        rows.clear();
+                        
+                        for (int i = 0; i < jobs.length(); i++) {
+                            Object[] rowValues = new Object[5];
+                            rowValues[0] = jobs.getJSONObject(i).getString("name");
+                            rowValues[1] = jobs.getJSONObject(i).getString("size");
+                            rowValues[2] = jobs.getJSONObject(i).getString("status");
+                            rowValues[3] = jobs.getJSONObject(i).getString("nzo_id");
+                            rowValues[4] = jobs.getJSONObject(i).getString("fail_message");
+                            rows.add(rowValues);
+                        }
+                        
+                        results[1] = rows;
+                        
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.HISTORY.ordinal();
+                        message.obj = results;
+                        message.sendToTarget();
                     }
-                    
-                    results[0] = jsonObject;
-                    
-                    JSONArray jobs = jsonObject.getJSONArray("slots");
-                    rows.clear();
-                    
-                    for (int i = 0; i < jobs.length(); i++) {
-                        Object[] rowValues = new Object[4];
-                        rowValues[0] = jobs.getJSONObject(i).getString("name");
-                        rowValues[1] = jobs.getJSONObject(i).getString("size");
-                        rowValues[2] = jobs.getJSONObject(i).getString("status");
-                        rowValues[3] = jobs.getJSONObject(i).getString("nzo_id");
-                        rows.add(rowValues);
-                    }
-                    
-                    results[1] = rows;
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.HISTORY.ordinal();
-                    message.obj = results;
-                    message.sendToTarget();
-                    
-                    sendUpdateMessageStatus(messageHandler, "");
                 }
                 catch (RuntimeException e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
-                    sendUpdateMessageStatus(messageHandler, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
-                    sendUpdateMessageStatus(messageHandler, "");
                 }
                 finally {
                     executingRefreshHistory = false;
+                    sendUpdateMessageStatus(messageHandler, "");
                 }
             }
         };
         
         executingRefreshHistory = true;
-        sendUpdateMessageStatus(messageHandler, MESSAGE.HISTORY.toString());
+        sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
     
@@ -342,63 +345,67 @@ public final class SABnzbdController {
                     Object results[] = new Object[2];
                     
                     String queueData = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
-                    // Removing unnecessary top tag in server answer
-                    queueData = queueData.substring(9, queueData.length() - 1);
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
                     
                     JSONObject jsonObject = new JSONObject(queueData);
-                    speed = jsonObject.optLong("kbpersec", 0);
-                    if (jsonObject.get("paused") == null)
-                        paused = false;
+                    
+                    if (!jsonObject.isNull("error")) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    }
                     else {
-                        // Due to a bug(?) on sabnzbd right after a restart this
-                        // field is "null" as a string
-                        // parseBoolean should take care of that since anything
-                        // but "true" is considered false
-                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
+                        jsonObject = jsonObject.getJSONObject("queue");
+                        
+                        if (jsonObject.get("paused") == null) {
+                            paused = false;
+                        }
+                        else {
+                            // Due to a bug(?) on sabnzbd right after a restart this
+                            // field is "null" as a string
+                            // parseBoolean should take care of that since anything
+                            // but "true" is considered false
+                            paused = Boolean.parseBoolean(jsonObject.getString("paused"));
+                        }
+                        
+                        results[0] = jsonObject;
+                        
+                        JSONArray jobs = jsonObject.getJSONArray("slots");
+                        rows.clear();
+                        
+                        for (int i = 0; i < jobs.length(); i++) {
+                            Object[] rowValues = new Object[6];
+                            rowValues[0] = jobs.getJSONObject(i).getString("filename");
+                            rowValues[1] = jobs.getJSONObject(i).getDouble("mb");
+                            rowValues[2] = jobs.getJSONObject(i).getDouble("mbleft");
+                            rowValues[3] = jobs.getJSONObject(i).getString("status");
+                            rowValues[4] = jobs.getJSONObject(i).getString("nzo_id");
+                            rowValues[5] = jobs.getJSONObject(i).getString("timeleft");
+                            rows.add(rowValues);
+                        }
+                        
+                        results[1] = rows;
+                        
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.QUEUE.ordinal();
+                        message.obj = results;
+                        message.sendToTarget();
                     }
-                    
-                    results[0] = jsonObject;
-                    
-                    JSONArray jobs = jsonObject.getJSONArray("slots");
-                    rows.clear();
-                    
-                    for (int i = 0; i < jobs.length(); i++) {
-                        Object[] rowValues = new Object[5];
-                        rowValues[0] = jobs.getJSONObject(i).getString("filename");
-                        rowValues[1] = jobs.getJSONObject(i).getDouble("mb");
-                        rowValues[2] = jobs.getJSONObject(i).getDouble("mbleft");
-                        rowValues[3] = jobs.getJSONObject(i).getString("status");
-                        rowValues[4] = jobs.getJSONObject(i).getString("nzo_id");
-                        rows.add(rowValues);
-                    }
-                    
-                    results[1] = rows;
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.QUEUE.ordinal();
-                    message.obj = results;
-                    message.sendToTarget();
-                    
-                    sendUpdateMessageStatus(messageHandler, "");
                 }
                 catch (RuntimeException e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
-                    sendUpdateMessageStatus(messageHandler, e.getMessage());
                 }
                 catch (Throwable e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
-                    sendUpdateMessageStatus(messageHandler, "");
                 }
                 finally {
                     executingRefreshQuery = false;
+                    sendUpdateMessageStatus(messageHandler, "");
                 }
             }
         };
         
         executingRefreshQuery = true;
-        sendUpdateMessageStatus(messageHandler, MESSAGE.QUEUE.toString());
+        sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
     

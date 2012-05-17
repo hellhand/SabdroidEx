@@ -1,5 +1,6 @@
 package com.sabdroidex.sickbeard;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -17,22 +18,21 @@ import com.sabdroidex.utils.Preferences;
 import com.utils.HttpUtil;
 
 public final class SickBeardController {
-    
+
     private static boolean executingRefreshShows = false;
     private static boolean executingRefreshComing = false;
     private static boolean executingCommand = false;
-    
+
     private static final String URL_TEMPLATE = "[SICKBEARD_SERVER_URL]/api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
-    
+
     public static enum MESSAGE {
         SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE
     }
-    
+
     /**
-     * Adds a show to SickBeard. For the location the configuration setting
-     * (default) is used -- if valid. The result sent to the {@link Handler}
-     * will be a {@link String} containing the status.
+     * Adds a show to SickBeard. For the location the configuration setting (default) is used -- if valid. The result sent to the {@link Handler} will be a
+     * {@link String} containing the status.
      * 
      * @param messageHandler
      *            The message handler to be notified
@@ -43,29 +43,29 @@ public final class SickBeardController {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
                     Object results[] = new Object[2];
                     String addData = makeApiCall(MESSAGE.SHOW_ADDNEW.toString().toLowerCase(), "tvdbid=" + value);
-                    
+
                     /**
                      * Getting the values from the JSON Object
                      */
                     JSONObject jsonObject = new JSONObject(addData);
-                    
+
                     results[0] = jsonObject;
                     results[1] = jsonObject.getString("result");
-                    
+
                     Message message = new Message();
                     message.setTarget(messageHandler);
                     message.what = MESSAGE.SHOW_ADDNEW.ordinal();
-                    message.obj = results;
+                    message.obj = results[1];
                     message.sendToTarget();
-                    
+
                     Thread.sleep(250);
                     SickBeardController.refreshShows(messageHandler);
                 }
@@ -77,17 +77,15 @@ public final class SickBeardController {
                 }
             }
         };
-        
+
         sendUpdateMessageStatus(messageHandler, MESSAGE.SHOW_ADDNEW.toString());
-        
+
         thread.start();
     }
-    
+
     /**
-     * Search for a show to add to SickBeard. The result sent to the
-     * {@link Handler} will be an array of all the shows matching. Each of these
-     * shows is presented in the form of an {@link Object[]} with the following
-     * informations : First Time Aired, Name, TvDBid.
+     * Search for a show to add to SickBeard. The result sent to the {@link Handler} will be an array of all the shows matching. Each of these shows is
+     * presented in the form of an {@link Object[]} with the following informations : First Time Aired, Name, TvDBid.
      * 
      * @param messageHandler
      *            The message handler to be notified
@@ -98,42 +96,47 @@ public final class SickBeardController {
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
             return;
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
                     Object results[] = new Object[2];
-                    String searchData = makeApiCall(MESSAGE.SB_SEARCHTVDB.toString().toLowerCase(), "name=" + value, "lang=en");
-                    
+
+                    String searchData = makeApiCall(MESSAGE.SB_SEARCHTVDB.toString().toLowerCase(), "name=" + URLEncoder.encode(value, "UTF-8"), "lang=en");
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
-                    
+
                     /**
                      * Getting the values from the JSON Object
                      */
                     JSONObject jsonObject = new JSONObject(searchData);
-                    jsonObject = jsonObject.getJSONObject("data");
-                    results[0] = jsonObject;
-                    
-                    JSONArray jobs = jsonObject.getJSONArray("results");
-                    rows.clear();
-                    
-                    for (int i = 0; i < jobs.length(); i++) {
-                        Object[] rowValues = new Object[3];
-                        rowValues[0] = jobs.getJSONObject(i).getString("first_aired");
-                        rowValues[1] = jobs.getJSONObject(i).getString("name");
-                        rowValues[2] = jobs.getJSONObject(i).getString("tvdbid");
-                        rows.add(rowValues);
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
-                    
-                    results[1] = rows;
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.SB_SEARCHTVDB.ordinal();
-                    message.obj = results;
-                    message.sendToTarget();
+                    else {
+                        jsonObject = jsonObject.getJSONObject("data");
+                        results[0] = jsonObject;
+
+                        JSONArray jobs = jsonObject.getJSONArray("results");
+                        rows.clear();
+
+                        for (int i = 0; i < jobs.length(); i++) {
+                            Object[] rowValues = new Object[3];
+                            rowValues[0] = jobs.getJSONObject(i).getString("first_aired");
+                            rowValues[1] = jobs.getJSONObject(i).getString("name");
+                            rowValues[2] = jobs.getJSONObject(i).getString("tvdbid");
+                            rows.add(rowValues);
+                        }
+
+                        results[1] = rows;
+
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.SB_SEARCHTVDB.ordinal();
+                        message.obj = results;
+                        message.sendToTarget();
+                    }
                 }
                 catch (Throwable e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
@@ -143,75 +146,78 @@ public final class SickBeardController {
                 }
             }
         };
-        
+
         sendUpdateMessageStatus(messageHandler, MESSAGE.SB_SEARCHTVDB.toString());
-        
+
         thread.start();
     }
-    
+
     /**
-     * Refresh the shows that are in SickBeard. The result sent to the
-     * {@link Handler} will be an array of all the shows.
+     * Refresh the shows that are in SickBeard. The result sent to the {@link Handler} will be an array of all the shows.
      * 
      * @param messageHandler
      *            The message handler to be notified
      */
     public static void refreshShows(final Handler messageHandler) {
-        
+
         // Already running or settings not ready
         if (executingRefreshShows || !Preferences.isSet(Preferences.SICKBEARD_URL))
             return;
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
-                
+
                 try {
                     Object results[] = new Object[2];
                     String queueData = makeApiCall(MESSAGE.SHOWS.toString().toLowerCase(), "sort=name");
-                    
+
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
-                    
+
                     /**
                      * Getting the values from the JSON Object
                      */
                     JSONObject jsonObject = new JSONObject(queueData);
-                    jsonObject = jsonObject.getJSONObject("data");
-                    results[0] = jsonObject;
-                    
-                    List<String> sortKey = new ArrayList<String>();
-                    Iterator<?> iterator = jsonObject.keys();
-                    while (iterator.hasNext()) {
-                        sortKey.add((String) iterator.next());
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
-                    Collections.sort(sortKey);
-                    rows.clear();
-                    
-                    for (int i = 0; i < sortKey.size(); i++) {
-                        /**
-                         * The seventh item will be the banner The eighth item
-                         * will be the poster
-                         */
-                        Object[] rowValues = new Object[7];
-                        JSONObject current = jsonObject.getJSONObject(sortKey.get(i));
-                        rowValues[0] = sortKey.get(i);
-                        rowValues[1] = current.getString("status");
-                        rowValues[2] = current.getString("quality");
-                        rowValues[3] = current.getString("next_ep_airdate");
-                        rowValues[4] = current.getString("network");
-                        rowValues[5] = current.getInt("tvdbid");
-                        rowValues[6] = current.getString("language");
-                        rows.add(rowValues);
+                    else {
+                        jsonObject = jsonObject.getJSONObject("data");
+                        results[0] = jsonObject;
+
+                        List<String> sortKey = new ArrayList<String>();
+                        Iterator<?> iterator = jsonObject.keys();
+                        while (iterator.hasNext()) {
+                            sortKey.add((String) iterator.next());
+                        }
+                        Collections.sort(sortKey);
+                        rows.clear();
+
+                        for (int i = 0; i < sortKey.size(); i++) {
+                            /**
+                             * The seventh item will be the banner The eighth item will be the poster
+                             */
+                            Object[] rowValues = new Object[7];
+                            JSONObject current = jsonObject.getJSONObject(sortKey.get(i));
+                            rowValues[0] = sortKey.get(i);
+                            rowValues[1] = current.getString("status");
+                            rowValues[2] = current.getString("quality");
+                            rowValues[3] = current.getString("next_ep_airdate");
+                            rowValues[4] = current.getString("network");
+                            rowValues[5] = current.getInt("tvdbid");
+                            rowValues[6] = current.getString("language");
+                            rows.add(rowValues);
+                        }
+
+                        results[1] = rows;
+
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.SHOWS.ordinal();
+                        message.obj = results;
+                        message.sendToTarget();
                     }
-                    
-                    results[1] = rows;
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOWS.ordinal();
-                    message.obj = results;
-                    message.sendToTarget();
                 }
                 catch (RuntimeException e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
@@ -224,77 +230,80 @@ public final class SickBeardController {
                 }
             }
         };
-        
+
         executingRefreshShows = true;
-        
+
         thread.start();
     }
-    
+
     /**
-     * Refresh the shows that are in SickBeard. The result sent to the
-     * {@link Handler} will be an array of all the shows.
+     * Refresh the shows that are in SickBeard. The result sent to the {@link Handler} will be an array of all the shows.
      * 
      * @param messageHandler
      *            The message handler to be notified
      */
     public static void refreshFuture(final Handler messageHandler) {
-        
+
         // Already running or settings not ready
         if (executingRefreshComing || !Preferences.isSet(Preferences.SICKBEARD_URL))
             return;
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
-                
+
                 try {
                     Object results[] = new Object[2];
                     String queueData = makeApiCall(MESSAGE.FUTURE.toString().toLowerCase(), "sort=date");
-                    
+
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
-                    
+
                     /**
                      * Getting the values from the JSON Object
                      */
                     JSONObject jsonObject = new JSONObject(queueData);
-                    jsonObject = jsonObject.getJSONObject("data");
-                    results[0] = jsonObject;
-                    
-                    Iterator<?> iterator = jsonObject.keys();
-                    while (iterator.hasNext()) {
-                        String when = (String) iterator.next();
-                        rows.add(new Object[] { when });
-                        JSONArray group = jsonObject.getJSONArray(when);
-                        for (int i = 0; i < group.length(); i++) {
-                            /**
-                             * The seventh item will be the banner The eighth
-                             * item will be the poster
-                             */
-                            Object[] rowValues = new Object[10];
-                            JSONObject current = group.getJSONObject(i);
-                            rowValues[0] = when;
-                            rowValues[1] = current.getInt("tvdbid");
-                            rowValues[2] = current.getString("show_name");
-                            
-                            rowValues[3] = current.getInt("season");
-                            rowValues[4] = current.getInt("episode");
-                            rowValues[5] = current.getString("ep_name");
-                            rowValues[6] = current.getString("airdate");
-                            
-                            rowValues[7] = current.getString("airs");
-                            rowValues[8] = current.getString("network");
-                            rowValues[9] = current.getString("quality");
-                            rows.add(rowValues);
-                        }
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
-                    results[1] = rows;
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.FUTURE.ordinal();
-                    message.obj = results;
-                    message.sendToTarget();
+                    else {
+                        jsonObject = jsonObject.getJSONObject("data");
+                        results[0] = jsonObject;
+
+                        Iterator<?> iterator = jsonObject.keys();
+                        while (iterator.hasNext()) {
+                            String when = (String) iterator.next();
+                            rows.add(new Object[] { when });
+                            JSONArray group = jsonObject.getJSONArray(when);
+                            for (int i = 0; i < group.length(); i++) {
+                                /**
+                                 * The seventh item will be the banner The eighth item will be the poster
+                                 */
+                                Object[] rowValues = new Object[10];
+                                JSONObject current = group.getJSONObject(i);
+                                rowValues[0] = when;
+                                rowValues[1] = current.getInt("tvdbid");
+                                rowValues[2] = current.getString("show_name");
+
+                                rowValues[3] = current.getInt("season");
+                                rowValues[4] = current.getInt("episode");
+                                rowValues[5] = current.getString("ep_name");
+                                rowValues[6] = current.getString("airdate");
+
+                                rowValues[7] = current.getString("airs");
+                                rowValues[8] = current.getString("network");
+                                rowValues[9] = current.getString("quality");
+                                rows.add(rowValues);
+                            }
+                        }
+                        results[1] = rows;
+
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.FUTURE.ordinal();
+                        message.obj = results;
+                        message.sendToTarget();
+                    }
                 }
                 catch (RuntimeException e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
@@ -307,15 +316,14 @@ public final class SickBeardController {
                 }
             }
         };
-        
+
         executingRefreshComing = true;
-        
+
         thread.start();
     }
-    
+
     /**
-     * This functions handle the API calls to SickBeard to define the URL and
-     * parameters
+     * This functions handle the API calls to SickBeard to define the URL and parameters
      * 
      * @param command
      *            The type of command that will be sent to SickBeard
@@ -323,21 +331,19 @@ public final class SickBeardController {
      *            Any parameter that will have to be part of the URL
      * @return The result of the API call
      * @throws RuntimeException
-     *             Thrown if there is any unexpected problem during the
-     *             communication with the server
+     *             Thrown if there is any unexpected problem during the communication with the server
      */
     public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
-        
+
         /**
          * Correcting the command names to be understood by SickBeard
          */
         command = command.replace('_', '.');
-        
+
         String url = getFormattedUrl();
-        
+
         /**
-         * Checking if there is an API Key from SickBeard to concatenate to the
-         * URL
+         * Checking if there is an API Key from SickBeard to concatenate to the URL
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_API_KEY))) {
             url = url.replace("[SICKBEARD_API_KEY]", "");
@@ -345,19 +351,19 @@ public final class SickBeardController {
         else {
             url = url.replace("[SICKBEARD_API_KEY]", Preferences.get(Preferences.SICKBEARD_API_KEY) + "/");
         }
-        
+
         url = url.replace("[COMMAND]", command);
-        
+
         for (String xTraParam : extraParams) {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
                 url = url + "&" + xTraParam;
             }
         }
-        
+
         String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
         return result;
     }
-    
+
     /**
      * This function gets the URL used to connect to the Sabnzbd server
      * 
@@ -374,19 +380,19 @@ public final class SickBeardController {
         else {
             url = url.replace("[SICKBEARD_SERVER_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
         }
-        
+
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
             if (Preferences.isEnabled(Preferences.SICKBEARD_SSL)) {
                 url = "https://" + url;
             }
-//            else {
-//                url = "http://" + url;
-//            }
+            else {
+                url = "http://" + url;
+            }
         }
-        
+
         return url;
     }
-    
+
     /**
      * This function returns the URL of the banner for a given show
      * 
@@ -397,12 +403,12 @@ public final class SickBeardController {
      * @return The URL of the banner
      */
     public static String getBannerURL(String command, Integer tvdbid) {
-        
+
         /**
          * Correcting the command names to be understood by SickBeard
          */
         command = command.replace('_', '.');
-        
+
         String url = URL_TEMPLATE;
         /**
          * Checking if there is a port to concatenate to the URL
@@ -413,10 +419,9 @@ public final class SickBeardController {
         else {
             url = url.replace("[SICKBEARD_SERVER_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
         }
-        
+
         /**
-         * Checking if there is an API Key from SickBeard to concatenate to the
-         * URL
+         * Checking if there is an API Key from SickBeard to concatenate to the URL
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_API_KEY))) {
             url = url.replace("[SICKBEARD_API_KEY]", "");
@@ -424,13 +429,13 @@ public final class SickBeardController {
         else {
             url = url.replace("[SICKBEARD_API_KEY]", Preferences.get(Preferences.SICKBEARD_API_KEY) + "/");
         }
-        
+
         url = url.replace("[COMMAND]", command);
         url = url + "&tvdbid=" + tvdbid;
-        
+
         return url;
     }
-    
+
     /**
      * This function returns the URL of the poster for a given show
      * 
@@ -443,10 +448,10 @@ public final class SickBeardController {
     public static String getPosterURL(String command, Integer tvdbid) {
         String url = URL_TVDB;
         url = url.replace("[TVDBID]", tvdbid + "-1.jpg");
-        
+
         return url;
     }
-    
+
     /**
      * 
      * @return
@@ -455,7 +460,7 @@ public final class SickBeardController {
     private static String getPreferencesParams() {
         String username = Preferences.get(Preferences.SERVER_USERNAME);
         String password = Preferences.get(Preferences.SERVER_PASSWORD);
-        
+
         String credentials = "";
         if (username != null && !"".equals(username)) {
             credentials += "&ma_username=" + username;
@@ -465,22 +470,20 @@ public final class SickBeardController {
         }
         return credentials;
     }
-    
+
     /**
-     * This functions handle the API calls to SickBeard to define the URL and
-     * parameters
+     * This functions handle the API calls to SickBeard to define the URL and parameters
      * 
      * @param command
      *            The type of command that will be sent to SickBeard
      * @return The result of the API call
      * @throws RuntimeException
-     *             Thrown if there is any unexpected problem during the
-     *             communication with the server
+     *             Thrown if there is any unexpected problem during the communication with the server
      */
     public static String makeApiCall(String command) throws RuntimeException {
         return makeApiCall(command, "");
     }
-    
+
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar
      * 
@@ -490,7 +493,7 @@ public final class SickBeardController {
      *            The text to write in the message
      */
     private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
-        
+
         Message message = new Message();
         message.setTarget(messageHandler);
         message.what = MESSAGE.UPDATE.ordinal();

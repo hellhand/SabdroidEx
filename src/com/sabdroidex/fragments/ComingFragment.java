@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
@@ -57,6 +56,11 @@ public class ComingFragment extends SABDFragment {
 					((SABDroidEx) mParent).updateStatus(true);
 				}
 			}
+            if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
+                if (msg.obj instanceof String && !"".equals((String)msg.obj)) {
+                    Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
+                }
+            }
 		}
 	};
 

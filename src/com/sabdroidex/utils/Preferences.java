@@ -1,6 +1,7 @@
 package com.sabdroidex.utils;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 public class Preferences {
 
@@ -30,17 +31,27 @@ public class Preferences {
     public static final String NZBMATRIX_HASH = "nzbmatrix_hash";
 
     public static final String DATA_CACHE = "data.cache";
+    
+    public static final String VERSION = "data_version";
 
     private static SharedPreferences preferences;
+    
+    private static Editor editor;
 
     public static void update(SharedPreferences preferences) {
         Preferences.preferences = preferences;
+        Preferences.editor = preferences.edit();
     }
 
     public static String get(String key) {
         return preferences.getString(key, "");
     }
 
+    public static void put(String key, String value) {
+        editor.putString(key, value);
+        editor.commit();
+    }
+    
     public static String get(String key, String defaultValue) {
         return preferences.getString(key, defaultValue);
     }

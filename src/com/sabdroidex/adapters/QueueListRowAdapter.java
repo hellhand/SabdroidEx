@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.sabnzbd.SABnzbdController;
-import com.utils.Calculator;
 import com.utils.Formatter;
 
 public class QueueListRowAdapter extends ArrayAdapter<Object[]> {
@@ -47,8 +45,13 @@ public class QueueListRowAdapter extends ArrayAdapter<Object[]> {
             mQueueListItem = (QueueListItem) convertView.getTag();
         }
 
+        if (mItems == null || mItems.size() <= position) {
+            return convertView;
+        }
+        
         Object[] values = mItems.get(position);
-        String eta = Calculator.calculateETA(((Double) values[2]), SABnzbdController.speed);
+        
+        String eta = (String) values[5];
         String completed = Formatter.formatShort(((Double) values[2])) + " / " + Formatter.formatShort(((Double) values[1])) + " MB";
         String status = (String) values[3];
         String fileName = (String) values[0];

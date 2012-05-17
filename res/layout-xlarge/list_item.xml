@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/track_list_body_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_item_bg"
-    android:gravity="center_vertical"
     android:paddingLeft="4dip"
-    android:paddingRight="12dip" >
+    android:paddingRight="10dip"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/queueRowLabelFilename"
@@ -20,37 +20,40 @@
         android:textColor="#000000"
         android:textSize="18dip" />
 
-    <ImageView
-        android:id="@+id/queueRowStatus"
-        android:layout_width="40dip"
-        android:layout_height="40dip"
-        android:layout_below="@id/queueRowLabelFilename"
-        android:layout_marginRight="10dip"
-        android:contentDescription="@string/app_name"
-        android:gravity="center_vertical"
-        android:scaleType="fitStart"
-        android:src="@android:drawable/ic_media_play" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/queueRowLabelEta"
-        android:layout_width="wrap_content"
-        android:layout_height="40dip"
-        android:layout_below="@id/queueRowLabelFilename"
-        android:layout_toRightOf="@id/queueRowStatus"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:textColor="#6a6a6a"
-        android:textSize="14dip" />
+        <ImageView
+            android:id="@+id/queueRowStatus"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_marginRight="10dip"
+            android:contentDescription="@string/app_name"
+            android:gravity="center_vertical"
+            android:scaleType="matrix"
+            android:src="@android:drawable/ic_media_play" />
 
-    <TextView
-        android:id="@+id/queueRowLabelCompleted"
-        android:layout_width="wrap_content"
-        android:layout_height="40dip"
-        android:layout_alignRight="@id/queueRowLabelFilename"
-        android:layout_below="@id/queueRowLabelFilename"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:textColor="#6a6a6a"
-        android:textSize="14dip" />
+        <TextView
+            android:id="@+id/queueRowLabelEta"
+            android:layout_width="0dip"
+            android:layout_height="40dip"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="14dip" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/queueRowLabelCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="14dip" />
+    </LinearLayout>
+
+</LinearLayout>

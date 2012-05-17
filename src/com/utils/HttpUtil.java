@@ -91,13 +91,7 @@ public class HttpUtil {
             String responseBody = "";
             URLConnection urlc;
             
-            if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
-                urlc = tryOpenConnection(url);
-            }
-            else {
-                urlc = new URL(url).openConnection();
-            }
-            
+            urlc = new URL(url).openConnection();
             urlc.setUseCaches(false);
             urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
@@ -121,29 +115,6 @@ public class HttpUtil {
         }
     }
     
-    private URLConnection tryOpenConnection(String url) throws RuntimeException {
-        URLConnection connection = null;
-        try {
-            connection = new URL("https://" + url).openConnection();
-            connection.getInputStream();
-            connection = new URL("https://" + url).openConnection();
-            return connection;
-        }
-        catch (Exception e) {
-            Log.w("ERROR", " " + e.getStackTrace()[0]);
-        }
-        try {
-            connection = new URL("http://" + url).openConnection();
-            connection.getInputStream();
-            connection = new URL("http://" + url).openConnection();
-            return connection;
-        }
-        catch (Exception e) {
-            Log.w("ERROR", " " + e.getStackTrace()[0]);
-        }
-        return null;
-    }
-    
     /**
      * Gets data from URL as byte[] throws {@link RuntimeException} If anything
      * goes wrong
@@ -156,13 +127,7 @@ public class HttpUtil {
             byte[] dat = null;
             URLConnection urlc;
             
-            if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
-                urlc = tryOpenConnection(url);
-            }
-            else {
-                urlc = new URL(url).openConnection();
-            }
-            
+            urlc = new URL(url).openConnection();            
             urlc.setUseCaches(false);
             urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
@@ -212,13 +177,7 @@ public class HttpUtil {
             char[] dat = null;
             URLConnection urlc;
             
-            if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
-                urlc = tryOpenConnection(url);
-            }
-            else {
-                urlc = new URL(url).openConnection();
-            }
-            
+            urlc = new URL(url).openConnection();
             urlc.setUseCaches(false);
             urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");

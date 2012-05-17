@@ -78,6 +78,14 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
                 result = (Object[]) msg.obj;
                 selectShowPrompt((ArrayList<Object[]>) result[1]);
             }
+            if (msg.what == SickBeardController.MESSAGE.SHOW_ADDNEW.ordinal()) {
+                Toast.makeText(mParent, getString(R.string.add_show_dialog_title) + " : " + msg.obj, Toast.LENGTH_LONG);
+            }
+            if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
+                if (msg.obj instanceof String && !"".equals((String)msg.obj)) {
+                    Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
+                }
+            }
         }
     };
     
@@ -439,6 +447,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
+                Toast.makeText(mParent, mParent.getText(R.string.add_show_background_search), Toast.LENGTH_LONG).show();
                 SickBeardController.searchShow(getMessageHandler(), value);
             }
         });
@@ -465,11 +474,16 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         
         AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
         
-        alert.setTitle(R.string.add_show_selection_dialog_title);
-        
         ArrayList<String> shows = new ArrayList<String>();
         for (Object[] show : result) {
             shows.add(show[1] + "");
+        }
+        
+        if (shows.size() > 0) {
+            alert.setTitle(R.string.add_show_selection_dialog_title);
+        }
+        else {
+            alert.setTitle(R.string.add_show_not_found);
         }
         
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mParent, android.R.layout.simple_list_item_1, shows);

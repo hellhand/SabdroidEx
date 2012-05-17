@@ -29,5 +29,7 @@
     <item name="menu_play_pause" type="id"/>
     <item name="menu_add_nzb" type="id"/>
 	<item name="dialog_setup_prompt" type="id"/>
-    
+    <item name="dialog_add" type="id"/>
+	<item name="dialog_update" type="id"/>
+
 </resources>

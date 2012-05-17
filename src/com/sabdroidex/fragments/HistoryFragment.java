@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
@@ -75,6 +76,9 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
                 try {
                     ((SABDroidEx) mParent).updateStatus(false);
+                    if (msg.obj instanceof String && !"".equals((String)msg.obj)) {
+                        Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
+                    }
                 }
                 catch (Exception e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());

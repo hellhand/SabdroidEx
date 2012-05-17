@@ -45,11 +45,16 @@ public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
         }
 
         Object[] values = mItems.get(position);
-        String completed = (String) values[1];
-
+        String size = (String) values[1];
+        String eta = (String) values[2];
+        
+        if (!values[4].equals("")) {
+            eta = (String) values[4];
+        }
+        
         mQueueListItem.filemame.setText((String) values[0]);
-        mQueueListItem.eta.setText(R.string.adapter_done);
-        mQueueListItem.completed.setText(completed);
+        mQueueListItem.eta.setText(eta);
+        mQueueListItem.completed.setText(size);
         mQueueListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
 
         convertView.setId(position);

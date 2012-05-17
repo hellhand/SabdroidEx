@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SABDroidEx</string>
+    <string name="new_version">New Version Info</string>
 
 	<string name="header_speed">Speed </string>
 	<string name="header_time_left">Time Left </string>
@@ -94,11 +95,17 @@
 	
 	<string name="add_show_dialog_title">Add new Show</string>
 	<string name="add_show_dialog_message">Enter the Name of the Show to add to Sickbeard:</string>
-	
+	<string name="add_show_background_search">Background search started</string>
+	<string name="add_show_not_found">No show found</string>
+
 	<string name="add_show_selection_dialog_title">Select the Show to add to Sickbeard</string>
 	
     <string name="add_nzb_dialog_title">Add new NZB</string>
     <string name="add_nzb_dialog_message">Enter the URL of the NZB to download via SABnzbd:</string>
-    
+
 	<string name="config">Would you like to configure SABDroidEx now ?</string>
+
+	<string name="config_server_error">SABnzbd configuration error</string>
+	<string name="config_sickbeard_error">Sickbeard configuration error</string>
+	
 </resources>
