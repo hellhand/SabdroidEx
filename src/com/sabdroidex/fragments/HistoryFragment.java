@@ -89,13 +89,25 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
 
     private FragmentActivity mParent;
 
+    /**
+     * 
+     */
     public HistoryFragment() {
     }
 
+    /**
+     * 
+     * @param fragmentActivity
+     */
     public HistoryFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
     }
 
+    /**
+     * 
+     * @param sabDroidEx
+     * @param historyRows
+     */
     public HistoryFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
         this(sabDroidEx);
         rows = historyRows;
@@ -121,7 +133,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
      */
     public void manualRefreshHistory() {
         // First run setup
-        if (!Preferences.isSet("server_url")) {
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
@@ -145,10 +157,10 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
 
         mHistoryList = (ListView) historyView.findViewById(R.id.queueList);
         historyView.removeAllViews();
-        mHistoryList.setOnItemLongClickListener(this);
-
+        
         mHistoryList.setAdapter(new HistoryListRowAdapter(mParent, rows));
-
+        mHistoryList.setOnItemLongClickListener(this);
+        
         // Tries to fetch recoverable data
         Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
         if (data != null && extracted(data, 1) != null) {
@@ -186,7 +198,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
-
+        builder.setTitle((String)rows.get(position)[0]);
         String[] options = new String[1];
         options[0] = getActivity().getResources().getString(R.string.menu_delete);
 

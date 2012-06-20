@@ -7,12 +7,10 @@
         android:id="@+id/queueList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:cacheColorHint="#FFFFFF"
+        android:cacheColorHint="#999999"
         android:divider="@drawable/list_item_bg"
         android:dividerHeight="1px"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="6dip"
-        android:scrollingCache="false" >
-    </ListView>
+        android:fadingEdgeLength="4dip"
+        android:scrollingCache="false" />
 
 </LinearLayout>

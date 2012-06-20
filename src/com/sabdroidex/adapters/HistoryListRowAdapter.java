@@ -16,7 +16,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private HistoryListItem mQueueListItem;
+    private HistoryListItem mHistoryListItem;
     private ArrayList<Object[]> mItems;
 
     @Override
@@ -34,17 +34,22 @@ public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item, null);
-            mQueueListItem = new HistoryListItem();
-            mQueueListItem.filemame = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
-            mQueueListItem.eta = (TextView) convertView.findViewById(R.id.queueRowLabelEta);
-            mQueueListItem.completed = (TextView) convertView.findViewById(R.id.queueRowLabelCompleted);
-            mQueueListItem.status = (ImageView) convertView.findViewById(R.id.queueRowStatus);
+            mHistoryListItem = new HistoryListItem();
+            mHistoryListItem.filemame = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
+            mHistoryListItem.eta = (TextView) convertView.findViewById(R.id.queueRowLabelEta);
+            mHistoryListItem.completed = (TextView) convertView.findViewById(R.id.queueRowLabelCompleted);
+            mHistoryListItem.status = (ImageView) convertView.findViewById(R.id.queueRowStatus);
         }
         else {
-            mQueueListItem = (HistoryListItem) convertView.getTag();
+            mHistoryListItem = (HistoryListItem) convertView.getTag();
         }
 
+        if (mItems == null || mItems.size() <= position) {
+            return convertView;
+        }
+        
         Object[] values = mItems.get(position);
+        
         String size = (String) values[1];
         String eta = (String) values[2];
         
@@ -52,13 +57,13 @@ public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
             eta = (String) values[4];
         }
         
-        mQueueListItem.filemame.setText((String) values[0]);
-        mQueueListItem.eta.setText(eta);
-        mQueueListItem.completed.setText(size);
-        mQueueListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
+        mHistoryListItem.filemame.setText((String) values[0]);
+        mHistoryListItem.eta.setText(eta);
+        mHistoryListItem.completed.setText(size);
+        mHistoryListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
 
         convertView.setId(position);
-        convertView.setTag(mQueueListItem);
+        convertView.setTag(mHistoryListItem);
         return (convertView);
     }
 

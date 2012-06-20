@@ -3,7 +3,7 @@
     android:id="@+id/track_list_body_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="@drawable/list_item_bg"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="10dip"

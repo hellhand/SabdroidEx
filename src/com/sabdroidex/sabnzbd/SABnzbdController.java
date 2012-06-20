@@ -21,20 +21,165 @@ public final class SABnzbdController {
     
     public static boolean paused = false;
     
-    private static final String URL_TEMPLATE = "[SERVER_URL]/api?mode=[COMMAND]&output=json";
+    private static final String URL_TEMPLATE = "[SABNZBD_URL]/api?mode=[COMMAND]&output=json";
     
     public static enum MESSAGE {
-        ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, UPDATE;
+        ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE;
     }
     
     /**
+     * Sets a specific configuration on the Sabnzbd Server
      * 
-     * @param messageHandler
-     * @param value
+     * @param messageHandler The class that will handle the result message.
+     * @param item An array that contains the configuration section, the configuration name and the new value.
+     */
+    public static void setConfig(final Handler messageHandler, final Object[] item) {
+        
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
+            return;
+        
+        Thread thread = new Thread() {
+            
+            @Override
+            public void run() {
+                
+                try {
+                    makeApiCall(MESSAGE.SET_CONFIG.toString().toLowerCase(), "section=" + item[0], "keyword=" + item[1], "value=" + item[2]);
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+        
+        executingCommand = true;
+        sendUpdateMessageStatus(messageHandler, "");
+        thread.start();
+    }
+    
+    /**
+     * Gets a specific configuration on the Sabnzbd Server
+     * 
+     * @param messageHandler The class that will handle the result message.
+     * @param item An array that contains the configuration section, the configuration name and the new value.
+     */
+    public static void getConfig(final Handler messageHandler, final Object[] item) {
+        
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
+            return;
+        
+        Thread thread = new Thread() {
+            
+            @Override
+            public void run() {
+                
+                try {
+                    String results = makeApiCall(MESSAGE.GET_CONFIG.toString().toLowerCase(), "section=" + item[0], "keyword=" + item[1]);
+                    
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.GET_CONFIG.ordinal();
+                    message.obj = results;
+                    message.sendToTarget();
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+        
+        executingCommand = true;
+        sendUpdateMessageStatus(messageHandler, "");
+        thread.start();
+    }
+    
+    
+    /**
+     * Gets all the configurations on the Sabnzbd Server
+     * 
+     * @param messageHandler The class that will handle the result message.
+     * @param item An array that contains the configuration section, the configuration name and the new value.
+     */
+    public static void getAllConfigs(final Handler messageHandler, final Object[] item) {
+        
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
+            return;
+        
+        Thread thread = new Thread() {
+            
+            @Override
+            public void run() {
+                
+                try {
+                    Object results[] = new Object[2];
+                    
+                    String result = makeApiCall(MESSAGE.GET_CONFIG.toString().toLowerCase());
+                    Object[] elements = new Object[7];
+                    
+                    JSONObject jsonObject = new JSONObject(result);
+                    
+                    if (!jsonObject.isNull("error")) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    }
+                    else {
+                        jsonObject = jsonObject.getJSONObject("config");
+                    }
+                    
+                    jsonObject = jsonObject.getJSONObject("misc");
+                    
+                    results[0] = jsonObject;
+                    
+                    elements[0] = jsonObject.get("bandwidth_limit");
+                    elements[1] = jsonObject.get("cache_dir");
+                    elements[2] = jsonObject.get("cache_limit");
+                    elements[3] = jsonObject.get("dirscan_dir");
+                    elements[4] = jsonObject.get("dirscan_speed");
+                    elements[5] = jsonObject.get("download_dir");
+                    elements[6] = jsonObject.get("complete_dir");
+                    
+                    results[1] = elements;
+                    
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.GET_CONFIG.ordinal();
+                    message.obj = results;
+                    message.sendToTarget();
+                }
+                catch (Throwable e) {
+                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+        
+        executingCommand = true;
+        sendUpdateMessageStatus(messageHandler, "");
+        thread.start();
+    }
+    
+    /**
+     * This function sends a Nzb URL to Sabnzbd to add to the queue.
+     * 
+     * @param messageHandler The class that will handle the result message.
+     * @param value The URL to sent to the Sabnzbd server.
      */
     public static void addByURL(final Handler messageHandler, final String value) {
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         
         Thread thread = new Thread() {
@@ -58,12 +203,13 @@ public final class SABnzbdController {
     }
     
     /**
+     * This function gets the Sabnzbd user name and password in an usable URL format.
      * 
-     * @return
+     * @return The credentials used to connect to Sabnzbd
      */
     private static String getPreferencesParams() {
-        String username = Preferences.get(Preferences.SERVER_USERNAME);
-        String password = Preferences.get(Preferences.SERVER_PASSWORD);
+        String username = Preferences.get(Preferences.SABNZBD_USERNAME);
+        String password = Preferences.get(Preferences.SABNZBD_PASSWORD);
         
         String credentials = "";
         if (username != null && !"".equals(username)) {
@@ -76,7 +222,7 @@ public final class SABnzbdController {
     }
     
     /**
-     * This functions handle the API calls to Sabnzbd to define the URL and
+     * This function handle the API calls to Sabnzbd to define the URL and
      * parameters
      * 
      * @param command
@@ -91,7 +237,7 @@ public final class SABnzbdController {
     }
     
     /**
-     * This functions handle the API calls to Sabnzbd to define the URL and
+     * This function handle the API calls to Sabnzbd to define the URL and
      * parameters
      * 
      * @param command
@@ -111,7 +257,7 @@ public final class SABnzbdController {
          * Checking if there is an API Key from Sabnzbd to concatenate to the
          * URL
          */
-        String apiKey = Preferences.get(Preferences.SERVER_API_KEY);
+        String apiKey = Preferences.get(Preferences.SABNZBD_API_KEY);
         if (!apiKey.trim().equals("")) {
             url = url + "&apikey=" + apiKey;
         }
@@ -139,15 +285,15 @@ public final class SABnzbdController {
         /**
          * Checking if there is a port to concatenate to the URL
          */
-        if ("".equals(Preferences.get(Preferences.SERVER_PORT))) {
-            url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL));
+        if ("".equals(Preferences.get(Preferences.SABNZBD_PORT))) {
+            url = url.replace("[SABNZBD_URL]", Preferences.get(Preferences.SABNZBD_URL));
         }
         else {
-            url = url.replace("[SERVER_URL]", Preferences.get(Preferences.SERVER_URL) + ":" + Preferences.get(Preferences.SERVER_PORT));
+            url = url.replace("[SABNZBD_URL]", Preferences.get(Preferences.SABNZBD_URL) + ":" + Preferences.get(Preferences.SABNZBD_PORT));
         }
         
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
-            if (Preferences.isEnabled(Preferences.SERVER_SSL)) {
+            if (Preferences.isEnabled(Preferences.SABNZBD_SSL)) {
                 url = "https://" + url;
             }
             else {
@@ -167,7 +313,7 @@ public final class SABnzbdController {
     public static void pauseResumeItem(final Handler messageHandler, final Object[] item) {
         
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         
         Thread thread = new Thread() {
@@ -210,7 +356,7 @@ public final class SABnzbdController {
      */
     public static void pauseResumeQueue(final Handler messageHandler) {
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         
         Thread thread = new Thread() {
@@ -247,12 +393,13 @@ public final class SABnzbdController {
     }
     
     /**
+     * This function refreshes the elements from the history.
      * 
-     * @param messageHandler
+     * @param messageHandler The class that will handle the result message
      */
     public static void refreshHistory(final Handler messageHandler) {
         // Already running or settings not ready
-        if (executingRefreshHistory || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingRefreshHistory || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         Thread thread = new Thread() {
             
@@ -262,10 +409,10 @@ public final class SABnzbdController {
                 try {
                     Object results[] = new Object[2];
                     
-                    String queueData = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
+                    String result = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
                     
-                    JSONObject jsonObject = new JSONObject(queueData);
+                    JSONObject jsonObject = new JSONObject(result);
                     
                     if (!jsonObject.isNull("error")) {
                         sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
@@ -327,13 +474,14 @@ public final class SABnzbdController {
     }
     
     /**
+     * This function refreshes the elements from the queue.
      * 
-     * @param messageHandler
+     * @param messageHandler The class that will handle the result message
      */
     public static void refreshQueue(final Handler messageHandler) {
         
         // Already running or settings not ready
-        if (executingRefreshQuery || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingRefreshQuery || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         
         Thread thread = new Thread() {
@@ -344,10 +492,10 @@ public final class SABnzbdController {
                 try {
                     Object results[] = new Object[2];
                     
-                    String queueData = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
+                    String result = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
                     ArrayList<Object[]> rows = new ArrayList<Object[]>();
                     
-                    JSONObject jsonObject = new JSONObject(queueData);
+                    JSONObject jsonObject = new JSONObject(result);
                     
                     if (!jsonObject.isNull("error")) {
                         sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
@@ -412,13 +560,13 @@ public final class SABnzbdController {
     /**
      * Removes a history item
      * 
-     * @param messageHandler
-     * @param item
+     * @param messageHandler The class that will handle the result message.
+     * @param item The item id to remove from the history.
      */
     public static void removeHistoryItem(final Handler messageHandler, final Object[] item) {
         
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         
         Thread thread = new Thread() {
@@ -449,13 +597,13 @@ public final class SABnzbdController {
     /**
      * Removes a queue item
      * 
-     * @param messageHandler
-     * @param item
+     * @param messageHandler The class that will handle the result message.
+     * @param item The item id to remove from the queue.
      */
     public static void removeQueueItem(final Handler messageHandler, final Object[] item) {
         
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
         
         Thread thread = new Thread() {

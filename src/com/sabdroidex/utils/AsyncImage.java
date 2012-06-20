@@ -82,6 +82,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
                 Log.w("ERROR", " " + e.getLocalizedMessage());
             }
         }
+        
         /**
          * The bitmap object is null if the BitmapFactory has been unable to decode the file. Hopefully this won't happen often
          */
@@ -96,6 +97,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
             if (params[4] == SickBeardController.MESSAGE.SHOW_GETPOSTER) {
                 url = SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[2]);
             }
+
             byte[] data;
             try {
                 data = HttpUtil.getInstance().getDataAsByteArray(url);
@@ -112,7 +114,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
                     fileOutputStream.close();
                 }
             }
-            catch (Exception e) {
+            catch (Throwable e) {
                 Log.w("ERROR", " " + e.getLocalizedMessage());
                 return null;
             }

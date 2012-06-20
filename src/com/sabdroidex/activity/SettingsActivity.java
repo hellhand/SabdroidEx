@@ -9,8 +9,9 @@ import com.sabdroidex.R;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 
-public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity {
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -19,10 +20,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         getPreferenceManager().setSharedPreferencesName(SABDroidConstants.PREFERENCES_KEY);
         addPreferencesFromResource(R.xml.preferences);
 
-        setSummaryChangeListener(Preferences.SERVER_URL, R.string.setting_server_url);
-        setSummaryChangeListener(Preferences.SERVER_PORT, R.string.setting_server_port);
-        setSummaryChangeListener(Preferences.SERVER_RATE, R.string.setting_refresh_rate);
-        setSummaryChangeListener(Preferences.SERVER_API_KEY, R.string.setting_api_key);
+        setSummaryChangeListener(Preferences.SABNZBD_URL, R.string.setting_server_url);
+        setSummaryChangeListener(Preferences.SABNZBD_PORT, R.string.setting_server_port);
+        setSummaryChangeListener(Preferences.SABNZBD_RATE, R.string.setting_refresh_rate);
+        setSummaryChangeListener(Preferences.SABNZBD_API_KEY, R.string.setting_api_key);
 
         setSummaryChangeListener(Preferences.SICKBEARD_URL, R.string.setting_sickbeard_url);
         setSummaryChangeListener(Preferences.SICKBEARD_PORT, R.string.setting_sickbeard_port);
@@ -31,6 +32,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     }
 
+    @SuppressWarnings("deprecation")
     private final void setSummaryChangeListener(String prefKey, final int resId) {
         final Preference preference = findPreference(prefKey);
 
@@ -52,9 +54,5 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 }
             }
         });
-    }
-
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        return true;
     }
 }

@@ -1,14 +1,12 @@
 SABDroidEx
 
-- Added notifications for some connection errors.
-  (Double check setting when having connection problems)
-- Removed some compatibility code for HTTPS
-  (Check SSL if using a secure connection)
-- Added notification regarding background searches.
-- Added version info dialog.
-- Corrected show add normalization when using spaces.
-- Better status message for SABnzbd history.
-- Getting downloads time left from SABnzbd instead of calculating it.
-- Corrected UI bug on tablets.
-- Corrected error due to use of too recent API.
 - Internationalisation of version info text.
+- Corrected banner fetch when using IP as Sickbeard URL.
+- Added download name on long press menu.
+- Added speed limit and other Sabnzbd configurations on long press on status bar.
+- Corrected crash when using too heavy banner or poster.
+
+Please Note :
+
+- Sickbeard does not need username/password via API.
+- Using too heavy images ( > 250k ) for banner and poster might not work or prevent other images to load depending on the system memory load.

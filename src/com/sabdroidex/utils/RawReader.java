@@ -26,7 +26,7 @@ public class RawReader {
         
         try {
             InputStream is = context.getResources().openRawResource(ressourceID);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     
             String line = "";
             while ((line = reader.readLine()) != null) {

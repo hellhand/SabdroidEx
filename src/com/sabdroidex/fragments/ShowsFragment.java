@@ -66,7 +66,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
                 rows.addAll((ArrayList<Object[]>) result[1]);
                 
                 /**
-                 * This might happens if a rotation occurs
+                 * This might happen if a rotation occurs
                  */
                 if (mListView != null || getAdapter(mListView) != null) {
                     ArrayAdapter<Object[]> adapter = getAdapter(mListView);

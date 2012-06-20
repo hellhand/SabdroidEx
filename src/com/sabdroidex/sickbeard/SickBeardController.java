@@ -23,7 +23,7 @@ public final class SickBeardController {
     private static boolean executingRefreshComing = false;
     private static boolean executingCommand = false;
 
-    private static final String URL_TEMPLATE = "[SICKBEARD_SERVER_URL]/api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
+    private static final String URL_TEMPLATE = "[SICKBEARD_SABNZBD_URL]/api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
 
     public static enum MESSAGE {
@@ -41,7 +41,7 @@ public final class SickBeardController {
      */
     public static void addShow(final Handler messageHandler, final String value) {
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
 
         Thread thread = new Thread() {
@@ -94,7 +94,7 @@ public final class SickBeardController {
      */
     public static void searchShow(final Handler messageHandler, final String value) {
         // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SERVER_URL))
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL))
             return;
 
         Thread thread = new Thread() {
@@ -375,10 +375,10 @@ public final class SickBeardController {
          * Checking if there is a port to concatenate to the URL
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_PORT))) {
-            url = url.replace("[SICKBEARD_SERVER_URL]", Preferences.get(Preferences.SICKBEARD_URL));
+            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL));
         }
         else {
-            url = url.replace("[SICKBEARD_SERVER_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
+            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
         }
 
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
@@ -409,15 +409,15 @@ public final class SickBeardController {
          */
         command = command.replace('_', '.');
 
-        String url = URL_TEMPLATE;
+        String url = getFormattedUrl();
         /**
          * Checking if there is a port to concatenate to the URL
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_PORT))) {
-            url = url.replace("[SICKBEARD_SERVER_URL]", Preferences.get(Preferences.SICKBEARD_URL));
+            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL));
         }
         else {
-            url = url.replace("[SICKBEARD_SERVER_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
+            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
         }
 
         /**
@@ -458,8 +458,8 @@ public final class SickBeardController {
      */
     @SuppressWarnings("unused")
     private static String getPreferencesParams() {
-        String username = Preferences.get(Preferences.SERVER_USERNAME);
-        String password = Preferences.get(Preferences.SERVER_PASSWORD);
+        String username = Preferences.get(Preferences.SABNZBD_USERNAME);
+        String password = Preferences.get(Preferences.SABNZBD_PASSWORD);
 
         String credentials = "";
         if (username != null && !"".equals(username)) {

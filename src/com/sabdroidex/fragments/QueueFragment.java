@@ -33,9 +33,6 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 
-/**
- * Main SABDroid Activity
- */
 public class QueueFragment extends SABDFragment implements OnItemLongClickListener {
 
     private static JSONObject backupJsonObject;
@@ -57,10 +54,14 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                 rows.clear();
                 rows.addAll((ArrayList<Object[]>) result[1]);
 
+                /**
+                 * This might happens if a rotation occurs
+                 */
                 if (mQueueList != null || getAdapter(mQueueList) != null) {
                     ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
                     adapter.notifyDataSetChanged();
                 }
+                
                 // Updating the header
                 JSONObject jsonObject = (JSONObject) result[0];
                 backupJsonObject = jsonObject;
@@ -73,6 +74,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                     Log.w("ERROR", " " + e.getLocalizedMessage());
                 }
             }
+            
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
                 try {
                     ((SABDroidEx) mParent).updateStatus(false);
@@ -90,14 +92,26 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
     protected boolean paused = false;
 
+    /**
+     * 
+     */
     public QueueFragment() {
 
     }
 
+    /**
+     * 
+     * @param fragmentActivity
+     */
     public QueueFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
     }
 
+    /**
+     * 
+     * @param sabDroidEx
+     * @param downloadRows
+     */
     public QueueFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> downloadRows) {
         this(sabDroidEx);
         rows = downloadRows;
@@ -127,10 +141,11 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
      */
     public void manualRefreshQueue() {
         // First run setup
-        if (!Preferences.isSet(Preferences.SERVER_URL)) {
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
+        
         SABnzbdController.refreshQueue(messageHandler);
     }
 
@@ -194,7 +209,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
-
+        builder.setTitle((String)rows.get(position)[0]);
         String[] options = new String[2];
         if ("Paused".equals(rows.get(position)[3])) {
             options[0] = getActivity().getResources().getString(R.string.menu_resume);
@@ -268,7 +283,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         /**
          * If nothing is configured we display the configuration pop-up
          */
-        if (!Preferences.isSet(Preferences.SERVER_URL)) {
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }

@@ -5,20 +5,32 @@ import android.content.SharedPreferences.Editor;
 
 public class Preferences {
 
-    public static final String SERVER_URL = "server_url";
-    public static final String SERVER_PORT = "server_port";
-    public static final String SERVER_SSL = "server_ssl";
-    public static final String SERVER_RATE = "refresh_rate";
-    public static final String SERVER_HTTP_AUTH = "server_http_auth";
-    public static final String SERVER_USERNAME = "sabnzb_auth_username";
-    public static final String SERVER_PASSWORD = "sabnzb_auth_password";
-    public static final String SERVER_API_KEY = "sabnzb_api_key";
+    public static final String SABNZBD_URL = "sabnzbd_url";
+    public static final String SABNZBD_PORT = "sabnzbd_port";
+    public static final String SABNZBD_SSL = "sabnzbd_ssl";
+    public static final String SABNZBD_RATE = "sabnzbd_rate";
+    public static final String SABNZBD_HTTP_AUTH = "sabnzbd_auth";
+    public static final String SABNZBD_USERNAME = "sabnzbd_auth_username";
+    public static final String SABNZBD_PASSWORD = "sabnzbd_auth_password";
+    public static final String SABNZBD_API_KEY = "sabnzbd_api_key";
 
+    public static final String SERVER_MISC = "misc";
+    public static final String SERVER_BANDWITH = "bandwidth_limit";
+    public static final String SERVER_CACHE_DIR = "cache_dir";
+    public static final String SERVER_CACHE_LIMIT = "cache_limit";
+    public static final String SERVER_DIRSCAN_DIR = "dirscan_dir";
+    public static final String SERVER_DIRSCAN_SPEED = "dirscan_speed";
+    public static final String SERVER_DOWNLOAD_DIR = "download_dir";
+    public static final String SERVER_COMPLETE_DIR = "complete_dir";
+    
     public static final String SICKBEARD = "sickbeard";
     public static final String SICKBEARD_URL = "sickbeard_url";
     public static final String SICKBEARD_PORT = "sickbeard_port";
     public static final String SICKBEARD_SSL = "sickbeard_ssl";
     public static final String SICKBEARD_RATE = "sickbeard_rate";
+    public static final String SICKBEARD_HTTP_AUTH = "sickbeard_auth";
+    public static final String SICKBEARD_USERNAME = "sickbeard_auth_username";
+    public static final String SICKBEARD_PASSWORD = "sickbeard_auth_password";
     public static final String SICKBEARD_API_KEY = "sickbeard_api_key";
     public static final String SICKBEARD_CACHE = "sickbeard_cache";
     public static final String SICKBEARD_LOWRES = "sickbeard_lowres";

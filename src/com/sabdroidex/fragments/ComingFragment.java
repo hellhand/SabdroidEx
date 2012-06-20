@@ -101,7 +101,7 @@ public class ComingFragment extends SABDFragment {
 	public String getTitle() {
 		return mParent.getString(R.string.tab_coming);
 	}
-
+	
 	/**
 	 * Refreshing the queue during startup or on user request. Asks to configure
 	 * if still not done
@@ -128,7 +128,7 @@ public class ComingFragment extends SABDFragment {
 				SABDroidConstants.PREFERENCES_KEY, 0);
 		Preferences.update(preferences);
 
-		LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.list,
+		LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.simplelist,
 				null);
 
 		mListView = (ListView) showView.findViewById(R.id.queueList);

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dip"
+    android:fillViewport="true" >
+
+	<PreferenceCategory 
+	    android:title="Sabnzbd+ server settings"
+	    android:key="misc" >
+    
+	    <EditTextPreference
+	        android:key="bandwidth_limit"
+	        android:summary="@string/setting_server_bandwidth_limit_summary"
+	        android:title="@string/setting_server_bandwidth_limit"
+	        android:numeric="integer"/>
+
+	    <EditTextPreference
+	        android:key="cache_dir"
+	        android:summary="@string/setting_server_cache_dir_summary"
+	        android:title="@string/setting_server_cache_dir"/>
+
+	    <EditTextPreference
+	        android:key="cache_limit"
+	        android:summary="@string/setting_server_cache_limit_summary"
+	        android:title="@string/setting_server_cache_limit_summary"/>
+
+	    <EditTextPreference
+	        android:key="dirscan_dir"
+	        android:summary="@string/setting_server_dirscan_dir_summary"
+	        android:title="@string/setting_server_dirscan_dir"/>
+	    
+	    <EditTextPreference
+	        android:key="dirscan_speed"
+	        android:summary="@string/setting_server_dirscan_speed_summary"
+	        android:title="@string/setting_server_dirscan_speed"
+	        android:numeric="integer"/>
+	    	    
+	    <EditTextPreference
+	        android:key="download_dir"
+	        android:summary="@string/setting_server_download_dir_summary"
+	        android:title="@string/setting_server_download_dir"/>
+	    
+	    <EditTextPreference
+	        android:key="complete_dir"
+	        android:summary="@string/setting_server_complete_dir_summary"
+	        android:title="@string/setting_server_complete_dir"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -7,7 +7,10 @@
 	<string name="header_time_left">Temps restant </string>
 	<string name="header_free">Libre </string>
 	<string name="header_queue">Total </string>
-	
+
+	<string name="header_speed_unit">KO/s</string>
+	<string name="header_free_unit">GO</string>
+		
 	<string name="header_speed_format">--- KO/s</string>
 	<string name="header_time_left_format">--:--:--</string>
 	<string name="header_free_format">-- GO</string>
@@ -29,6 +32,21 @@
     <string name="setting_auth_username">Nom Utilisateur</string>
     <string name="setting_auth_password">Mot de Passe</string>
 
+	<string name="setting_server_bandwidth_limit">Sabnzbd max speed</string>
+	<string name="setting_server_bandwidth_limit_summary">Set the max download speed for Sabnzbd</string>
+	<string name="setting_server_cache_dir">Cache Directory</string>
+	<string name="setting_server_cache_dir_summary">Set the cache directory for Sabnzbd</string>
+	<string name="setting_server_cache_limit">Cache Limit</string>
+	<string name="setting_server_cache_limit_summary">Set the cache size limit for Sabnzbd</string>
+	<string name="setting_server_dirscan_dir">Dirscan Directory</string>
+	<string name="setting_server_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
+	<string name="setting_server_dirscan_speed">Dirscan Speed</string>
+	<string name="setting_server_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
+	<string name="setting_server_download_dir">Download Directory</string>
+	<string name="setting_server_download_dir_summary">Set the directory in which Sabnzbd will download</string>
+	<string name="setting_server_complete_dir">Complete Directory</string>
+	<string name="setting_server_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>    
+    
 	<string name="setting_sickbeard">Utiliser Sickbeard</string>
 	<string name="setting_sickbeard_url">URL Serveur</string>
     <string name="setting_sickbeard_url_summary">URL Serveur à utiliser pour SickBeard</string>
@@ -46,7 +64,7 @@
 	<string name="setting_sickbeard_lowres_summary">Utiliser les images basse résolution</string>
 	<string name="setting_sickbeard_nomedia">.Nomedia</string>
 	<string name="setting_sickbeard_nomedia_summary">Empécher les images de se retrouver dans la Galerie</string>
-
+	
     <string name="setting_nzbs_org_auth">Authentification NZBS.org</string>
     <string name="setting_nzbs_org_uid">UID NZBS.org</string>
     <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
@@ -55,6 +73,13 @@
 	
 	<string name="setting_data_cache">Activer le cache des données</string>
 	<string name="setting_data_cache_summary">Permets de garder le contenu des Onglets même en étant hors ligne</string>
+	
+	<string name="setting_search_servers">Configure search providers</string>
+	<string name="setting_search_servers_summary">Add, change, delete search providers</string>
+	
+	<string name="setting_newznab_url_">URL Serveur</string>
+	<string name="setting_newznab_url_summary">URL Serveur à utiliser pour NewzNab</string>
+	<string name="setting_newznab_api_key">NewzNab server api key</string>
 	
 	<string name="menu_play">Play</string>
     <string name="menu_pause">Pause</string>

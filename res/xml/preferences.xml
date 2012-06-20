@@ -2,135 +2,129 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="Sabnzbd+ settings" >
-
+        
         <EditTextPreference
-            android:key="server_url"
+            android:key="sabnzbd_url"
             android:summary="@string/setting_server_url_summary"
             android:title="@string/setting_server_url" />
 
         <EditTextPreference
             android:defaultValue="8080"
-            android:key="server_port"
+            android:key="sabnzbd_port"
             android:summary="@string/setting_server_port_summary"
-            android:title="@string/setting_server_port" />
+            android:title="@string/setting_server_port"
+            android:numeric="integer" />
 
         <CheckBoxPreference
-            android:key="server_ssl"
+            android:key="sabnzbd_ssl"
             android:summary="@string/setting_server_ssl_summary"
             android:title="@string/setting_server_ssl" />
-        
-        <EditTextPreference
-            android:defaultValue="5000"
-            android:key="refresh_rate"
-            android:summary="@string/setting_refresh_rate_summary"
-            android:title="@string/setting_refresh_rate" />
 
         <EditTextPreference
-            android:key="sabnzb_api_key"
+            android:defaultValue="5000"
+            android:key="sabnzbd_rate"
+            android:summary="@string/setting_refresh_rate_summary"
+            android:title="@string/setting_refresh_rate"
+            android:numeric="integer" />
+        
+        <EditTextPreference
+            android:key="sabnzbd_api_key"
             android:summary="@string/setting_api_key"
             android:title="@string/setting_api_key" />
 
         <CheckBoxPreference
-            android:key="sabnzb_auth"
+            android:key="sabnzbd_auth"
             android:title="@string/setting_auth" />
 
         <EditTextPreference
-            android:dependency="sabnzb_auth"
-            android:key="sabnzb_auth_username"
+            android:dependency="sabnzbd_auth"
+            android:key="sabnzbd_auth_username"
             android:summary="@string/setting_auth_username"
             android:title="@string/setting_auth_username" />
-
+        
         <EditTextPreference
-            android:dependency="sabnzb_auth"
-            android:key="sabnzb_auth_password"
+            android:dependency="sabnzbd_auth"
+            android:key="sabnzbd_auth_password"
             android:password="true"
             android:summary="@string/setting_auth_password"
             android:title="@string/setting_auth_password" />
     </PreferenceCategory>
-
-	<PreferenceCategory android:title="Sickbeard settings" >
-
+    
+    <PreferenceCategory android:title="Sickbeard settings" >
+    
         <CheckBoxPreference
             android:key="sickbeard"
             android:title="@string/setting_sickbeard" />
-	    
-		<EditTextPreference
-		    android:dependency="sickbeard"
-            android:key="sickbeard_url"
-            android:summary="@string/setting_sickbeard_url_summary"
-            android:title="@string/setting_sickbeard_url" />
 
         <EditTextPreference
             android:dependency="sickbeard"
+            android:key="sickbeard_url"
+            android:summary="@string/setting_sickbeard_url_summary"
+            android:title="@string/setting_sickbeard_url" />
+        <EditTextPreference
             android:defaultValue="8080"
+            android:dependency="sickbeard"
             android:key="sickbeard_port"
             android:summary="@string/setting_sickbeard_port_summary"
-            android:title="@string/setting_sickbeard_port" />
+            android:title="@string/setting_sickbeard_port"
+            android:numeric="integer" />
 
         <CheckBoxPreference
             android:dependency="sickbeard"
             android:key="sickbeard_ssl"
             android:summary="@string/setting_sickbeard_ssl_summary"
             android:title="@string/setting_sickbeard_ssl" />
-        
+
         <EditTextPreference
-            android:dependency="sickbeard"
             android:defaultValue="5000"
+            android:dependency="sickbeard"
             android:key="sickbeard_rate"
             android:summary="@string/setting_sickbeard_refresh_rate_summary"
-            android:title="@string/setting_sickbeard_refresh_rate" />
+            android:title="@string/setting_sickbeard_refresh_rate"
+            android:numeric="integer" />
         
         <EditTextPreference
             android:dependency="sickbeard"
             android:key="sickbeard_api_key"
             android:title="@string/setting_sickbeard_api_key" />
-        
-		<CheckBoxPreference
+
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="sickbeard_cache"
             android:summary="@string/setting_sickbeard_cache_summary"
-            android:title="@string/setting_sickbeard_cache"
-            android:defaultValue="true" />
+            android:title="@string/setting_sickbeard_cache" />
         
-		<CheckBoxPreference
+        <CheckBoxPreference
             android:key="sickbeard_lowres"
-			android:summary="@string/setting_sickbeard_lowres_summary"
+            android:summary="@string/setting_sickbeard_lowres_summary"
             android:title="@string/setting_sickbeard_lowres" />
-
-		<CheckBoxPreference
+        
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="sickbeard_nomedia"
-			android:summary="@string/setting_sickbeard_nomedia_summary"
-            android:title="@string/setting_sickbeard_nomedia"
-            android:defaultValue="true" />
-				
+            android:summary="@string/setting_sickbeard_nomedia_summary"
+            android:title="@string/setting_sickbeard_nomedia" />
+        
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="Nzbs.org settings" >
-
-        <CheckBoxPreference
-            android:key="nzbs_org_auth"
-            android:title="@string/setting_nzbs_org_auth" />
-
-        <EditTextPreference
-            android:dependency="nzbs_org_auth"
-            android:key="nzbs_org_uid"
-            android:summary="@string/setting_nzbs_org_uid_summary"
-            android:title="@string/setting_nzbs_org_uid" />
-
-        <EditTextPreference
-            android:dependency="nzbs_org_auth"
-            android:key="nzbs_org_hash"
-            android:summary="@string/setting_nzbs_org_hash_summary"
-            android:title="@string/setting_nzbs_org_hash" />
-    </PreferenceCategory>
-
-	<PreferenceCategory android:title="Global settings" >
-	    
-        <CheckBoxPreference
-            android:key="data.cache"
-            android:title="@string/setting_data_cache"
-            android:summary="@string/setting_data_cache_summary"
-            android:defaultValue="true" />
+    <PreferenceCategory android:title="Search providers settings" >
         
-	</PreferenceCategory>    
+        <PreferenceScreen
+            android:summary="@string/setting_search_servers_summary"
+            android:title="@string/setting_search_servers" >
+            
+        </PreferenceScreen>
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Global settings" >
+        
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="data.cache"
+            android:summary="@string/setting_data_cache_summary"
+            android:title="@string/setting_data_cache" />
+        
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.TextView;
 
 import com.android.actionbarcompat.ActionBarActivity;
@@ -50,7 +51,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * Main SABDroid Activity
  */
-public class SABDroidEx extends ActionBarActivity {
+public class SABDroidEx extends ActionBarActivity implements OnLongClickListener {
 
     /**
      * This is the data that will be retrieved and saved each time the application starts and stops is is used as cache.
@@ -94,7 +95,7 @@ public class SABDroidEx extends ActionBarActivity {
         
         if (!Preferences.get(Preferences.VERSION).equals(application_version)) {
             deleteFile(Preferences.DATA_CACHE);
-            showUpdatePopUp();
+            showVersionUpdatePopUp();
             Preferences.put(Preferences.VERSION, application_version);
         }
         
@@ -252,6 +253,9 @@ public class SABDroidEx extends ActionBarActivity {
 
         TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
         tabPageIndicator.setViewPager(pager);
+        
+        View statusBar = (View) findViewById(R.id.statusBar);
+        statusBar.setOnLongClickListener(this);
     }
 
     /**
@@ -271,7 +275,7 @@ public class SABDroidEx extends ActionBarActivity {
      */
     void manualRefresh() {
         // First run setup
-        if (!Preferences.isSet(Preferences.SERVER_URL)) {
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             showDialog(R.id.dialog_setup_prompt);
             return;
         }
@@ -298,10 +302,10 @@ public class SABDroidEx extends ActionBarActivity {
             String mb = jsonObject.getString("mb");
             String diskspace2 = jsonObject.getString("diskspace2");
 
-            ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " GB");
+            ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " " + getString(R.string.header_free_unit));
             ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb))
                     + " MB");
-            ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " KB/s");
+            ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " " + getString(R.string.header_speed_unit));
             ((TextView) findViewById(R.id.headerEta)).setText(Calculator.calculateETA(mbleft, kbpersec));
         }
         catch (Throwable e) {
@@ -406,10 +410,16 @@ public class SABDroidEx extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 
+     */
     private void clearVersion() {
         Preferences.put(Preferences.VERSION, "");
     }
 
+    /**
+     * 
+     */
     private void addPrompt() {
 
         OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -475,7 +485,6 @@ public class SABDroidEx extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         if (whichButton == Dialog.BUTTON_POSITIVE) {
                             showSettings();
-                            manualRefresh();
                         }
                     }
                 };
@@ -493,7 +502,7 @@ public class SABDroidEx extends ActionBarActivity {
     /**
      * This method creates the pop-up that is displayed when a new version of the application is installed
      */
-    private void showUpdatePopUp() {
+    private void showVersionUpdatePopUp() {
         OnClickListener clickListener = new DialogInterface.OnClickListener() {
 
             @Override
@@ -538,5 +547,23 @@ public class SABDroidEx extends ActionBarActivity {
      */
     public void updateStatus(boolean showAsUpdate) {
         getActionBarHelper().setRefreshActionItemState(showAsUpdate);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        
+        /**
+         * If a long click is done on the status bar this opens the 
+         */
+        if (v.getId() == R.id.statusBar) {
+            showServerSettings();
+            return true;
+        }
+        
+        return false;
+    }
+
+    private void showServerSettings() {
+        startActivity(new Intent(this, ServerSettingsActivity.class));
     }
 }
