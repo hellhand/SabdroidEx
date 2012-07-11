@@ -19,6 +19,8 @@ import com.utils.HttpUtil;
 
 public final class SickBeardController {
 
+    private static final String TAG = "SickBeardController";
+    
     private static boolean executingRefreshShows = false;
     private static boolean executingRefreshComing = false;
     private static boolean executingCommand = false;
@@ -70,7 +72,7 @@ public final class SickBeardController {
                     SickBeardController.refreshShows(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     sendUpdateMessageStatus(messageHandler, "");
@@ -139,7 +141,7 @@ public final class SickBeardController {
                     }
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     sendUpdateMessageStatus(messageHandler, "");
@@ -220,10 +222,10 @@ public final class SickBeardController {
                     }
                 }
                 catch (RuntimeException e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshShows = false;
@@ -306,10 +308,10 @@ public final class SickBeardController {
                     }
                 }
                 catch (RuntimeException e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshComing = false;
@@ -379,6 +381,16 @@ public final class SickBeardController {
         }
         else {
             url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
+        }
+        
+        /**
+         * Checking if there is an URL extention to append to the URL
+         */
+        if ("".equals(Preferences.get(Preferences.SICKBEARD_URL_EXTENTION))) {
+            
+        }
+        else {
+            
         }
 
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {

@@ -15,6 +15,8 @@ import com.utils.HttpUtil;
 
 public final class SABnzbdController {
     
+    private static final String TAG = "SABnzbdController";
+    
     private static boolean executingCommand = false;
     private static boolean executingRefreshHistory = false;
     private static boolean executingRefreshQuery = false;
@@ -48,7 +50,7 @@ public final class SABnzbdController {
                     makeApiCall(MESSAGE.SET_CONFIG.toString().toLowerCase(), "section=" + item[0], "keyword=" + item[1], "value=" + item[2]);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -89,7 +91,7 @@ public final class SABnzbdController {
                     message.sendToTarget();
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -157,7 +159,7 @@ public final class SABnzbdController {
                     message.sendToTarget();
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -190,7 +192,7 @@ public final class SABnzbdController {
                     makeApiCall(MESSAGE.ADDURL.toString().toLowerCase(), "name=" + value);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     sendUpdateMessageStatus(messageHandler, "");
@@ -331,7 +333,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -374,7 +376,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -456,10 +458,10 @@ public final class SABnzbdController {
                     }
                 }
                 catch (RuntimeException e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshHistory = false;
@@ -540,10 +542,10 @@ public final class SABnzbdController {
                     }
                 }
                 catch (RuntimeException e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshQuery = false;
@@ -580,7 +582,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshHistory(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -617,7 +619,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (Throwable e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;

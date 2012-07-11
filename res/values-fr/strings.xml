@@ -22,6 +22,8 @@
     <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
     <string name="setting_server_port">Port du Serveur</string>
     <string name="setting_server_port_summary">Port du Serveur à utiliser pour SABnzbd</string>
+	<string name="setting_server_url_extention">Extention URL Serveur</string>
+    <string name="setting_server_url_extention_summary">Extention d\'URL à utiliser pour SABnzbd</string>
     <string name="setting_server_ssl">Utiliser SSL/HTTPS</string>
     <string name="setting_server_ssl_summary">Utiliser une connection cryptée pour se connecter à SABnzbd</string>
     
@@ -52,6 +54,8 @@
     <string name="setting_sickbeard_url_summary">URL Serveur à utiliser pour SickBeard</string>
     <string name="setting_sickbeard_port">Port du Serveur</string>
     <string name="setting_sickbeard_port_summary">Port du Serveur à utiliser pour SickBeard</string>
+    <string name="setting_sickbeard_url_extention">Extention URL Serveur</string>
+    <string name="setting_sickbeard_url_extention_summary">Extention d\'URL à utiliser pour SickBeard</string>
     <string name="setting_sickbeard_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
     <string name="setting_sickbeard_ssl_summary">Use a secure connection to connect to Sickbeard</string>
     

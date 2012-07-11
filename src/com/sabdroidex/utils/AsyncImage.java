@@ -34,7 +34,10 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
         Options BgOptions = new Options();
         BgOptions.inPurgeable = true;
         BgOptions.inPreferredConfig = Config.RGB_565;
-
+        if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
+            BgOptions.inSampleSize = 2;
+        }
+        
         String folderPath = mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[3] + File.separator;
         folderPath = folderPath.replace(":", "");
 
@@ -72,9 +75,6 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
             File folder = new File(folderPath);
             folder.mkdirs();
 
-            if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
-                BgOptions.inSampleSize = 2;
-            }
             try {
                 bitmap = BitmapFactory.decodeFile(folderPath + File.separator + fileName, BgOptions);
             }

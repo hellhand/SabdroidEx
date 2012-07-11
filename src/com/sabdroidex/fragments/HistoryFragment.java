@@ -114,11 +114,6 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
     }
 
     @SuppressWarnings("unchecked")
-    ArrayList<Object[]> extracted(Object[] data, int position) {
-        return data == null ? null : (ArrayList<Object[]>) data[position];
-    }
-
-    @SuppressWarnings("unchecked")
     private ArrayAdapter<Object[]> getAdapter(ListView listView) {
         return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
     }
@@ -131,6 +126,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
     /**
      * Refreshing the queue during startup or on user request. Asks to configure if still not done
      */
+    @SuppressWarnings("deprecation")
     public void manualRefreshHistory() {
         // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
@@ -218,5 +214,11 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         dialog = builder.create();
         dialog.show();
         return true;
+    }
+
+    @Override
+    protected void clearAdapter() {
+        // TODO Auto-generated method stub
+        
     }
 }

@@ -35,6 +35,8 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class QueueFragment extends SABDFragment implements OnItemLongClickListener {
 
+    private static final String TAG = "QueueFragment";
+
     private static JSONObject backupJsonObject;
 
     private static ArrayList<Object[]> rows;
@@ -61,7 +63,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                     ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
                     adapter.notifyDataSetChanged();
                 }
-                
+
                 // Updating the header
                 JSONObject jsonObject = (JSONObject) result[0];
                 backupJsonObject = jsonObject;
@@ -71,19 +73,19 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                     ((SABDroidEx) mParent).updateStatus(true);
                 }
                 catch (Exception e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
             }
-            
+
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
                 try {
                     ((SABDroidEx) mParent).updateStatus(false);
-                    if (msg.obj instanceof String && !"".equals((String)msg.obj)) {
+                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
                         Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
                     }
                 }
                 catch (Exception e) {
-                    Log.w("ERROR", " " + e.getLocalizedMessage());
+                    Log.w(TAG, e.getLocalizedMessage());
                 }
             }
         }
@@ -118,11 +120,6 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     }
 
     @SuppressWarnings("unchecked")
-    ArrayList<Object[]> extracted(Object[] data, int position) {
-        return data == null ? null : (ArrayList<Object[]>) data[position];
-    }
-
-    @SuppressWarnings("unchecked")
     private ArrayAdapter<Object[]> getAdapter(ListView listView) {
         return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
     }
@@ -139,13 +136,14 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     /**
      * Refreshing the queue during startup or on user request. Asks to configure if still not done
      */
+    @SuppressWarnings("deprecation")
     public void manualRefreshQueue() {
         // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
-        
+
         SABnzbdController.refreshQueue(messageHandler);
     }
 
@@ -209,7 +207,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
-        builder.setTitle((String)rows.get(position)[0]);
+        builder.setTitle((String) rows.get(position)[0]);
         String[] options = new String[2];
         if ("Paused".equals(rows.get(position)[3])) {
             options[0] = getActivity().getResources().getString(R.string.menu_resume);
@@ -266,7 +264,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                         Thread.sleep(rate);
                     }
                     catch (Exception e) {
-                        Log.w("ERROR", e.getLocalizedMessage());
+                        Log.w(TAG, e.getLocalizedMessage());
                     }
                     if (!paused)
                         SABnzbdController.refreshQueue(messageHandler);
@@ -279,6 +277,7 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     /**
      * Displays the Props dialog when the user wants to add a download
      */
+    @SuppressWarnings("deprecation")
     public void addDownloadPrompt() {
         /**
          * If nothing is configured we display the configuration pop-up
@@ -315,5 +314,11 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         });
 
         alert.show();
+    }
+
+    @Override
+    protected void clearAdapter() {
+        // TODO Auto-generated method stub
+        
     }
 }

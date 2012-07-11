@@ -48,4 +48,10 @@ public class SearchFragment extends SABDFragment {
     public void onFragmentActivated() {
 
     }
+
+    @Override
+    protected void clearAdapter() {
+        // TODO Auto-generated method stub
+        
+    }
 }

@@ -29,7 +29,9 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class ComingFragment extends SABDFragment {
 
-	private static ArrayList<Object[]> rows;
+	private ArrayList<Object[]> rows;
+    private Object[] sections;
+    private Object[] sectionSize;
 	private static Bitmap mEmptyPoster;
 	private ListView mListView;
 	private ComingListRowAdapter mComingRowAdapter;
@@ -42,17 +44,15 @@ public class ComingFragment extends SABDFragment {
 		public void handleMessage(Message msg) {
 			Object result[];
 			if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
-				result = (Object[]) msg.obj;
-				// Updating rows
-				rows.clear();
-				rows.addAll((ArrayList<Object[]>) result[1]);
+                result = (Object[]) msg.obj;
 
+                setRows((ArrayList<Object[]>) result[1]);
+				
 				/**
 				 * This might happens if a rotation occurs
 				 */
-				if (mListView != null || getAdapter(mListView) != null) {
-					ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-					adapter.notifyDataSetChanged();
+				if (mComingRowAdapter != null) {
+				    mComingRowAdapter.notifyDataSetChanged();
 					((SABDroidEx) mParent).updateStatus(true);
 				}
 			}
@@ -77,24 +77,13 @@ public class ComingFragment extends SABDFragment {
 	}
 
 	public ComingFragment(FragmentActivity sabDroidEx,
-			ArrayList<Object[]> historyRows) {
+			ArrayList<Object[]> comingRows) {
 		this(sabDroidEx);
-		rows = historyRows;
+		setRows(comingRows);
 	}
 
 	public Handler getMessageHandler() {
 		return messageHandler;
-	}
-
-	@SuppressWarnings("unchecked")
-	ArrayList<Object[]> extracted(Object[] data, int position) {
-		return data == null ? null : (ArrayList<Object[]>) data[position];
-	}
-
-	@SuppressWarnings("unchecked")
-	private ArrayAdapter<Object[]> getAdapter(ListView listView) {
-		return listView == null ? null : (ArrayAdapter<Object[]>) listView
-				.getAdapter();
 	}
 
 	@Override
@@ -119,7 +108,8 @@ public class ComingFragment extends SABDFragment {
 		mParent = (FragmentActivity) activity;
 		super.onAttach(activity);
 	}
-
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -142,12 +132,11 @@ public class ComingFragment extends SABDFragment {
 		Object data[] = (Object[]) mParent
 				.getLastCustomNonConfigurationInstance();
 		if (data != null && extracted(data, 3) != null) {
-			rows = extracted(data, 3);
+			setRows(extracted(data, 3));
 		}
 
-		if (rows.size() > 0) {
-			ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-			adapter.notifyDataSetChanged();
+		if (getRows().size() > 0) {
+		    mComingRowAdapter.notifyDataSetChanged();
 		} 
 		else {
 			manualRefreshComing();
@@ -157,49 +146,32 @@ public class ComingFragment extends SABDFragment {
 	}
 
 	@Override
-	protected void finalize() throws Throwable {
-		if (mComingRowAdapter != null)
-			mComingRowAdapter.clearBitmaps();
-		super.finalize();
+	protected void clearAdapter() {
+	    if (mComingRowAdapter != null)
+            mComingRowAdapter.clearBitmaps();
 	}
-
-	@Override
-	public void onDestroyView() {
-		if (mComingRowAdapter != null)
-			mComingRowAdapter.clearBitmaps();
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onDestroy() {
-		if (mComingRowAdapter != null)
-			mComingRowAdapter.clearBitmaps();
-		super.onDestroy();
-	}
-
-	@Override
-	public void onDetach() {
-		if (mComingRowAdapter != null)
-			mComingRowAdapter.clearBitmaps();
-		super.onDetach();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		if (mComingRowAdapter != null)
-			mComingRowAdapter.clearBitmaps();
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public void onPause() {
-		if (mComingRowAdapter != null)
-			mComingRowAdapter.clearBitmaps();
-		super.onPause();
-	}
-
+	
 	@Override
 	public void onFragmentActivated() {
 		manualRefreshComing();
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+    public ArrayList<Object[]> getRows() {
+        return rows;
+    }
+
+    /**
+     * 
+     * @param rows
+     */
+    public void setRows(ArrayList<Object[]> rows) {
+        if (this.rows == null)
+            this.rows = new ArrayList<Object[]>();
+        this.rows.clear();
+        this.rows.addAll(rows);
+    }
 }

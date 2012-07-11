@@ -15,6 +15,11 @@
             android:title="@string/setting_server_port"
             android:numeric="integer" />
 
+        <EditTextPreference
+            android:key="sabnzbd_url_extention"
+            android:summary="@string/setting_server_url_extention_summary"
+            android:title="@string/setting_server_url_extention" />
+        
         <CheckBoxPreference
             android:key="sabnzbd_ssl"
             android:summary="@string/setting_server_ssl_summary"
@@ -61,6 +66,7 @@
             android:key="sickbeard_url"
             android:summary="@string/setting_sickbeard_url_summary"
             android:title="@string/setting_sickbeard_url" />
+        
         <EditTextPreference
             android:defaultValue="8080"
             android:dependency="sickbeard"
@@ -69,6 +75,11 @@
             android:title="@string/setting_sickbeard_port"
             android:numeric="integer" />
 
+        <EditTextPreference
+            android:key="sickbeard_url_extention"
+            android:summary="@string/setting_sickbeard_url_extention_summary"
+            android:title="@string/setting_sickbeard_url_extention" />
+        
         <CheckBoxPreference
             android:dependency="sickbeard"
             android:key="sickbeard_ssl"

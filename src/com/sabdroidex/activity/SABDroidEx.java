@@ -60,7 +60,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     private static ArrayList<Object[]> historyRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> comingRows = new ArrayList<Object[]>();
-    private static JSONObject backupJsonObject = null;
     private static String application_version;
     protected boolean paused = false;
 
@@ -75,7 +74,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     /**
      * Creating the elements of the screen
      */
-    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,40 +82,19 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
-        try
-        {
+        try {
             application_version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
         }
-        catch (NameNotFoundException e)
-        {
-            Log.v("ERROR", e.getMessage());
+        catch (NameNotFoundException e) {
+            Log.e("ERROR", e.getMessage());
         }
-        
+
         if (!Preferences.get(Preferences.VERSION).equals(application_version)) {
             deleteFile(Preferences.DATA_CACHE);
             showVersionUpdatePopUp();
             Preferences.put(Preferences.VERSION, application_version);
         }
-        
-        if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
-            
-            /**
-             * Restoring data.
-             */
 
-            FileInputStream fis = null;
-            try {
-                fis = openFileInput(Preferences.DATA_CACHE);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                downloadRows = (ArrayList<Object[]>) ois.readObject();
-                historyRows = (ArrayList<Object[]>) ois.readObject();
-                showsRows = (ArrayList<Object[]>) ois.readObject();
-                comingRows = (ArrayList<Object[]>) ois.readObject();
-            }
-            catch (Exception e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
-            }
-        }
         createLists();
         manualRefresh();
     }
@@ -188,7 +165,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         }
         super.onResume();
     }
-    
+
     @Override
     protected void onStop() {
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
@@ -206,7 +183,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                 oos.writeObject(comingRows);
             }
             catch (Exception e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
+                Log.e("ERROR", " " + e.getLocalizedMessage());
             }
         }
         super.onStop();
@@ -226,8 +203,29 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     /**
      * Creating the whole ViewPager content
      */
+    @SuppressWarnings("unchecked")
     private void createLists() {
 
+        if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
+
+            /**
+             * Restoring data.
+             */
+
+            FileInputStream fis = null;
+            try {
+                fis = openFileInput(Preferences.DATA_CACHE);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                downloadRows = (ArrayList<Object[]>) ois.readObject();
+                historyRows = (ArrayList<Object[]>) ois.readObject();
+                showsRows = (ArrayList<Object[]>) ois.readObject();
+                comingRows = (ArrayList<Object[]>) ois.readObject();
+            }
+            catch (Exception e) {
+                Log.w("ERROR", " " + e.getLocalizedMessage());
+            }
+        }
+        
         queue = new QueueFragment(this, downloadRows);
         queue.setRetainInstance(true);
         history = new HistoryFragment(this, historyRows);
@@ -253,26 +251,15 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
 
         TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
         tabPageIndicator.setViewPager(pager);
-        
+
         View statusBar = (View) findViewById(R.id.statusBar);
         statusBar.setOnLongClickListener(this);
     }
 
     /**
-     * This function will serve as a retriever to get back the wanted data from the serialized object
-     * 
-     * @param data The previously Serialized cache Object[]
-     * @param osition The position of the object in the array to recover
-     * @return The object in the array to recover
-     */
-    @SuppressWarnings("unchecked")
-    ArrayList<String> extracted(Object[] data, int position) {
-        return (ArrayList<String>) data[position];
-    }
-
-    /**
      * Refreshing the queue during startup or on user request. Asks to configure if still not done
      */
+    @SuppressWarnings("deprecation")
     void manualRefresh() {
         // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
@@ -291,7 +278,8 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     /**
      * This will refresh the labels at the top of the screen
      * 
-     * @param jsonObject The object which contains the updated data to display
+     * @param jsonObject
+     *            The object which contains the updated data to display
      */
     public void updateLabels(JSONObject jsonObject) {
         if (jsonObject == null)
@@ -312,8 +300,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
             e.printStackTrace();
         }
     }
-
-    View searchItemView;
 
     /**
      * This creates the menu items as they will be by default
@@ -345,6 +331,9 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         }
     }
 
+    /**
+     * Listener for the query text.
+     */
     OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
 
         @Override
@@ -372,8 +361,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
         }
-        if (!Debug.isDebuggerConnected())
-        {
+        if (!Debug.isDebuggerConnected()) {
             menu.findItem(R.id.menu_clear).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
@@ -411,14 +399,14 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     }
 
     /**
-     * 
+     * Clears the application version. For testing purposes.
      */
     private void clearVersion() {
         Preferences.put(Preferences.VERSION, "");
     }
 
     /**
-     * 
+     * Shows the add popup for the different elements.
      */
     private void addPrompt() {
 
@@ -458,7 +446,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                 }
             }
         });
-        
+
         AlertDialog dialog = null;
         dialog = builder.create();
         dialog.show();
@@ -498,7 +486,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         }
         return null;
     }
-    
+
     /**
      * This method creates the pop-up that is displayed when a new version of the application is installed
      */
@@ -510,22 +498,22 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                 dialog.dismiss();
             }
         };
-        
+
         String versionInfo = RawReader.readTextRaw(getApplicationContext(), R.raw.version_info);
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
         builder.setTitle(R.string.new_version);
         builder.setPositiveButton(android.R.string.ok, clickListener);
         builder.setMessage(versionInfo);
-        
+
         AlertDialog dialog = null;
         dialog = builder.create();
         dialog.show();
-        
-        TextView messageView = (TextView)dialog.findViewById(android.R.id.message);
+
+        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
         messageView.setGravity(Gravity.LEFT);
     }
-    
+
     /**
      * This function will Serialize the current data for reuse the next time the application is reopened
      */
@@ -536,7 +524,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         data[1] = historyRows;
         data[2] = showsRows;
         data[3] = comingRows;
-        data[4] = backupJsonObject;
         return data;
     }
 
@@ -551,15 +538,15 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
 
     @Override
     public boolean onLongClick(View v) {
-        
+
         /**
-         * If a long click is done on the status bar this opens the 
+         * If a long click is done on the status bar this opens the
          */
         if (v.getId() == R.id.statusBar) {
             showServerSettings();
             return true;
         }
-        
+
         return false;
     }
 
