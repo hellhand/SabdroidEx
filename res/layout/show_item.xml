@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/show_list_body_layout"
     android:layout_width="fill_parent"
-    android:layout_height="60dip"
+    android:layout_height="wrap_content"
     android:background="@drawable/list_item_bg"
     android:gravity="center_vertical"
     android:paddingLeft="1dip"
@@ -11,9 +11,10 @@
     <ImageView
         android:id="@+id/showBanner"
         android:layout_width="fill_parent"
-        android:layout_height="60dip"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/show_banner"
-        android:gravity="center_vertical"
-        android:scaleType="fitCenter" />
+        android:gravity="fill_horizontal"
+        android:layout_weight="1"
+        android:scaleType="centerCrop" />
 
 </LinearLayout>

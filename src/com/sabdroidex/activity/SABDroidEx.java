@@ -1,5 +1,6 @@
 package com.sabdroidex.activity;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -17,6 +18,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -53,6 +55,8 @@ import com.viewpagerindicator.TabPageIndicator;
  */
 public class SABDroidEx extends ActionBarActivity implements OnLongClickListener {
 
+    private static final String TAG = SABDroidEx.class.getSimpleName();
+    
     /**
      * This is the data that will be retrieved and saved each time the application starts and stops is is used as cache.
      */
@@ -60,7 +64,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     private static ArrayList<Object[]> historyRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> comingRows = new ArrayList<Object[]>();
-    private static String application_version;
+    private static String APPLICATION_VERSION;
     protected boolean paused = false;
 
     /**
@@ -77,31 +81,60 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        Log.v(TAG, "Starting SABDroidEx");
+        
         setContentView(R.layout.header);
 
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
         try {
-            application_version = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+            APPLICATION_VERSION = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
         }
         catch (NameNotFoundException e) {
-            Log.e("ERROR", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
 
-        if (!Preferences.get(Preferences.VERSION).equals(application_version)) {
-            deleteFile(Preferences.DATA_CACHE);
+        if (!Preferences.get(Preferences.VERSION).equals(APPLICATION_VERSION)) {
+            Log.i(TAG, "New version detected : Opening vestion popup");
+            //deleteFile(Preferences.DATA_CACHE);
             showVersionUpdatePopUp();
-            Preferences.put(Preferences.VERSION, application_version);
+            Preferences.put(Preferences.VERSION, APPLICATION_VERSION);
         }
 
         createLists();
         manualRefresh();
     }
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        
+        final Intent intent = getIntent();
+        if (intent != null)
+        {
+           final Uri data = intent.getData();
+           if (data != null)
+           {
+              final String filePath = data.getEncodedPath ();
+              if (filePath != null && !"".equals(filePath)) {
+                  Log.v(TAG, "File received : " + filePath);
+                  openFilePopUp(filePath);
+              }
+              else {
+                  Log.e(TAG, "Incorrect parameter received : " + filePath);
+              }
+           }
+        }
+        Log.v(TAG, "- onStart");
+        return;
+    }
 
     @Override
     public void onNewIntent(final Intent newIntent) {
         super.onNewIntent(newIntent);
+        Log.v(TAG, "New Intent received : " + newIntent.getAction());
         final String queryAction = newIntent.getAction();
         if (Intent.ACTION_SEARCH.equals(queryAction)) {
             doSearchQuery(newIntent, "onNewIntent()");
@@ -183,7 +216,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                 oos.writeObject(comingRows);
             }
             catch (Exception e) {
-                Log.e("ERROR", " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getLocalizedMessage());
             }
         }
         super.onStop();
@@ -222,7 +255,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                 comingRows = (ArrayList<Object[]>) ois.readObject();
             }
             catch (Exception e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getLocalizedMessage());
             }
         }
         
@@ -261,6 +294,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
      */
     @SuppressWarnings("deprecation")
     void manualRefresh() {
+        Log.v(TAG, "Refreshing");
         // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             showDialog(R.id.dialog_setup_prompt);
@@ -487,6 +521,40 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         return null;
     }
 
+    /**
+     * This method creates the pop-up that is displayed when a Nzb file is opened with SABDroidEx
+     */
+    private void openFilePopUp(final String filePath) {
+        OnClickListener clickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (whichButton == Dialog.BUTTON_POSITIVE) {
+                    showSettings();
+                }
+            }
+        };
+
+        File file = new File(filePath);
+        file.getName();
+        
+        String message = getResources().getString(R.string.send_validation);
+        message += file.getName();
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
+        builder.setTitle(R.string.send_file);
+        builder.setPositiveButton(android.R.string.ok, clickListener);
+        builder.setNegativeButton(android.R.string.cancel, clickListener);
+        builder.setMessage(message);
+
+        AlertDialog dialog = null;
+        dialog = builder.create();
+        dialog.show();
+
+        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+        messageView.setGravity(Gravity.LEFT);
+    }
+    
     /**
      * This method creates the pop-up that is displayed when a new version of the application is installed
      */

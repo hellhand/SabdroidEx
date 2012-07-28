@@ -19,8 +19,10 @@ import com.utils.HttpUtil;
 
 public class AsyncImage extends AsyncTask<Object, Void, Void> {
 
+    private static final String TAG = AsyncImage.class.getCanonicalName();
+    
     private static File mExtFolder = Environment.getExternalStorageDirectory();
-
+    
     /**
      * This method is a background worker and notifies us with a {@link Message} when is has finished
      * 
@@ -52,6 +54,9 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
         }
 
         if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
+            
+            Log.i(TAG, "Loading Bitmap for : " + params[3] + " ... trying to open file.");
+            
             File noMedia = new File(mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + ".Nomedia");
             try {
                 if (Preferences.isEnabled(Preferences.SICKBEARD_NOMEDIA)) {
@@ -66,7 +71,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
                 }
             }
             catch (IOException e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getLocalizedMessage());
             }
 
             /**
@@ -79,7 +84,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
                 bitmap = BitmapFactory.decodeFile(folderPath + File.separator + fileName, BgOptions);
             }
             catch (Throwable e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getLocalizedMessage());
             }
         }
         
@@ -87,6 +92,9 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
          * The bitmap object is null if the BitmapFactory has been unable to decode the file. Hopefully this won't happen often
          */
         if (bitmap == null) {
+            
+            Log.i(TAG, "Bitmap for : " + params[3] + " not found ... trying to download file.");
+            
             /**
              * We get the banner from the server
              */
@@ -97,7 +105,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
             if (params[4] == SickBeardController.MESSAGE.SHOW_GETPOSTER) {
                 url = SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[2]);
             }
-
+            
             byte[] data;
             try {
                 data = HttpUtil.getInstance().getDataAsByteArray(url);
@@ -115,7 +123,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
                 }
             }
             catch (Throwable e) {
-                Log.w("ERROR", " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getLocalizedMessage());
                 return null;
             }
         }

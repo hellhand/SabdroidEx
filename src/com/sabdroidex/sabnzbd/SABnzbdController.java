@@ -23,7 +23,7 @@ public final class SABnzbdController {
     
     public static boolean paused = false;
     
-    private static final String URL_TEMPLATE = "[SABNZBD_URL]/api?mode=[COMMAND]&output=json";
+    private static final String URL_TEMPLATE = "[SABNZBD_URL]/[SABNZBD_URL_EXTENTION]api?mode=[COMMAND]&output=json";
     
     public static enum MESSAGE {
         ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE;
@@ -255,15 +255,6 @@ public final class SABnzbdController {
         
         String url = getFormattedUrl();
         
-        /**
-         * Checking if there is an API Key from Sabnzbd to concatenate to the
-         * URL
-         */
-        String apiKey = Preferences.get(Preferences.SABNZBD_API_KEY);
-        if (!apiKey.trim().equals("")) {
-            url = url + "&apikey=" + apiKey;
-        }
-        
         url = url.replace("[COMMAND]", command);
         url = url + getPreferencesParams();
         
@@ -294,6 +285,16 @@ public final class SABnzbdController {
             url = url.replace("[SABNZBD_URL]", Preferences.get(Preferences.SABNZBD_URL) + ":" + Preferences.get(Preferences.SABNZBD_PORT));
         }
         
+        /**
+         * Checking the URL extension
+         */
+        if ("".equals(Preferences.get(Preferences.SICKBEARD_URL_EXTENTION))) {
+            url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SICKBEARD_URL_EXTENTION));
+        }
+        else {
+            url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SICKBEARD_URL_EXTENTION) + "/");
+        }
+        
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
             if (Preferences.isEnabled(Preferences.SABNZBD_SSL)) {
                 url = "https://" + url;
@@ -301,6 +302,15 @@ public final class SABnzbdController {
             else {
                 url = "http://" + url;
             }
+        }
+        
+        /**
+         * Checking if there is an API Key from Sabnzbd to concatenate to the
+         * URL
+         */
+        String apiKey = Preferences.get(Preferences.SABNZBD_API_KEY);
+        if (!apiKey.trim().equals("")) {
+            url = url + "&apikey=" + apiKey;
         }
         
         return url;

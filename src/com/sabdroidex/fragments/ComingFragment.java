@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,9 +27,7 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class ComingFragment extends SABDFragment {
 
-	private ArrayList<Object[]> rows;
-    private Object[] sections;
-    private Object[] sectionSize;
+	private static ArrayList<Object[]> rows;
 	private static Bitmap mEmptyPoster;
 	private ListView mListView;
 	private ComingListRowAdapter mComingRowAdapter;
@@ -46,7 +42,8 @@ public class ComingFragment extends SABDFragment {
 			if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
                 result = (Object[]) msg.obj;
 
-                setRows((ArrayList<Object[]>) result[1]);
+                rows.clear();
+                rows.addAll((ArrayList<Object[]>) result[1]);
 				
 				/**
 				 * This might happens if a rotation occurs
@@ -79,7 +76,7 @@ public class ComingFragment extends SABDFragment {
 	public ComingFragment(FragmentActivity sabDroidEx,
 			ArrayList<Object[]> comingRows) {
 		this(sabDroidEx);
-		setRows(comingRows);
+		rows = comingRows;
 	}
 
 	public Handler getMessageHandler() {
@@ -129,10 +126,9 @@ public class ComingFragment extends SABDFragment {
 		mListView.setAdapter(mComingRowAdapter);
 
 		// Tries to fetch recoverable data
-		Object data[] = (Object[]) mParent
-				.getLastCustomNonConfigurationInstance();
+		Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
 		if (data != null && extracted(data, 3) != null) {
-			setRows(extracted(data, 3));
+			rows = extracted(data, 3);
 		}
 
 		if (getRows().size() > 0) {
@@ -162,16 +158,5 @@ public class ComingFragment extends SABDFragment {
 	 */
     public ArrayList<Object[]> getRows() {
         return rows;
-    }
-
-    /**
-     * 
-     * @param rows
-     */
-    public void setRows(ArrayList<Object[]> rows) {
-        if (this.rows == null)
-            this.rows = new ArrayList<Object[]>();
-        this.rows.clear();
-        this.rows.addAll(rows);
     }
 }

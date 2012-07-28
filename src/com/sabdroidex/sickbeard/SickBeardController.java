@@ -25,7 +25,7 @@ public final class SickBeardController {
     private static boolean executingRefreshComing = false;
     private static boolean executingCommand = false;
 
-    private static final String URL_TEMPLATE = "[SICKBEARD_SABNZBD_URL]/api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
+    private static final String URL_TEMPLATE = "[SICKBEARD_URL]/[SICKBEARD_URL_EXTENTION]api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
 
     public static enum MESSAGE {
@@ -343,18 +343,9 @@ public final class SickBeardController {
         command = command.replace('_', '.');
 
         String url = getFormattedUrl();
-
-        /**
-         * Checking if there is an API Key from SickBeard to concatenate to the URL
-         */
-        if ("".equals(Preferences.get(Preferences.SICKBEARD_API_KEY))) {
-            url = url.replace("[SICKBEARD_API_KEY]", "");
-        }
-        else {
-            url = url.replace("[SICKBEARD_API_KEY]", Preferences.get(Preferences.SICKBEARD_API_KEY) + "/");
-        }
-
         url = url.replace("[COMMAND]", command);
+        
+        Log.d(TAG, url);
 
         for (String xTraParam : extraParams) {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
@@ -377,22 +368,32 @@ public final class SickBeardController {
          * Checking if there is a port to concatenate to the URL
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_PORT))) {
-            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL));
+            url = url.replace("[SICKBEARD_URL]", Preferences.get(Preferences.SICKBEARD_URL));
         }
         else {
-            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
+            url = url.replace("[SICKBEARD_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
         }
         
         /**
-         * Checking if there is an URL extention to append to the URL
+         * Checking the url extention
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_URL_EXTENTION))) {
-            
+            url = url.replace("[SICKBEARD_URL_EXTENTION]", Preferences.get(Preferences.SICKBEARD_URL_EXTENTION));
         }
         else {
-            
+            url = url.replace("[SICKBEARD_URL_EXTENTION]", Preferences.get(Preferences.SICKBEARD_URL_EXTENTION) + "/");
         }
 
+        /**
+         * Checking if there is an API Key from SickBeard to concatenate to the URL
+         */
+        if ("".equals(Preferences.get(Preferences.SICKBEARD_API_KEY))) {
+            url = url.replace("[SICKBEARD_API_KEY]", "");
+        }
+        else {
+            url = url.replace("[SICKBEARD_API_KEY]", Preferences.get(Preferences.SICKBEARD_API_KEY) + "/");
+        }
+        
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
             if (Preferences.isEnabled(Preferences.SICKBEARD_SSL)) {
                 url = "https://" + url;
@@ -404,7 +405,7 @@ public final class SickBeardController {
 
         return url;
     }
-
+    
     /**
      * This function returns the URL of the banner for a given show
      * 
@@ -420,27 +421,9 @@ public final class SickBeardController {
          * Correcting the command names to be understood by SickBeard
          */
         command = command.replace('_', '.');
-
         String url = getFormattedUrl();
-        /**
-         * Checking if there is a port to concatenate to the URL
-         */
-        if ("".equals(Preferences.get(Preferences.SICKBEARD_PORT))) {
-            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL));
-        }
-        else {
-            url = url.replace("[SICKBEARD_SABNZBD_URL]", Preferences.get(Preferences.SICKBEARD_URL) + ":" + Preferences.get(Preferences.SICKBEARD_PORT));
-        }
-
-        /**
-         * Checking if there is an API Key from SickBeard to concatenate to the URL
-         */
-        if ("".equals(Preferences.get(Preferences.SICKBEARD_API_KEY))) {
-            url = url.replace("[SICKBEARD_API_KEY]", "");
-        }
-        else {
-            url = url.replace("[SICKBEARD_API_KEY]", Preferences.get(Preferences.SICKBEARD_API_KEY) + "/");
-        }
+        
+        Log.d(TAG, url);
 
         url = url.replace("[COMMAND]", command);
         url = url + "&tvdbid=" + tvdbid;
