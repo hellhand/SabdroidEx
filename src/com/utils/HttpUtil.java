@@ -1,9 +1,11 @@
 package com.utils;
 
 import java.io.BufferedReader;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -20,7 +22,9 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import com.sabdroidex.utils.Preferences;
 
+import android.util.Base64;
 import android.util.Log;
 
 public class HttpUtil {
@@ -31,7 +35,7 @@ public class HttpUtil {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpParams params = httpClient.getParams();
         HttpConnectionParams.setConnectionTimeout(params, 5000);
-        HttpConnectionParams.setSoTimeout(params, 5000);
+        HttpConnectionParams.setSoTimeout(params, 5000);        
     }
     
     public static HttpUtil getInstance() {
@@ -41,7 +45,6 @@ public class HttpUtil {
     static {
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             
-            @Override
             public boolean verify(String hostname, SSLSession session) {
                 return true;
             }
@@ -50,7 +53,6 @@ public class HttpUtil {
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(null, new X509TrustManager[] { new X509TrustManager() {
                 
-                @Override
                 public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                     /**
                      * We accept all certificates as Sickbeard's is self signed
@@ -58,7 +60,6 @@ public class HttpUtil {
                      */
                 }
                 
-                @Override
                 public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                     /**
                      * We accept all certificates as Sickbeard's is self signed
@@ -66,7 +67,6 @@ public class HttpUtil {
                      */
                 }
                 
-                @Override
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
                 }
@@ -78,6 +78,26 @@ public class HttpUtil {
         }
     }
     
+    public URLConnection startHttpConn(String url) throws RuntimeException{
+    	try{
+	        URLConnection urlc;
+	        
+	        urlc = new URL(url).openConnection();
+	        urlc.setUseCaches(false);
+	        urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+	        urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
+	        urlc.setRequestProperty("Accept-Encoding", "gzip");
+	        if(Preferences.isEnabled(Preferences.APACHE)){
+	        	String apache_auth = Preferences.get(Preferences.APACHE_USERNAME)+":"+Preferences.get(Preferences.APACHE_PASSWORD);
+	        	String encoding = new String(Base64.encode(apache_auth.getBytes(), Base64.NO_WRAP));
+	        	urlc.setRequestProperty("Authorization", "Basic "+encoding);
+	        }
+	        return urlc;
+    	}
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     /**
      * Gets data from URL as String throws {@link RuntimeException} If anything
      * goes wrong
@@ -89,14 +109,10 @@ public class HttpUtil {
         try {
             
             String responseBody = "";
+
             URLConnection urlc;
-            
-            urlc = new URL(url).openConnection();
-            urlc.setUseCaches(false);
-            urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
-            urlc.setRequestProperty("Accept-Encoding", "gzip");
-            
+            urlc = startHttpConn(url);
+
             InputStreamReader re = new InputStreamReader(urlc.getInputStream());
             BufferedReader rd = new BufferedReader(re);
             String line = "";
@@ -126,12 +142,7 @@ public class HttpUtil {
         try {
             byte[] dat = null;
             URLConnection urlc;
-            
-            urlc = new URL(url).openConnection();            
-            urlc.setUseCaches(false);
-            urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
-            urlc.setRequestProperty("Accept-Encoding", "gzip");
+            urlc = startHttpConn(url);
             
             InputStream is = urlc.getInputStream();
             int len = urlc.getContentLength();
@@ -176,12 +187,7 @@ public class HttpUtil {
         try {
             char[] dat = null;
             URLConnection urlc;
-            
-            urlc = new URL(url).openConnection();
-            urlc.setUseCaches(false);
-            urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            urlc.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
-            urlc.setRequestProperty("Accept-Encoding", "gzip");
+            urlc = startHttpConn(url);          
             
             InputStream is = urlc.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()));

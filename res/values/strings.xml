@@ -136,6 +136,10 @@
 
 	<string name="config_server_error">SABnzbd configuration error</string>
 	<string name="config_sickbeard_error">Sickbeard configuration error</string>
+	<string name="setting_apache">HTTP Authentication</string>
+	<string name="setting_apache_username">Username</string>
+	<string name="setting_apache_password">Password</string>
+	<string name="setting_apache_summary">Using HTTP authentication</string>
 	
 	<string name="send_file">Send Nzb File</string>
 	<string name="send_validation">Send this file to the Sabnzbd+ server : </string>

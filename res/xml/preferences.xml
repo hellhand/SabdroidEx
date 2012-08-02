@@ -118,6 +118,27 @@
         
     </PreferenceCategory>
     
+    <PreferenceCategory android:title="Apache settings">
+        <CheckBoxPreference 
+            android:title="@string/setting_apache" 
+            android:key="apache" 
+            android:summary="@string/setting_apache_summary"/>
+        
+        <EditTextPreference 
+            android:key="apache_auth_username" 
+            android:title="@string/setting_apache_username" 
+            android:dependency="apache" 
+            android:summary="@string/setting_apache_username"/>
+        
+        <EditTextPreference 
+            android:title="@string/setting_apache_password" 
+            android:key="apache_auth_password" 
+            android:password="true"
+            android:dependency="apache" 
+            android:summary="@string/setting_apache_password"/>
+        
+    </PreferenceCategory>
+    
     <PreferenceCategory android:title="Search providers settings" >
         
         <PreferenceScreen
@@ -137,5 +158,6 @@
             android:title="@string/setting_data_cache" />
         
     </PreferenceCategory>
+    
 
 </PreferenceScreen>
