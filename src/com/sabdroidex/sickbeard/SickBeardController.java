@@ -3,6 +3,7 @@ package com.sabdroidex.sickbeard;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -353,7 +354,7 @@ public final class SickBeardController {
             }
         }
 
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, new HashMap<String, String>()));
         return result;
     }
 

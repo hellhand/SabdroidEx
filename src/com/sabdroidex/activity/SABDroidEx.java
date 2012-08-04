@@ -1,6 +1,5 @@
 package com.sabdroidex.activity;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -18,7 +17,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -65,7 +63,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     private static ArrayList<Object[]> showsRows = new ArrayList<Object[]>();
     private static ArrayList<Object[]> comingRows = new ArrayList<Object[]>();
     private static String APPLICATION_VERSION;
-    protected boolean paused = false;
 
     /**
      * The Fragments that will take place in the ViewPager
@@ -105,30 +102,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
 
         createLists();
         manualRefresh();
-    }
-    
-    @Override
-    protected void onStart() {
-        super.onStart();
-        
-        final Intent intent = getIntent();
-        if (intent != null)
-        {
-           final Uri data = intent.getData();
-           if (data != null)
-           {
-              final String filePath = data.getEncodedPath ();
-              if (filePath != null && !"".equals(filePath)) {
-                  Log.v(TAG, "File received : " + filePath);
-                  openFilePopUp(filePath);
-              }
-              else {
-                  Log.e(TAG, "Incorrect parameter received : " + filePath);
-              }
-           }
-        }
-        Log.v(TAG, "- onStart");
-        return;
     }
 
     @Override
@@ -519,40 +492,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                 return builder.create();
         }
         return null;
-    }
-
-    /**
-     * This method creates the pop-up that is displayed when a Nzb file is opened with SABDroidEx
-     */
-    private void openFilePopUp(final String filePath) {
-        OnClickListener clickListener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                if (whichButton == Dialog.BUTTON_POSITIVE) {
-                    showSettings();
-                }
-            }
-        };
-
-        File file = new File(filePath);
-        file.getName();
-        
-        String message = getResources().getString(R.string.send_validation);
-        message += file.getName();
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
-        builder.setTitle(R.string.send_file);
-        builder.setPositiveButton(android.R.string.ok, clickListener);
-        builder.setNegativeButton(android.R.string.cancel, clickListener);
-        builder.setMessage(message);
-
-        AlertDialog dialog = null;
-        dialog = builder.create();
-        dialog.show();
-
-        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
-        messageView.setGravity(Gravity.LEFT);
     }
     
     /**

@@ -6,14 +6,18 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
@@ -32,6 +37,7 @@ import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
+import com.utils.FileUtil;
 
 public class QueueFragment extends SABDFragment implements OnItemLongClickListener {
 
@@ -320,5 +326,61 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
     protected void clearAdapter() {
         // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        
+        final Intent intent = getActivity().getIntent();
+        if (intent != null)
+        {
+           final Uri data = intent.getData();
+           if (data != null)
+           {
+              final String filePath = data.getEncodedPath ();
+              if (filePath != null && !"".equals(filePath)) {
+                  Log.v(TAG, "File received : " + filePath);
+                  intent.setData(null);
+                  openFilePopUp(filePath);
+              }
+              else {
+                  Log.e(TAG, "Incorrect parameter received : " + filePath);
+              }
+           }
+        }
+        Log.v(TAG, "- onStart");
+        return;
+    }
+    
+    /**
+     * This method creates the pop-up that is displayed when a Nzb file is opened with SABDroidEx
+     */
+    public void openFilePopUp(final String path) {
+        OnClickListener clickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (whichButton == Dialog.BUTTON_POSITIVE) {
+                    SABnzbdController.addFile(messageHandler, FileUtil.getFileName(path), FileUtil.getFileAsCharArray(path));
+                }
+            }
+        };
+        
+        String message = getResources().getString(R.string.send_validation);
+        message += FileUtil.getFileName(path);
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
+        builder.setTitle(R.string.send_file);
+        builder.setPositiveButton(android.R.string.ok, clickListener);
+        builder.setNegativeButton(android.R.string.cancel, clickListener);
+        builder.setMessage(message);
+
+        AlertDialog dialog = null;
+        dialog = builder.create();
+        dialog.show();
+
+        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+        messageView.setGravity(Gravity.LEFT);
     }
 }

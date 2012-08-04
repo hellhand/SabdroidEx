@@ -2,6 +2,7 @@ package com.nzb;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -125,7 +126,7 @@ public class NewzNab {
             }
         }
         
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url));
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, new HashMap<String, String>()));
         return result;
     }
     
