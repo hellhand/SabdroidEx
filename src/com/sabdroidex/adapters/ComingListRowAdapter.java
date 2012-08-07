@@ -156,9 +156,6 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
                 mListBanners.set(msg.what, bitmap);
                 notifyDataSetChanged();
             }
-            else {
-                Toast.makeText(getContext(), R.string.no_poster + " : " + rows.get(msg.what)[0], Toast.LENGTH_LONG);
-            }
         }
     };
 

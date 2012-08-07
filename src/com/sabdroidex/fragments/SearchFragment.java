@@ -17,11 +17,13 @@ import com.sabdroidex.utils.SABDFragment;
 public class SearchFragment extends SABDFragment {
 
     private FragmentActivity mParent;
-
     private static ArrayList<String> rows = new ArrayList<String>();
-
     private ListView listView;
 
+    public SearchFragment() {
+
+	}
+    
     public SearchFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
     }

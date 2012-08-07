@@ -30,8 +30,8 @@
         <activity android:name=".activity.SettingsActivity"/>
 		<activity android:name=".activity.ServerSettingsActivity"/>
         
+	    <provider android:name=".search.SearchProvider" android:authorities="com.sabdroidex.SearchProvider" />
+		    
     </application>
-
-    <provider android:name=".search.SearchProvider" android:authorities="com.sabdroidex.SearchProvider" />
 
 </manifest> 

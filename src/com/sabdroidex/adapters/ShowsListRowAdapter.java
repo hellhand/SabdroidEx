@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.sickbeard.SickBeardController;
@@ -130,9 +129,6 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
             if (bitmap != null && mListBanners != null && mListBanners.size() > msg.what) {
                 mListBanners.set(msg.what, bitmap);
                 notifyDataSetChanged();
-            }
-            else {
-                Toast.makeText(getContext(), R.string.no_poster + " : " + rows.get(msg.what)[0], Toast.LENGTH_LONG);
             }
         }
     };

@@ -240,6 +240,11 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         }
         super.onActivityCreated(savedInstanceState);
     }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    }
 
     @Override
     protected void clearAdapter() {
@@ -410,9 +415,6 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
                 }
                 showPoster.setImageBitmap(bitmap);
                 showPoster.invalidate();
-            }
-            else {
-                Toast.makeText(mParent, R.string.no_poster, Toast.LENGTH_LONG);
             }
         }
     };
