@@ -11,6 +11,8 @@
         android:divider="#A0A0A0"
         android:dividerHeight="1px"
         android:fadingEdgeLength="4dip"
-        android:scrollingCache="false" />
+        android:scrollingCache="false"
+        android:fastScrollAlwaysVisible="true"
+        android:fastScrollEnabled="true" />
 
 </LinearLayout>

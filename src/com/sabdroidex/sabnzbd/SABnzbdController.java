@@ -90,7 +90,7 @@ public final class SABnzbdController {
             @Override
             public void run() {
                 try {
-                    makePostApiCall(MESSAGE.ADDFILE.toString().toLowerCase(), "application/x-nzb", URLEncoder.encode(name, "UTF-8"), file, "name=" + URLEncoder.encode(name, "UTF-8"));
+                    makePostApiCall(MESSAGE.ADDFILE.toString().toLowerCase(), "application/x-nzb", URLEncoder.encode(name, "UTF-8"), file, "name=" + URLEncoder.encode(name, "UTF-8"), "cat=", "priority=");
                 }
                 catch (final Throwable e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());

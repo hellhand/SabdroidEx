@@ -1,4 +1,4 @@
-package com.sabdroidex.utils;
+package com.sabdroidex.search;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

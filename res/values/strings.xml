@@ -143,4 +143,26 @@
 	
 	<string name="send_file">Send Nzb File</string>
 	<string name="send_validation">Send this file to the Sabnzbd+ server : </string>
+
+	<string name="send_category">Choose a category</string>
+	<string name="send_category_none">None</string>
+	<string name="send_category_apps">Apps</string>
+	<string name="send_category_books">Books</string>
+	<string name="send_category_consoles">Consoles</string>
+	<string name="send_category_emulation">Emulation</string>
+	<string name="send_category_games">Games</string>
+	<string name="send_category_misc">Misc</string>
+	<string name="send_category_movies">Movies</string>
+	<string name="send_category_music">Music</string>
+	<string name="send_category_pda">Pda</string>
+	<string name="send_category_resources">Resources</string>
+	<string name="send_category_tv">Tv</string>	
+	
+	<string name="send_priority">Choose a priority</string>
+	<string name="send_priority_default">Default</string>
+	<string name="send_priority_paused">Paused</string>
+	<string name="send_priority_low">Low</string>
+	<string name="send_priority_normal">Normal</string>
+	<string name="send_priority_high">High</string>
+
 </resources>

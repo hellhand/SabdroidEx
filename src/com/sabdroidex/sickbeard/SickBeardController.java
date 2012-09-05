@@ -276,8 +276,8 @@ public final class SickBeardController {
                         Iterator<?> iterator = jsonObject.keys();
                         while (iterator.hasNext()) {
                             String when = (String) iterator.next();
-                            rows.add(new Object[] { when });
                             JSONArray group = jsonObject.getJSONArray(when);
+                            rows.add(new Object[] { when, group.length() });
                             for (int i = 0; i < group.length(); i++) {
                                 /**
                                  * The seventh item will be the banner The eighth item will be the poster

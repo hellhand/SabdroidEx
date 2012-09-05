@@ -79,6 +79,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
         }
         else {
             mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
+            mQueueListItem.banner.getLayoutParams().height = convertView.getHeight();
         }
 
         if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
@@ -119,7 +120,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
      * This handler will receive the messages from the background worker
      */
     private final Handler handler = new Handler() {
-
+    	
         /**
          * This method will handle the messages sent to this handler by the background worker
          */
