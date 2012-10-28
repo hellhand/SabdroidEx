@@ -11,10 +11,12 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -324,7 +326,6 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
     @Override
     protected void clearAdapter() {
-        // TODO Auto-generated method stub
         
     }
     
@@ -338,18 +339,21 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
            final Uri data = intent.getData();
            if (data != null)
            {
-              final String filePath = data.getEncodedPath ();
-              if (filePath != null && !"".equals(filePath)) {
-                  Log.v(TAG, "File received : " + filePath);
-                  intent.setData(null);
-                  openFilePopUp(filePath);
-              }
-              else {
-                  Log.e(TAG, "Incorrect parameter received : " + filePath);
-              }
+        	   String path = "";
+        	   if (data.getScheme().equalsIgnoreCase("content")) {
+					Cursor cursor = getActivity().getContentResolver().query(data, null, null, null, null); 
+					cursor.moveToFirst(); 
+					int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA); 
+					path = cursor.getString(idx);
+        	   }
+        	   else {
+        		   path = data.getPath();
+        	   }
+        	   intent.setData(null);
+        	   Log.v(TAG, "Data received : " + data.toString());
+        	   openFilePopUp(path);
            }
         }
-        Log.v(TAG, "- onStart");
         return;
     }
     

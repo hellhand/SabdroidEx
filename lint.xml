@@ -18,6 +18,7 @@
     <issue id="GifUsage" severity="ignore" />
     <issue id="GrantAllUris" severity="ignore" />
     <issue id="GridLayout" severity="ignore" />
+    <issue id="HandlerLeak" severity="ignore" />
     <issue id="HardcodedDebugMode" severity="ignore" />
     <issue id="HardcodedText" severity="ignore" />
     <issue id="IconDensities" severity="ignore" />

@@ -2,17 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/show_list_body_layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/list_item_bg"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
     android:paddingLeft="1dip"
-    android:paddingRight="1dip" >
-
-    <ImageView
+    android:paddingRight="1dip" >
+    <ImageView
         android:id="@+id/showBanner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/temp_banner"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/show_banner"
-        android:adjustViewBounds="true"/>
+        android:gravity="center_vertical"
+        android:scaleType="centerCrop"
+        android:src="@drawable/temp_banner" />
 
 </LinearLayout>

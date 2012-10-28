@@ -79,7 +79,7 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
         }
         else {
             mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
-            mQueueListItem.banner.getLayoutParams().height = convertView.getHeight();
+            //mQueueListItem.banner.getLayoutParams().height = convertView.getHeight();
         }
 
         if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
