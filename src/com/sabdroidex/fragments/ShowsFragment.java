@@ -389,6 +389,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         mAsyncImage.execute(getActivity(), imageHandler, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER, 0);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
+        builder.setPositiveButton(R.string.more, onClickListener);
         builder.setNegativeButton(R.string.close, onClickListener);
         builder.setView(mShowView);
         dialog = builder.create();

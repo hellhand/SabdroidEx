@@ -401,6 +401,9 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
             case R.id.menu_clear:
                 clearVersion();
                 break;
+            case R.id.menu_server_settings:
+                showServerSettings();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
