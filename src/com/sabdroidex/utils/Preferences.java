@@ -38,6 +38,16 @@ public class Preferences {
     public static final String SICKBEARD_LOWRES = "sickbeard_lowres";
     public static final String SICKBEARD_NOMEDIA = "sickbeard_nomedia";
     
+    public static final String COUCHPOTATO = "couchpotato";
+    public static final String COUCHPOTATO_URL = "couchpotato_url";
+    public static final String COUCHPOTATO_PORT = "couchpotato_port";
+    public static final String COUCHPOTATO_URL_EXTENTION = "couchpotato_url_extention";
+    public static final String COUCHPOTATO_SSL = "couchpotato_ssl";
+    public static final String COUCHPOTATO_AUTH = "couchpotato_auth";
+    public static final String COUCHPOTATO_PROFILE = "couchpotato_profile";
+    public static final String COUCHPOTATO_USERNAME = "couchpotato_auth_username";
+    public static final String COUCHPOTATO_PASSWORD = "couchpotato_auth_password";
+    
     public static final String APACHE = "apache";
     public static final String APACHE_USERNAME = "apache_auth_username";
     public static final String APACHE_PASSWORD = "apache_auth_password";

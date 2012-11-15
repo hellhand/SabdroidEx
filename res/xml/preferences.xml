@@ -118,6 +118,59 @@
         
     </PreferenceCategory>
     
+    <PreferenceCategory android:title="Couchpotato settings">
+        <CheckBoxPreference 
+            android:key="couchpotato" 
+            android:title="@string/setting_couchpotato"/>
+        
+        <EditTextPreference 
+            android:title="@string/setting_couchpotato_url" 
+            android:summary="@string/setting_couchpotato_url_summary" 
+            android:key="couchpotato_url" 
+            android:dependency="couchpotato"/>
+        
+        <EditTextPreference 
+            android:title="@string/setting_couchpotato_port" 
+            android:dependency="couchpotato" 
+            android:summary="@string/setting_couchpotato_port_summary" 
+            android:key="couchpotato_port" />
+        
+        <EditTextPreference 
+            android:title="@string/setting_couchpotato_url_extention" 
+            android:summary="@string/setting_couchpotato_url_extention_summary" 
+            android:key="couchpotato_url_extention" 
+            android:dependency="couchpotato"/>
+        
+        <CheckBoxPreference 
+            android:summary="@string/setting_couchpotato_ssl_summary" 
+            android:dependency="couchpotato" 
+            android:key="couchpotato_ssl" 
+            android:title="@string/setting_couchpotato_ssl" />
+        
+        <CheckBoxPreference 
+            android:dependency="couchpotato" 
+            android:key="couchpotato_auth" 
+            android:title="@string/setting_couchpotato_auth"/>
+        
+        <EditTextPreference 
+            android:title="@string/setting_couchpotato_auth_username" 
+            android:dependency="couchpotato_auth" 
+            android:key="couchpotato_auth_username"/>
+        
+        <EditTextPreference 
+            android:title="@string/setting_couchpotato_auth_password" 
+            android:dependency="couchpotato_auth" 
+            android:key="couchpotato_auth_password"/>
+        
+        <ListPreference
+            android:title="@string/setting_couchpotato_profile" 
+            android:summary="@string/setting_couchpotato_profile_summary" 
+            android:key="couchpotato_profile" 
+            android:enabled="false" 
+            android:dependency="couchpotato"/>
+        
+    </PreferenceCategory>
+    
     <PreferenceCategory android:title="Apache settings">
         <CheckBoxPreference 
             android:title="@string/setting_apache" 

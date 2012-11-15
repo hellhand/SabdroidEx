@@ -166,5 +166,22 @@
 	<string name="priority_low">Low</string>
 	<string name="priority_normal">Normal</string>
 	<string name="priority_high">High</string>
+	
+	<string name="setting_couchpotato">Use CouchPotato</string>
+	<string name="setting_couchpotato_url">Server URL</string>
+	<string name="setting_couchpotato_url_summary">The CouchPotato server address</string>
+	<string name="setting_couchpotato_port">Server port</string>
+	<string name="setting_couchpotato_port_summary">The CouchPotato server port</string>
+	<string name="setting_couchpotato_url_extention">Server URl extention</string>
+	<string name="setting_couchpotato_profile">CouchPotato Profile</string>
+	<string name="setting_couchpotato_profile_summary">Select CouchPotato profile for download</string>
+	<string name="setting_couchpotato_url_extention_summary">Extention of the server URL of CouchPotato</string>
+	<string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
+	<string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
+	<string name="setting_couchpotato_auth">Authentification</string>
+	<string name="setting_couchpotato_auth_username">Username</string>
+	<string name="setting_couchpotato_auth_password">Password</string>
+	<string name="add_movie_dialog_title">Add new Movie</string>
+	<string name="add_movie_dialog_message">Enter name of movie to add</string>
 
 </resources>

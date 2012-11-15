@@ -76,6 +76,7 @@
     <issue id="UselessLeaf" severity="ignore" />
     <issue id="UselessParent" severity="ignore" />
     <issue id="UsesMinSdkAttributes" severity="ignore" />
+    <issue id="ValidFragment" severity="ignore" />
     <issue id="ViewConstructor" severity="ignore" />
     <issue id="WorldWriteableFiles" severity="ignore" />
     <issue id="WrongViewCast" severity="ignore" />

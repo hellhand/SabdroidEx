@@ -38,6 +38,7 @@ import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.fragments.ComingFragment;
 import com.sabdroidex.fragments.HistoryFragment;
+import com.sabdroidex.fragments.MoviesFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.ShowsFragment;
 import com.sabdroidex.sabnzbd.SABnzbdController;
@@ -71,6 +72,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
     private HistoryFragment history;
     private ShowsFragment shows;
     private ComingFragment coming;
+    private MoviesFragment movies;
 
     /**
      * Creating the elements of the screen
@@ -236,6 +238,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         queue.setRetainInstance(true);
         history = new HistoryFragment(this, historyRows);
         history.setRetainInstance(true);
+        movies = new MoviesFragment(this);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             shows = new ShowsFragment(this, showsRows);
             shows.setRetainInstance(true);
@@ -431,7 +434,13 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
 
         String[] options = null;
-        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+        if (Preferences.isEnabled(Preferences.COUCHPOTATO)){
+        	options = new String[3];
+            options[0] = getResources().getString(R.string.add_nzb_dialog_title);
+            options[2] = getResources().getString(R.string.add_movie_dialog_title);
+            options[1] = getResources().getString(R.string.add_show_dialog_title);
+        }
+        else if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             options = new String[2];
             options[0] = getResources().getString(R.string.add_nzb_dialog_title);
             options[1] = getResources().getString(R.string.add_show_dialog_title);
@@ -451,6 +460,9 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
                     case 1:
                         shows.addShowPrompt();
                         break;
+                    case 2:
+                    	movies.addMoviePrompt();
+                    	break;
                     default:
                         break;
                 }

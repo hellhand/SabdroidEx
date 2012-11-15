@@ -240,10 +240,10 @@ public final class SABnzbdController {
          * Checking the URL extension
          */
         if ("".equals(Preferences.get(Preferences.SICKBEARD_URL_EXTENTION))) {
-            url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SICKBEARD_URL_EXTENTION));
+            url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SABNZBD_URL_EXTENTION));
         }
         else {
-            url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SICKBEARD_URL_EXTENTION) + "/");
+            url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SABNZBD_URL_EXTENTION) + "/");
         }
 
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {

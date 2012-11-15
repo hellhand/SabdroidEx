@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.utils.Preferences;
@@ -342,7 +344,7 @@ public final class SickBeardController {
          * Correcting the command names to be understood by SickBeard
          */
         command = command.replace('_', '.');
-
+        Map<String, String> parameterMap = getAdditionalParameters();
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
         
@@ -354,7 +356,7 @@ public final class SickBeardController {
             }
         }
 
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, new HashMap<String, String>()));
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, parameterMap));
         return result;
     }
 
@@ -479,6 +481,19 @@ public final class SickBeardController {
     public static String makeApiCall(String command) throws RuntimeException {
         return makeApiCall(command, "");
     }
+    
+    private static Map<String, String> getAdditionalParameters() {
+    	HashMap<String, String> parameterMap = new HashMap<String, String>();
+    	
+        if(Preferences.isEnabled(Preferences.APACHE)){
+        	String apache_auth = Preferences.get(Preferences.APACHE_USERNAME)+":"+Preferences.get(Preferences.APACHE_PASSWORD);
+        	String encoding = new String(Base64.encode(apache_auth.getBytes(), Base64.NO_WRAP));
+        	parameterMap.put("Authorization", "Basic " + encoding);
+        }
+    	
+    	return parameterMap;
+	}
+
 
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar
