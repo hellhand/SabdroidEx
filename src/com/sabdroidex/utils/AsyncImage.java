@@ -14,7 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.sabdroidex.sickbeard.SickBeardController;
+import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.utils.HttpUtil;
 
 public class AsyncImage extends AsyncTask<Object, Void, Void> {

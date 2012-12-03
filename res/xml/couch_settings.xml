@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:dependency="couchpotato"
+        android:enabled="false"
+        android:key="couchpotato_profile"
+        android:summary="@string/setting_couchpotato_profile_summary"
+        android:title="@string/setting_couchpotato_profile" />
+
+</PreferenceScreen>

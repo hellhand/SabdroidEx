@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
-import com.sabdroidex.couchpotato.CouchPotatoController;
+import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 
@@ -100,7 +100,8 @@ public class MoviesFragment extends SABDFragment {
     }
     
     
-    public void addMoviePrompt(){
+    @SuppressWarnings("deprecation")
+	public void addMoviePrompt(){
     	
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             mParent.showDialog(R.id.dialog_setup_prompt);

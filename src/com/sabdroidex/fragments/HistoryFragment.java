@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.HistoryListRowAdapter;
-import com.sabdroidex.sabnzbd.SABnzbdController;
+import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;

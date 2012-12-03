@@ -1,4 +1,4 @@
-package com.sabdroidex.couchpotato;
+package com.sabdroidex.controllers.couchpotato;
 
 import java.util.ArrayList;
 import java.util.HashMap;

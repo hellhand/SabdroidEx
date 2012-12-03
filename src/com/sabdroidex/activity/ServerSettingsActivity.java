@@ -9,7 +9,7 @@ import android.preference.PreferenceActivity;
 import android.view.Window;
 
 import com.sabdroidex.R;
-import com.sabdroidex.sabnzbd.SABnzbdController;
+import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 

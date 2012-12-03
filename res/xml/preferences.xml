@@ -162,13 +162,6 @@
             android:dependency="couchpotato_auth" 
             android:key="couchpotato_auth_password"/>
         
-        <ListPreference
-            android:title="@string/setting_couchpotato_profile" 
-            android:summary="@string/setting_couchpotato_profile_summary" 
-            android:key="couchpotato_profile" 
-            android:enabled="false" 
-            android:dependency="couchpotato"/>
-        
     </PreferenceCategory>
     
     <PreferenceCategory android:title="Apache settings">

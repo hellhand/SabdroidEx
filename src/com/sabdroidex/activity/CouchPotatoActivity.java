@@ -12,7 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.sabdroidex.couchpotato.CouchPotatoController;
+import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 

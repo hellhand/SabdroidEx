@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.sickbeard.SickBeardController;
+import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.utils.AsyncImage;
 
 public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {

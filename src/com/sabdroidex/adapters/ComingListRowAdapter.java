@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.sickbeard.SickBeardController;
+import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.utils.AsyncImage;
 
 public class ComingListRowAdapter extends ArrayAdapter<Object[]> {

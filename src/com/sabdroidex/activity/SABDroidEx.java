@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONObject;
@@ -36,12 +37,12 @@ import android.widget.TextView;
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
+import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.fragments.ComingFragment;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.MoviesFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.ShowsFragment;
-import com.sabdroidex.sabnzbd.SABnzbdController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.RawReader;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -238,7 +239,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         queue.setRetainInstance(true);
         history = new HistoryFragment(this, historyRows);
         history.setRetainInstance(true);
-        movies = new MoviesFragment(this);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             shows = new ShowsFragment(this, showsRows);
             shows.setRetainInstance(true);
@@ -407,6 +407,9 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
             case R.id.menu_server_settings:
                 showServerSettings();
                 break;
+            case R.id.menu_couch_settings:
+                showCouchSettings();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -433,23 +436,16 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
 
-        String[] options = null;
+        List<CharSequence> options = new ArrayList<CharSequence>();
+        options.add(getResources().getString(R.string.add_nzb_dialog_title));
+        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
+            options.add(getResources().getString(R.string.add_show_dialog_title));
+        }
         if (Preferences.isEnabled(Preferences.COUCHPOTATO)){
-        	options = new String[3];
-            options[0] = getResources().getString(R.string.add_nzb_dialog_title);
-            options[2] = getResources().getString(R.string.add_movie_dialog_title);
-            options[1] = getResources().getString(R.string.add_show_dialog_title);
+            options.add(getResources().getString(R.string.add_movie_dialog_title));
         }
-        else if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            options = new String[2];
-            options[0] = getResources().getString(R.string.add_nzb_dialog_title);
-            options[1] = getResources().getString(R.string.add_show_dialog_title);
-        }
-        else {
-            options = new String[1];
-            options[0] = getResources().getString(R.string.add_nzb_dialog_title);
-        }
-        builder.setItems(options, new OnClickListener() {
+        
+        builder.setItems((CharSequence[]) options.toArray(), new OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -574,5 +570,9 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
 
     private void showServerSettings() {
         startActivity(new Intent(this, ServerSettingsActivity.class));
+    }
+    
+    private void showCouchSettings() {
+        startActivity(new Intent(this, CouchSettingsActivity.class));
     }
 }

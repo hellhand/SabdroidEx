@@ -1,4 +1,4 @@
-package com.sabdroidex.sabnzbd;
+package com.sabdroidex.controllers.sabnzbd;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -496,17 +496,7 @@ public final class SABnzbdController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("history");
-
-                        if (jsonObject.get("paused") == null) {
-                            paused = false;
-                        }
-                        else {
-                            // Due to a bug(?) on sabnzbd right after a restart this
-                            // field is "null" as a string
-                            // parseBoolean should take care of that since anything
-                            // but "true" is considered false
-                            paused = Boolean.parseBoolean(jsonObject.getString("paused"));
-                        }
+                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
 
                         results[0] = jsonObject;
 
@@ -581,17 +571,7 @@ public final class SABnzbdController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("queue");
-
-                        if (jsonObject.get("paused") == null) {
-                            paused = false;
-                        }
-                        else {
-                            // Due to a bug(?) on sabnzbd right after a restart this
-                            // field is "null" as a string
-                            // parseBoolean should take care of that since anything
-                            // but "true" is considered false
-                            paused = Boolean.parseBoolean(jsonObject.getString("paused"));
-                        }
+                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
 
                         results[0] = jsonObject;
 

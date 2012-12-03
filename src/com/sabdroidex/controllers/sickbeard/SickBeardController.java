@@ -1,4 +1,4 @@
-package com.sabdroidex.sickbeard;
+package com.sabdroidex.controllers.sickbeard;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;

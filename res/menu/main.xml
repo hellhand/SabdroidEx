@@ -52,6 +52,12 @@
         android:orderInCategory="1"
         android:showAsAction="never" />
     
+    <item android:id="@+id/menu_couch_settings"
+        android:title="@string/menu_couch_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="1"
+        android:showAsAction="never" />
+    
     <item android:id="@+id/menu_quit"
         android:title="@string/menu_quit"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"

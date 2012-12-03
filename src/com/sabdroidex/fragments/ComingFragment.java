@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.ComingListRowAdapter;
-import com.sabdroidex.sickbeard.SickBeardController;
+import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
