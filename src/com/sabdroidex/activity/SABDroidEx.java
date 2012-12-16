@@ -31,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.TextView;
 
 import com.android.actionbarcompat.ActionBarActivity;
@@ -53,7 +52,7 @@ import com.viewpagerindicator.TabPageIndicator;
 /**
  * Main SABDroid Activity
  */
-public class SABDroidEx extends ActionBarActivity implements OnLongClickListener {
+public class SABDroidEx extends ActionBarActivity {
 
     private static final String TAG = SABDroidEx.class.getSimpleName();
     
@@ -260,9 +259,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
 
         TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
         tabPageIndicator.setViewPager(pager);
-
-        View statusBar = (View) findViewById(R.id.statusBar);
-        statusBar.setOnLongClickListener(this);
     }
 
     /**
@@ -321,7 +317,7 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         setupSearchView(menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+    
     /**
      * Setting up the Search View
      * 
@@ -370,6 +366,12 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
         else {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
+        }
+        if (Preferences.isEnabled(Preferences.COUCHPOTATO)){
+        	menu.findItem(R.id.menu_couch_settings).setVisible(true);
+        }
+        else {
+        	menu.findItem(R.id.menu_couch_settings).setVisible(false);
         }
         if (!Debug.isDebuggerConnected()) {
             menu.findItem(R.id.menu_clear).setVisible(false);
@@ -552,20 +554,6 @@ public class SABDroidEx extends ActionBarActivity implements OnLongClickListener
      */
     public void updateStatus(boolean showAsUpdate) {
         getActionBarHelper().setRefreshActionItemState(showAsUpdate);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-
-        /**
-         * If a long click is done on the status bar this opens the
-         */
-        if (v.getId() == R.id.statusBar) {
-            showServerSettings();
-            return true;
-        }
-
-        return false;
     }
 
     private void showServerSettings() {

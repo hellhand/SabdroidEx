@@ -1,12 +1,19 @@
 package com.sabdroidex.activity;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
@@ -16,12 +23,20 @@ import com.sabdroidex.utils.SABDroidConstants;
 public class ServerSettingsActivity extends PreferenceActivity {
 
     private SharedPreferences preferences;
-
+    private TextView empty;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         
+        empty = new TextView(getApplicationContext());
+        empty.setText(R.string.setting_empty);
+        empty.setGravity(Gravity.CENTER);
+        empty.setId(1337);
+        getWindow().addContentView(empty, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "" + empty.getId());
+
         preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, MODE_PRIVATE);
         
         getValuesFromServer();
@@ -31,6 +46,8 @@ public class ServerSettingsActivity extends PreferenceActivity {
     @SuppressWarnings("deprecation")
     private void onPostCreate() {
 
+    	getWindow().findViewById(empty.getId()).setVisibility(View.GONE);
+    	
         getPreferenceManager().setSharedPreferencesName(SABDroidConstants.PREFERENCES_KEY);
         addPreferencesFromResource(R.xml.server_settings);
 

@@ -18,12 +18,14 @@
 	
 	<string name="separator"> : </string>
 
+    <string name="setting_empty">There are no settings available</string>
+	
     <string name="setting_server_url">Server URL</string>
     <string name="setting_server_url_summary">The SABnzbd server address</string>
     <string name="setting_server_port">Server Port</string>
     <string name="setting_server_port_summary">The SABnzbd server port</string>
-    <string name="setting_server_url_extention">Server URL Extention</string>
-    <string name="setting_server_url_extention_summary">Extention of the server URL for Sabnzbd</string>
+    <string name="setting_server_url_extention">Server URL Extension</string>
+    <string name="setting_server_url_extention_summary">Extension of the server URL for Sabnzbd</string>
     <string name="setting_server_ssl">Use SSL/HTTPS</string>
     <string name="setting_server_ssl_summary">Use a secure connection to connect to SABnzbd</string>
     
@@ -34,7 +36,7 @@
     <string name="setting_auth_username">Username</string>
     <string name="setting_auth_password">Password</string>
 
-	<string name="setting_server_bandwidth_limit">Bandwith Limit</string>
+	<string name="setting_server_bandwidth_limit">Bandwidth Limit</string>
 	<string name="setting_server_bandwidth_limit_summary">Set the max download speed for Sabnzbd</string>
 	<string name="setting_server_cache_dir">Cache Directory</string>
 	<string name="setting_server_cache_dir_summary">Set the cache directory for Sabnzbd</string>
@@ -54,8 +56,8 @@
     <string name="setting_sickbeard_url_summary">The Sickbeard server address</string>
     <string name="setting_sickbeard_port">Server Port</string>
     <string name="setting_sickbeard_port_summary">The Sickbeard server port</string>
-	<string name="setting_sickbeard_url_extention">Server URL Extention</string>
-    <string name="setting_sickbeard_url_extention_summary">Extention of the server URL for Sickbeard</string>
+	<string name="setting_sickbeard_url_extention">Server URL Extension</string>
+    <string name="setting_sickbeard_url_extention_summary">Extension of the server URL for Sickbeard</string>
     <string name="setting_sickbeard_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
     <string name="setting_sickbeard_ssl_summary">Use a secure connection to connect to Sickbeard</string>
 
@@ -173,10 +175,10 @@
 	<string name="setting_couchpotato_url_summary">The CouchPotato server address</string>
 	<string name="setting_couchpotato_port">Server port</string>
 	<string name="setting_couchpotato_port_summary">The CouchPotato server port</string>
-	<string name="setting_couchpotato_url_extention">Server URl extention</string>
+	<string name="setting_couchpotato_url_extention">Server URl extension</string>
 	<string name="setting_couchpotato_profile">CouchPotato Profile</string>
 	<string name="setting_couchpotato_profile_summary">Select CouchPotato profile for download</string>
-	<string name="setting_couchpotato_url_extention_summary">Extention of the server URL of CouchPotato</string>
+	<string name="setting_couchpotato_url_extention_summary">Extension of the server URL of CouchPotato</string>
 	<string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
 	<string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
 	<string name="setting_couchpotato_auth">Authentification</string>
