@@ -18,6 +18,8 @@
 
 	<string name="separator"> : </string>
 	
+    <string name="setting_empty">Les préférences sont en cours de récupération</string>
+	
     <string name="setting_server_url">URL Serveur</string>
     <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
     <string name="setting_server_port">Port du Serveur</string>

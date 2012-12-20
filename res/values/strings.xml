@@ -18,7 +18,7 @@
 	
 	<string name="separator"> : </string>
 
-    <string name="setting_empty">There are no settings available</string>
+    <string name="setting_empty">The settings are being retrieved</string>
 	
     <string name="setting_server_url">Server URL</string>
     <string name="setting_server_url_summary">The SABnzbd server address</string>

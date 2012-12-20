@@ -7,8 +7,8 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="1dip"
-    android:paddingRight="1dip" >
-    <ImageView
+    android:paddingRight="1dip" >
+        <ImageView
         android:id="@+id/showBanner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -17,5 +17,10 @@
         android:gravity="center_vertical"
         android:scaleType="centerCrop"
         android:src="@drawable/temp_banner" />
+    
+    <ListView
+        android:id="@+id/show_seasons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
