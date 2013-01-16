@@ -73,13 +73,11 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
             }
 
             if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                mAsyncImages.get(position).execute(mContext, handler, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETBANNER,
-                        position);
+                mAsyncImages.get(position).execute(handler, position, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETBANNER);
             }
         }
         else {
             mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
-            //mQueueListItem.banner.getLayoutParams().height = convertView.getHeight();
         }
 
         if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE

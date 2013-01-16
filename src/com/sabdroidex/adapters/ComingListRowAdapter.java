@@ -103,8 +103,8 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
                 }
 
                 if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                    mAsyncImages.get(position).execute(mContext, handler, rows.get(position)[1], rows.get(position)[2],
-                            SickBeardController.MESSAGE.SHOW_GETBANNER, position);
+                    mAsyncImages.get(position).execute(handler, position, rows.get(position)[1], rows.get(position)[2],
+                            SickBeardController.MESSAGE.SHOW_GETBANNER);
                 }
             }
             else {

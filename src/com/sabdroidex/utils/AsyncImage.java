@@ -26,31 +26,34 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
     /**
      * This method is a background worker and notifies us with a {@link Message} when is has finished
      * 
-     * @param params [0] Is the item position in the list, [1] Is the IMDB id of the TV show, [2] Is the name of the TV Show
+     * @param params [0] is the handler, [1] Is the item position in the list or 0 is not in a list, [2] Is the IMDB id of the TV show, [3] Is the name of the TV Show, [4] is the image type.
      * @return
      */
     @Override
     protected Void doInBackground(Object... params) {
 
         Bitmap bitmap = null;
-        Options BgOptions = new Options();
-        BgOptions.inPurgeable = true;
-        BgOptions.inPreferredConfig = Config.RGB_565;
+        Options bgOptions = new Options();
+        bgOptions.inPurgeable = true;
+        bgOptions.inPreferredConfig = Config.RGB_565;
         if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
-            BgOptions.inSampleSize = 2;
+            bgOptions.inSampleSize = 2;
         }
         
         String folderPath = mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[3] + File.separator;
         folderPath = folderPath.replace(":", "");
 
-        Handler handler = (Handler) params[1];
+        Handler handler = (Handler) params[0];
         String fileName = "";
 
         if (params[4] == SickBeardController.MESSAGE.SHOW_GETBANNER) {
             fileName = "banner.jpg";
         }
-        if (params[4] == SickBeardController.MESSAGE.SHOW_GETPOSTER) {
+        else if (params[4] == SickBeardController.MESSAGE.SHOW_GETPOSTER) {
             fileName = "poster.jpg";
+        }
+        else if (params[4] == SickBeardController.MESSAGE.SHOW_SEASONLIST) {
+            fileName = "season-" + params[1] + ".jpg";
         }
 
         if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
@@ -81,7 +84,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
             folder.mkdirs();
 
             try {
-                bitmap = BitmapFactory.decodeFile(folderPath + File.separator + fileName, BgOptions);
+                bitmap = BitmapFactory.decodeFile(folderPath + File.separator + fileName, bgOptions);
             }
             catch (Throwable e) {
                 Log.e(TAG, " " + e.getLocalizedMessage());
@@ -109,7 +112,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
             byte[] data;
             try {
                 data = HttpUtil.getInstance().getDataAsByteArray(url);
-                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, BgOptions);
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, bgOptions);
 
                 if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
                     /**
@@ -133,7 +136,7 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
          */
         Message msg = new Message();
         msg.obj = bitmap;
-        msg.what = (Integer) params[5];
+        msg.what = (Integer) params[1];
         handler.sendMessage(msg);
 
         return null;

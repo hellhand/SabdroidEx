@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -38,6 +40,7 @@ import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
+import com.sabdroidex.activity.ShowActivity;
 import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.utils.AsyncImage;
@@ -313,7 +316,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             mAsyncImage.cancel(true);
         }
         mAsyncImage = new AsyncImage();
-        mAsyncImage.execute(getActivity(), imageHandler, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER, 0);
+        mAsyncImage.execute(imageHandler, 0, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER);
     }
 
     @Override
@@ -324,6 +327,11 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
+                if (whichButton == Dialog.BUTTON_POSITIVE) {
+                    Intent intent = new Intent(getActivity(), ShowActivity.class);
+                    intent.putExtra("tvrageid", (Integer)rows.get(position)[5]);
+                    startActivity(intent);
+                }
                 if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
                     mAsyncImage.cancel(true);
                 }
@@ -386,7 +394,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             mAsyncImage.cancel(true);
         }
         mAsyncImage = new AsyncImage();
-        mAsyncImage.execute(getActivity(), imageHandler, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER, 0);
+        mAsyncImage.execute(imageHandler, 0, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETPOSTER);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setPositiveButton(R.string.more, onClickListener);

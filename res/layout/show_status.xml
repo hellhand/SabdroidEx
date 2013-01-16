@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="8dip"
     android:fillViewport="true" >
-
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
+
         <ImageView
             android:id="@+id/showPoster"
             android:layout_width="fill_parent"
@@ -29,17 +30,13 @@
             android:layout_marginRight="5dip" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dip"
-                android:text="@string/show_name" />
-
-            <TextView
                 android:id="@+id/show_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
-                android:gravity="left" />
+                android:gravity="left"
+                android:textSize="25dip"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow
@@ -53,12 +50,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dip"
-                android:text="@string/show_status" />
+                android:text="@string/show_status"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/show_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:background="@drawable/rounded_edges"
                 android:contentDescription="@string/show_status"
                 android:gravity="left" />
@@ -75,12 +74,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dip"
-                android:text="@string/show_quality" />
+                android:text="@string/show_quality"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/show_quality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:background="@drawable/rounded_edges"
                 android:contentDescription="@string/show_quality"
                 android:gravity="left" />
@@ -97,12 +98,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dip"
-                android:text="@string/show_next_episode" />
+                android:text="@string/show_next_episode"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/show_next_episode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:contentDescription="@string/show_next_episode"
                 android:gravity="left" />
         </TableRow>
@@ -118,12 +121,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dip"
-                android:text="@string/show_network" />
+                android:text="@string/show_network"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/show_network"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:contentDescription="@string/show_network"
                 android:gravity="left" />
         </TableRow>
@@ -139,12 +144,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dip"
-                android:text="@string/show_language" />
+                android:text="@string/show_language"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/show_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:contentDescription="@string/show_language"
                 android:gravity="left" />
         </TableRow>

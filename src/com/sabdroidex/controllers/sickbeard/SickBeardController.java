@@ -17,6 +17,7 @@ import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
+import com.sabdroidex.data.Show;
 import com.sabdroidex.utils.Preferences;
 import com.utils.HttpUtil;
 
@@ -32,7 +33,7 @@ public final class SickBeardController {
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
 
     public static enum MESSAGE {
-        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE
+        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE, SHOW_SEASONLIST 
     }
 
     /**
@@ -327,6 +328,21 @@ public final class SickBeardController {
         thread.start();
     }
 
+    /**
+     * Refresh the shows that are in SickBeard. The result sent to the {@link Handler} will be an array of all the shows.
+     * 
+     * @param messageHandler
+     *            The message handler to be notified
+     * @param integer 
+     */
+    public static void getShow(final Handler messageHandler, String value) {
+
+        // Already running or settings not ready
+        if (!Preferences.isSet(Preferences.SICKBEARD_URL))
+            return;
+
+    }
+    
     /**
      * This functions handle the API calls to SickBeard to define the URL and parameters
      * 

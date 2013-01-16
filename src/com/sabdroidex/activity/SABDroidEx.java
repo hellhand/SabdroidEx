@@ -388,9 +388,6 @@ public class SABDroidEx extends ActionBarActivity {
             case R.id.menu_refresh:
                 manualRefresh();
                 break;
-            case R.id.menu_quit:
-                finish();
-                break;
             case R.id.menu_settings:
                 showSettings();
                 break;

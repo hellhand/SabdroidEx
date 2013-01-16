@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/show_list_body_layout"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/list_item_bg"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingLeft="1dip"
-    android:paddingRight="1dip" >
-        <ImageView
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip" >
+
+    <com.sabdroidex.utils.AspectRatioImageView
         android:id="@+id/showBanner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription="@string/show_banner"
-        android:gravity="center_vertical"
-        android:scaleType="centerCrop"
         android:src="@drawable/temp_banner" />
-    
-    <ListView
-        android:id="@+id/show_seasons"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
 
 </LinearLayout>
