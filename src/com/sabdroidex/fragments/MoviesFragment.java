@@ -185,4 +185,10 @@ public class MoviesFragment extends SABDFragment {
 
         alert.show();
     }
+
+    @Override
+    public Object getDataCache() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

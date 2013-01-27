@@ -28,30 +28,31 @@ import com.sabdroidex.R;
 import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.HistoryListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 
 public class HistoryFragment extends SABDFragment implements OnItemLongClickListener {
-
+    
     private static JSONObject backupJsonObject;
-
+    
     private static ArrayList<Object[]> rows;
     private ListView mHistoryList;
-
+    
     // Instantiating the Handler associated with the main thread.
     private final Handler messageHandler = new Handler() {
-
+        
         @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             if (msg.what == SABnzbdController.MESSAGE.HISTORY.ordinal()) {
-
+                
                 Object result[] = (Object[]) msg.obj;
                 // Updating rows
                 rows.clear();
                 rows.addAll((ArrayList<Object[]>) result[1]);
-
+                
                 /**
                  * This might happens if a rotation occurs
                  */
@@ -59,24 +60,24 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
                     ArrayAdapter<Object[]> adapter = getAdapter(mHistoryList);
                     adapter.notifyDataSetChanged();
                 }
-
+                
                 // Updating the header
                 JSONObject jsonObject = (JSONObject) result[0];
                 backupJsonObject = jsonObject;
-
+                
                 try {
-                    ((SABDroidEx) mParent).updateLabels(jsonObject);
-                    ((SABDroidEx) mParent).updateStatus(true);
+                    // ((UpdateableActivity) mParent).updateLabels(jsonObject);
+                    ((UpdateableActivity) mParent).updateState(true);
                 }
                 catch (Exception e) {
                     Log.w("ERROR", " " + e.getLocalizedMessage());
                 }
             }
-
+            
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
                 try {
-                    ((SABDroidEx) mParent).updateStatus(false);
-                    if (msg.obj instanceof String && !"".equals((String)msg.obj)) {
+                    ((SABDroidEx) mParent).updateState(false);
+                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
                         Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -86,15 +87,14 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
             }
         }
     };
-
+    
     private FragmentActivity mParent;
-
+    
     /**
      * 
      */
-    public HistoryFragment() {
-    }
-
+    public HistoryFragment() {}
+    
     /**
      * 
      * @param fragmentActivity
@@ -102,7 +102,7 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
     public HistoryFragment(FragmentActivity fragmentActivity) {
         mParent = fragmentActivity;
     }
-
+    
     /**
      * 
      * @param sabDroidEx
@@ -112,19 +112,20 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         this(sabDroidEx);
         rows = historyRows;
     }
-
+    
     @SuppressWarnings("unchecked")
     private ArrayAdapter<Object[]> getAdapter(ListView listView) {
         return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
     }
-
+    
     @Override
     public String getTitle() {
         return mParent.getString(R.string.tab_history);
     }
-
+    
     /**
-     * Refreshing the queue during startup or on user request. Asks to configure if still not done
+     * Refreshing the queue during startup or on user request. Asks to configure
+     * if still not done
      */
     @SuppressWarnings("deprecation")
     public void manualRefreshHistory() {
@@ -133,25 +134,25 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
             mParent.showDialog(R.id.dialog_setup_prompt);
             return;
         }
-
+        
         SABnzbdController.refreshHistory(messageHandler);
     }
-
+    
     @Override
     public void onAttach(Activity activity) {
         mParent = (FragmentActivity) activity;
         super.onAttach(activity);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
-
+        
         LinearLayout historyView = (LinearLayout) inflater.inflate(R.layout.list, null);
-
-        mHistoryList = (ListView) historyView.findViewById(R.id.queueList);
+        
+        mHistoryList = (ListView) historyView.findViewById(R.id.elementList);
         historyView.removeAllViews();
         
         mHistoryList.setAdapter(new HistoryListRowAdapter(mParent, rows));
@@ -162,9 +163,9 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         if (data != null && extracted(data, 1) != null) {
             rows = extracted(data, 1);
             backupJsonObject = (JSONObject) data[4];
-            ((SABDroidEx) mParent).updateLabels(backupJsonObject);
+            // ((SABDroidEx) mParent).updateLabels(backupJsonObject);
         }
-
+        
         if (rows.size() > 0) {
             ArrayAdapter<Object[]> adapter = getAdapter(mHistoryList);
             adapter.notifyDataSetChanged();
@@ -172,21 +173,21 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         else {
             manualRefreshHistory();
         }
-
+        
         return mHistoryList;
     }
-
+    
     @Override
     public void onFragmentActivated() {
         manualRefreshHistory();
     }
-
+    
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-
+        
         AlertDialog dialog = null;
         OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-
+            
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
@@ -194,12 +195,12 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
-        builder.setTitle((String)rows.get(position)[0]);
+        builder.setTitle((String) rows.get(position)[0]);
         String[] options = new String[1];
         options[0] = getActivity().getResources().getString(R.string.menu_delete);
-
+        
         builder.setItems(options, new OnClickListener() {
-
+            
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -215,10 +216,14 @@ public class HistoryFragment extends SABDFragment implements OnItemLongClickList
         dialog.show();
         return true;
     }
-
+    
     @Override
     protected void clearAdapter() {
-        // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public Object getDataCache() {
+        return rows;
     }
 }

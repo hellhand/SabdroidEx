@@ -1,10 +1,17 @@
 package com.sabdroidex.data;
 
+import java.io.Serializable;
+
+import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 
-
-public class Cache {
+@JSONElement
+public class Cache implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2664197781437907595L;
     private Integer banner;
     private Integer poster;
     

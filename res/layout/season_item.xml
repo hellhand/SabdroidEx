@@ -1,7 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal" >
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="2dip"
+    android:paddingTop="10dip" >
 
     <com.sabdroidex.utils.AspectRatioImageView
         android:id="@+id/show_season_poster"
@@ -13,12 +16,20 @@
         android:id="@+id/show_season_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/show_season_poster"
-        android:background="#99000000"
-        android:gravity="center_horizontal"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:lines="1"
         android:text="Season"
-        android:textColor="#FFFFFF"
-        android:textSize="25dip"
+        android:textSize="20dip"
         android:textStyle="bold" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/show_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:text="show name"
+        android:textColor="#6a6a6a" />
+
+</LinearLayout>

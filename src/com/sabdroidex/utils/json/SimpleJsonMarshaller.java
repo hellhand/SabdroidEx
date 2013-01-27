@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2011-2012  Marc Boulanger
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.*
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.sabdroidex.utils.json;
 
 import java.lang.reflect.Method;
@@ -9,10 +25,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class SimpleJsonMarshaller {
     
     private Class<?> clazz;
     private Object result;
+    private static final String TAG = SimpleJsonMarshaller.class.getCanonicalName();
     
     public SimpleJsonMarshaller(Class<?> clazz) throws JSONException {
         this.clazz = clazz;
@@ -23,7 +42,7 @@ public class SimpleJsonMarshaller {
         result = clazz.newInstance();
         
         try {
-            Method[] methods = clazz.getDeclaredMethods();
+            Method[] methods = clazz.getMethods();
             
             for (int i = 0; i < methods.length; i++) {
                 JSONSetter setter = methods[i].getAnnotation(JSONSetter.class);
@@ -36,7 +55,7 @@ public class SimpleJsonMarshaller {
                             methods[i].invoke(result, parameter);
                         }
                         catch (JSONException exception) {
-                            exception.printStackTrace();
+                            Log.d(TAG, exception.getLocalizedMessage());
                         }
                     }
                     else if (setter.type() == JSONType.LIST) {
@@ -51,12 +70,16 @@ public class SimpleJsonMarshaller {
                             }
                             for (int j = 0; j < jsonArray.length(); j++) {
                                 Object element = jsonArray.get(j);
+                                if (setter.listClazz() != Void.class) {
+                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(setter.listClazz());
+                                    element = simpleJsonMarshaller.unmarshal((JSONObject) element);
+                                }
                                 collection.add(element);
                             }
                             methods[i].invoke(result, collection);
                         }
                         catch (JSONException exception) {
-                            exception.printStackTrace();
+                            Log.d(TAG, exception.getLocalizedMessage());
                         }
                     }
                     else if (setter.type() == JSONType.SIMPLE) {
@@ -65,14 +88,14 @@ public class SimpleJsonMarshaller {
                             methods[i].invoke(result, parameter);
                         }
                         catch (JSONException exception) {
-                            exception.printStackTrace();
+                            Log.d(TAG, exception.getLocalizedMessage());
                         }
                     }
                 }
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getLocalizedMessage());
         }
         return result;
     }

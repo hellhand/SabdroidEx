@@ -7,8 +7,10 @@
     android:gravity="center"
     android:horizontalSpacing="10dp"
     android:numColumns="2"
-    android:padding="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="3dp"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="10dp">
+    android:verticalSpacing="10dp" >
 
 </GridView>

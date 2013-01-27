@@ -1,12 +1,19 @@
 package com.sabdroidex.data;
 
+import java.io.Serializable;
 import java.util.List;
 
+import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
-public class Show {
+@JSONElement
+public class Show implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4393785794653519806L;
     private Integer airByDate;
     private String airs;
     private Cache cache;

@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.sabdroidex.data.Show;
 import com.sabdroidex.utils.Preferences;
+import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
 
 public final class SickBeardController {
@@ -31,6 +32,7 @@ public final class SickBeardController {
 
     private static final String URL_TEMPLATE = "[SICKBEARD_URL]/[SICKBEARD_URL_EXTENTION]api/[SICKBEARD_API_KEY]?cmd=[COMMAND]";
     private static final String URL_TVDB = "http://thetvdb.com/banners/posters/[TVDBID]";
+    private static final String URL_TVDB_SEASONS = "http://thetvdb.com/banners/seasons/[TVDBID]";
 
     public static enum MESSAGE {
         SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE, SHOW_SEASONLIST 
@@ -335,12 +337,49 @@ public final class SickBeardController {
      *            The message handler to be notified
      * @param integer 
      */
-    public static void getShow(final Handler messageHandler, String value) {
+    public static void getShow(final Handler messageHandler,final  String value) {
 
         // Already running or settings not ready
         if (!Preferences.isSet(Preferences.SICKBEARD_URL))
             return;
 
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    String queueData = makeApiCall(MESSAGE.SHOW.toString().toLowerCase(), "tvdbid=" + value);
+                    JSONObject jsonObject = new JSONObject(queueData);                    
+                    Show show = null;
+                    
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
+                    }
+                    
+                    else {
+                        jsonObject = jsonObject.getJSONObject("data");
+                        
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Show.class);
+                        show = (Show) jsonMarshaller.unmarshal(jsonObject);
+                    }
+                    
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.SHOW.ordinal();
+                    message.obj = show;
+                    message.sendToTarget();
+                }
+                catch (RuntimeException e) {
+                    Log.w(TAG, e.getLocalizedMessage());
+                }
+                catch (Throwable e) {
+                    Log.w(TAG, e.getLocalizedMessage());
+                }
+            }
+        };
+        
+        thread.start();
     }
     
     /**
@@ -526,5 +565,12 @@ public final class SickBeardController {
         message.what = MESSAGE.UPDATE.ordinal();
         message.obj = text;
         message.sendToTarget();
+    }
+
+    public static String getSeasonPosterURL(String command, Integer tvdbid, Integer season) {
+        String url = URL_TVDB_SEASONS;
+        url = url.replace("[TVDBID]", tvdbid + "-" + season + "-2.jpg");
+
+        return url;
     }
 }

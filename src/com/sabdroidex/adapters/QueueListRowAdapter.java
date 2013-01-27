@@ -1,6 +1,7 @@
 package com.sabdroidex.adapters;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,24 +12,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
+import com.sabdroidex.data.QueueElement;
 import com.utils.Formatter;
 
-public class QueueListRowAdapter extends ArrayAdapter<Object[]> {
+public class QueueListRowAdapter extends ArrayAdapter<QueueElement> {
 
     private Context mContext;
     private LayoutInflater mInflater;
     private QueueListItem mQueueListItem;
-    private ArrayList<Object[]> mItems;
 
     @Override
-    public int getCount() {
-        return mItems.size();
+    public void addAll(Collection<? extends QueueElement> collection) {
+        super.addAll(collection);
     }
-
-    public QueueListRowAdapter(Context context, ArrayList<Object[]> items) {
+    
+    public QueueListRowAdapter(Context context, List<QueueElement> items) {
         super(context, R.layout.list_item, items);
         this.mContext = context;
-        this.mItems = items;
         this.mInflater = LayoutInflater.from(this.mContext);
     }
 
@@ -45,16 +45,16 @@ public class QueueListRowAdapter extends ArrayAdapter<Object[]> {
             mQueueListItem = (QueueListItem) convertView.getTag();
         }
 
-        if (mItems == null || mItems.size() <= position) {
+        if (getItem(position) == null || getCount() <= position) {
             return convertView;
         }
         
-        Object[] values = mItems.get(position);
+        QueueElement element = getItem(position);
         
-        String eta = (String) values[5];
-        String completed = Formatter.formatShort(((Double) values[2])) + " / " + Formatter.formatShort(((Double) values[1])) + " MB";
-        String status = (String) values[3];
-        String fileName = (String) values[0];
+        String eta = element.getTimeLeft();
+        String completed = Formatter.formatShort(new Double(element.getMbLeft())) + " / " + Formatter.formatShort(new Double(element.getMb())) + " MB";
+        String status = element.getStatus();
+        String fileName = element.getFilename();
 
         mQueueListItem.filemame.setText(fileName);
         mQueueListItem.eta.setText(eta);

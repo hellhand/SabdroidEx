@@ -17,8 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.utils.AsyncImage;
+import com.sabdroidex.utils.AsyncShowBanner;
 
 public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
 
@@ -69,11 +69,11 @@ public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
             mQueueListItem.banner.setImageBitmap(mEmptyBanner);
 
             if (mAsyncImages.get(position) == null) {
-                mAsyncImages.add(position, new AsyncImage());
+                mAsyncImages.add(position, new AsyncShowBanner());
             }
 
             if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                mAsyncImages.get(position).execute(handler, position, rows.get(position)[5], rows.get(position)[0], SickBeardController.MESSAGE.SHOW_GETBANNER);
+                mAsyncImages.get(position).execute(handler, position, rows.get(position)[5], rows.get(position)[0]);
             }
         }
         else {

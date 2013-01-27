@@ -50,7 +50,7 @@ public class ComingFragment extends SABDFragment {
 				 */
 				if (mComingRowAdapter != null) {
 				    mComingRowAdapter.notifyDataSetChanged();
-					((SABDroidEx) mParent).updateStatus(true);
+					((SABDroidEx) mParent).updateState(true);
 				}
 			}
             if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
@@ -79,9 +79,10 @@ public class ComingFragment extends SABDFragment {
 		rows = comingRows;
 	}
 
-	public Handler getMessageHandler() {
-		return messageHandler;
-	}
+    @Override
+    public Object getDataCache() {
+        return rows;
+    }
 
 	@Override
 	public String getTitle() {
@@ -131,7 +132,7 @@ public class ComingFragment extends SABDFragment {
 			rows = extracted(data, 3);
 		}
 
-		if (getRows().size() > 0) {
+		if (rows.size() > 0) {
 		    mComingRowAdapter.notifyDataSetChanged();
 		} 
 		else {
@@ -151,12 +152,4 @@ public class ComingFragment extends SABDFragment {
 	public void onFragmentActivated() {
 		manualRefreshComing();
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
-    public ArrayList<Object[]> getRows() {
-        return rows;
-    }
 }

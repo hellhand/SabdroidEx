@@ -2,10 +2,11 @@ package com.sabdroidex.data;
 
 import java.util.List;
 
+import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
-
+@JSONElement
 public class QualityDetails {
     
     private List<String> archive;

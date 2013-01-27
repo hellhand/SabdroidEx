@@ -18,9 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.utils.AsyncImage;
+import com.sabdroidex.utils.AsyncSeasonPoster;
 
 public class ShowSeasonAdapater extends BaseAdapter {
     
@@ -31,7 +31,7 @@ public class ShowSeasonAdapater extends BaseAdapter {
     private final List<Integer> items;
     private final Bitmap mEmptyBanner;
     private Show show;
-
+    
     public ShowSeasonAdapater(Context context) {
         this.context = context;
         this.inflater = LayoutInflater.from(this.context);
@@ -46,12 +46,16 @@ public class ShowSeasonAdapater extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.season_item, null);
             seasonItem = new SeasonItem();
-            seasonItem.textView = (TextView) convertView.findViewById(R.id.show_season_name);
-            seasonItem.imageView = (ImageView) convertView.findViewById(R.id.show_season_poster);
+            seasonItem.seasonName = (TextView) convertView.findViewById(R.id.show_season_name);
+            seasonItem.showName = (TextView) convertView.findViewById(R.id.show_name);
+            seasonItem.seasonPoster = (ImageView) convertView.findViewById(R.id.show_season_poster);
         }
         else {
             seasonItem = (SeasonItem) convertView.getTag();
         }
+        
+        this.mAsyncImages.setSize(items.size());
+        this.mListPosters.setSize(items.size());
         
         if (items.size() != 0 && mAsyncImages.size() != items.size()) {
             this.mAsyncImages.clear();
@@ -59,22 +63,28 @@ public class ShowSeasonAdapater extends BaseAdapter {
         }
         
         if (mListPosters.get(position) == null) {
-            seasonItem.imageView.setImageBitmap(mEmptyBanner);
-
+            seasonItem.seasonPoster.setImageBitmap(mEmptyBanner);
+            
             if (mAsyncImages.get(position) == null) {
-                mAsyncImages.add(position, new AsyncImage());
+                mAsyncImages.add(position, new AsyncSeasonPoster());
             }
-
+            
             if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                mAsyncImages.get(position).execute(imageHandler, position, show.getTvrageId(), show.getShowName(), SickBeardController.MESSAGE.SHOW_SEASONLIST);
+                mAsyncImages.get(position).execute(imageHandler, position, show.getTvdvId(), show.getShowName(), show.getSeasonList().get(position));
             }
         }
         else {
-            seasonItem.imageView.setImageBitmap(mListPosters.get(position));
+            seasonItem.seasonPoster.setImageBitmap(mListPosters.get(position));
         }
         
-        seasonItem.textView.setText("" + position);
-        seasonItem.imageView.setImageResource(R.drawable.temp_poster);
+        Integer season = show.getSeasonList().get(position);
+        if (season == 0) {
+            seasonItem.seasonName.setText(context.getResources().getString(R.string.show_specials));
+        }
+        else {
+            seasonItem.seasonName.setText(context.getResources().getString(R.string.show_season) + " " + show.getSeasonList().get(position));
+        }
+        seasonItem.showName.setText(show.getShowName());
         
         convertView.setId(position);
         convertView.setTag(seasonItem);
@@ -83,10 +93,11 @@ public class ShowSeasonAdapater extends BaseAdapter {
     }
     
     /**
-     * Handler used to notify this Fragment that an image has been downloaded and that it should be refreshed to display it.
+     * Handler used to notify this Fragment that an image has been downloaded
+     * and that it should be refreshed to display it.
      */
     private final Handler imageHandler = new Handler() {
-
+        
         @Override
         public void handleMessage(Message msg) {
             Bitmap bitmap = (Bitmap) msg.obj;
@@ -119,7 +130,9 @@ public class ShowSeasonAdapater extends BaseAdapter {
     }
     
     class SeasonItem {
-        ImageView imageView;
-        TextView textView;
+        
+        ImageView seasonPoster;
+        TextView seasonName;
+        TextView showName;
     }
 }

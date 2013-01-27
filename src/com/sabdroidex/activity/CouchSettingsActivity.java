@@ -13,8 +13,8 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.sabdroidex.R;

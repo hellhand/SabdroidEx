@@ -121,7 +121,9 @@
     <string name="show_network">Network : </string>
     <string name="show_next_episode">Next Episode : </string>
 	<string name="show_language">Language : </string>
-    
+	<string name="show_season">Season</string>
+    <string name="show_specials">Specials</string>
+	
 	<string name="comming_next">Next Episode : </string>
 	<string name="comming_airs">Airs : </string>
 		

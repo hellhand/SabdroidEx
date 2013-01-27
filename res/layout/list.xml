@@ -4,7 +4,7 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/queueList"
+        android:id="@+id/elementList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:cacheColorHint="#999999"
@@ -12,7 +12,6 @@
         android:dividerHeight="1px"
         android:fadingEdgeLength="4dip"
         android:scrollingCache="false"
-        android:fastScrollAlwaysVisible="true"
         android:fastScrollEnabled="true" />
 
 </LinearLayout>

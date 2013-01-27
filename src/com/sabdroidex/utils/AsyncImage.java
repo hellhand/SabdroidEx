@@ -14,25 +14,27 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.utils.HttpUtil;
 
-public class AsyncImage extends AsyncTask<Object, Void, Void> {
+public abstract class AsyncImage extends AsyncTask<Object, Void, Void> {
 
     private static final String TAG = AsyncImage.class.getCanonicalName();
     
     private static File mExtFolder = Environment.getExternalStorageDirectory();
     
+    private Bitmap bitmap = null;
+    private Handler handler = null;
+    private int what;
+    
     /**
      * This method is a background worker and notifies us with a {@link Message} when is has finished
      * 
-     * @param params [0] is the handler, [1] Is the item position in the list or 0 is not in a list, [2] Is the IMDB id of the TV show, [3] Is the name of the TV Show, [4] is the image type.
+     * @param params [0] is the handler, [1] Is the item position in the list or 0 is not in a list, [2] Is the IMDB id of the TV show, [3] Is the name of the TV Show.
      * @return
      */
     @Override
     protected Void doInBackground(Object... params) {
-
-        Bitmap bitmap = null;
+        
         Options bgOptions = new Options();
         bgOptions.inPurgeable = true;
         bgOptions.inPreferredConfig = Config.RGB_565;
@@ -43,18 +45,10 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
         String folderPath = mExtFolder.getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[3] + File.separator;
         folderPath = folderPath.replace(":", "");
 
-        Handler handler = (Handler) params[0];
-        String fileName = "";
-
-        if (params[4] == SickBeardController.MESSAGE.SHOW_GETBANNER) {
-            fileName = "banner.jpg";
-        }
-        else if (params[4] == SickBeardController.MESSAGE.SHOW_GETPOSTER) {
-            fileName = "poster.jpg";
-        }
-        else if (params[4] == SickBeardController.MESSAGE.SHOW_SEASONLIST) {
-            fileName = "season-" + params[1] + ".jpg";
-        }
+        handler = (Handler) params[0];
+        what = (Integer) params[1];
+        
+        String fileName = getFilename(params);
 
         if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
             
@@ -101,13 +95,8 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
             /**
              * We get the banner from the server
              */
-            String url = "";
-            if (params[4] == SickBeardController.MESSAGE.SHOW_GETBANNER) {
-                url = SickBeardController.getBannerURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[2]);
-            }
-            if (params[4] == SickBeardController.MESSAGE.SHOW_GETPOSTER) {
-                url = SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[2]);
-            }
+            String url = getImageURL(params);
+            Log.i(TAG, url);
             
             byte[] data;
             try {
@@ -130,15 +119,23 @@ public class AsyncImage extends AsyncTask<Object, Void, Void> {
                 return null;
             }
         }
-
+        
+        sendAnswer();
+        
+        return null;
+    }
+    
+    private void sendAnswer() {
         /**
          * Waking up the main Thread
          */
         Message msg = new Message();
         msg.obj = bitmap;
-        msg.what = (Integer) params[1];
+        msg.what = what;
         handler.sendMessage(msg);
-
-        return null;
     }
+    
+    protected abstract String getImageURL(Object...params);
+    
+    protected abstract String getFilename(Object...params);
 }

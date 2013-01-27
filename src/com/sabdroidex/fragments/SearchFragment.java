@@ -56,4 +56,10 @@ public class SearchFragment extends SABDFragment {
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public Object getDataCache() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

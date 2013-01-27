@@ -1,9 +1,5 @@
 package com.sabdroidex.fragments;
 
-import java.util.ArrayList;
-
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,9 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
-import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.Queue;
+import com.sabdroidex.data.QueueElement;
+import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -45,63 +43,43 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
     private static final String TAG = "QueueFragment";
 
-    private static JSONObject backupJsonObject;
-
-    private static ArrayList<Object[]> rows;
+    private boolean paused = false;
+    private static Queue queue;
     private Thread updater;
     private ListView mQueueList;
-
+    private FragmentActivity mParent;
+    
     // Instantiating the Handler associated with the main thread.
     private final Handler messageHandler = new Handler() {
 
         @Override
-        @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             if (msg.what == SABnzbdController.MESSAGE.QUEUE.ordinal()) {
 
-                Object result[] = (Object[]) msg.obj;
-                // Updating rows
-                rows.clear();
-                rows.addAll((ArrayList<Object[]>) result[1]);
+                queue = (Queue) msg.obj;
 
                 /**
                  * This might happens if a rotation occurs
                  */
                 if (mQueueList != null || getAdapter(mQueueList) != null) {
-                    ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
+                    ArrayAdapter<Object> adapter = getAdapter(mQueueList);
+                    adapter.clear();
+                    adapter.addAll(queue.getQueueElements());
                     adapter.notifyDataSetChanged();
                 }
 
-                // Updating the header
-                JSONObject jsonObject = (JSONObject) result[0];
-                backupJsonObject = jsonObject;
-
-                try {
-                    ((SABDroidEx) mParent).updateLabels(jsonObject);
-                    ((SABDroidEx) mParent).updateStatus(true);
-                }
-                catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
-                }
+                ((UpdateableActivity) mParent).updateLabels(queue);
+                ((UpdateableActivity) mParent).updateState(true);
             }
 
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
-                try {
-                    ((SABDroidEx) mParent).updateStatus(false);
-                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
-                        Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
-                    }
-                }
-                catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
+                ((UpdateableActivity) mParent).updateState(false);
+                if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
+                    Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
                 }
             }
         }
     };
-    
-    private FragmentActivity mParent;
-
-    protected boolean paused = false;
 
     /**
      * 
@@ -123,14 +101,14 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
      * @param sabDroidEx
      * @param downloadRows
      */
-    public QueueFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> downloadRows) {
-        this(sabDroidEx);
-        rows = downloadRows;
+    public QueueFragment(FragmentActivity fragmentActivity, Queue downloadRows) {
+        this(fragmentActivity);
+        queue = downloadRows;
     }
 
     @SuppressWarnings("unchecked")
-    private ArrayAdapter<Object[]> getAdapter(ListView listView) {
-        return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
+    private ArrayAdapter<Object> getAdapter(ListView listView) {
+        return listView == null ? null : (ArrayAdapter<Object>) listView.getAdapter();
     }
 
     public Handler getMessageHandler() {
@@ -170,27 +148,27 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
         LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
-        mQueueList = (ListView) downloadView.findViewById(R.id.queueList);
+        mQueueList = (ListView) downloadView.findViewById(R.id.elementList);
         downloadView.removeAllViews();
 
-        mQueueList.setAdapter(new QueueListRowAdapter(mParent, rows));
+        mQueueList.setAdapter(new QueueListRowAdapter(mParent, queue.getQueueElements()));
         mQueueList.setOnItemLongClickListener(this);
 
         // Tries to fetch recoverable data
-        Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
-        if (data != null && extracted(data, 0) != null) {
-            rows = extracted(data, 0);
-            backupJsonObject = (JSONObject) data[4];
-            ((SABDroidEx) mParent).updateLabels(backupJsonObject);
-        }
-
-        if (rows.size() > 0) {
-            ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
-            adapter.notifyDataSetChanged();
-        }
-        else {
+//        Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
+//        if (data != null && extracted(data, 0) != null) {
+//            rows = extracted(data, 0);
+//            backupJsonObject = (JSONObject) data[4];
+//            ((SABDroidEx) mParent).updateLabels(backupJsonObject);
+//        }
+//
+//        if (rows.size() > 0) {
+//            ArrayAdapter<Object[]> adapter = getAdapter(mQueueList);
+//            adapter.notifyDataSetChanged();
+//        }
+//        else {
             manualRefreshQueue();
-        }
+//        }
 
         if (updater == null || updater.isInterrupted())
             startAutomaticUpdater();
@@ -214,11 +192,14 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
                 dialog.dismiss();
             }
         };
+        
+        final QueueElement element = queue.getQueueElements().get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
-        builder.setTitle((String) rows.get(position)[0]);
+        builder.setTitle(element.getFilename());
+
         String[] options = new String[2];
-        if ("Paused".equals(rows.get(position)[3])) {
+        if ("Paused".equals(element.getStatus())) {
             options[0] = getActivity().getResources().getString(R.string.menu_resume);
         }
         else {
@@ -232,10 +213,10 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        SABnzbdController.pauseResumeItem(messageHandler, rows.get(position));
+                        SABnzbdController.pauseResumeItem(messageHandler, element);
                         break;
                     case 1:
-                        SABnzbdController.removeQueueItem(messageHandler, rows.get(position));
+                        SABnzbdController.removeQueueItem(messageHandler, element);
                         break;
                     default:
                         break;
@@ -259,6 +240,11 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
         paused = false;
     }
 
+    @Override
+    public Object getDataCache() {
+        return queue;
+    }
+    
     /**
      * Fires up a new Thread to update the queue every X minutes
      */
@@ -324,11 +310,6 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
         alert.show();
     }
-
-    @Override
-    protected void clearAdapter() {
-        
-    }
     
     @Override
     public void onStart() {
@@ -387,5 +368,10 @@ public class QueueFragment extends SABDFragment implements OnItemLongClickListen
 
         TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
         messageView.setGravity(Gravity.LEFT);
+    }
+
+    @Override
+    protected void clearAdapter() {
+        
     }
 }

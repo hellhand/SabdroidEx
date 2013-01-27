@@ -11,6 +11,8 @@ public abstract class SABDFragment extends Fragment {
 
     public abstract void onFragmentActivated();
     
+    public abstract Object getDataCache();
+    
     /**
      * This function will serve as a retriever to get back the wanted data from the serialized object
      * 

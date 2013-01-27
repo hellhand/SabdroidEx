@@ -14,7 +14,10 @@ import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
+import com.sabdroidex.data.Queue;
+import com.sabdroidex.data.QueueElement;
 import com.sabdroidex.utils.Preferences;
+import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
 
 /**
@@ -379,7 +382,7 @@ public final class SABnzbdController {
      * @param messageHandler
      * @param item
      */
-    public static void pauseResumeItem(final Handler messageHandler, final Object[] item) {
+    public static void pauseResumeItem(final Handler messageHandler, final QueueElement item) {
 
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
@@ -391,11 +394,11 @@ public final class SABnzbdController {
             @Override
             public void run() {
                 try {
-                    if ("Paused".equals(item[3])) {
-                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=resume", "value=" + item[4]);
+                    if ("Paused".equals(item.getStatus())) {
+                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=resume", "value=" + item.getNzoId());
                     }
                     else {
-                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=pause", "value=" + item[4]);
+                        makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=pause", "value=" + item.getNzoId());
                     }
                     Thread.sleep(100);
                     SABnzbdController.refreshQueue(messageHandler);
@@ -562,8 +565,6 @@ public final class SABnzbdController {
                     final Object results[] = new Object[2];
 
                     final String result = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
-                    final ArrayList<Object[]> rows = new ArrayList<Object[]>();
-
                     JSONObject jsonObject = new JSONObject(result);
 
                     if (!jsonObject.isNull("error")) {
@@ -571,30 +572,13 @@ public final class SABnzbdController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("queue");
-                        paused = Boolean.parseBoolean(jsonObject.getString("paused"));
-
-                        results[0] = jsonObject;
-
-                        final JSONArray jobs = jsonObject.getJSONArray("slots");
-                        rows.clear();
-
-                        for (int i = 0; i < jobs.length(); i++) {
-                            final Object[] rowValues = new Object[6];
-                            rowValues[0] = jobs.getJSONObject(i).getString("filename");
-                            rowValues[1] = jobs.getJSONObject(i).getDouble("mb");
-                            rowValues[2] = jobs.getJSONObject(i).getDouble("mbleft");
-                            rowValues[3] = jobs.getJSONObject(i).getString("status");
-                            rowValues[4] = jobs.getJSONObject(i).getString("nzo_id");
-                            rowValues[5] = jobs.getJSONObject(i).getString("timeleft");
-                            rows.add(rowValues);
-                        }
-
-                        results[1] = rows;
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Queue.class);
+                        Queue queue = (Queue) jsonMarshaller.unmarshal(jsonObject);
 
                         final Message message = new Message();
                         message.setTarget(messageHandler);
                         message.what = MESSAGE.QUEUE.ordinal();
-                        message.obj = results;
+                        message.obj = queue;
                         message.sendToTarget();
                     }
                 }
@@ -664,7 +648,7 @@ public final class SABnzbdController {
      * @param item
      *            The item id to remove from the queue.
      */
-    public static void removeQueueItem(final Handler messageHandler, final Object[] item) {
+    public static void removeQueueItem(final Handler messageHandler, final QueueElement item) {
 
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
@@ -677,7 +661,7 @@ public final class SABnzbdController {
             public void run() {
 
                 try {
-                    makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=delete", "value=" + item[4]);
+                    makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=delete", "value=" + item.getNzoId());
                     Thread.sleep(250);
                     SABnzbdController.refreshQueue(messageHandler);
                 }

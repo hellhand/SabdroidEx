@@ -118,6 +118,8 @@
     <string name="show_network">Réseau : </string>
     <string name="show_next_episode">Prochain Épisode : </string>
 	<string name="show_language">Langue : </string>
+	<string name="show_season">Saison</string>
+    <string name="show_specials">Spéciaux</string>
 	
 	<string name="comming_next">Prochain Episode : </string>
 	<string name="comming_airs">Sur les ondes : </string>
