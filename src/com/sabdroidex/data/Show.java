@@ -1,14 +1,13 @@
 package com.sabdroidex.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
-@JSONElement
-public class Show implements Serializable {
+public class Show extends UnknowMappingElement implements Serializable, Comparable<Show> {
     
     /**
      * 
@@ -55,7 +54,7 @@ public class Show implements Serializable {
         return cache;
     }
     
-    @JSONSetter(name = "cache", type=JSONType.JSONOBJECT)
+    @JSONSetter(name = "cache", type=JSONType.JSON_OBJECT)
     public void setCache(Cache cache) {
         this.cache = cache;
     }
@@ -136,12 +135,15 @@ public class Show implements Serializable {
         return qualityDetails;
     }
     
-    @JSONSetter(name = "quality_details", type=JSONType.JSONOBJECT)
+    @JSONSetter(name = "quality_details", type=JSONType.JSON_OBJECT)
     public void setQualityDetails(QualityDetails qualityDetails) {
         this.qualityDetails = qualityDetails;
     }
     
     public List<Integer> getSeasonList() {
+        if (seasonList == null) {
+            seasonList = new ArrayList<Integer>();
+        }
         return seasonList;
     }
     
@@ -168,7 +170,7 @@ public class Show implements Serializable {
         this.status = status;
     }
     
-    public Integer getTvdvId() {
+    public Integer getTvdbId() {
         return tvdvId;
     }
     
@@ -193,5 +195,16 @@ public class Show implements Serializable {
     @JSONSetter(name = "tvrage_name")
     public void setTvrageName(String tvrageName) {
         this.tvrageName = tvrageName;
+    }
+    
+    @Override
+    public void setId(String id) {
+        setTvdbId(new Integer(id));
+        super.setId(id);
+    }
+
+    @Override
+    public int compareTo(Show another) {
+        return getShowName().compareTo(another.getShowName());
     }
 }

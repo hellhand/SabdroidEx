@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,14 +20,11 @@ import com.sabdroidex.activity.SABDroidEx;
 import com.sabdroidex.adapters.ComingListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.SABDFragment;
 import com.sabdroidex.utils.SABDroidConstants;
 
-public class ComingFragment extends SABDFragment {
+public class ComingFragment extends SABFragment {
 
 	private static ArrayList<Object[]> rows;
-	private static Bitmap mEmptyPoster;
-	private ListView mListView;
 	private ComingListRowAdapter mComingRowAdapter;
 
 	// Instantiating the Handler associated with the main thread.
@@ -63,19 +58,11 @@ public class ComingFragment extends SABDFragment {
 
 	private FragmentActivity mParent;
 
-	public ComingFragment() {
-	}
+    public ComingFragment() {
 
-	public ComingFragment(FragmentActivity fragmentActivity) {
-		mParent = fragmentActivity;
-		if (mEmptyPoster == null) {
-			mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(),R.drawable.temp_poster);
-		}
-	}
-
-	public ComingFragment(FragmentActivity sabDroidEx,
-			ArrayList<Object[]> comingRows) {
-		this(sabDroidEx);
+    }
+	
+	public ComingFragment(ArrayList<Object[]> comingRows) {
 		rows = comingRows;
 	}
 
@@ -85,8 +72,8 @@ public class ComingFragment extends SABDFragment {
     }
 
 	@Override
-	public String getTitle() {
-		return mParent.getString(R.string.tab_coming);
+	public int getTitle() {
+		return R.string.tab_coming;
 	}
 	
 	/**
@@ -119,7 +106,7 @@ public class ComingFragment extends SABDFragment {
 		LinearLayout showView = (LinearLayout) inflater.inflate(R.layout.simplelist,
 				null);
 
-		mListView = (ListView) showView.findViewById(R.id.queueList);
+		ListView mListView = (ListView) showView.findViewById(R.id.queueList);
 		mListView.setDividerHeight(0);
 		showView.removeAllViews();
 
@@ -144,8 +131,7 @@ public class ComingFragment extends SABDFragment {
 
 	@Override
 	protected void clearAdapter() {
-	    if (mComingRowAdapter != null)
-            mComingRowAdapter.clearBitmaps();
+
 	}
 	
 	@Override

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -18,6 +17,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.data.Show;
+import com.sabdroidex.data.ShowList;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
@@ -176,56 +176,28 @@ public final class SickBeardController {
 
             @Override
             public void run() {
-
+                
                 try {
-                    Object results[] = new Object[2];
-                    String queueData = makeApiCall(MESSAGE.SHOWS.toString().toLowerCase(), "sort=name");
-
-                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
-
-                    /**
-                     * Getting the values from the JSON Object
-                     */
-                    JSONObject jsonObject = new JSONObject(queueData);
+                    String queueData = makeApiCall(MESSAGE.SHOWS.toString().toLowerCase());
+                    JSONObject jsonObject = new JSONObject(queueData);                    
+                    ShowList showList = null;
+                    
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
+                    
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        results[0] = jsonObject;
-
-                        List<String> sortKey = new ArrayList<String>();
-                        Iterator<?> iterator = jsonObject.keys();
-                        while (iterator.hasNext()) {
-                            sortKey.add((String) iterator.next());
-                        }
-                        Collections.sort(sortKey);
-                        rows.clear();
-
-                        for (int i = 0; i < sortKey.size(); i++) {
-                            /**
-                             * The seventh item will be the banner The eighth item will be the poster
-                             */
-                            Object[] rowValues = new Object[7];
-                            JSONObject current = jsonObject.getJSONObject(sortKey.get(i));
-                            rowValues[0] = sortKey.get(i);
-                            rowValues[1] = current.getString("status");
-                            rowValues[2] = current.getString("quality");
-                            rowValues[3] = current.getString("next_ep_airdate");
-                            rowValues[4] = current.getString("network");
-                            rowValues[5] = current.getInt("tvdbid");
-                            rowValues[6] = current.getString("language");
-                            rows.add(rowValues);
-                        }
-
-                        results[1] = rows;
-
-                        Message message = new Message();
-                        message.setTarget(messageHandler);
-                        message.what = MESSAGE.SHOWS.ordinal();
-                        message.obj = results;
-                        message.sendToTarget();
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(ShowList.class);
+                        showList = (ShowList) jsonMarshaller.unmarshal(jsonObject);
+                        Collections.sort(showList.getShowElements());
                     }
+                    
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.SHOWS.ordinal();
+                    message.obj = showList;
+                    message.sendToTarget();
                 }
                 catch (RuntimeException e) {
                     Log.w(TAG, e.getLocalizedMessage());
@@ -349,8 +321,8 @@ public final class SickBeardController {
             public void run() {
 
                 try {
-                    String queueData = makeApiCall(MESSAGE.SHOW.toString().toLowerCase(), "tvdbid=" + value);
-                    JSONObject jsonObject = new JSONObject(queueData);                    
+                    String data = makeApiCall(MESSAGE.SHOW.toString().toLowerCase(), "tvdbid=" + value);
+                    JSONObject jsonObject = new JSONObject(data);                    
                     Show show = null;
                     
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {

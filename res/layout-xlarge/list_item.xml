@@ -32,8 +32,7 @@
             android:layout_marginRight="10dip"
             android:contentDescription="@string/app_name"
             android:gravity="center_vertical"
-            android:scaleType="matrix"
-            android:src="@android:drawable/ic_media_play" />
+            android:scaleType="matrix" />
 
         <TextView
             android:id="@+id/queueRowLabelEta"

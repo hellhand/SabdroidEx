@@ -19,13 +19,17 @@ package com.sabdroidex.utils.json;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Debug;
 import android.util.Log;
+
+import com.sabdroidex.data.UnknowMappingElement;
 
 public class SimpleJsonMarshaller {
     
@@ -47,7 +51,18 @@ public class SimpleJsonMarshaller {
             for (int i = 0; i < methods.length; i++) {
                 JSONSetter setter = methods[i].getAnnotation(JSONSetter.class);
                 if (setter != null) {
-                    if (setter.type() == JSONType.JSONOBJECT) {
+                    if (setter.type() == JSONType.SIMPLE) {
+                        try {
+                            Object parameter = jsonObject.get(setter.name());
+                            methods[i].invoke(result, parameter);
+                        }
+                        catch (JSONException exception) {
+                            if (Debug.isDebuggerConnected()) {
+                                Log.d(TAG, exception.getLocalizedMessage());
+                            }
+                        }
+                    }
+                    else if (setter.type() == JSONType.JSON_OBJECT) {
                         try {
                             SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(methods[i].getParameterTypes()[0]);
                             JSONObject jsonElement = jsonObject.getJSONObject(setter.name());
@@ -55,7 +70,9 @@ public class SimpleJsonMarshaller {
                             methods[i].invoke(result, parameter);
                         }
                         catch (JSONException exception) {
-                            Log.d(TAG, exception.getLocalizedMessage());
+                            if (Debug.isDebuggerConnected()) {
+                                Log.d(TAG, exception.getLocalizedMessage());
+                            }
                         }
                     }
                     else if (setter.type() == JSONType.LIST) {
@@ -79,23 +96,49 @@ public class SimpleJsonMarshaller {
                             methods[i].invoke(result, collection);
                         }
                         catch (JSONException exception) {
-                            Log.d(TAG, exception.getLocalizedMessage());
+                            if (Debug.isDebuggerConnected()) {
+                                Log.d(TAG, exception.getLocalizedMessage());
+                            }
                         }
                     }
-                    else if (setter.type() == JSONType.SIMPLE) {
+                    else if (setter.type() == JSONType.UNKNOWN_KEY_ELEMENTS) {
                         try {
-                            Object parameter = jsonObject.get(setter.name());
-                            methods[i].invoke(result, parameter);
+                            Collection<Object> collection = null;
+                            if (methods[i].getParameterTypes()[0] == List.class) {
+                                collection = new ArrayList<Object>();
+                            }
+                            else {
+                                collection = (Collection<Object>) methods[i].getParameterTypes()[0].newInstance();
+                            }
+                            
+                            Iterator<?> iterator = jsonObject.keys();
+                            while (iterator.hasNext()) {
+                                String key = (String) iterator.next();
+                                Object element = jsonObject.get(key);
+                                if (setter.listClazz() != Void.class) {
+                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(setter.listClazz());
+                                    element = simpleJsonMarshaller.unmarshal((JSONObject) element);
+                                    if (element instanceof UnknowMappingElement) {
+                                        ((UnknowMappingElement) element).setId(key);
+                                    }
+                                }
+                                collection.add(element);
+                            }
+                            methods[i].invoke(result, collection);
                         }
                         catch (JSONException exception) {
-                            Log.d(TAG, exception.getLocalizedMessage());
+                            if (Debug.isDebuggerConnected()) {
+                                Log.d(TAG, exception.getLocalizedMessage());
+                            }
                         }
                     }
                 }
             }
         }
         catch (Exception e) {
-            Log.d(TAG, e.getLocalizedMessage());
+            if (Debug.isDebuggerConnected()) {
+                Log.d(TAG, e.getLocalizedMessage());
+            }
         }
         return result;
     }

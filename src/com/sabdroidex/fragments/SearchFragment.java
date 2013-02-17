@@ -12,9 +12,8 @@ import android.widget.ListView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SearchListRowAdapter;
-import com.sabdroidex.utils.SABDFragment;
 
-public class SearchFragment extends SABDFragment {
+public class SearchFragment extends SABFragment {
 
     private FragmentActivity mParent;
     private static ArrayList<String> rows = new ArrayList<String>();
@@ -29,8 +28,8 @@ public class SearchFragment extends SABDFragment {
     }
 
     @Override
-    public String getTitle() {
-        return mParent.getString(R.string.tab_search);
+    public int getTitle() {
+        return R.string.tab_search;
     }
 
     @Override

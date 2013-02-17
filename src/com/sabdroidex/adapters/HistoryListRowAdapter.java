@@ -1,6 +1,6 @@
 package com.sabdroidex.adapters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,20 +11,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
+import com.sabdroidex.data.HistoryElement;
 
-public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
+public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
 
     private Context mContext;
     private LayoutInflater mInflater;
     private HistoryListItem mHistoryListItem;
-    private ArrayList<Object[]> mItems;
+    private List<HistoryElement> mItems;
 
     @Override
     public int getCount() {
         return mItems.size();
     }
 
-    public HistoryListRowAdapter(Context context, ArrayList<Object[]> items) {
+    public HistoryListRowAdapter(Context context, List<HistoryElement> items) {
         super(context, R.layout.list_item, items);
         this.mContext = context;
         this.mItems = items;
@@ -48,18 +49,11 @@ public class HistoryListRowAdapter extends ArrayAdapter<Object[]> {
             return convertView;
         }
         
-        Object[] values = mItems.get(position);
+        HistoryElement element = mItems.get(position);
         
-        String size = (String) values[1];
-        String eta = (String) values[2];
-        
-        if (!values[4].equals("")) {
-            eta = (String) values[4];
-        }
-        
-        mHistoryListItem.filemame.setText((String) values[0]);
-        mHistoryListItem.eta.setText(eta);
-        mHistoryListItem.completed.setText(size);
+        mHistoryListItem.filemame.setText(element.getName());
+        mHistoryListItem.eta.setText(element.getStatus());
+        mHistoryListItem.completed.setText(element.getSize());
         mHistoryListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
 
         convertView.setId(position);

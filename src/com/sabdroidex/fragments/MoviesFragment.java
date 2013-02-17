@@ -23,9 +23,8 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.SABDFragment;
 
-public class MoviesFragment extends SABDFragment {
+public class MoviesFragment extends SABFragment {
 
 	private static final String TAG = "ShowsFragment";
     private FragmentActivity mParent;
@@ -68,8 +67,8 @@ public class MoviesFragment extends SABDFragment {
     }
 
     @Override
-    public String getTitle() {
-        return mParent.getString(R.string.tab_movies);
+    public int getTitle() {
+        return R.string.tab_movies;
     }
 
     @Override

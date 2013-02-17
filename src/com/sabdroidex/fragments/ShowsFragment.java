@@ -4,24 +4,13 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,54 +23,43 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
-import com.sabdroidex.activity.SABDroidEx;
-import com.sabdroidex.activity.ShowActivity;
 import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.utils.AsyncImage;
-import com.sabdroidex.utils.AsyncShowPoster;
+import com.sabdroidex.data.Show;
+import com.sabdroidex.data.ShowList;
+import com.sabdroidex.fragments.dialogs.ShowDetailsDialog;
+import com.sabdroidex.utils.ImageUtils;
+import com.sabdroidex.utils.ImageWorker.ImageType;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.SABDFragment;
-import com.sabdroidex.utils.SABDroidConstants;
+import com.sabdroidex.utils.SABHandler;
 
-public class ShowsFragment extends SABDFragment implements OnItemClickListener, OnItemLongClickListener {
+public class ShowsFragment extends SABFragment {
     
     private static final String TAG = "ShowsFragment";
     
-    private static ArrayList<Object[]> rows;
-    private static Bitmap mEmptyPoster;
-    private ListView mListView;
-    private ScrollView mShowView;
-    private AsyncImage mAsyncImage;
+    private static ShowList showList;
     private ShowsListRowAdapter mShowsListRowAdapter;
     
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
-    private final Handler messageHandler = new Handler() {
+    private final SABHandler messageHandler = new SABHandler() {
         
         @Override
         @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             Object result[];
             if (msg.what == SickBeardController.MESSAGE.SHOWS.ordinal()) {
-                result = (Object[]) msg.obj;
-                // Updating rows
-                rows.clear();
-                rows.addAll((ArrayList<Object[]>) result[1]);
+                showList = (ShowList) msg.obj;
                 
-                /**
-                 * This might happen if a rotation occurs
-                 */
-                if (mListView != null || getAdapter(mListView) != null) {
-                    ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-                    adapter.notifyDataSetChanged();
-                    ((SABDroidEx) mParent).updateState(true);
+                if (mShowsListRowAdapter != null) {
+                    mShowsListRowAdapter.clear();
+                    mShowsListRowAdapter.addAll(showList.getShowElements());
+                    mShowsListRowAdapter.notifyDataSetChanged();
                 }
             }
             if (msg.what == SickBeardController.MESSAGE.SB_SEARCHTVDB.ordinal()) {
@@ -95,7 +73,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             }
             if (msg.what == SickBeardController.MESSAGE.SHOW_ADDNEW.ordinal()) {
                 try {
-                    Toast.makeText(mParent, getString(R.string.add_show_dialog_title) + " : " + msg.obj, Toast.LENGTH_LONG);
+                    Toast.makeText(getParentActivity(), getString(R.string.add_show_dialog_title) + " : " + msg.obj, Toast.LENGTH_LONG);
                 }
                 catch (Exception e) {
                     Log.w(TAG, e.getLocalizedMessage());
@@ -104,7 +82,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
                 try {
                     if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
-                        Toast.makeText(mParent, (String) msg.obj, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
                     }
                 }
                 catch (Exception e) {
@@ -114,46 +92,12 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         }
     };
     
-    /**
-     * This {@link Fragment} parent {@link Activity}.
-     */
-    private FragmentActivity mParent;
-    
-    /**
-     * Default Constructor.
-     */
-    public ShowsFragment() {}
-    
-    /**
-     * Constructor with parent {@link Activity}
-     * 
-     * @param fragmentActivity
-     *            the parent {@link Activity}.
-     */
-    public ShowsFragment(FragmentActivity fragmentActivity) {
-        mParent = fragmentActivity;
-        if (mEmptyPoster == null) {
-            Options BgOptions = new Options();
-            BgOptions.inPurgeable = true;
-            BgOptions.inPreferredConfig = Config.RGB_565;
-            if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
-                BgOptions.inSampleSize = 2;
-            }
-            mEmptyPoster = BitmapFactory.decodeResource(mParent.getResources(), R.drawable.temp_poster, BgOptions);
-        }
+    public ShowsFragment() {
+        showList = new ShowList();
     }
     
-    /**
-     * Constructor with parent {@link Activity} and the rows to display.
-     * 
-     * @param sabDroidEx
-     *            the parent {@link Activity}.
-     * @param historyRows
-     *            the rows to dispplay.
-     */
-    public ShowsFragment(FragmentActivity sabDroidEx, ArrayList<Object[]> historyRows) {
-        this(sabDroidEx);
-        rows = historyRows;
+    public ShowsFragment(ShowList historyRows) {
+        showList = historyRows;
     }
     
     /**
@@ -165,14 +109,9 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         return messageHandler;
     }
     
-    @SuppressWarnings("unchecked")
-    private ArrayAdapter<Object[]> getAdapter(ListView listView) {
-        return listView == null ? null : (ArrayAdapter<Object[]>) listView.getAdapter();
-    }
-    
     @Override
-    public String getTitle() {
-        return mParent.getString(R.string.tab_shows);
+    public int getTitle() {
+        return R.string.tab_shows;
     }
     
     /**
@@ -189,61 +128,51 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
     
     @Override
     public void onAttach(Activity activity) {
-        mParent = (FragmentActivity) activity;
         super.onAttach(activity);
+    }
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        messageHandler.setActivity(getActivity());
+        super.onCreate(savedInstanceState);
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        SharedPreferences preferences = mParent.getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
-        Preferences.update(preferences);
         
         LinearLayout showView;
-        if ((mParent.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             showView = (LinearLayout) inflater.inflate(R.layout.show_list, null);
         }
         else {
             showView = (LinearLayout) inflater.inflate(R.layout.simplelist, null);
         }
         
-        mListView = (ListView) showView.findViewById(R.id.queueList);
+        ListView listView = (ListView) showView.findViewById(R.id.queueList);
         
-        mShowsListRowAdapter = new ShowsListRowAdapter(mParent, rows);
-        mListView.setAdapter(mShowsListRowAdapter);
-        if ((mParent.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            mListView.setOnItemClickListener(this);
+        mShowsListRowAdapter = new ShowsListRowAdapter(getActivity().getApplicationContext(), showList.getShowElements());
+        listView.setAdapter(mShowsListRowAdapter);
+        ListItemClickListener listItemClickListener = new ListItemClickListener();
+        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setOnItemClickListener(listItemClickListener);
+            listView.setItemChecked(0, true);
         }
         else {
-            mListView.setOnItemLongClickListener(this);
+            listView.setOnItemLongClickListener(new ListItemLongClickListener());
         }
-        // Tries to fetch recoverable data
-        Object data[] = (Object[]) mParent.getLastCustomNonConfigurationInstance();
-        if (data != null && extracted(data, 2) != null) {
-            rows = extracted(data, 2);
-        }
-        
-        if (rows.size() > 0) {
-            ArrayAdapter<Object[]> adapter = getAdapter(mListView);
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            manualRefreshShows();
-        }
+        manualRefreshShows();
         
         return showView;
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        if ((mParent.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (rows.size() > 0) {
+        if ((getActivity().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+                && getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (showList.getShowElements().size() > 0) {
                 getView().findViewById(R.id.show_list_right_pane).setVisibility(View.VISIBLE);
-                onItemClick(null, null, 0, 0);
             }
         }
         super.onActivityCreated(savedInstanceState);
@@ -256,13 +185,12 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
     
     @Override
     public Object getDataCache() {
-        return rows;
+        return showList;
     }
     
     @Override
     protected void clearAdapter() {
-        if (mShowsListRowAdapter != null)
-            mShowsListRowAdapter.clearBitmaps();
+        
     }
     
     @Override
@@ -270,160 +198,65 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         manualRefreshShows();
     }
     
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mShowsListRowAdapter.setSelectedItem(position);
-        setupShowElements(position);
-    }
-    
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+    public void setupShowElements(View view, Show show) {
+        ImageView showPoster = (ImageView) view.findViewById(R.id.showPoster);
         
-        AlertDialog dialog = null;
-        OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                if (whichButton == Dialog.BUTTON_POSITIVE) {
-                    Intent intent = new Intent(getActivity(), ShowActivity.class);
-                    intent.putExtra("tvrageid", (Integer) rows.get(position)[5]);
-                    startActivity(intent);
-                }
-                if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
-                    mAsyncImage.cancel(true);
-                }
-                mAsyncImage = null;
-                dialog.dismiss();
-            }
-        };
+        TextView showName = (TextView) view.findViewById(R.id.show_name);
+        showName.setText(show.getShowName());
         
-        LayoutInflater inflater = LayoutInflater.from(mParent);
-        mShowView = (ScrollView) inflater.inflate(R.layout.show_status, null);
+        TextView showStatus = (TextView) view.findViewById(R.id.show_status);
+        showStatus.setText(show.getStatus());
         
-        setupShowElements(position);
+        TextView showQuality = (TextView) view.findViewById(R.id.show_quality);
+        showQuality.setText(show.getQuality());
         
-        AlertDialog.Builder builder = new AlertDialog.Builder(mParent);
-        builder.setPositiveButton(R.string.more, onClickListener);
-        builder.setNegativeButton(R.string.close, onClickListener);
-        builder.setView(mShowView);
-        dialog = builder.create();
-        dialog.show();
-        return true;
-    }
-    
-    public void setupShowElements(int position) {
+        TextView showNextEpisode = (TextView) view.findViewById(R.id.show_next_episode);
+        showNextEpisode.setText(show.getNextEpAirdate());
         
-        ImageView showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
-        showPoster.setImageBitmap(mEmptyPoster);
+        TextView showNetwork = (TextView) view.findViewById(R.id.show_network);
+        showNetwork.setText(show.getNetwork());
         
-        TextView showName = (TextView) mShowView.findViewById(R.id.show_name);
-        showName.setText((CharSequence) rows.get(position)[0]);
+        TextView showLanguage = (TextView) view.findViewById(R.id.show_language);
+        showLanguage.setText(show.getLanguage());
         
-        GradientDrawable gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
-        gradientDrawable.setColor(Color.TRANSPARENT);
-        
-        TextView showStatus = (TextView) mShowView.findViewById(R.id.show_status);
-        showStatus.setText((CharSequence) rows.get(position)[1]);
-        if ("Ended".equals(rows.get(position)[1])) {
-            gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
-            gradientDrawable.setColor(Color.rgb(255, 50, 50));
-            showStatus.setBackgroundDrawable(gradientDrawable);
-            showStatus.setTextColor(Color.WHITE);
-        }
-        else {
-            gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
-            gradientDrawable.setColor(Color.TRANSPARENT);
-            showStatus.setBackgroundDrawable(gradientDrawable);
-            showStatus.setTextColor(Color.BLACK);
-        }
-        
-        TextView showQuality = (TextView) mShowView.findViewById(R.id.show_quality);
-        showQuality.setText((CharSequence) rows.get(position)[2]);
-        showQuality.setTextColor(Color.WHITE);
-        gradientDrawable = (GradientDrawable) getResources().getDrawable(R.drawable.rounded_edges);
-        if ("Any".equals(rows.get(position)[2])) {
-            gradientDrawable.setColor(Color.rgb(68, 68, 68));
-        }
-        if ("SD".equals(rows.get(position)[2])) {
-            gradientDrawable.setColor(Color.rgb(153, 68, 68));
-        }
-        if ("HD".equals(rows.get(position)[2])) {
-            gradientDrawable.setColor(Color.rgb(68, 153, 68));
-        }
-        showQuality.setBackgroundDrawable(gradientDrawable);
-        
-        TextView showNextEpisode = (TextView) mShowView.findViewById(R.id.show_next_episode);
-        showNextEpisode.setText((CharSequence) rows.get(position)[3]);
-        
-        TextView showNetwork = (TextView) mShowView.findViewById(R.id.show_network);
-        showNetwork.setText((CharSequence) rows.get(position)[4]);
-        
-        TextView showLanguage = (TextView) mShowView.findViewById(R.id.show_language);
-        showLanguage.setText((CharSequence) rows.get(position)[6]);
-        
-        if (mAsyncImage != null && mAsyncImage.getStatus() == (AsyncTask.Status.RUNNING)) {
-            mAsyncImage.cancel(true);
-        }
-        mAsyncImage = new AsyncShowPoster();
-        mAsyncImage.execute(imageHandler, 0, rows.get(position)[5], rows.get(position)[0]);
+        String imageKey = ImageType.POSTER.name() + show.getTvdbId();
+        ImageUtils.getImageWorker().loadImage(showPoster, ImageType.POSTER, imageKey, show.getTvdbId(), show.getShowName());
     }
     
     /**
-     * Handler used to notify this Fragment that an image has been downloaded
-     * and that it should be refreshed to display it.
-     */
-    private final Handler imageHandler = new Handler() {
-        
-        @Override
-        public void handleMessage(Message msg) {
-            Bitmap bitmap = (Bitmap) msg.obj;
-            if (bitmap != null) {
-                ImageView showPoster;
-                if ((mParent.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                        && mParent.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    showPoster = (ImageView) getView().findViewById(R.id.showPoster);
-                }
-                else {
-                    showPoster = (ImageView) mShowView.findViewById(R.id.showPoster);
-                }
-                showPoster.setImageBitmap(bitmap);
-                showPoster.invalidate();
-            }
-        }
-    };
-    
-    /**
-     * Displays the Props dialog when the user wants to add a download
+     * Create and displays a pop-up dialog when the user wants to add a show to
+     * SickBeard
      */
     @SuppressWarnings("deprecation")
     public void addShowPrompt() {
         /**
-         * If nothing is configured we display the configuration pop-up
+         * If SickBeard's configuration is not done, the configuration Dialog is
+         * displayed
          */
         if (!Preferences.isSet(Preferences.SICKBEARD_URL)) {
-            mParent.showDialog(R.id.dialog_setup_prompt);
+            getActivity().showDialog(R.id.dialog_setup_prompt);
             return;
         }
         
-        AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         
-        alert.setTitle(R.string.add_show_dialog_title);
-        alert.setMessage(R.string.add_show_dialog_message);
+        builder.setTitle(R.string.add_show_dialog_title);
+        builder.setMessage(R.string.add_show_dialog_message);
         
-        final EditText input = new EditText(mParent);
-        alert.setView(input);
+        final EditText input = new EditText(getActivity());
+        builder.setView(input);
         
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
-                Toast.makeText(mParent, mParent.getText(R.string.add_show_background_search), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getActivity().getApplicationContext().getText(R.string.add_show_background_search), Toast.LENGTH_LONG).show();
                 SickBeardController.searchShow(getMessageHandler(), value);
             }
         });
         
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -431,7 +264,9 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             }
         });
         
-        alert.show();
+        AlertDialog dialog = null;
+        dialog = builder.create();
+        dialog.show();
     }
     
     /**
@@ -443,7 +278,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
      */
     private void selectShowPrompt(final ArrayList<Object[]> result) {
         
-        AlertDialog.Builder alert = new AlertDialog.Builder(mParent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         
         ArrayList<String> shows = new ArrayList<String>();
         for (Object[] show : result) {
@@ -451,14 +286,14 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
         }
         
         if (shows.size() > 0) {
-            alert.setTitle(R.string.add_show_selection_dialog_title);
+            builder.setTitle(R.string.add_show_selection_dialog_title);
         }
         else {
-            alert.setTitle(R.string.add_show_not_found);
+            builder.setTitle(R.string.add_show_not_found);
         }
         
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mParent, android.R.layout.simple_list_item_1, shows);
-        alert.setAdapter(adapter, new OnClickListener() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, shows);
+        builder.setAdapter(adapter, new OnClickListener() {
             
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -468,7 +303,7 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             }
         });
         
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -476,6 +311,38 @@ public class ShowsFragment extends SABDFragment implements OnItemClickListener, 
             }
         });
         
-        alert.show();
+        AlertDialog dialog = null;
+        dialog = builder.create();
+        dialog.show();
+    }
+    
+    private class ListItemClickListener implements OnItemClickListener {
+        
+        /**
+         * When an item is selected by a click the show details are displayed at
+         * the side of the ListView
+         */
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // Setup of the show details
+            setupShowElements(getView(), showList.getShowElements().get(position));
+            mShowsListRowAdapter.notifyDataSetInvalidated();
+        }
+        
+    }
+    
+    private class ListItemLongClickListener implements OnItemLongClickListener {
+        
+        /**
+         * When an item is selected by a long click a Dialog appears to display
+         * the show details.
+         */
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog(showList.getShowElements().get(position));
+            showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
+            return true;
+        }
+        
     }
 }

@@ -1,144 +1,77 @@
 package com.sabdroidex.adapters;
 
-import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask.Status;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.utils.AsyncImage;
-import com.sabdroidex.utils.AsyncShowBanner;
+import com.sabdroidex.data.Show;
+import com.sabdroidex.utils.ImageUtils;
+import com.sabdroidex.utils.ImageWorker.ImageType;
 
-public class ShowsListRowAdapter extends ArrayAdapter<Object[]> {
-
+public class ShowsListRowAdapter extends ArrayAdapter<Show> {
+    
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final ArrayList<Object[]> rows;
-    private final Vector<Bitmap> mListBanners;
-    private final Vector<AsyncImage> mAsyncImages;
-    private final Bitmap mEmptyBanner;
-    private ShowsListItem mQueueListItem;
-    private int mSelectedIndex;
-
-    public ShowsListRowAdapter(Context context, ArrayList<Object[]> rows) {
-        super(context, R.layout.show_item, rows);
+    private boolean showOverlay = false;
+    
+    public ShowsListRowAdapter(Context context, List<Show> items) {
+        super(context, R.layout.show_item, items);
         this.mContext = context;
-        this.rows = rows;
         this.mInflater = LayoutInflater.from(this.mContext);
-        this.mListBanners = new Vector<Bitmap>();
-        this.mAsyncImages = new Vector<AsyncImage>();
-        this.mEmptyBanner = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.temp_banner);
+        this.showOverlay = ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
-
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ShowsListItem showItem = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.show_item, null);
-            mQueueListItem = new ShowsListItem();
-            mQueueListItem.banner = (ImageView) convertView.findViewById(R.id.showBanner);
-            mQueueListItem.overlay = (ImageView) convertView.findViewById(R.id.showOverlay);
-            if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                    && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mQueueListItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
+            showItem = new ShowsListItem();
+            showItem.banner = (ImageView) convertView.findViewById(R.id.showBanner);
+            showItem.overlay = (ImageView) convertView.findViewById(R.id.showOverlay);
+            if (showOverlay) {
+                showItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
+                showItem.overlay.setVisibility(View.INVISIBLE);
             }
         }
         else {
-            mQueueListItem = (ShowsListItem) convertView.getTag();
+            showItem = (ShowsListItem) convertView.getTag();
         }
-
-        this.mListBanners.setSize(rows.size());
-        this.mAsyncImages.setSize(rows.size());
-
-        if (rows.size() != 0 && mAsyncImages.size() != rows.size()) {
-            this.mAsyncImages.clear();
-            this.mAsyncImages.setSize(rows.size());
-        }
-
-        if (mListBanners.get(position) == null) {
-            mQueueListItem.banner.setImageBitmap(mEmptyBanner);
-
-            if (mAsyncImages.get(position) == null) {
-                mAsyncImages.add(position, new AsyncShowBanner());
-            }
-
-            if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                mAsyncImages.get(position).execute(handler, position, rows.get(position)[5], rows.get(position)[0]);
-            }
-        }
-        else {
-            mQueueListItem.banner.setImageBitmap(mListBanners.get(position));
-        }
-
-        if ((mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                && mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (position == mSelectedIndex) {
-                mQueueListItem.overlay.getLayoutParams().height = convertView.getHeight();
-                mQueueListItem.overlay.setVisibility(View.VISIBLE);
+        
+        if (showOverlay) {
+            if (((ListView) parent).getCheckedItemPosition() == position) {
+                showItem.overlay.getLayoutParams().height = convertView.getHeight();
+                showItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
+                showItem.overlay.setVisibility(View.VISIBLE);
             }
             else {
-                mQueueListItem.overlay.setVisibility(View.GONE);
+                showItem.overlay.setVisibility(View.INVISIBLE);
             }
         }
-
+        
+        Show show = getItem(position);
+        String imageKey = ImageType.BANNER.name() + show.getTvdbId();
+        ImageUtils.getImageWorker().loadImage(showItem.banner, ImageType.BANNER, imageKey, show.getTvdbId(), show.getShowName());
+        
         convertView.setId(position);
-        convertView.setTag(mQueueListItem);
+        convertView.setTag(showItem);
         return (convertView);
     }
-
-    public void setSelectedItem(int position) {
-        mSelectedIndex = position;
-        notifyDataSetChanged();
-    }
-
-    public int getSelectedIndex() {
-        return mSelectedIndex;
-    }
-
+    
     /**
      * This inner class is used to represent the content of a list item.
      */
     class ShowsListItem {
-
+        
         ImageView banner;
         ImageView overlay;
-    }
-
-    /**
-     * This handler will receive the messages from the background worker
-     */
-    private final Handler handler = new Handler() {
-    	
-        /**
-         * This method will handle the messages sent to this handler by the background worker
-         */
-        @Override
-        public void handleMessage(Message msg) {
-            Bitmap bitmap = (Bitmap) msg.obj;
-            if (bitmap != null && mListBanners != null && mListBanners.size() > msg.what) {
-                mListBanners.set(msg.what, bitmap);
-                notifyDataSetChanged();
-            }
-        }
-    };
-
-    /**
-     * Clearing the {@link Bitmap} list
-     */
-    public void clearBitmaps() {
-        if (mListBanners != null) {
-            mListBanners.clear();
-        }
-        System.gc();
     }
 }

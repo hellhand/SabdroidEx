@@ -7,10 +7,10 @@
         android:id="@+id/queueList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:cacheColorHint="#999999"
         android:divider="@drawable/list_item_bg"
         android:dividerHeight="1px"
-        android:fadingEdgeLength="4dip"
-        android:scrollingCache="false" />
+        android:fadingEdgeLength="4dip" />
 
 </LinearLayout>

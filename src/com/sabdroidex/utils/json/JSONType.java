@@ -23,5 +23,5 @@ public enum JSONType {
      * List is used when the List interface is needed (An ArrayList is generated is the parameter of the JSONSetter method is a List)
      * JSONObject is used when the unmarshall need to be processed for that item too (complex Object)
      */
-    SIMPLE, LIST, JSONOBJECT
+    SIMPLE, LIST, JSON_OBJECT, UNKNOWN_KEY_ELEMENTS
 }

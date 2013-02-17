@@ -1,15 +1,9 @@
 package com.sabdroidex.adapters;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask.Status;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,27 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.utils.AsyncImage;
-import com.sabdroidex.utils.AsyncShowBanner;
+import com.sabdroidex.utils.ImageUtils;
+import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final ArrayList<Object[]> rows;
-    private final Vector<Bitmap> mListBanners;
-    private final Vector<AsyncImage> mAsyncImages;
-    private final Bitmap mEmptyBanner;
-    private ShowsListItem mComingListItem;
 
     public ComingListRowAdapter(Context context, ArrayList<Object[]> rows) {
         super(context, R.layout.coming_item, rows);
         this.mContext = context;
-        this.rows = rows;
         this.mInflater = LayoutInflater.from(this.mContext);
-        this.mListBanners = new Vector<Bitmap>();
-        this.mAsyncImages = new Vector<AsyncImage>();
-        this.mEmptyBanner = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.temp_banner);
     }
 
     @Override
@@ -49,80 +34,60 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ShowsListItem comingItem;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.coming_item, null);
-            mComingListItem = new ShowsListItem();
-            mComingListItem.title = (TextView) convertView.findViewById(R.id.coming_show_name);
-            mComingListItem.banner = (ImageView) convertView.findViewById(R.id.coming_show_banner);
-            mComingListItem.next_ = (TextView) convertView.findViewById(R.id.coming_next_episode_);
-            mComingListItem.next = (TextView) convertView.findViewById(R.id.coming_next_episode);
-            mComingListItem.airs_ = (TextView) convertView.findViewById(R.id.coming_airs_);
-            mComingListItem.airs = (TextView) convertView.findViewById(R.id.coming_airs);
+            comingItem = new ShowsListItem();
+            comingItem.title = (TextView) convertView.findViewById(R.id.coming_show_name);
+            comingItem.banner = (ImageView) convertView.findViewById(R.id.coming_show_banner);
+            comingItem.next_ = (TextView) convertView.findViewById(R.id.coming_next_episode_);
+            comingItem.next = (TextView) convertView.findViewById(R.id.coming_next_episode);
+            comingItem.airs_ = (TextView) convertView.findViewById(R.id.coming_airs_);
+            comingItem.airs = (TextView) convertView.findViewById(R.id.coming_airs);
         }
         else {
-            mComingListItem = (ShowsListItem) convertView.getTag();
+            comingItem = (ShowsListItem) convertView.getTag();
         }
-
-        this.mListBanners.setSize(rows.size());
-        this.mAsyncImages.setSize(rows.size());
 
         /**
          * If the size is 1, this means this is a time descriptor
          */
-        if (rows.get(position).length == 1) {
+        if (getItem(position).length == 1) {
             convertView.setPadding(0, 0, 0, 0);
-            mComingListItem.banner.setVisibility(View.GONE);
-            mComingListItem.next_.setVisibility(View.GONE);
-            mComingListItem.next.setVisibility(View.GONE);
-            mComingListItem.airs_.setVisibility(View.GONE);
-            mComingListItem.airs.setVisibility(View.GONE);
+            comingItem.banner.setVisibility(View.GONE);
+            comingItem.next_.setVisibility(View.GONE);
+            comingItem.next.setVisibility(View.GONE);
+            comingItem.airs_.setVisibility(View.GONE);
+            comingItem.airs.setVisibility(View.GONE);
 
-            mComingListItem.title.setTextColor(Color.BLACK);
-            mComingListItem.title.setBackgroundColor(Color.rgb(156, 181, 207));
-            mComingListItem.title.setGravity(Gravity.CENTER);
-            mComingListItem.title.setText(rows.get(position)[0] + " ");
+            comingItem.title.setTextColor(Color.BLACK);
+            comingItem.title.setBackgroundColor(Color.rgb(156, 181, 207));
+            comingItem.title.setGravity(Gravity.CENTER);
+            comingItem.title.setText(getItem(position)[0] + " ");
         }
         else {
             convertView.setPadding(10, 4, 10, 0);
-            mComingListItem.banner.setVisibility(View.VISIBLE);
-            mComingListItem.next_.setVisibility(View.VISIBLE);
-            mComingListItem.next.setVisibility(View.VISIBLE);
-            mComingListItem.airs_.setVisibility(View.VISIBLE);
-            mComingListItem.airs.setVisibility(View.VISIBLE);
+            comingItem.banner.setVisibility(View.VISIBLE);
+            comingItem.next_.setVisibility(View.VISIBLE);
+            comingItem.next.setVisibility(View.VISIBLE);
+            comingItem.airs_.setVisibility(View.VISIBLE);
+            comingItem.airs.setVisibility(View.VISIBLE);
 
-            if (rows.size() != 0 && mAsyncImages.size() != rows.size()) {
-                this.mAsyncImages.clear();
-                this.mAsyncImages.setSize(rows.size());
-            }
+            String imageKey = ImageType.BANNER.name() + getItem(position)[1].toString();
+            ImageUtils.getImageWorker().loadImage(comingItem.banner, ImageType.BANNER, imageKey, getItem(position)[1], getItem(position)[2]);            
+            comingItem.title.setTextColor(Color.WHITE);
+            comingItem.title.setBackgroundColor(Color.rgb(128, 128, 128));
+            comingItem.title.setGravity(Gravity.LEFT);
+            comingItem.title.setText(getItem(position)[2] + " ");
 
-            if (mListBanners.get(position) == null) {
-                mComingListItem.banner.setImageBitmap(mEmptyBanner);
+            String next = getItem(position)[3] + "x" + getItem(position)[4] + " - " + getItem(position)[5] + " (" + getItem(position)[6] + ")";
+            String airs = getItem(position)[7] + " " + getItem(position)[8] + " [" + getItem(position)[9] + "]";
 
-                if (mAsyncImages.get(position) == null) {
-                    mAsyncImages.add(position, new AsyncShowBanner());
-                }
-
-                if (mAsyncImages.get(position).getStatus() != Status.FINISHED && mAsyncImages.get(position).getStatus() != Status.RUNNING) {
-                    mAsyncImages.get(position).execute(handler, position, rows.get(position)[1], rows.get(position)[2]);
-                }
-            }
-            else {
-                mComingListItem.banner.setImageBitmap(mListBanners.get(position));
-            }
-
-            mComingListItem.title.setTextColor(Color.WHITE);
-            mComingListItem.title.setBackgroundColor(Color.rgb(128, 128, 128));
-            mComingListItem.title.setGravity(Gravity.LEFT);
-            mComingListItem.title.setText(rows.get(position)[2] + " ");
-
-            String next = rows.get(position)[3] + "x" + rows.get(position)[4] + " - " + rows.get(position)[5] + " (" + rows.get(position)[6] + ")";
-            String airs = rows.get(position)[7] + " " + rows.get(position)[8] + " [" + rows.get(position)[9] + "]";
-
-            mComingListItem.next.setText(next);
-            mComingListItem.airs.setText(airs);
+            comingItem.next.setText(next);
+            comingItem.airs.setText(airs);
         }
         convertView.setId(position);
-        convertView.setTag(mComingListItem);
+        convertView.setTag(comingItem);
         return (convertView);
     }
 
@@ -137,33 +102,5 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
         TextView next;
         TextView airs_;
         TextView airs;
-    }
-
-    /**
-     * This handler will receive the messages from the background worker
-     */
-    private final Handler handler = new Handler() {
-
-        /**
-         * This method will handle the messages sent to this handler by the background worker
-         */
-        @Override
-        public void handleMessage(Message msg) {
-            Bitmap bitmap = (Bitmap) msg.obj;
-            if (bitmap != null && mListBanners != null && mListBanners.size() > msg.what) {
-                mListBanners.set(msg.what, bitmap);
-                notifyDataSetChanged();
-            }
-        }
-    };
-
-    /**
-     * Clearing the {@link Bitmap} list
-     */
-    public void clearBitmaps() {
-        if (mListBanners != null) {
-            mListBanners.clear();
-        }
-        System.gc();
     }
 }

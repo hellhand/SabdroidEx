@@ -19,6 +19,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Environment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SearchViewCompat;
@@ -35,14 +36,18 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.History;
 import com.sabdroidex.data.Queue;
 import com.sabdroidex.data.SabnzbdStatus;
+import com.sabdroidex.data.ShowList;
 import com.sabdroidex.fragments.ComingFragment;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.MoviesFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.ShowsFragment;
 import com.sabdroidex.interfaces.UpdateableActivity;
+import com.sabdroidex.utils.ImageUtils;
+import com.sabdroidex.utils.ImageUtils.NoMediaChecker;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.RawReader;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -77,26 +82,25 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         Log.v(TAG, "Starting SABDroidEx");
         
         setContentView(R.layout.header);
-        
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
+        NoMediaChecker.check(Environment.getExternalStorageDirectory().getAbsolutePath());
+        ImageUtils.initImageWorker(getApplicationContext());
         
         try {
-            APPLICATION_VERSION = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+            APPLICATION_VERSION = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         }
         catch (NameNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }
         
         if (!Preferences.get(Preferences.VERSION).equals(APPLICATION_VERSION)) {
-            Log.i(TAG, "New version detected : Opening vestion popup");
-            //deleteFile(Preferences.DATA_CACHE);
+            Log.i(TAG, "New version detected : Opening version popup");
+            deleteFile(Preferences.DATA_CACHE);
             showVersionUpdatePopUp();
             Preferences.put(Preferences.VERSION, APPLICATION_VERSION);
         }
-        
         createLists();
-        manualRefresh();
     }
     
     @Override
@@ -110,74 +114,17 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     }
     
     @Override
-    protected void onResume() {
-        /**
-         * Checking if SickBeard has been just been disabled
-         */
-        if (!Preferences.isEnabled(Preferences.SICKBEARD) && showsFragment != null) {
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
-            if (pagerAdapter.contains(showsFragment)) {
-                pagerAdapter.removeFragment(showsFragment);
-                showsFragment = null;
-            }
-            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
-            tabPageIndicator.notifyDataSetChanged();
-            tabPageIndicator.setCurrentItem(0);
-            pager.refreshDrawableState();
-        }
-        if (!Preferences.isEnabled(Preferences.SICKBEARD) && comingFragment != null) {
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
-            if (pagerAdapter.contains(comingFragment)) {
-                pagerAdapter.removeFragment(comingFragment);
-                comingFragment = null;
-            }
-            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
-            tabPageIndicator.notifyDataSetChanged();
-            tabPageIndicator.setCurrentItem(0);
-            pager.refreshDrawableState();
-        }
-        if (Preferences.isEnabled(Preferences.SICKBEARD) && showsFragment == null) {
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
-            showsFragment = new ShowsFragment(this);
-            showsFragment.setRetainInstance(true);
-            if (!pagerAdapter.contains(showsFragment)) {
-                pagerAdapter.addFragment(showsFragment);
-            }
-            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
-            tabPageIndicator.notifyDataSetChanged();
-            tabPageIndicator.setCurrentItem(0);
-            pager.refreshDrawableState();
-        }
-        if (Preferences.isEnabled(Preferences.SICKBEARD) && comingFragment == null) {
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            SABDroidExPagerAdapter pagerAdapter = (SABDroidExPagerAdapter) pager.getAdapter();
-            comingFragment = new ComingFragment(this);
-            comingFragment.setRetainInstance(true);
-            if (!pagerAdapter.contains(comingFragment)) {
-                pagerAdapter.addFragment(comingFragment);
-            }
-            TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
-            tabPageIndicator.notifyDataSetChanged();
-            tabPageIndicator.setCurrentItem(0);
-            pager.refreshDrawableState();
-        }
-        super.onResume();
-    }
-    
-    @Override
     protected void onStop() {
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
             /**
-             * Saving data for offline use.
+             * Saving data for off line use.
              */
             String FILENAME = Preferences.DATA_CACHE;
             FileOutputStream fos = null;
+            ObjectOutputStream oos = null;
             try {
                 fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos = new ObjectOutputStream(fos);
                 oos.writeObject(queueFragment.getDataCache());
                 oos.writeObject(historyFragment.getDataCache());
                 oos.writeObject(showsFragment.getDataCache());
@@ -185,6 +132,15 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             }
             catch (Exception e) {
                 Log.e(TAG, " " + e.getLocalizedMessage());
+            }
+            finally {
+                try {
+                    oos.close();
+                    fos.close();
+                }
+                catch (Exception e) {
+                    // we do not care
+                }
             }
         }
         super.onStop();
@@ -208,42 +164,53 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     private void createLists() {
         
         Queue queue = new Queue();
-        ArrayList<Object[]> history = new ArrayList<Object[]>();
-        ArrayList<Object[]> shows = new ArrayList<Object[]>();
+        History history = new History();
+        ShowList shows = new ShowList();
         ArrayList<Object[]> coming = new ArrayList<Object[]>();
+        
+        /**
+         * Restoring data if the cache is enabled.
+         */
         
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
             
-            /**
-             * Restoring data.
-             */
-            
             FileInputStream fis = null;
+            ObjectInputStream ois = null;
             try {
                 fis = openFileInput(Preferences.DATA_CACHE);
-                ObjectInputStream ois = new ObjectInputStream(fis);
+                ois = new ObjectInputStream(fis);
                 queue = (Queue) ois.readObject();
-                history = (ArrayList<Object[]>) ois.readObject();
-                shows = (ArrayList<Object[]>) ois.readObject();
+                history = (History) ois.readObject();
+                shows = (ShowList) ois.readObject();
                 coming = (ArrayList<Object[]>) ois.readObject();
             }
             catch (Exception e) {
                 Log.e(TAG, " " + e.getLocalizedMessage());
             }
+            finally {
+                try {
+                    ois.close();
+                    fis.close();
+                }
+                catch (Exception e) {
+                    // we do not care
+                }
+            }
         }
         
+        updateLabels(queue);
         queueFragment = new QueueFragment(this, queue);
         queueFragment.setRetainInstance(true);
         historyFragment = new HistoryFragment(this, history);
         historyFragment.setRetainInstance(true);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            showsFragment = new ShowsFragment(this, shows);
+            showsFragment = new ShowsFragment(shows);
             showsFragment.setRetainInstance(true);
-            comingFragment = new ComingFragment(this, coming);
+            comingFragment = new ComingFragment(coming);
             comingFragment.setRetainInstance(true);
         }
         
-        SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getSupportFragmentManager());
+        SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(), getSupportFragmentManager());
         pagerAdapter.addFragment(queueFragment);
         pagerAdapter.addFragment(historyFragment);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
@@ -252,6 +219,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
         
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(0);
         pager.setAdapter(pagerAdapter);
         pager.setPageMargin(5);
         
@@ -328,7 +296,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             MenuItem searchItem = menu.findItem(R.id.menu_search);
             searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         }
-        View searchView = SearchViewCompat.newSearchView(this);
+        View searchView = SearchViewCompat.newSearchView(getApplicationContext());
         if (searchView != null) {
             SearchViewCompat.setOnQueryTextListener(searchView, queryTextListener);
             MenuItem item = menu.findItem(R.id.menu_search);
@@ -448,18 +416,14 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        queueFragment.addDownloadPrompt();
-                        break;
-                    case 1:
-                        showsFragment.addShowPrompt();
-                        break;
-                    case 2:
-                        moviesFragment.addMoviePrompt();
-                        break;
-                    default:
-                        break;
+                if (which == 0) {
+                    queueFragment.addDownloadPrompt();
+                }
+                else if (which == 1 && Preferences.isEnabled(Preferences.SICKBEARD)) {
+                    showsFragment.addShowPrompt();
+                }
+                else if (which >= 1 && Preferences.isEnabled(Preferences.COUCHPOTATO)) {
+                    moviesFragment.addMoviePrompt();
                 }
             }
         });
@@ -467,13 +431,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         AlertDialog dialog = null;
         dialog = builder.create();
         dialog.show();
-    }
-    
-    /**
-     * Displaying the application settings
-     */
-    private void showSettings() {
-        startActivity(new Intent(this, SettingsActivity.class));
     }
     
     /**
@@ -495,7 +452,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                     }
                 };
                 
-                AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.config);
                 builder.setPositiveButton(android.R.string.ok, clickListener);
                 builder.setNegativeButton(android.R.string.cancel, clickListener);
@@ -520,7 +477,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         
         String versionInfo = RawReader.readTextRaw(getApplicationContext(), R.raw.version_info);
         
-        AlertDialog.Builder builder = new AlertDialog.Builder(SABDroidEx.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.new_version);
         builder.setPositiveButton(android.R.string.ok, clickListener);
         builder.setMessage(versionInfo);
@@ -547,11 +504,24 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         return data;
     }
     
-    private void showServerSettings() {
-        startActivity(new Intent(this, ServerSettingsActivity.class));
+    /**
+     * Displaying the application settings
+     */
+    private void showSettings() {
+        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
     }
     
+    /**
+     * Displaying the Sabnzbd server settings
+     */
+    private void showServerSettings() {
+        startActivity(new Intent(getApplicationContext(), ServerSettingsActivity.class));
+    }
+    
+    /**
+     * Displaying the Couchpotato server settings
+     */
     private void showCouchSettings() {
-        startActivity(new Intent(this, CouchSettingsActivity.class));
+        startActivity(new Intent(getApplicationContext(), CouchSettingsActivity.class));
     }
 }
