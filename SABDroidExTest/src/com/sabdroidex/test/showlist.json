@@ -1,0 +1,966 @@
+{
+    "data": {
+        "70726": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syndicated", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Custom", 
+            "show_name": "Babylon 5", 
+            "status": "Ended", 
+            "tvrage_id": 2693, 
+            "tvrage_name": "Babylon 5"
+        }, 
+        "72108": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "CBS", 
+            "next_ep_airdate": "2013-01-29", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "NCIS", 
+            "status": "Continuing", 
+            "tvrage_id": 4628, 
+            "tvrage_name": "NCIS"
+        }, 
+        "72449": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "SciFi", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Any", 
+            "show_name": "Stargate SG-1", 
+            "status": "Ended", 
+            "tvrage_id": 5325, 
+            "tvrage_name": "Stargate SG-1"
+        }, 
+        "73141": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "2013-01-27", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "American Dad!", 
+            "status": "Continuing", 
+            "tvrage_id": 2594, 
+            "tvrage_name": "American Dad!"
+        }, 
+        "73255": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "House", 
+            "status": "Ended", 
+            "tvrage_id": 3908, 
+            "tvrage_name": "House"
+        }, 
+        "73545": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "SciFi", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Any", 
+            "show_name": "Battlestar Galactica (2003)", 
+            "status": "Ended", 
+            "tvrage_id": 2730, 
+            "tvrage_name": "Battlestar Galactica"
+        }, 
+        "73871": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Comedy Central", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Futurama", 
+            "status": "Continuing", 
+            "tvrage_id": 3628, 
+            "tvrage_name": "Futurama"
+        }, 
+        "75397": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "NBC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "My Name Is Earl", 
+            "status": "Ended", 
+            "tvrage_id": 4590, 
+            "tvrage_name": "My Name Is Earl"
+        }, 
+        "75682": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "2013-01-28", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Bones", 
+            "status": "Continuing", 
+            "tvrage_id": 2870, 
+            "tvrage_name": "Bones"
+        }, 
+        "75760": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "CBS", 
+            "next_ep_airdate": "2013-02-04", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "How I Met Your Mother", 
+            "status": "Continuing", 
+            "tvrage_id": 3918, 
+            "tvrage_name": "How I Met Your Mother"
+        }, 
+        "75930": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "ABC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Alias", 
+            "status": "Ended", 
+            "tvrage_id": 2537, 
+            "tvrage_name": "Alias"
+        }, 
+        "75978": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Family Guy", 
+            "status": "Continuing", 
+            "tvrage_id": 3506, 
+            "tvrage_name": "Family Guy"
+        }, 
+        "78874": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Firefly", 
+            "status": "Ended", 
+            "tvrage_id": 3548, 
+            "tvrage_name": "Firefly"
+        }, 
+        "79168": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "NBC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Any", 
+            "show_name": "Friends", 
+            "status": "Ended", 
+            "tvrage_id": 3616, 
+            "tvrage_name": "Friends"
+        }, 
+        "79216": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Channel 4", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The IT Crowd", 
+            "status": "Ended", 
+            "tvrage_id": 8044, 
+            "tvrage_name": "The IT Crowd"
+        }, 
+        "79334": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Eureka", 
+            "status": "Ended", 
+            "tvrage_id": 7506, 
+            "tvrage_name": "Eureka"
+        }, 
+        "79335": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "USA Network", 
+            "next_ep_airdate": "2013-02-27", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Psych", 
+            "status": "Continuing", 
+            "tvrage_id": 8322, 
+            "tvrage_name": "Psych"
+        }, 
+        "79343": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "NBC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Studio 60 on the Sunset Strip", 
+            "status": "Ended", 
+            "tvrage_id": 8115, 
+            "tvrage_name": "Studio 60 on the Sunset Strip"
+        }, 
+        "79488": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "NBC", 
+            "next_ep_airdate": "2013-01-31", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "30 Rock", 
+            "status": "Continuing", 
+            "tvrage_id": 11215, 
+            "tvrage_name": "30 Rock"
+        }, 
+        "80159": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Sanctuary", 
+            "status": "Ended", 
+            "tvrage_id": 18682, 
+            "tvrage_name": "Sanctuary (US)"
+        }, 
+        "80270": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "USA Network", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Burn Notice", 
+            "status": "Continuing", 
+            "tvrage_id": 15383, 
+            "tvrage_name": "Burn Notice"
+        }, 
+        "80348": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "NBC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Chuck", 
+            "status": "Ended", 
+            "tvrage_id": 15614, 
+            "tvrage_name": "Chuck"
+        }, 
+        "80349": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Showtime", 
+            "next_ep_airdate": "2013-01-27", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Californication", 
+            "status": "Continuing", 
+            "tvrage_id": 15319, 
+            "tvrage_name": "Californication"
+        }, 
+        "80379": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "CBS", 
+            "next_ep_airdate": "2013-01-31", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Big Bang Theory", 
+            "status": "Continuing", 
+            "tvrage_id": 8511, 
+            "tvrage_name": "The Big Bang Theory"
+        }, 
+        "81189": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "AMC", 
+            "next_ep_airdate": "2013-07-14", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Breaking Bad", 
+            "status": "Continuing", 
+            "tvrage_id": 18164, 
+            "tvrage_name": "Breaking Bad"
+        }, 
+        "82066": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Fringe", 
+            "status": "Ended", 
+            "tvrage_id": 18388, 
+            "tvrage_name": "Fringe"
+        }, 
+        "82459": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "CBS", 
+            "next_ep_airdate": "2013-01-27", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Mentalist", 
+            "status": "Continuing", 
+            "tvrage_id": 18967, 
+            "tvrage_name": "The Mentalist"
+        }, 
+        "82672": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "ABC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Legend of the Seeker", 
+            "status": "Ended", 
+            "tvrage_id": 19609, 
+            "tvrage_name": "Legend of the Seeker"
+        }, 
+        "83237": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Stargate Universe", 
+            "status": "Ended", 
+            "tvrage_id": 15343, 
+            "tvrage_name": "Stargate Universe"
+        }, 
+        "83268": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Cartoon Network", 
+            "next_ep_airdate": "2013-02-02", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Star Wars: The Clone Wars", 
+            "status": "Continuing", 
+            "tvrage_id": 19187, 
+            "tvrage_name": "Star Wars: The Clone Wars (2008)"
+        }, 
+        "83462": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "ABC", 
+            "next_ep_airdate": "2013-02-04", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Castle (2009)", 
+            "status": "Continuing", 
+            "tvrage_id": 19267, 
+            "tvrage_name": "Castle (2009)"
+        }, 
+        "83602": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Lie to me", 
+            "status": "Ended", 
+            "tvrage_id": 19295, 
+            "tvrage_name": "Lie to Me"
+        }, 
+        "84676": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Warehouse 13", 
+            "status": "Continuing", 
+            "tvrage_id": 7884, 
+            "tvrage_name": "Warehouse 13"
+        }, 
+        "85040": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "SciFi", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Caprica", 
+            "status": "Ended", 
+            "tvrage_id": 0, 
+            "tvrage_name": ""
+        }, 
+        "85091": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "NTV", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Any", 
+            "show_name": "My Boss, My Hero (JP)", 
+            "status": "Ended", 
+            "tvrage_id": 16213, 
+            "tvrage_name": "My Boss, My Hero"
+        }, 
+        "85230": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "YLE", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Custom", 
+            "show_name": "Space Battleship Yamato", 
+            "status": "Ended", 
+            "tvrage_id": 1838, 
+            "tvrage_name": "Star Blazers (US)"
+        }, 
+        "85539": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "HBO", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Pacific", 
+            "status": "Ended", 
+            "tvrage_id": 19316, 
+            "tvrage_name": "The Pacific"
+        }, 
+        "94801": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Human Target (2010)", 
+            "status": "Ended", 
+            "tvrage_id": 22699, 
+            "tvrage_name": "Human Target (2010)"
+        }, 
+        "95441": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "CBS", 
+            "next_ep_airdate": "2013-01-29", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "NCIS: Los Angeles", 
+            "status": "Continuing", 
+            "tvrage_id": 21934, 
+            "tvrage_name": "NCIS: Los Angeles"
+        }, 
+        "95821": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Fuji TV", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Any", 
+            "show_name": "Hero", 
+            "status": "Ended", 
+            "tvrage_id": 13796, 
+            "tvrage_name": "Hero"
+        }, 
+        "121361": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "HBO", 
+            "next_ep_airdate": "2013-03-31", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Game of Thrones", 
+            "status": "Continuing", 
+            "tvrage_id": 24493, 
+            "tvrage_name": "Game of Thrones"
+        }, 
+        "129261": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Starz!", 
+            "next_ep_airdate": "2013-02-01", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Spartacus: Blood and Sand", 
+            "status": "Continuing", 
+            "tvrage_id": 21885, 
+            "tvrage_name": "Spartacus: Blood and Sand"
+        }, 
+        "142601": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "", 
+            "next_ep_airdate": "2013-03-22", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Mobile Suit Gundam Unicorn", 
+            "status": "Continuing", 
+            "tvrage_id": 0, 
+            "tvrage_name": ""
+        }, 
+        "153021": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "AMC", 
+            "next_ep_airdate": "2013-02-10", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Walking Dead", 
+            "status": "Continuing", 
+            "tvrage_id": 25056, 
+            "tvrage_name": "The Walking Dead"
+        }, 
+        "158661": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Haven", 
+            "status": "Continuing", 
+            "tvrage_id": 24496, 
+            "tvrage_name": "Haven"
+        }, 
+        "161461": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "TNT", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Rizzoli & Isles", 
+            "status": "Continuing", 
+            "tvrage_id": 24996, 
+            "tvrage_name": "Rizzoli & Isles"
+        }, 
+        "164091": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "FOX", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Terra Nova", 
+            "status": "Ended", 
+            "tvrage_id": 25729, 
+            "tvrage_name": "Terra Nova"
+        }, 
+        "164541": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "CBS", 
+            "next_ep_airdate": "2013-02-04", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Hawaii Five-0", 
+            "status": "Continuing", 
+            "tvrage_id": 24840, 
+            "tvrage_name": "Hawaii Five-0 (2010)"
+        }, 
+        "167591": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "ABC", 
+            "next_ep_airdate": "2013-02-19", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Body of Proof", 
+            "status": "Continuing", 
+            "tvrage_id": 25718, 
+            "tvrage_name": "Body Of Proof"
+        }, 
+        "168941": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "A&E", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Glades", 
+            "status": "Continuing", 
+            "tvrage_id": 25608, 
+            "tvrage_name": "The Glades"
+        }, 
+        "182061": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Showcase", 
+            "next_ep_airdate": "2013-01-27", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Lost Girl", 
+            "status": "Continuing", 
+            "tvrage_id": 26401, 
+            "tvrage_name": "Lost Girl"
+        }, 
+        "192171": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Disney XD", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Avengers: Earth's Mightiest Heroes", 
+            "status": "Ended", 
+            "tvrage_id": 23227, 
+            "tvrage_name": "Avengers: Earth\u2019s Mightiest Heroes"
+        }, 
+        "205281": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "TNT", 
+            "next_ep_airdate": "2013-06-02", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Falling Skies", 
+            "status": "Continuing", 
+            "tvrage_id": 26205, 
+            "tvrage_name": "Falling Skies"
+        }, 
+        "210841": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Alphas", 
+            "status": "Continuing", 
+            "tvrage_id": 19268, 
+            "tvrage_name": "Alphas"
+        }, 
+        "212961": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "AMC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Hell on Wheels", 
+            "status": "Continuing", 
+            "tvrage_id": 27195, 
+            "tvrage_name": "Hell on Wheels"
+        }, 
+        "241531": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "ABC", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Charlie's Angels (2011)", 
+            "status": "Ended", 
+            "tvrage_id": 24634, 
+            "tvrage_name": "Charlie's Angels (2011)"
+        }, 
+        "248261": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Cartoon Network", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "NTSF:SD:SUV::", 
+            "status": "Continuing", 
+            "tvrage_id": 28439, 
+            "tvrage_name": "NTSF:SD:SUV"
+        }, 
+        "248835": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "ABC", 
+            "next_ep_airdate": "2013-02-10", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Once Upon a Time (2011)", 
+            "status": "Continuing", 
+            "tvrage_id": 28385, 
+            "tvrage_name": "Once Upon a Time"
+        }, 
+        "249750": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Syfy", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "Legend Quest", 
+            "status": "Continuing", 
+            "tvrage_id": 28680, 
+            "tvrage_name": "Legend Quest"
+        }, 
+        "255266": {
+            "air_by_date": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "language": "en", 
+            "network": "Lifetime", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "HD", 
+            "show_name": "The Client List", 
+            "status": "Continuing", 
+            "tvrage_id": 29471, 
+            "tvrage_name": "The Client List"
+        }
+    }, 
+    "message": "", 
+    "result": "success"
+}
