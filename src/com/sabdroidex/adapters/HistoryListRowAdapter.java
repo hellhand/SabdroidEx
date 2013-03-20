@@ -60,6 +60,11 @@ public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
         convertView.setTag(mHistoryListItem);
         return (convertView);
     }
+    
+    @Override
+    public int getViewTypeCount() {
+        return 1;
+    }
 
     class HistoryListItem {
 

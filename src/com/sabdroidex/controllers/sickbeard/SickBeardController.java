@@ -374,8 +374,6 @@ public final class SickBeardController {
         Map<String, String> parameterMap = getAdditionalParameters();
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
-        
-        Log.d(TAG, url);
 
         for (String xTraParam : extraParams) {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
@@ -445,15 +443,13 @@ public final class SickBeardController {
      *            The TvDBid of the show to get the banner for
      * @return The URL of the banner
      */
-    public static String getBannerURL(String command, Integer tvdbid) {
+    public static String getImageURL(String command, Integer tvdbid) {
 
         /**
          * Correcting the command names to be understood by SickBeard
          */
         command = command.replace('_', '.');
         String url = getFormattedUrl();
-        
-        Log.d(TAG, url);
 
         url = url.replace("[COMMAND]", command);
         url = url + "&tvdbid=" + tvdbid;

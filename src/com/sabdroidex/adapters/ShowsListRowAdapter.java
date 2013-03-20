@@ -66,6 +66,11 @@ public class ShowsListRowAdapter extends ArrayAdapter<Show> {
         return (convertView);
     }
     
+    @Override
+    public int getViewTypeCount() {
+        return 1;
+    }
+    
     /**
      * This inner class is used to represent the content of a list item.
      */

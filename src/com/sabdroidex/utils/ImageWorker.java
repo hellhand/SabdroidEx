@@ -21,6 +21,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
+import com.utils.FileUtil;
 import com.utils.HttpUtil;
 
 public class ImageWorker {
@@ -278,7 +279,7 @@ public class ImageWorker {
         
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getBannerURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[0]);
+            return SickBeardController.getImageURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[0]);
         }
         
         @Override
@@ -387,15 +388,14 @@ public class ImageWorker {
         public Bitmap getBitmapFromFile(String folderPath, String fileName, String key) {
             
             Bitmap bitmap = null;
+            byte[] data;
             
             /**
              * Trying to find Image on Local System
-             */
-            File folder = new File(folderPath);
-            folder.mkdirs();
-            
+             */            
             try {
-                bitmap = BitmapFactory.decodeFile(folderPath + File.separator + fileName, bgOptions);
+                data = FileUtil.getFileAsByteArray(folderPath + File.separator + fileName);
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, bgOptions);
                 if (bitmap != null) {
                     mMemoryCache.put(key, bitmap);
                 }
@@ -422,8 +422,7 @@ public class ImageWorker {
                     /**
                      * And save it on the device
                      */
-                    FileOutputStream fileOutputStream;
-                    fileOutputStream = new FileOutputStream(savePath);
+                    FileOutputStream fileOutputStream = new FileOutputStream(savePath);
                     fileOutputStream.write(data);
                     fileOutputStream.flush();
                     fileOutputStream.close();

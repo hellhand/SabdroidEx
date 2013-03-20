@@ -90,7 +90,20 @@ public class ComingListRowAdapter extends ArrayAdapter<Object[]> {
         convertView.setTag(comingItem);
         return (convertView);
     }
-
+    
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+    
+    @Override
+    public int getItemViewType(int position) {
+        if (getItem(position).length == 1) {
+            return 0;
+        }
+        return 1;
+    }
+    
     /**
      * This inner class is used to represent the content of a list item.
      */

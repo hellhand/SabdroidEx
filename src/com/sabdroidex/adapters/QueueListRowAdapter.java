@@ -69,6 +69,11 @@ public class QueueListRowAdapter extends ArrayAdapter<QueueElement> {
         return (convertView);
     }
 
+    @Override
+    public int getViewTypeCount() {
+        return 1;
+    }
+    
     class QueueListItem {
 
         TextView filemame;
