@@ -7,6 +7,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import com.sabdroidex.utils.SABHandler;
 
 public class HistoryFragment extends SABFragment {
     
+    private static final String TAG = HistoryFragment.class.getCanonicalName();
+    
     private static History history;
     private ListView mHistoryList;
     
@@ -38,28 +41,38 @@ public class HistoryFragment extends SABFragment {
         public void handleMessage(Message msg) {
             
             if (msg.what == SABnzbdController.MESSAGE.HISTORY.ordinal()) {
-
-                history = (History) msg.obj;
-
-                /**
-                 * This might happens if a rotation occurs
-                 */
-                if (mHistoryList != null || getAdapter(mHistoryList) != null) {
-                    ArrayAdapter<Object> adapter = getAdapter(mHistoryList);
-                    adapter.clear();
-                    adapter.addAll(history.getHistoryElements());
-                    adapter.notifyDataSetChanged();
+                try {
+                    history = (History) msg.obj;
+    
+                    /**
+                     * This might happens if a rotation occurs
+                     */
+                    if (mHistoryList != null || getAdapter(mHistoryList) != null) {
+                        ArrayAdapter<Object> adapter = getAdapter(mHistoryList);
+                        adapter.clear();
+                        adapter.addAll(history.getHistoryElements());
+                        adapter.notifyDataSetChanged();
+                    }
+    
+                    ((UpdateableActivity) getParentActivity()).updateLabels(history);
+                    ((UpdateableActivity) getParentActivity()).updateState(true);
                 }
-
-                ((UpdateableActivity) getParentActivity()).updateLabels(history);
-                ((UpdateableActivity) getParentActivity()).updateState(true);
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
+                }
             }
             
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
-                ((UpdateableActivity) getParentActivity()).updateState(false);
-                if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
-                    Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                try {
+                    ((UpdateableActivity) getParentActivity()).updateState(false);
+                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
+                        Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                    }
                 }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
+                }
+                
             }
         }
     };

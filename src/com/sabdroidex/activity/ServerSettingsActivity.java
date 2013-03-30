@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 
@@ -75,15 +76,15 @@ public class ServerSettingsActivity extends PreferenceActivity {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SABnzbdController.MESSAGE.GET_CONFIG.ordinal()) {
-                values = (Object[]) ((Object[]) msg.obj)[1];
+                SabnzbdConfig config = (SabnzbdConfig) msg.obj;
 
-                setPreferenceValue(Preferences.SERVER_BANDWITH, values[0]);
-                setPreferenceValue(Preferences.SERVER_CACHE_DIR, values[1]);
-                setPreferenceValue(Preferences.SERVER_CACHE_LIMIT, values[2]);
-                setPreferenceValue(Preferences.SERVER_DIRSCAN_DIR, values[3]);
-                setPreferenceValue(Preferences.SERVER_DIRSCAN_SPEED, values[4]);
-                setPreferenceValue(Preferences.SERVER_DOWNLOAD_DIR, values[5]);
-                setPreferenceValue(Preferences.SERVER_COMPLETE_DIR, values[6]);
+                setPreferenceValue(Preferences.SERVER_BANDWITH, config.getMisc().getBanwidthLimit());
+                setPreferenceValue(Preferences.SERVER_CACHE_DIR, config.getMisc().getCacheDir());
+                setPreferenceValue(Preferences.SERVER_CACHE_LIMIT, config.getMisc().getCacheLimit());
+                setPreferenceValue(Preferences.SERVER_DIRSCAN_DIR, config.getMisc().getDirscanDir());
+                setPreferenceValue(Preferences.SERVER_DIRSCAN_SPEED, config.getMisc().getDirscanSpeed());
+                setPreferenceValue(Preferences.SERVER_DOWNLOAD_DIR, config.getMisc().getDownloadDir());
+                setPreferenceValue(Preferences.SERVER_COMPLETE_DIR, config.getMisc().getCompleteDir());
 
                 onPostCreate();
             }
@@ -105,8 +106,6 @@ public class ServerSettingsActivity extends PreferenceActivity {
         editor.putString(prefKey, String.valueOf(value));
         editor.commit();
     }
-
-    private static Object[] values;
 
     /**
      * Sets a change listener on a setting in order to send the change to the server when the user changes one of the values.

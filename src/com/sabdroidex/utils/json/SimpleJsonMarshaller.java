@@ -42,7 +42,8 @@ public class SimpleJsonMarshaller {
     }
     
     @SuppressWarnings("unchecked")
-    public Object unmarshal(final JSONObject jsonObject) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public Object unmarshal(final JSONObject jsonObject) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
         result = clazz.newInstance();
         
         try {
@@ -51,6 +52,9 @@ public class SimpleJsonMarshaller {
             for (int i = 0; i < methods.length; i++) {
                 JSONSetter setter = methods[i].getAnnotation(JSONSetter.class);
                 if (setter != null) {
+                    if (Debug.isDebuggerConnected()) {
+                        Log.d(TAG, methods[i].getName());
+                    }
                     if (setter.type() == JSONType.SIMPLE) {
                         try {
                             Object parameter = jsonObject.get(setter.name());
@@ -58,20 +62,38 @@ public class SimpleJsonMarshaller {
                         }
                         catch (JSONException exception) {
                             if (Debug.isDebuggerConnected()) {
-                                Log.d(TAG, exception.getLocalizedMessage());
+                                Log.e(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
+                        }
+                        catch (IllegalArgumentException exception) {
+                            /**
+                             * This happens if the object returned by the getter
+                             * is a null, it would be defined as a JSONObject
+                             * and thus cause an IllegalArgumentException when
+                             * calling the targeted method.
+                             * 
+                             * This is yet another problem in an Android API
+                             * which is bypassed by creating an empty object of
+                             * the awaited type.
+                             */
+                            if (Debug.isDebuggerConnected()) {
+                                Log.w(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
+                            }
+                            Object parameter = methods[i].getParameterTypes()[0].newInstance();
+                            methods[i].invoke(result, parameter);
                         }
                     }
                     else if (setter.type() == JSONType.JSON_OBJECT) {
                         try {
-                            SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(methods[i].getParameterTypes()[0]);
+                            SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(
+                                    methods[i].getParameterTypes()[0]);
                             JSONObject jsonElement = jsonObject.getJSONObject(setter.name());
                             Object parameter = simpleJsonMarshaller.unmarshal(jsonElement);
                             methods[i].invoke(result, parameter);
                         }
                         catch (JSONException exception) {
                             if (Debug.isDebuggerConnected()) {
-                                Log.d(TAG, exception.getLocalizedMessage());
+                                Log.e(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
                         }
                     }
@@ -88,7 +110,8 @@ public class SimpleJsonMarshaller {
                             for (int j = 0; j < jsonArray.length(); j++) {
                                 Object element = jsonArray.get(j);
                                 if (setter.listClazz() != Void.class) {
-                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(setter.listClazz());
+                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(
+                                            setter.listClazz());
                                     element = simpleJsonMarshaller.unmarshal((JSONObject) element);
                                 }
                                 collection.add(element);
@@ -97,7 +120,7 @@ public class SimpleJsonMarshaller {
                         }
                         catch (JSONException exception) {
                             if (Debug.isDebuggerConnected()) {
-                                Log.d(TAG, exception.getLocalizedMessage());
+                                Log.e(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
                         }
                     }
@@ -116,7 +139,8 @@ public class SimpleJsonMarshaller {
                                 String key = (String) iterator.next();
                                 Object element = jsonObject.get(key);
                                 if (setter.listClazz() != Void.class) {
-                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(setter.listClazz());
+                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(
+                                            setter.listClazz());
                                     element = simpleJsonMarshaller.unmarshal((JSONObject) element);
                                     if (element instanceof UnknowMappingElement) {
                                         ((UnknowMappingElement) element).setId(key);
@@ -128,7 +152,7 @@ public class SimpleJsonMarshaller {
                         }
                         catch (JSONException exception) {
                             if (Debug.isDebuggerConnected()) {
-                                Log.d(TAG, exception.getLocalizedMessage());
+                                Log.e(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
                         }
                     }
@@ -137,7 +161,7 @@ public class SimpleJsonMarshaller {
         }
         catch (Exception e) {
             if (Debug.isDebuggerConnected()) {
-                Log.d(TAG, e.getLocalizedMessage());
+                Log.e(TAG, e.getLocalizedMessage());
             }
         }
         return result;

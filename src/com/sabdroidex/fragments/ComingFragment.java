@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class ComingFragment extends SABFragment {
 
+    private static final String TAG = ComingFragment.class.getCanonicalName();
+    
 	private static ArrayList<Object[]> rows;
 	private ComingListRowAdapter mComingRowAdapter;
 
@@ -35,18 +38,23 @@ public class ComingFragment extends SABFragment {
 		public void handleMessage(Message msg) {
 			Object result[];
 			if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
-                result = (Object[]) msg.obj;
-
-                rows.clear();
-                rows.addAll((ArrayList<Object[]>) result[1]);
-				
-				/**
-				 * This might happens if a rotation occurs
-				 */
-				if (mComingRowAdapter != null) {
-				    mComingRowAdapter.notifyDataSetChanged();
-					((SABDroidEx) mParent).updateState(true);
-				}
+			    try {
+                    result = (Object[]) msg.obj;
+    
+                    rows.clear();
+                    rows.addAll((ArrayList<Object[]>) result[1]);
+    				
+    				/**
+    				 * This might happens if a rotation occurs
+    				 */
+    				if (mComingRowAdapter != null) {
+    				    mComingRowAdapter.notifyDataSetChanged();
+    					((SABDroidEx) mParent).updateState(true);
+    				}
+			    }
+			    catch (Exception e) {
+			        Log.e(TAG, e.getLocalizedMessage());
+			    }
 			}
             if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
                 if (msg.obj instanceof String && !"".equals((String)msg.obj)) {

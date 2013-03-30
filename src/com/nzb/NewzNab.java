@@ -105,7 +105,7 @@ public class NewzNab {
      *             Thrown if there is any unexpected problem during the
      *             communication with the server
      */
-    public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
+    public static String makeApiCall(String command, String... extraParams) throws Exception {
         
         String url = getFormattedUrl();
         

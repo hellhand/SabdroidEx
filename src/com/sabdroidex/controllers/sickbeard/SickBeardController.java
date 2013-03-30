@@ -1,5 +1,6 @@
 package com.sabdroidex.controllers.sickbeard;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,19 +11,20 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.data.ShowList;
+import com.sabdroidex.data.ShowSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
 
-public final class SickBeardController {
+public final class SickBeardController extends SABController {
 
     private static final String TAG = "SickBeardController";
     
@@ -110,39 +112,22 @@ public final class SickBeardController {
             @Override
             public void run() {
                 try {
-                    Object results[] = new Object[2];
 
                     String searchData = makeApiCall(MESSAGE.SB_SEARCHTVDB.toString().toLowerCase(), "name=" + URLEncoder.encode(value, "UTF-8"), "lang=en");
-                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
-
-                    /**
-                     * Getting the values from the JSON Object
-                     */
                     JSONObject jsonObject = new JSONObject(searchData);
+                    
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        results[0] = jsonObject;
-
-                        JSONArray jobs = jsonObject.getJSONArray("results");
-                        rows.clear();
-
-                        for (int i = 0; i < jobs.length(); i++) {
-                            Object[] rowValues = new Object[3];
-                            rowValues[0] = jobs.getJSONObject(i).getString("first_aired");
-                            rowValues[1] = jobs.getJSONObject(i).getString("name");
-                            rowValues[2] = jobs.getJSONObject(i).getString("tvdbid");
-                            rows.add(rowValues);
-                        }
-
-                        results[1] = rows;
+                        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(ShowSearch.class);
+                        ShowSearch showSearch = (ShowSearch) simpleJsonMarshaller.unmarshal(jsonObject);
 
                         Message message = new Message();
                         message.setTarget(messageHandler);
                         message.what = MESSAGE.SB_SEARCHTVDB.ordinal();
-                        message.obj = results;
+                        message.obj = showSearch;
                         message.sendToTarget();
                     }
                 }
@@ -176,6 +161,8 @@ public final class SickBeardController {
 
             @Override
             public void run() {
+
+                String statusMessage = "";
                 
                 try {
                     String queueData = makeApiCall(MESSAGE.SHOWS.toString().toLowerCase());
@@ -199,14 +186,16 @@ public final class SickBeardController {
                     message.obj = showList;
                     message.sendToTarget();
                 }
-                catch (RuntimeException e) {
+                catch (IOException e) {
                     Log.w(TAG, e.getLocalizedMessage());
+                    statusMessage = e.getLocalizedMessage();
                 }
                 catch (Throwable e) {
                     Log.w(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshShows = false;
+                    sendUpdateMessageStatus(messageHandler, statusMessage);
                 }
             }
         };
@@ -285,7 +274,7 @@ public final class SickBeardController {
                         message.sendToTarget();
                     }
                 }
-                catch (RuntimeException e) {
+                catch (IOException e) {
                     Log.w(TAG, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
@@ -342,7 +331,7 @@ public final class SickBeardController {
                     message.obj = show;
                     message.sendToTarget();
                 }
-                catch (RuntimeException e) {
+                catch (IOException e) {
                     Log.w(TAG, e.getLocalizedMessage());
                 }
                 catch (Throwable e) {
@@ -359,13 +348,26 @@ public final class SickBeardController {
      * 
      * @param command
      *            The type of command that will be sent to SickBeard
+     * @return The result of the API call
+     * @throws Exception
+     *             Thrown if there is any unexpected problem during the communication with the server
+     */
+    public static String makeApiCall(String command) throws Exception {
+        return makeApiCall(command, "");
+    }
+    
+    /**
+     * This functions handle the API calls to SickBeard to define the URL and parameters
+     * 
+     * @param command
+     *            The type of command that will be sent to SickBeard
      * @param extraParams
      *            Any parameter that will have to be part of the URL
      * @return The result of the API call
-     * @throws RuntimeException
+     * @throws Exception
      *             Thrown if there is any unexpected problem during the communication with the server
      */
-    public static String makeApiCall(String command, String... extraParams) throws RuntimeException {
+    public static String makeApiCall(String command, String... extraParams) throws Exception {
 
         /**
          * Correcting the command names to be understood by SickBeard
@@ -491,19 +493,6 @@ public final class SickBeardController {
         }
         return credentials;
     }
-
-    /**
-     * This functions handle the API calls to SickBeard to define the URL and parameters
-     * 
-     * @param command
-     *            The type of command that will be sent to SickBeard
-     * @return The result of the API call
-     * @throws RuntimeException
-     *             Thrown if there is any unexpected problem during the communication with the server
-     */
-    public static String makeApiCall(String command) throws RuntimeException {
-        return makeApiCall(command, "");
-    }
     
     private static Map<String, String> getAdditionalParameters() {
     	HashMap<String, String> parameterMap = new HashMap<String, String>();
@@ -516,24 +505,6 @@ public final class SickBeardController {
     	
     	return parameterMap;
 	}
-
-
-    /**
-     * Sends a message to the calling {@link Activity} to update it's status bar
-     * 
-     * @param messageHandler
-     *            The message handler to be notified
-     * @param text
-     *            The text to write in the message
-     */
-    private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
-
-        Message message = new Message();
-        message.setTarget(messageHandler);
-        message.what = MESSAGE.UPDATE.ordinal();
-        message.obj = text;
-        message.sendToTarget();
-    }
 
     public static String getSeasonPosterURL(String command, Integer tvdbid, Integer season) {
         String url = URL_TVDB_SEASONS;

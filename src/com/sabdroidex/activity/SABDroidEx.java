@@ -5,14 +5,9 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -25,7 +20,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,11 +39,11 @@ import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.MoviesFragment;
 import com.sabdroidex.fragments.QueueFragment;
 import com.sabdroidex.fragments.ShowsFragment;
+import com.sabdroidex.fragments.dialogs.DialogFragmentManager;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageUtils.NoMediaChecker;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.RawReader;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
 import com.utils.Formatter;
@@ -71,6 +65,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     private ShowsFragment showsFragment;
     private ComingFragment comingFragment;
     private MoviesFragment moviesFragment;
+    private DialogFragmentManager dialogFragmentManager;
     
     /**
      * Creating the elements of the screen
@@ -87,6 +82,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         NoMediaChecker.check(Environment.getExternalStorageDirectory().getAbsolutePath());
         ImageUtils.initImageWorker(getApplicationContext());
         
+        dialogFragmentManager = new DialogFragmentManager(this);
+        
         try {
             APPLICATION_VERSION = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         }
@@ -97,7 +94,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         if (!Preferences.get(Preferences.VERSION).equals(APPLICATION_VERSION)) {
             Log.i(TAG, "New version detected : Opening version popup");
             deleteFile(Preferences.DATA_CACHE);
-            showVersionUpdatePopUp();
+            dialogFragmentManager.showNewVersionDialog();
             Preferences.put(Preferences.VERSION, APPLICATION_VERSION);
         }
         createLists();
@@ -144,6 +141,20 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             }
         }
         super.onStop();
+    }
+    
+    /**
+     * This function will Serialize the current data for reuse the next time the
+     * application is reopened
+     */
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        Object data[] = new Object[5];
+        data[0] = queueFragment.getDataCache();
+        data[1] = historyFragment.getDataCache();
+        data[2] = showsFragment.getDataCache();
+        data[3] = comingFragment.getDataCache();
+        return data;
     }
     
     /**
@@ -210,7 +221,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             comingFragment.setRetainInstance(true);
         }
         
-        SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(), getSupportFragmentManager());
+        SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(),
+                getSupportFragmentManager());
         pagerAdapter.addFragment(queueFragment);
         pagerAdapter.addFragment(historyFragment);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
@@ -231,12 +243,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      * Refreshing the queue during startup or on user request. Asks to configure
      * if still not done
      */
-    @SuppressWarnings("deprecation")
     void manualRefresh() {
         Log.v(TAG, "Refreshing");
         // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
-            showDialog(R.id.dialog_setup_prompt);
+            dialogFragmentManager.showSetupDialog();
             return;
         }
         queueFragment.manualRefreshQueue();
@@ -252,16 +263,18 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     public void updateLabels(SabnzbdStatus status) {
         if (status == null)
             return;
-        
         try {
             Double mbleft = new Double(status.getMbLeft());
             Double kbpersec = new Double(status.getKbPerSec());
             String mb = status.getMb();
             String diskspace2 = status.getDiskSpace2();
             
-            ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " " + getString(R.string.header_free_unit));
-            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb)) + " MB");
-            ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " " + getString(R.string.header_speed_unit));
+            ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " "
+                    + getString(R.string.header_free_unit));
+            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / "
+                    + Formatter.formatShort(Double.parseDouble(mb)) + " MB");
+            ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " "
+                    + getString(R.string.header_speed_unit));
             ((TextView) findViewById(R.id.headerEta)).setText(Calculator.calculateETA(mbleft, kbpersec));
         }
         catch (Exception exception) {
@@ -294,7 +307,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         // Place an action bar item for searching.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             MenuItem searchItem = menu.findItem(R.id.menu_search);
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         }
         View searchView = SearchViewCompat.newSearchView(getApplicationContext());
         if (searchView != null) {
@@ -342,7 +356,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             menu.findItem(R.id.menu_couch_settings).setVisible(false);
         }
         if (!Debug.isDebuggerConnected()) {
-            menu.findItem(R.id.menu_clear).setVisible(false);
+            menu.findItem(R.id.menu_clear).setVisible(true);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -360,10 +374,10 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 showSettings();
                 break;
             case R.id.menu_play_pause:
-                SABnzbdController.pauseResumeQueue(queueFragment.getMessageHandler());
+                pauseResume();
                 break;
             case R.id.menu_add_nzb:
-                addPrompt();
+                showAddDialog();
                 break;
             case R.id.menu_search:
                 onSearchRequested();
@@ -381,127 +395,16 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         return super.onOptionsItemSelected(item);
     }
     
+    private void showAddDialog() {
+        dialogFragmentManager.showAddDialog();
+    }
+    
     /**
      * Clears the application version. For testing purposes.
      */
     private void clearVersion() {
         Preferences.put(Preferences.VERSION, "");
-    }
-    
-    /**
-     * Shows the add pop-up for the different elements.
-     */
-    private void addPrompt() {
-        
-        OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setNegativeButton(android.R.string.cancel, onClickListener);
-        
-        List<CharSequence> options = new ArrayList<CharSequence>();
-        options.add(getResources().getString(R.string.add_nzb_dialog_title));
-        if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            options.add(getResources().getString(R.string.add_show_dialog_title));
-        }
-        if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
-            options.add(getResources().getString(R.string.add_movie_dialog_title));
-        }
-        
-        builder.setItems(options.toArray(new CharSequence[options.size()]), new OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    queueFragment.addDownloadPrompt();
-                }
-                else if (which == 1 && Preferences.isEnabled(Preferences.SICKBEARD)) {
-                    showsFragment.addShowPrompt();
-                }
-                else if (which >= 1 && Preferences.isEnabled(Preferences.COUCHPOTATO)) {
-                    moviesFragment.addMoviePrompt();
-                }
-            }
-        });
-        
-        AlertDialog dialog = null;
-        dialog = builder.create();
-        dialog.show();
-    }
-    
-    /**
-     * Creating of the global Dialogs Specific dialogs can be handled here too
-     * if possible
-     */
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case R.id.dialog_setup_prompt:
-                
-                OnClickListener clickListener = new DialogInterface.OnClickListener() {
-                    
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if (whichButton == Dialog.BUTTON_POSITIVE) {
-                            showSettings();
-                        }
-                    }
-                };
-                
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.config);
-                builder.setPositiveButton(android.R.string.ok, clickListener);
-                builder.setNegativeButton(android.R.string.cancel, clickListener);
-                
-                return builder.create();
-        }
-        return null;
-    }
-    
-    /**
-     * This method creates the pop-up that is displayed when a new version of
-     * the application is installed
-     */
-    private void showVersionUpdatePopUp() {
-        OnClickListener clickListener = new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        };
-        
-        String versionInfo = RawReader.readTextRaw(getApplicationContext(), R.raw.version_info);
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.new_version);
-        builder.setPositiveButton(android.R.string.ok, clickListener);
-        builder.setMessage(versionInfo);
-        
-        AlertDialog dialog = null;
-        dialog = builder.create();
-        dialog.show();
-        
-        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
-        messageView.setGravity(Gravity.LEFT);
-    }
-    
-    /**
-     * This function will Serialize the current data for reuse the next time the
-     * application is reopened
-     */
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        Object data[] = new Object[5];
-        data[0] = queueFragment.getDataCache();
-        data[1] = historyFragment.getDataCache();
-        data[2] = showsFragment.getDataCache();
-        data[3] = comingFragment.getDataCache();
-        return data;
+        deleteFile(Preferences.DATA_CACHE);
     }
     
     /**
@@ -524,4 +427,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     private void showCouchSettings() {
         startActivity(new Intent(getApplicationContext(), CouchSettingsActivity.class));
     }
+    
+    /**
+     * This method invokes either the pause or resume functionality of sabnzbd
+     * regarding of the known status
+     */
+    private void pauseResume() {
+        SABnzbdController.pauseResumeQueue(queueFragment.getMessageHandler());
+    }
+    
 }

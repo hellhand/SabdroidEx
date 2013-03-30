@@ -1,12 +1,7 @@
 package com.sabdroidex.fragments;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,6 +24,8 @@ import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.data.ShowList;
+import com.sabdroidex.data.ShowSearch;
+import com.sabdroidex.fragments.dialogs.AddShowDialog;
 import com.sabdroidex.fragments.dialogs.ShowDetailsDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
@@ -50,22 +45,25 @@ public class ShowsFragment extends SABFragment {
     private final SABHandler messageHandler = new SABHandler() {
         
         @Override
-        @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
-            Object result[];
             if (msg.what == SickBeardController.MESSAGE.SHOWS.ordinal()) {
-                showList = (ShowList) msg.obj;
-                
-                if (mShowsListRowAdapter != null) {
-                    mShowsListRowAdapter.clear();
-                    mShowsListRowAdapter.addAll(showList.getShowElements());
-                    mShowsListRowAdapter.notifyDataSetChanged();
+                try {
+                    showList = (ShowList) msg.obj;
+                    
+                    if (mShowsListRowAdapter != null) {
+                        mShowsListRowAdapter.clear();
+                        mShowsListRowAdapter.addAll(showList.getShowElements());
+                        mShowsListRowAdapter.notifyDataSetChanged();
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
                 }
             }
             if (msg.what == SickBeardController.MESSAGE.SB_SEARCHTVDB.ordinal()) {
                 try {
-                    result = (Object[]) msg.obj;
-                    selectShowPrompt((ArrayList<Object[]>) result[1]);
+                    ShowSearch showSearch = (ShowSearch) msg.obj;
+                    selectShowPrompt(showSearch);
                 }
                 catch (Exception e) {
                     Log.w(TAG, e.getLocalizedMessage());
@@ -227,93 +225,21 @@ public class ShowsFragment extends SABFragment {
      * Create and displays a pop-up dialog when the user wants to add a show to
      * SickBeard
      */
-    @SuppressWarnings("deprecation")
     public void addShowPrompt() {
-        /**
-         * If SickBeard's configuration is not done, the configuration Dialog is
-         * displayed
-         */
-        if (!Preferences.isSet(Preferences.SICKBEARD_URL)) {
-            getActivity().showDialog(R.id.dialog_setup_prompt);
-            return;
-        }
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        
-        builder.setTitle(R.string.add_show_dialog_title);
-        builder.setMessage(R.string.add_show_dialog_message);
-        
-        final EditText input = new EditText(getActivity());
-        builder.setView(input);
-        
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                Toast.makeText(getActivity(), getActivity().getApplicationContext().getText(R.string.add_show_background_search), Toast.LENGTH_LONG).show();
-                SickBeardController.searchShow(getMessageHandler(), value);
-            }
-        });
-        
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-        
-        AlertDialog dialog = null;
-        dialog = builder.create();
-        dialog.show();
+        AddShowDialog addShowDialog = new AddShowDialog(messageHandler);
+        addShowDialog.show(getActivity().getSupportFragmentManager(), "addshow");
     }
     
     /**
      * Displays the propositions dialog with the resulting show names found
      * after a user search to add a show to Sickbeard.
      * 
-     * @param result
+     * @param showSearch
      *            The result of the search query
      */
-    private void selectShowPrompt(final ArrayList<Object[]> result) {
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        
-        ArrayList<String> shows = new ArrayList<String>();
-        for (Object[] show : result) {
-            shows.add(show[1] + "");
-        }
-        
-        if (shows.size() > 0) {
-            builder.setTitle(R.string.add_show_selection_dialog_title);
-        }
-        else {
-            builder.setTitle(R.string.add_show_not_found);
-        }
-        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, shows);
-        builder.setAdapter(adapter, new OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Object[] selected = result.get(which);
-                SickBeardController.addShow(messageHandler, ((String) selected[2]));
-                dialog.dismiss();
-            }
-        });
-        
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-        
-        AlertDialog dialog = null;
-        dialog = builder.create();
-        dialog.show();
+    private void selectShowPrompt(final ShowSearch showSearch) {
+        AddShowDialog addShowDialog = new AddShowDialog(messageHandler);
+        addShowDialog.show(getActivity().getSupportFragmentManager(), "selectshow");
     }
     
     private class ListItemClickListener implements OnItemClickListener {

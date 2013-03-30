@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,27 +52,36 @@ public class QueueFragment extends SABFragment {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SABnzbdController.MESSAGE.QUEUE.ordinal()) {
-                
-                mQueue = (Queue) msg.obj;
-                
-                /**
-                 * This might happens if a rotation occurs
-                 */
-                if (mQueueList != null || getAdapter(mQueueList) != null) {
-                    ArrayAdapter<Object> adapter = getAdapter(mQueueList);
-                    adapter.clear();
-                    adapter.addAll(mQueue.getQueueElements());
-                    adapter.notifyDataSetChanged();
+                try {
+                    mQueue = (Queue) msg.obj;
+                    
+                    /**
+                     * This might happens if a rotation occurs
+                     */
+                    if (mQueueList != null || getAdapter(mQueueList) != null) {
+                        ArrayAdapter<Object> adapter = getAdapter(mQueueList);
+                        adapter.clear();
+                        adapter.addAll(mQueue.getQueueElements());
+                        adapter.notifyDataSetChanged();
+                    }
+    
+                    ((UpdateableActivity) getParentActivity()).updateLabels(mQueue);
+                    ((UpdateableActivity) getParentActivity()).updateState(true);
                 }
-
-                ((UpdateableActivity) getParentActivity()).updateLabels(mQueue);
-                ((UpdateableActivity) getParentActivity()).updateState(true);
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
+                }
             }
             
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
-                ((UpdateableActivity) getParentActivity()).updateState(false);
-                if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
-                    Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                try {
+                    ((UpdateableActivity) getParentActivity()).updateState(false);
+                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
+                        Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
                 }
             }
         }
@@ -208,48 +216,6 @@ public class QueueFragment extends SABFragment {
             }
         };
         updater.start();
-    }
-    
-    /**
-     * Displays the Props dialog when the user wants to add a download
-     */
-    @SuppressWarnings("deprecation")
-    public void addDownloadPrompt() {
-        /**
-         * If nothing is configured we display the configuration pop-up
-         */
-        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
-            this.getActivity().showDialog(R.id.dialog_setup_prompt);
-            return;
-        }
-        
-        AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
-        
-        alert.setTitle(R.string.add_nzb_dialog_title);
-        alert.setMessage(R.string.add_nzb_dialog_message);
-        
-        final EditText input = new EditText(this.getActivity());
-        alert.setView(input);
-        
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                SABnzbdController.addByURL(messageHandler, value);
-                dialog.dismiss();
-            }
-        });
-        
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
-        
-        alert.show();
     }
     
     /**

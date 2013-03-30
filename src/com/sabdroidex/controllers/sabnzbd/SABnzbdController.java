@@ -1,20 +1,22 @@
 package com.sabdroidex.controllers.sabnzbd;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.data.History;
 import com.sabdroidex.data.Queue;
 import com.sabdroidex.data.QueueElement;
+import com.sabdroidex.data.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
@@ -23,7 +25,7 @@ import com.utils.HttpUtil;
  * @author Marc
  * 
  */
-public final class SABnzbdController {
+public final class SABnzbdController extends SABController {
     
     public static enum MESSAGE {
         ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE;
@@ -61,7 +63,7 @@ public final class SABnzbdController {
                     makeApiCall(MESSAGE.ADDURL.toString().toLowerCase(), "name=" + value);
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     sendUpdateMessageStatus(messageHandler, "");
@@ -129,11 +131,7 @@ public final class SABnzbdController {
             public void run() {
                 
                 try {
-                    final Object results[] = new Object[2];
-                    
                     final String result = makeApiCall(MESSAGE.GET_CONFIG.toString().toLowerCase());
-                    final Object[] elements = new Object[7];
-                    
                     JSONObject jsonObject = new JSONObject(result);
                     
                     if (!jsonObject.isNull("error")) {
@@ -141,30 +139,19 @@ public final class SABnzbdController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("config");
+                        
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(SabnzbdConfig.class);
+                        SabnzbdConfig config = (SabnzbdConfig) jsonMarshaller.unmarshal(jsonObject);
+                        
+                        final Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.GET_CONFIG.ordinal();
+                        message.obj = config;
+                        message.sendToTarget();
                     }
-                    
-                    jsonObject = jsonObject.getJSONObject("misc");
-                    
-                    results[0] = jsonObject;
-                    
-                    elements[0] = jsonObject.get("bandwidth_limit");
-                    elements[1] = jsonObject.get("cache_dir");
-                    elements[2] = jsonObject.get("cache_limit");
-                    elements[3] = jsonObject.get("dirscan_dir");
-                    elements[4] = jsonObject.get("dirscan_speed");
-                    elements[5] = jsonObject.get("download_dir");
-                    elements[6] = jsonObject.get("complete_dir");
-                    
-                    results[1] = elements;
-                    
-                    final Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.GET_CONFIG.ordinal();
-                    message.obj = results;
-                    message.sendToTarget();
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -209,7 +196,7 @@ public final class SABnzbdController {
                     message.sendToTarget();
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -302,7 +289,7 @@ public final class SABnzbdController {
      *             Thrown if there is any unexpected problem during the
      *             communication with the server
      */
-    public static String makeApiCall(final String command) throws RuntimeException {
+    public static String makeApiCall(final String command) throws Exception {
         return makeApiCall(command, "");
     }
     
@@ -319,7 +306,7 @@ public final class SABnzbdController {
      *             Thrown if there is any unexpected problem during the
      *             communication with the server
      */
-    public static String makeApiCall(final String command, final String... extraParams) throws RuntimeException {
+    public static String makeApiCall(final String command, final String... extraParams) throws Exception {
         
         String url = getFormattedUrl();
         Map<String, String> parameterMap = getAdditionalParameters();
@@ -369,7 +356,7 @@ public final class SABnzbdController {
      *             Thrown if there is any unexpected problem during the
      *             communication with the server
      */
-    public static String makePostApiCall(final String command, final String contentType, String contentName, final char[] content, final String... extraParams) throws RuntimeException {
+    public static String makePostApiCall(final String command, final String contentType, String contentName, final char[] content, final String... extraParams) throws Exception {
         
         String url = getFormattedUrl();
         
@@ -414,7 +401,7 @@ public final class SABnzbdController {
                     SABnzbdController.refreshQueue(messageHandler);
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -459,7 +446,7 @@ public final class SABnzbdController {
                     Thread.sleep(100);
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage());
                 }
                 finally {
                     executingCommand = false;
@@ -514,11 +501,11 @@ public final class SABnzbdController {
                         message.sendToTarget();
                     }
                 }
-                catch (final RuntimeException e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                catch (final IOException e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshHistory = false;
@@ -550,6 +537,8 @@ public final class SABnzbdController {
             @Override
             public void run() {
                 
+                String statusMessage = "";
+                
                 try {
                     final String result = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
                     JSONObject jsonObject = new JSONObject(result);
@@ -570,15 +559,16 @@ public final class SABnzbdController {
                         message.sendToTarget();
                     }
                 }
-                catch (final RuntimeException e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                catch (final IOException e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
+                    statusMessage = e.getLocalizedMessage();
                 }
                 catch (final Throwable e) {
-                    Log.w(TAG, " " + e.getLocalizedMessage());
+                    Log.e(TAG, " " + e.getLocalizedMessage());
                 }
                 finally {
                     executingRefreshQuery = false;
-                    sendUpdateMessageStatus(messageHandler, "");
+                    sendUpdateMessageStatus(messageHandler, statusMessage);
                 }
             }
         };
@@ -665,23 +655,6 @@ public final class SABnzbdController {
         executingCommand = true;
         sendUpdateMessageStatus(messageHandler, "");
         thread.start();
-    }
-    
-    /**
-     * Sends a message to the calling {@link Activity} to update it's status bar
-     * 
-     * @param messageHandler
-     *            The message handler to be notified
-     * @param text
-     *            The text to write in the message
-     */
-    private static void sendUpdateMessageStatus(final Handler messageHandler, final String text) {
-        
-        final Message message = new Message();
-        message.setTarget(messageHandler);
-        message.what = MESSAGE.UPDATE.ordinal();
-        message.obj = text;
-        message.sendToTarget();
     }
     
     /**

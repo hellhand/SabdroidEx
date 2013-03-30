@@ -101,7 +101,7 @@ public class HttpUtil {
             HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
         }
         catch (Exception e) {
-            Log.w("ERROR", " " + e.getLocalizedMessage());
+            Log.e("ERROR", " " + e.getLocalizedMessage());
         }
     }
     
@@ -110,47 +110,43 @@ public class HttpUtil {
      * goes wrong
      * 
      * @return The content of the URL as a String
+     * @throws IOException
      * @throws ServerConnectinoException
      */
-    public String getDataAsString(String url) throws RuntimeException {
+    public String getDataAsString(String url) throws IOException {
         URLConnection urlc = null;
         InputStream is = null;
         InputStreamReader re = null;
         BufferedReader rd = null;
         String responseBody = "";
+        
+        urlc = getConnection(new URL(url));
+        
+        if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
+            is = new GZIPInputStream(urlc.getInputStream());
+        }
+        else {
+            is = urlc.getInputStream();
+        }
+        
+        re = new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8));
+        rd = new BufferedReader(re);
+        
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            responseBody += line;
+            responseBody += HttpUtil.NL;
+            line = null;
+        }
+        
         try {
-            urlc = getConnection(new URL(url));
-            
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            
-            re = new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8));
-            rd = new BufferedReader(re);
-            
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                responseBody += line;
-                responseBody += HttpUtil.NL;
-                line = null;
-            }
+            rd.close();
+            re.close();
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            // we do not care about this
         }
-        finally {
-            
-            try {
-                rd.close();
-                re.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
-        }
+        
         return responseBody;
     }
     
@@ -159,45 +155,40 @@ public class HttpUtil {
      * goes wrong
      * 
      * @return The content of the URL as a byte[]
+     * @throws IOException
+     * @throws
      * @throws ServerConnectinoException
      */
-    public byte[] getDataAsByteArray(String url) {
+    public byte[] getDataAsByteArray(String url) throws IOException {
         byte[] dat = null;
         URLConnection urlc = null;
         InputStream is = null;
         ByteArrayOutputStream bao = null;
         
+        urlc = getConnection(new URL(url));
+        if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
+            is = new GZIPInputStream(urlc.getInputStream());
+        }
+        else {
+            is = urlc.getInputStream();
+        }
+        
+        bao = new ByteArrayOutputStream();
+        byte[] buf = new byte[4096];
+        for (;;) {
+            int nb = is.read(buf);
+            if (nb <= 0)
+                break;
+            bao.write(buf, 0, nb);
+        }
+        dat = bao.toByteArray();
+        
         try {
-            
-            urlc = getConnection(new URL(url));
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            
-            bao = new ByteArrayOutputStream();
-            byte[] buf = new byte[4096];
-            for (;;) {
-                int nb = is.read(buf);
-                if (nb <= 0)
-                    break;
-                bao.write(buf, 0, nb);
-            }
-            dat = bao.toByteArray();
+            bao.close();
+            is.close();
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            try {
-                bao.close();
-                is.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
+            // we do not care about this
         }
         return dat;
     }
@@ -207,9 +198,10 @@ public class HttpUtil {
      * goes wrong
      * 
      * @return The content of the URL as a char[]
-     * @throws ServerConnectinoException
+     * @throws IOException
      */
-    public byte[] postDataAsByteArray(String url, String contentType, String contentName, byte[] content) {
+    public byte[] postDataAsByteArray(String url, String contentType, String contentName, byte[] content)
+            throws IOException {
         
         URLConnection urlc = null;
         OutputStream os = null;
@@ -217,50 +209,45 @@ public class HttpUtil {
         byte[] dat = null;
         final String boundary = "" + new Date().getTime();
         
+        urlc = new URL(url).openConnection();
+        urlc.setDoOutput(true);
+        urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------"
+                + boundary);
+        os = urlc.getOutputStream();
+        
+        String message1 = "-----------------------------" + boundary + HttpUtil.BNL;
+        message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\"" + HttpUtil.BNL;
+        message1 += "Content-Type: " + contentType + HttpUtil.BNL;
+        message1 += HttpUtil.BNL;
+        String message2 = HttpUtil.BNL + "-----------------------------" + boundary + "--" + HttpUtil.BNL;
+        
+        os.write(message1.getBytes());
+        os.write(content);
+        os.write(message2.getBytes());
+        os.flush();
+        
+        if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
+            is = new GZIPInputStream(urlc.getInputStream());
+        }
+        else {
+            is = urlc.getInputStream();
+        }
+        
+        ByteArrayOutputStream bis = new ByteArrayOutputStream();
+        int ch;
+        while ((ch = is.read()) != -1) {
+            bis.write(ch);
+        }
+        dat = bis.toByteArray();
+        
         try {
-            urlc = new URL(url).openConnection();
-            urlc.setDoOutput(true);
-            urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------" + boundary);
-            os = urlc.getOutputStream();
-            
-            String message1 = "-----------------------------" + boundary + HttpUtil.BNL;
-            message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\"" + HttpUtil.BNL;
-            message1 += "Content-Type: " + contentType + HttpUtil.BNL;
-            message1 += HttpUtil.BNL;
-            String message2 = HttpUtil.BNL + "-----------------------------" + boundary + "--" + HttpUtil.BNL;
-            
-            os.write(message1.getBytes());
-            os.write(content);
-            os.write(message2.getBytes());
-            os.flush();
-            
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            
-            ByteArrayOutputStream bis = new ByteArrayOutputStream();
-            int ch;
-            while ((ch = is.read()) != -1) {
-                bis.write(ch);
-            }
-            dat = bis.toByteArray();
-            
+            os.close();
+            is.close();
         }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        catch (Exception e) {
+            // we do not care about this
         }
-        finally {
-            try {
-                os.close();
-                is.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
-        }
+        
         return dat;
     }
     
@@ -271,41 +258,35 @@ public class HttpUtil {
      * @param parameterMap
      * 
      * @return The content of the URL as a char[]
-     * @throws ServerConnectinoException
+     * @throws IOException
      */
-    public char[] getDataAsCharArray(String url, Map<String, String> parameterMap) {
+    public synchronized char[] getDataAsCharArray(String url, Map<String, String> parameterMap) throws IOException {
         
-        CharArrayWriter dat;
+        CharArrayWriter dat = null;
         URLConnection urlc = null;
         InputStream is = null;
         BufferedReader reader = null;
         
+        dat = new CharArrayWriter();
+        urlc = getConnection(new URL(url), parameterMap);
+        if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
+            is = new GZIPInputStream(urlc.getInputStream());
+        }
+        else {
+            is = urlc.getInputStream();
+        }
+        reader = new BufferedReader(new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8)));
+        
+        int c;
+        while ((c = reader.read()) != -1) {
+            dat.append((char) c);
+        }
+        
         try {
-            dat = new CharArrayWriter();
-            urlc = getConnection(new URL(url), parameterMap);
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8)));
-            
-            int c;
-            while ((c = reader.read()) != -1) {
-                dat.append((char) c);
-            }
+            is.close();
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            try {
-                is.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
+            // we do not care about this
         }
         return dat.toCharArray();
     }
@@ -315,9 +296,10 @@ public class HttpUtil {
      * goes wrong
      * 
      * @return The content of the URL as a char[]
-     * @throws ServerConnectinoException
+     * @throws IOException
      */
-    public char[] postDataAsCharArray(String url, String contentType, String contentName, char[] content) {
+    public char[] postDataAsCharArray(String url, String contentType, String contentName, char[] content)
+            throws IOException {
         
         URLConnection urlc = null;
         OutputStream os = null;
@@ -326,49 +308,44 @@ public class HttpUtil {
         BufferedReader reader = null;
         String boundary = "" + new Date().getTime();
         
+        urlc = new URL(url).openConnection();
+        urlc.setDoOutput(true);
+        urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------"
+                + boundary);
+        
+        String message1 = "-----------------------------" + boundary + HttpUtil.BNL;
+        message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\"" + HttpUtil.BNL;
+        message1 += "Content-Type: " + contentType + HttpUtil.BNL;
+        message1 += HttpUtil.BNL;
+        String message2 = HttpUtil.BNL + "-----------------------------" + boundary + "--" + HttpUtil.BNL;
+        
+        os = urlc.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charset.forName(HttpUtil.UTF_8)));
+        
+        writer.write(message1);
+        writer.write(content);
+        writer.write(message2);
+        writer.flush();
+        
+        dat = new CharArrayWriter();
+        if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
+            is = new GZIPInputStream(urlc.getInputStream());
+        }
+        else {
+            is = urlc.getInputStream();
+        }
+        reader = new BufferedReader(new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8)));
+        
+        int c;
+        while ((c = reader.read()) != -1) {
+            dat.append((char) c);
+        }
+        
         try {
-            urlc = new URL(url).openConnection();
-            urlc.setDoOutput(true);
-            urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------" + boundary);
-            
-            String message1 = "-----------------------------" + boundary + HttpUtil.BNL;
-            message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\"" + HttpUtil.BNL;
-            message1 += "Content-Type: " + contentType + HttpUtil.BNL;
-            message1 += HttpUtil.BNL;
-            String message2 = HttpUtil.BNL + "-----------------------------" + boundary + "--" + HttpUtil.BNL;
-            
-            os = urlc.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charset.forName(HttpUtil.UTF_8)));
-            
-            writer.write(message1);
-            writer.write(content);
-            writer.write(message2);
-            writer.flush();
-            
-            dat = new CharArrayWriter();
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8)));
-            
-            int c;
-            while ((c = reader.read()) != -1) {
-                dat.append((char) c);
-            }
+            is.close();
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            try {
-                is.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
+            // we do not care about this
         }
         
         return dat.toCharArray();
@@ -380,7 +357,8 @@ public class HttpUtil {
         urlc = url.openConnection();
         urlc.setUseCaches(false);
         urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "application/x-www-form-urlencoded");
-        urlc.setRequestProperty(HttpUtil.USER_AGENT, "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
+        urlc.setRequestProperty(HttpUtil.USER_AGENT,
+                "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
         urlc.setRequestProperty(HttpUtil.ACCEPT_ENCODING, HttpUtil.GZIP);
         
         return urlc;
