@@ -217,6 +217,7 @@ public class HttpUtil {
         URLConnection urlc = null;
         OutputStream os = null;
         InputStream is = null;
+        ByteArrayOutputStream bis = null;
         byte[] dat = null;
         final String boundary = "" + new Date().getTime();
         
@@ -246,7 +247,7 @@ public class HttpUtil {
                 is = urlc.getInputStream();
             }
             
-            ByteArrayOutputStream bis = new ByteArrayOutputStream();
+            bis = new ByteArrayOutputStream();
             int ch;
             while ((ch = is.read()) != -1) {
                 bis.write(ch);
@@ -258,6 +259,7 @@ public class HttpUtil {
         }
         finally {
             try {
+                bis.close();
                 os.close();
                 is.close();
             }
@@ -305,6 +307,7 @@ public class HttpUtil {
         }
         finally {
             try {
+                reader.close();
                 is.close();
             }
             catch (Exception e) {
@@ -371,6 +374,8 @@ public class HttpUtil {
         }
         finally {
             try {
+                reader.close();
+                os.close();
                 is.close();
             }
             catch (Exception e) {
