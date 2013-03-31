@@ -121,6 +121,11 @@
 	<string name="show_season">Saison</string>
     <string name="show_specials">Spéciaux</string>
 	
+    <string name="episode">Episode : </string>
+    <string name="episode_name">Nom épisode : </string>
+    <string name="episode_airdate">Date sortie : </string>
+    <string name="episode_quality">Qualité : </string>
+            
 	<string name="comming_next">Prochain Episode : </string>
 	<string name="comming_airs">Sur les ondes : </string>
     

@@ -124,6 +124,11 @@
 	<string name="show_season">Season</string>
     <string name="show_specials">Specials</string>
 	
+    <string name="episode">Episode : </string>
+    <string name="episode_name">Episode name : </string>
+    <string name="episode_airdate">Air date : </string>
+    <string name="episode_quality">Quality : </string>
+    
 	<string name="comming_next">Next Episode : </string>
 	<string name="comming_airs">Airs : </string>
 		

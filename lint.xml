@@ -43,6 +43,7 @@
     <issue id="NewApi" severity="ignore" />
     <issue id="ObsoleteLayoutParam" severity="ignore" />
     <issue id="OnClick" severity="ignore" />
+    <issue id="Orientation" severity="ignore" />
     <issue id="Overdraw" severity="ignore" />
     <issue id="PrivateResource" severity="ignore" />
     <issue id="Proguard" severity="ignore" />
@@ -53,6 +54,7 @@
     <issue id="ScrollViewCount" severity="ignore" />
     <issue id="ScrollViewSize" severity="ignore" />
     <issue id="SdCardPath" severity="ignore" />
+    <issue id="SelectableText" severity="ignore" />
     <issue id="SpUsage" severity="ignore" />
     <issue id="StateListReachable" severity="ignore" />
     <issue id="StringFormatCount" severity="ignore" />

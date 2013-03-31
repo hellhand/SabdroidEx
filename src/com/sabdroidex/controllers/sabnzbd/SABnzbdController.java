@@ -114,11 +114,8 @@ public final class SABnzbdController extends SABController {
      * 
      * @param messageHandler
      *            The class that will handle the result message.
-     * @param item
-     *            An array that contains the configuration section, the
-     *            configuration name and the new value.
      */
-    public static void getAllConfigs(final Handler messageHandler, final Object[] item) {
+    public static void getAllConfigs(final Handler messageHandler) {
         
         // Already running or settings not ready
         if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {

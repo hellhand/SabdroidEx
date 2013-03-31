@@ -65,7 +65,7 @@ public class ServerSettingsActivity extends PreferenceActivity {
      * This is an asynchronous method to get the Sabnzbd server bandwidth
      */
     private void getValuesFromServer() {
-        SABnzbdController.getAllConfigs(messageHandler, null);
+        SABnzbdController.getAllConfigs(messageHandler);
     }
 
     /**
