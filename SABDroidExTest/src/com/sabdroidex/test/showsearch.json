@@ -1,0 +1,164 @@
+{
+    "message":"",
+    "data":{
+        "results":[
+            {
+                "tvdbid":251013,
+                "name":"Gundam Frag",
+                "first_aired":null
+            },
+            {
+                "tvdbid":76547,
+                "name":"Mobile Suit Gundam",
+                "first_aired":"1979-04-07"
+            },
+            {
+                "tvdbid":71585,
+                "name":"Turn A Gundam",
+                "first_aired":"1999-04-01"
+            },
+            {
+                "tvdbid":71536,
+                "name":"Mobile Suit Victory Gundam",
+                "first_aired":"1993-04-02"
+            },
+            {
+                "tvdbid":168511,
+                "name":"Gundam Seed Character Theater",
+                "first_aired":null
+            },
+            {
+                "tvdbid":121611,
+                "name":"Gundam Evolve",
+                "first_aired":"2003-09-06"
+            },
+            {
+                "tvdbid":266825,
+                "name":"Gundam: Mission To The Rise",
+                "first_aired":"1998-08-01"
+            },
+            {
+                "tvdbid":80398,
+                "name":"Mobile Fighter G Gundam",
+                "first_aired":"1994-04-01"
+            },
+            {
+                "tvdbid":71535,
+                "name":"Mobile Suit Zeta Gundam",
+                "first_aired":"1985-03-01"
+            },
+            {
+                "tvdbid":81104,
+                "name":"Mobile Suit Gundam: MS IGLOO - The Hidden One-Year War",
+                "first_aired":"2004-07-19"
+            },
+            {
+                "tvdbid":266824,
+                "name":"Mobile Suit Gundam 0079",
+                "first_aired":null
+            },
+            {
+                "tvdbid":254931,
+                "name":"Mobile Suit Gundam SEED (2012)",
+                "first_aired":"2012-01-01"
+            },
+            {
+                "tvdbid":266826,
+                "name":"SD Gundam Matsuri",
+                "first_aired":null
+            },
+            {
+                "tvdbid":85443,
+                "name":"Mobile Suit Gundam MS IGLOO 2 Gravity Of The Battlefront",
+                "first_aired":"2008-10-24"
+            },
+            {
+                "tvdbid":80785,
+                "name":"Mobile Suit Gundam 0080: War in the Pocket",
+                "first_aired":"1989-03-25"
+            },
+            {
+                "tvdbid":80675,
+                "name":"Mobile Suit Gundam 00",
+                "first_aired":"2007-10-06"
+            },
+            {
+                "tvdbid":261719,
+                "name":"Mobile Suit Gundam Z",
+                "first_aired":null
+            },
+            {
+                "tvdbid":80784,
+                "name":"Mobile Suit Gundam: The 08th MS Team",
+                "first_aired":"1996-01-25"
+            },
+            {
+                "tvdbid":71584,
+                "name":"Mobile New Century Gundam X",
+                "first_aired":"1996-05-01"
+            },
+            {
+                "tvdbid":72352,
+                "name":"Mobile Suit Gundam ZZ",
+                "first_aired":"1986-03-01"
+            },
+            {
+                "tvdbid":74890,
+                "name":"Mobile Suit Gundam SEED Destiny",
+                "first_aired":"2004-10-01"
+            },
+            {
+                "tvdbid":79327,
+                "name":"Mobile Suit Gundam Wing",
+                "first_aired":"1995-04-07"
+            },
+            {
+                "tvdbid":156411,
+                "name":"SD Gundam Legend of the Three Kingdoms Brave Battle Warriors",
+                "first_aired":"2010-04-03"
+            },
+            {
+                "tvdbid":252621,
+                "name":"Mobile Suit Gundam AGE",
+                "first_aired":"2011-10-09"
+            },
+            {
+                "tvdbid":103871,
+                "name":"Mobile Suit Gundam SEED: Special Edition",
+                "first_aired":"2004-08-27"
+            },
+            {
+                "tvdbid":74474,
+                "name":"Mobile Suit Gundam SEED",
+                "first_aired":"2004-04-01"
+            },
+            {
+                "tvdbid":81466,
+                "name":"Mobile Suit Gundam SEED C.E. 73: Stargazer",
+                "first_aired":"2006-07-14"
+            },
+            {
+                "tvdbid":157211,
+                "name":"SD Gundam Force",
+                "first_aired":"2003-09-01"
+            },
+            {
+                "tvdbid":142601,
+                "name":"Mobile Suit Gundam Unicorn",
+                "first_aired":"2010-03-12"
+            },
+            {
+                "tvdbid":80783,
+                "name":"Mobile Suit Gundam 0083: Stardust Memory",
+                "first_aired":"1991-05-23"
+            },
+            {
+                "tvdbid":81103,
+                "name":"Mobile Suit Gundam: MS IGLOO - Apocalypse 0079",
+                "first_aired":null
+            }
+        ],
+        "langid":7
+    },
+    "result":"success"
+}
