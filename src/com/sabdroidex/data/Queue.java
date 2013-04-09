@@ -51,7 +51,7 @@ public class Queue extends SabnzbdStatus {
         return queueElements;
     }
     
-    @JSONSetter(name = "slots", type = JSONType.LIST, listClazz = QueueElement.class)
+    @JSONSetter(name = "slots", type = JSONType.LIST, objectClazz = QueueElement.class)
     public void setQueueElements(List<QueueElement> queueElements) {
         this.queueElements = queueElements;
     }

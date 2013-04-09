@@ -541,7 +541,7 @@ public final class SABnzbdController extends SABController {
                     JSONObject jsonObject = new JSONObject(result);
                     
                     if (!jsonObject.isNull("error")) {
-                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                        statusMessage = "SABnzbd : " + jsonObject.getString("error");
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("queue");

@@ -110,6 +110,10 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
     }
     
+    /**
+     * When the activity is stopped the status is saved so that data stays
+     * available offline if the data cache has been enabled.
+     */
     @Override
     protected void onStop() {
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
@@ -259,6 +263,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         getActionBarHelper().setRefreshActionItemState(true);
     }
     
+    /**
+     * This method is used to refresh the contents of the status panel.
+     */
     @Override
     public void updateLabels(SabnzbdStatus status) {
         if (status == null)
@@ -282,6 +289,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
     }
     
+    /**
+     * This method is used to set the refresh button as active or not
+     */
     @Override
     public void updateState(boolean showAsUpdate) {
         getActionBarHelper().setRefreshActionItemState(showAsUpdate);
@@ -319,7 +329,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     }
     
     /**
-     * Listener for the query text.
+     * Listener for the search text field contents.
      */
     OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
         

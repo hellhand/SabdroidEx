@@ -25,7 +25,7 @@ public class ShowSearch {
         return results;
     }
     
-    @JSONSetter(name="results", type=JSONType.LIST, listClazz=ShowSearchResult.class)
+    @JSONSetter(name="results", type=JSONType.LIST, objectClazz=ShowSearchResult.class)
     public void setResults(List<ShowSearchResult> results) {
         this.results = results;
     }

@@ -21,6 +21,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -29,5 +30,6 @@ public @interface JSONSetter {
     
     String name() default "";
     JSONType type() default JSONType.SIMPLE;
-    Class<?> listClazz() default Void.class;
+    Class<?> objectClazz() default Void.class;
+    Class<?> listClazz() default ArrayList.class;
 }

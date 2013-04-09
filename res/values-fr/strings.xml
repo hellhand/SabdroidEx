@@ -125,7 +125,15 @@
     <string name="episode_name">Nom épisode : </string>
     <string name="episode_airdate">Date sortie : </string>
     <string name="episode_quality">Qualité : </string>
-            
+    <string name="episodes">épisodes</string>
+    
+    <string name="episode_status_wanted">Voulu</string>
+    <string name="episode_status_skipped">Passé</string>
+    <string name="episode_status_archieved">Archivé</string>
+    <string name="episode_status_ignored">Ignoré</string>
+    <string name="episode_status_set">Définir le status de l\'épisode</string>
+    <string name="episode_status_set_to">Changement du status de l\'épisode</string>
+    
 	<string name="comming_next">Prochain Episode : </string>
 	<string name="comming_airs">Sur les ondes : </string>
     

@@ -34,7 +34,7 @@ import com.sabdroidex.utils.SABHandler;
 
 public class ShowsFragment extends SABFragment {
     
-    private static final String TAG = "ShowsFragment";
+    private static final String TAG = ShowsFragment.class.getCanonicalName();
     
     private static ShowList showList;
     private ShowsListRowAdapter mShowsListRowAdapter;

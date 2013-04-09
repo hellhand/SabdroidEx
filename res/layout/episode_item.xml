@@ -1,110 +1,99 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_item_bg"
+    android:orientation="vertical"
     android:paddingLeft="5dip"
-    android:paddingRight="5dip" >
+    android:paddingRight="5dip"
+    android:paddingTop="5dip" >
 
-    <TextView
-        android:id="@+id/status_led"
-        android:layout_width="10dip"
-        android:layout_height="match_parent" />
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip" >
 
-    <TextView
-        android:id="@+id/episode_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_toRightOf="@id/status_led"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="@string/episode"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dip"
+            android:text="@string/episode"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/episode"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_toRightOf="@id/episode_holder"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="1"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip" />
+        <TextView
+            android:id="@+id/episode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="15dip"
+            android:singleLine="true" />
 
-    <TextView
-        android:id="@+id/episode_name_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@id/episode_holder"
-        android:layout_toRightOf="@id/status_led"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="@string/episode_name"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dip"
+            android:text="@string/episode_airdate"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/episode_name"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@id/episode_holder"
-        android:layout_toRightOf="@id/episode_name_holder"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="Something Wicked This Fae Comes"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip" />
+        <TextView
+            android:id="@+id/episode_airdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:singleLine="true" />
+    </TableRow>
 
-    <TextView
-        android:id="@+id/episode_airdate_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@id/episode_name_holder"
-        android:layout_toRightOf="@id/status_led"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="@string/episode_airdate"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip"
-        android:textStyle="bold" />
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip" >
 
-    <TextView
-        android:id="@+id/episode_airdate"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@id/episode_name_holder"
-        android:layout_toRightOf="@id/episode_airdate_holder"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="2011-09-04"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dip"
+            android:text="@string/episode_name"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/episode_quality_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@id/episode_airdate_holder"
-        android:layout_toRightOf="@id/status_led"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="@string/episode_quality"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/episode_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+    </TableRow>
 
-    <TextView
-        android:id="@+id/episode_status"
-        android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@id/episode_airdate_holder"
-        android:layout_toRightOf="@id/episode_quality_holder"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="720p WEB-DL"
-        android:textColor="#6a6a6a"
-        android:textSize="12dip" />
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip" >
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dip"
+            android:text="@string/episode_quality"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/episode_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/episode_status"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="Downloaded"
+            android:textStyle="bold" />
+    </TableRow>
+
+</LinearLayout>

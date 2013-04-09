@@ -269,7 +269,7 @@ public class HistoryElement implements Serializable {
         return stageLogs;
     }
     
-    @JSONSetter(name="stage_log", type=JSONType.LIST, listClazz=DownloadLog.class)
+    @JSONSetter(name="stage_log", type=JSONType.LIST, objectClazz=DownloadLog.class)
     public void setStageLog(List<DownloadLog> stageLogs) {
         this.stageLogs = stageLogs;
     }

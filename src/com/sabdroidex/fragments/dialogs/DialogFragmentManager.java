@@ -47,7 +47,7 @@ public class DialogFragmentManager implements DialogActionsListener {
     private FragmentActivity mActivity;
     
     /**
-     * Construcor
+     * Constructor
      * 
      * @param activity
      */

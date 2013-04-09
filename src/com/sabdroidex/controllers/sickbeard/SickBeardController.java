@@ -11,12 +11,14 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
+import com.sabdroidex.data.Season;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.data.ShowList;
 import com.sabdroidex.data.ShowSearch;
@@ -37,7 +39,7 @@ public final class SickBeardController extends SABController {
     private static final String URL_TVDB_SEASONS = "http://thetvdb.com/banners/seasons/[TVDBID]";
     
     public static enum MESSAGE {
-        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE, SHOW_SEASONLIST, SHOW_SEASONS
+        SHOWS, SHOW, FUTURE, SHOW_GETBANNER, SHOW_GETPOSTER, SHOW_ADDNEW, SB_SEARCHTVDB, UPDATE, SHOW_SEASONLIST, SHOW_SEASONS, EPISODE_SETSTATUS
     }
     
     /**
@@ -338,6 +340,7 @@ public final class SickBeardController extends SABController {
                         
                         SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Show.class);
                         show = (Show) jsonMarshaller.unmarshal(jsonObject);
+                        Collections.sort(show.getSeasonList());
                     }
                     
                     Message message = new Message();
@@ -382,9 +385,9 @@ public final class SickBeardController extends SABController {
             public void run() {
                 
                 try {
-                    String data = makeApiCall(MESSAGE.SHOW.toString().toLowerCase(), "tvdbid=" + showId, "season=" + seasonId);
+                    String data = makeApiCall(MESSAGE.SHOW_SEASONS.toString().toLowerCase(), "tvdbid=" + showId, "season=" + seasonId);
                     JSONObject jsonObject = new JSONObject(data);
-                    Show show = null;
+                    Season season = null;
                     
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
@@ -393,14 +396,15 @@ public final class SickBeardController extends SABController {
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
                         
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Show.class);
-                        show = (Show) jsonMarshaller.unmarshal(jsonObject);
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Season.class);
+                        season = (Season) jsonMarshaller.unmarshal(jsonObject);
+                        Collections.sort(season.getEpisodes());
                     }
                     
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOW.ordinal();
-                    message.obj = show;
+                    message.what = MESSAGE.SHOW_SEASONS.ordinal();
+                    message.obj = season;
                     message.sendToTarget();
                 }
                 catch (IOException e) {
@@ -408,6 +412,44 @@ public final class SickBeardController extends SABController {
                 }
                 catch (Throwable e) {
                     Log.w(TAG, e.getLocalizedMessage());
+                }
+            }
+        };
+        
+        thread.start();
+    }
+    
+    public static void setEpisodeStatus(final Handler messageHandler, final String tvdbId, final String seasonId, final String episode, final String status) {
+
+        /**
+         * If Sickbeard is not configured
+         */
+        if (!Preferences.isSet(Preferences.SICKBEARD_URL))
+            return;
+        
+        Thread thread = new Thread() {
+            
+            @Override
+            public void run() {
+                
+                String statusMessage = "";
+                
+                try {
+                    String data = makeApiCall(MESSAGE.EPISODE_SETSTATUS.toString().toLowerCase(), "tvdbid=" + tvdbId, "season=" + seasonId, "episode=" + episode, "status=" + status);
+                    JSONObject jsonObject = new JSONObject(data);
+                    
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        statusMessage = "SickBeard : " + jsonObject.getString("message");
+                    }
+                }
+                catch (IOException e) {
+                    Log.w(TAG, e.getLocalizedMessage());
+                }
+                catch (Throwable e) {
+                    Log.w(TAG, e.getLocalizedMessage());
+                }
+                finally {
+                    sendUpdateMessageStatus(messageHandler, statusMessage);
                 }
             }
         };
@@ -457,6 +499,10 @@ public final class SickBeardController extends SABController {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
                 url = url + "&" + xTraParam;
             }
+        }
+        
+        if (Debug.isDebuggerConnected()) {
+            Log.d(TAG, url);
         }
         
         String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, parameterMap));

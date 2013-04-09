@@ -17,7 +17,6 @@
 package com.sabdroidex.utils.json;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -102,16 +101,16 @@ public class SimpleJsonMarshaller {
                             JSONArray jsonArray = jsonObject.getJSONArray(setter.name());
                             Collection<Object> collection = null;
                             if (methods[i].getParameterTypes()[0] == List.class) {
-                                collection = new ArrayList<Object>();
+                                collection = (Collection<Object>) setter.listClazz().newInstance();
                             }
                             else {
                                 collection = (Collection<Object>) methods[i].getParameterTypes()[0].newInstance();
                             }
                             for (int j = 0; j < jsonArray.length(); j++) {
                                 Object element = jsonArray.get(j);
-                                if (setter.listClazz() != Void.class) {
+                                if (setter.objectClazz() != Void.class) {
                                     SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(
-                                            setter.listClazz());
+                                            setter.objectClazz());
                                     element = simpleJsonMarshaller.unmarshal((JSONObject) element);
                                 }
                                 collection.add(element);
@@ -128,7 +127,7 @@ public class SimpleJsonMarshaller {
                         try {
                             Collection<Object> collection = null;
                             if (methods[i].getParameterTypes()[0] == List.class) {
-                                collection = new ArrayList<Object>();
+                                collection = (Collection<Object>) setter.listClazz().newInstance();
                             }
                             else {
                                 collection = (Collection<Object>) methods[i].getParameterTypes()[0].newInstance();
@@ -138,9 +137,9 @@ public class SimpleJsonMarshaller {
                             while (iterator.hasNext()) {
                                 String key = (String) iterator.next();
                                 Object element = jsonObject.get(key);
-                                if (setter.listClazz() != Void.class) {
+                                if (setter.objectClazz() != Void.class) {
                                     SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(
-                                            setter.listClazz());
+                                            setter.objectClazz());
                                     element = simpleJsonMarshaller.unmarshal((JSONObject) element);
                                     if (element instanceof UnknowMappingElement) {
                                         ((UnknowMappingElement) element).setId(key);

@@ -3,6 +3,7 @@ package com.sabdroidex.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.util.logging.Logger;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
@@ -168,7 +170,7 @@ public class ImageWorker {
         protected Bitmap getLoadingBitmap() {
             return mLoadingBitmap.get();
         }
-
+        
         /**
          * TODO: rewrite this jdoc
          */
@@ -184,7 +186,8 @@ public class ImageWorker {
                 bgOptions.inSampleSize = 1;
             }
             
-            String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[1] + File.separator;
+            String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                    + "SABDroidEx" + File.separator + params[1] + File.separator;
             folderPath = folderPath.replace(":", "");
             
             String fileName = getFilename(params);
@@ -194,7 +197,10 @@ public class ImageWorker {
              * (Default is enabled)
              */
             if (!isCancelled() && bitmap == null && Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
-                Log.i(getClass().getCanonicalName(), "Loading Bitmap for : " + params[1] + " ... trying to open file.");
+                if (Debug.isDebuggerConnected()) {
+                    Log.i(getClass().getCanonicalName(), "Loading Bitmap for : " + params[1]
+                            + " ... trying to open file.");
+                }
                 bitmap = mBitmapReader.getBitmapFromFile(folderPath, fileName, key);
             }
             
@@ -206,7 +212,10 @@ public class ImageWorker {
                 /**
                  * We get the banner from the server
                  */
-                Log.i(getClass().getCanonicalName(), "Bitmap for : " + params[1] + " not found ... trying to download file.");
+                if (Debug.isDebuggerConnected()) {
+                    Log.i(getClass().getCanonicalName(), "Bitmap for : " + params[1]
+                            + " not found ... trying to download file.");
+                }
                 String url = getImageURL(params);
                 String savePath = folderPath + File.separator + fileName;
                 bitmap = mBitmapReader.getBitmapFromWeb(url, savePath, key);
@@ -238,8 +247,10 @@ public class ImageWorker {
         
         private void setImage(ImageView imageView, Bitmap bitmap) {
             if (mFade) {
-                // Create a transition and set the resulting image to be displayed
-                TransitionDrawable td = new TransitionDrawable(new Drawable[] { new BitmapDrawable(mResources, mLoadingBitmap.get()), new BitmapDrawable(mResources, bitmap) });
+                // Create a transition and set the resulting image to be
+                // displayed
+                TransitionDrawable td = new TransitionDrawable(new Drawable[] {
+                        new BitmapDrawable(mResources, mLoadingBitmap.get()), new BitmapDrawable(mResources, bitmap) });
                 imageView.setImageDrawable(td);
                 td.startTransition(FADE_IN_TIME);
             }
@@ -279,7 +290,8 @@ public class ImageWorker {
         
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getImageURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[0]);
+            return SickBeardController.getImageURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(),
+                    (Integer) params[0]);
         }
         
         @Override
@@ -302,7 +314,8 @@ public class ImageWorker {
         
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[0]);
+            return SickBeardController.getPosterURL(
+                    SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[0]);
         }
         
         @Override
@@ -325,7 +338,8 @@ public class ImageWorker {
         
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getSeasonPosterURL(SickBeardController.MESSAGE.SHOW_SEASONLIST.toString().toLowerCase(), (Integer) params[0], (Integer) params[2]);
+            return SickBeardController.getSeasonPosterURL(SickBeardController.MESSAGE.SHOW_SEASONLIST.toString()
+                    .toLowerCase(), (Integer) params[0], (Integer) params[2]);
         }
         
         @Override
@@ -346,7 +360,8 @@ public class ImageWorker {
         
         public BitmapReader(float percent) {
             if (percent < 0.05f || percent > 0.8f) {
-                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be " + "between 0.05 and 0.8 (inclusive)");
+                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be "
+                        + "between 0.05 and 0.8 (inclusive)");
             }
             int memCacheSize = Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
             mMemoryCache = new LruCache<String, Bitmap>(memCacheSize) {
@@ -392,7 +407,7 @@ public class ImageWorker {
             
             /**
              * Trying to find Image on Local System
-             */            
+             */
             try {
                 data = FileUtil.getFileAsByteArray(folderPath + File.separator + fileName);
                 bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, bgOptions);

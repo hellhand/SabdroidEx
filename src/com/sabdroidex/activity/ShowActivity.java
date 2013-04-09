@@ -1,22 +1,27 @@
 package com.sabdroidex.activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
+import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ShowSeasonAdapater;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.Show;
 
-public class ShowActivity extends FragmentActivity {
+public class ShowActivity extends ActionBarActivity {
     
     private static final String TAG = ShowActivity.class.getCanonicalName();
     
@@ -37,6 +42,8 @@ public class ShowActivity extends FragmentActivity {
                 mShow.setTvdbId(mShowId);
                 showSeasonAdapater.setShow(mShow);
                 showSeasonAdapater.notifyDataSetChanged();
+                
+                setTitle(mShow.getShowName());
             }
         }
     };
@@ -50,7 +57,10 @@ public class ShowActivity extends FragmentActivity {
         
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mShow.getSeasonList().get(position);
+            Intent intent = new Intent(getBaseContext(), SeasonActivity.class);
+            intent.putExtra("show", mShow);
+            intent.putExtra("season", mShow.getSeasonList().get(position));
+            startActivity(intent);
         }
     };
     
@@ -71,6 +81,33 @@ public class ShowActivity extends FragmentActivity {
         gridView.setAdapter(showSeasonAdapater);
         gridView.setOnItemClickListener(itemClickListener);
         
+        refresh();
+    }
+    
+    /**
+     * This creates the menu items as they will be by default
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.refresh, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    /**
+     * Handles item selections in the Menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                refresh();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void refresh() {
         SickBeardController.getShow(messageHandler, mShowId.toString());
     }
 }

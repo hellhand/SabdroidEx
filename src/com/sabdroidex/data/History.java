@@ -50,7 +50,7 @@ public class History extends SabnzbdStatus {
         return historyElements;
     }
 
-    @JSONSetter(name = "slots", type = JSONType.LIST, listClazz = HistoryElement.class)
+    @JSONSetter(name = "slots", type = JSONType.LIST, objectClazz = HistoryElement.class)
     public void setHistoryElements(List<HistoryElement> historyElements) {
         this.historyElements = historyElements;
     }
