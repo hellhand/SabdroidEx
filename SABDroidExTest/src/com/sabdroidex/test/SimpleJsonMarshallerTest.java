@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.test.AndroidTestCase;
 
 import com.sabdroidex.data.SabnzbdConfig;
+import com.sabdroidex.data.Season;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.data.ShowList;
 import com.sabdroidex.data.ShowSearch;
@@ -91,5 +92,23 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         ShowSearch showSearch = (ShowSearch) simpleJsonMarshaller.unmarshal(jsonObject);
         assertNotNull(showSearch);
         assertTrue(showSearch.getResults().size() > 0);
+    }
+    
+    public void testMarshaller_ShowSeason() throws IOException, JSONException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        StringBuffer stringBuffer = new StringBuffer();
+        
+        InputStream stream = getClass().getResourceAsStream("showseason.json");
+        int c;
+        while ((c = stream.read()) != -1) {
+            stringBuffer.append((char) c);
+        }
+        
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+        jsonObject = jsonObject.getJSONObject("data");
+        
+        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(Season.class);
+        Season season = (Season) simpleJsonMarshaller.unmarshal(jsonObject);
+        assertNotNull(season);
+        assertTrue(season.getEpisodes().size() > 0);
     }
 }

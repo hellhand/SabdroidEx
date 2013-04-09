@@ -1,0 +1,44 @@
+{
+    "data": {
+        "air_by_date": 0, 
+        "airs": "Monday 7:00 PM", 
+        "cache": {
+            "banner": 1, 
+            "poster": 1
+        }, 
+        "flatten_folders": 0, 
+        "genre": [
+            "Science-Fiction"
+        ], 
+        "language": "en", 
+        "location": "/media/TvShows2/Babylon 5", 
+        "network": "Syndicated", 
+        "next_ep_airdate": "", 
+        "paused": 0, 
+        "quality": "Custom", 
+        "quality_details": {
+            "archive": [], 
+            "initial": [
+                "sdtv", 
+                "sddvd", 
+                "hdtv", 
+                "hdwebdl", 
+                "hdbluray"
+            ]
+        }, 
+        "season_list": [
+            5, 
+            4, 
+            3, 
+            2, 
+            1, 
+            0
+        ], 
+        "show_name": "Babylon 5", 
+        "status": "Ended", 
+        "tvrage_id": 2693, 
+        "tvrage_name": "Babylon 5"
+    }, 
+    "message": "", 
+    "result": "success"
+}
