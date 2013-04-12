@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.test.AndroidTestCase;
 
+import com.sabdroidex.data.FuturePeriod;
 import com.sabdroidex.data.SabnzbdConfig;
 import com.sabdroidex.data.Season;
 import com.sabdroidex.data.Show;
@@ -110,5 +111,24 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         Season season = (Season) simpleJsonMarshaller.unmarshal(jsonObject);
         assertNotNull(season);
         assertTrue(season.getEpisodes().size() > 0);
+    }
+    
+    public void testMarshaller_Future() throws IOException, JSONException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        StringBuffer stringBuffer = new StringBuffer();
+        
+        InputStream stream = getClass().getResourceAsStream("future.json");
+        int c;
+        while ((c = stream.read()) != -1) {
+            stringBuffer.append((char) c);
+        }
+        
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+        jsonObject = jsonObject.getJSONObject("data");
+        
+        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(FuturePeriod.class);
+        FuturePeriod futurePeriod = (FuturePeriod) simpleJsonMarshaller.unmarshal(jsonObject);
+        assertNotNull(futurePeriod);
+        assertTrue(futurePeriod.getMissed().size() > 0);
+        assertTrue(futurePeriod.getToday().size() > 0);
     }
 }
