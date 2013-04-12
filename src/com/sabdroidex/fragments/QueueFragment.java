@@ -1,20 +1,9 @@
 package com.sabdroidex.fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,19 +12,17 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.Queue;
-import com.sabdroidex.data.QueueElement;
+import com.sabdroidex.fragments.dialogs.QueueElementActionDialog;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.sabdroidex.utils.SABHandler;
-import com.utils.FileUtil;
 
 public class QueueFragment extends SABFragment {
     
@@ -64,7 +51,7 @@ public class QueueFragment extends SABFragment {
                         adapter.addAll(mQueue.getQueueElements());
                         adapter.notifyDataSetChanged();
                     }
-    
+                    
                     ((UpdateableActivity) getParentActivity()).updateLabels(mQueue);
                     ((UpdateableActivity) getParentActivity()).updateState(true);
                 }
@@ -94,12 +81,7 @@ public class QueueFragment extends SABFragment {
         
     }
     
-    public QueueFragment(Activity activity) {
-        //mActivity = new WeakReference<Activity>(activity);
-    }
-    
-    public QueueFragment(Activity activity, Queue downloadRows) {
-        this(activity);
+    public QueueFragment(Queue downloadRows) {
         mQueue = downloadRows;
     }
     
@@ -152,32 +134,6 @@ public class QueueFragment extends SABFragment {
     }
     
     @Override
-    public void onStart() {
-        super.onStart();
-        
-        final Intent intent = getActivity().getIntent();
-        if (intent != null) {
-            final Uri data = intent.getData();
-            if (data != null) {
-                String path = "";
-                if (data.getScheme().equalsIgnoreCase("content")) {
-                    Cursor cursor = getActivity().getContentResolver().query(data, null, null, null, null);
-                    cursor.moveToFirst();
-                    int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
-                    path = cursor.getString(idx);
-                }
-                else {
-                    path = data.getPath();
-                }
-                intent.setData(null);
-                Log.v(TAG, "Data received : " + data.toString());
-                openFilePopUp(path);
-            }
-        }
-        return;
-    }
-    
-    @Override
     public void onPause() {
         super.onPause();
         paused = true;
@@ -218,94 +174,18 @@ public class QueueFragment extends SABFragment {
         updater.start();
     }
     
-    /**
-     * This method creates the pop-up that is displayed when a Nzb file is
-     * opened with SABDroidEx
-     */
-    public void openFilePopUp(final String path) {
-        OnClickListener clickListener = new DialogInterface.OnClickListener() {
-            
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-                if (whichButton == Dialog.BUTTON_POSITIVE) {
-                    SABnzbdController.addFile(messageHandler, FileUtil.getFileName(path), FileUtil.getFileAsCharArray(path));
-                }
-            }
-        };
-        
-        String message = getResources().getString(R.string.send_validation);
-        message += FileUtil.getFileName(path);
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        builder.setTitle(R.string.send_file);
-        builder.setPositiveButton(android.R.string.ok, clickListener);
-        builder.setNegativeButton(android.R.string.cancel, clickListener);
-        builder.setMessage(message);
-        
-        AlertDialog dialog = null;
-        dialog = builder.create();
-        dialog.show();
-        
-        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
-        messageView.setGravity(Gravity.LEFT);
-    }
-    
-    @Override
-    protected void clearAdapter() {
-        
-    }
-    
-    public Handler getMessageHandler() {
-        return messageHandler;
-    }
-    
     private class ListItemLongClickListener implements OnItemLongClickListener {
         
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-            
-            AlertDialog dialog = null;
-            OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                
-                @Override
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            };
-            
-            final QueueElement element = mQueue.getQueueElements().get(position);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setNegativeButton(android.R.string.cancel, onClickListener);
-            builder.setTitle(element.getFilename());
-            
-            String[] options = new String[2];
-            if ("Paused".equals(element.getStatus())) {
-                options[0] = getActivity().getResources().getString(R.string.menu_resume);
-            }
-            else {
-                options[0] = getActivity().getResources().getString(R.string.menu_pause);
-            }
-            options[1] = getActivity().getResources().getString(R.string.menu_delete);
-            
-            builder.setItems(options, new OnClickListener() {
-                
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case 0:
-                            SABnzbdController.pauseResumeItem(messageHandler, element);
-                            break;
-                        case 1:
-                            SABnzbdController.removeQueueItem(messageHandler, element);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            });
-            dialog = builder.create();
-            dialog.show();
+            QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, mQueue
+                    .getQueueElements().get(position));
+            queueElementActionDialog.show(getChildFragmentManager(), "queueaction");
             return true;
         }
+    }
+    
+    public void pauseResumeQueue() {
+        SABnzbdController.pauseResumeQueue(messageHandler);
     }
 }

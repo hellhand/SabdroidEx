@@ -87,7 +87,7 @@ public class HistoryFragment extends SABFragment {
      * @param sabDroidEx
      * @param historyRows
      */
-    public HistoryFragment(Activity activity, History historyRows) {
+    public HistoryFragment(History historyRows) {
         history = historyRows;
     }
     
@@ -146,12 +146,7 @@ public class HistoryFragment extends SABFragment {
     public void onFragmentActivated() {
         manualRefreshHistory();
     }
-    
-    @Override
-    protected void clearAdapter() {
-        
-    }
-    
+
     @Override
     public Object getDataCache() {
         return history;

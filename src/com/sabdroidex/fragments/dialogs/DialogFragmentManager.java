@@ -73,6 +73,15 @@ public class DialogFragmentManager implements DialogActionsListener {
     }
     
     /**
+     * Displays a dialog to add an opened nzb to sabnzbd
+     */
+    @Override
+    public void showAddNzbFileDialog(String path) {
+        AddNzbFileDialog addNzbFileDialog = new AddNzbFileDialog(messageHandler, path);
+        addNzbFileDialog.show(mActivity.getSupportFragmentManager(), "addnzbfile");
+    }
+    
+    /**
      * Displays a pop-up dialog when the user wants to add a show to SickBeard
      */
     @Override

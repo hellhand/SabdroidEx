@@ -1,8 +1,6 @@
 package com.sabdroidex.data;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
@@ -15,14 +13,14 @@ public class Future implements Serializable {
      * 
      */
     private static final long serialVersionUID = 8363254087580757089L;
-    private List<FutureEpisode> futureEpisodes;
+    private FuturePeriod futurePeriod;
     
-    public List<FutureEpisode> getFutureEpisodes() {
-        return futureEpisodes;
+    public FuturePeriod getFuturePeriod() {
+        return futurePeriod;
     }
     
-    @JSONSetter(name="data", type=JSONType.UNKNOWN_KEY_ELEMENTS, listClazz=LinkedList.class, objectClazz=FutureEpisode.class)
-    public void setFutureEpisodes(List<FutureEpisode> futureEpisodes) {
-        this.futureEpisodes = futureEpisodes;
+    @JSONSetter(name="data", type=JSONType.JSON_OBJECT, objectClazz=FuturePeriod.class)
+    public void setFutureEpisodes(FuturePeriod futurePeriod) {
+        this.futurePeriod = futurePeriod;
     }
 }

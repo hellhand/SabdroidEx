@@ -2,13 +2,10 @@ package com.sabdroidex.controllers.sickbeard;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Debug;
@@ -18,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
+import com.sabdroidex.data.FuturePeriod;
 import com.sabdroidex.data.Season;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.data.ShowList;
@@ -236,57 +234,27 @@ public final class SickBeardController extends SABController {
             public void run() {
                 
                 try {
-                    Object results[] = new Object[2];
-                    String queueData = makeApiCall(MESSAGE.FUTURE.toString().toLowerCase(), "sort=date");
-                    
-                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
-                    
                     /**
                      * Getting the values from the JSON Object
                      */
+                    String queueData = makeApiCall(MESSAGE.FUTURE.toString().toLowerCase(), "sort=date");
                     JSONObject jsonObject = new JSONObject(queueData);
+                    FuturePeriod futurePeriod = null;
+                    
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        results[0] = jsonObject;
-                        
-                        Iterator<?> iterator = jsonObject.keys();
-                        while (iterator.hasNext()) {
-                            String when = (String) iterator.next();
-                            JSONArray group = jsonObject.getJSONArray(when);
-                            rows.add(new Object[] { when });
-                            for (int i = 0; i < group.length(); i++) {
-                                /**
-                                 * The seventh item will be the banner The
-                                 * eighth item will be the poster
-                                 */
-                                Object[] rowValues = new Object[10];
-                                JSONObject current = group.getJSONObject(i);
-                                rowValues[0] = when;
-                                rowValues[1] = current.getInt("tvdbid");
-                                rowValues[2] = current.getString("show_name");
-                                
-                                rowValues[3] = current.getInt("season");
-                                rowValues[4] = current.getInt("episode");
-                                rowValues[5] = current.getString("ep_name");
-                                rowValues[6] = current.getString("airdate");
-                                
-                                rowValues[7] = current.getString("airs");
-                                rowValues[8] = current.getString("network");
-                                rowValues[9] = current.getString("quality");
-                                rows.add(rowValues);
-                            }
-                        }
-                        results[1] = rows;
-                        
-                        Message message = new Message();
-                        message.setTarget(messageHandler);
-                        message.what = MESSAGE.FUTURE.ordinal();
-                        message.obj = results;
-                        message.sendToTarget();
+                        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(FuturePeriod.class);
+                        futurePeriod = (FuturePeriod) simpleJsonMarshaller.unmarshal(jsonObject);
                     }
+                    
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.FUTURE.ordinal();
+                    message.obj = futurePeriod;
+                    message.sendToTarget();
                 }
                 catch (IOException e) {
                     Log.w(TAG, e.getLocalizedMessage());

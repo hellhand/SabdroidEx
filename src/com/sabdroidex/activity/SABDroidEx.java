@@ -4,17 +4,19 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SearchViewCompat;
@@ -30,6 +32,7 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.FuturePeriod;
 import com.sabdroidex.data.History;
 import com.sabdroidex.data.Queue;
 import com.sabdroidex.data.SabnzbdStatus;
@@ -110,6 +113,30 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
     }
     
+    @Override
+    protected void onStart() {
+        final Intent intent = getIntent();
+        if (intent != null) {
+            final Uri data = intent.getData();
+            if (data != null) {
+                String path = "";
+                if (data.getScheme().equalsIgnoreCase("content")) {
+                    Cursor cursor = getContentResolver().query(data, null, null, null, null);
+                    cursor.moveToFirst();
+                    int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                    path = cursor.getString(idx);
+                }
+                else {
+                    path = data.getPath();
+                }
+                intent.setData(null);
+                Log.v(TAG, "Data received : " + data.toString());
+                dialogFragmentManager.showAddNzbFileDialog(path);
+            }
+        }
+        super.onStart();
+    }
+    
     /**
      * When the activity is stopped the status is saved so that data stays
      * available offline if the data cache has been enabled.
@@ -132,7 +159,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 oos.writeObject(comingFragment.getDataCache());
             }
             catch (Exception e) {
-                Log.e(TAG, " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getStackTrace());
             }
             finally {
                 try {
@@ -145,20 +172,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             }
         }
         super.onStop();
-    }
-    
-    /**
-     * This function will Serialize the current data for reuse the next time the
-     * application is reopened
-     */
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        Object data[] = new Object[5];
-        data[0] = queueFragment.getDataCache();
-        data[1] = historyFragment.getDataCache();
-        data[2] = showsFragment.getDataCache();
-        data[3] = comingFragment.getDataCache();
-        return data;
     }
     
     /**
@@ -175,18 +188,19 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     /**
      * Creating the whole ViewPager content
      */
-    @SuppressWarnings("unchecked")
     private void createLists() {
         
+        /**
+         * Creating default empty data.
+         */
         Queue queue = new Queue();
         History history = new History();
         ShowList shows = new ShowList();
-        ArrayList<Object[]> coming = new ArrayList<Object[]>();
+        FuturePeriod coming = new FuturePeriod();
         
         /**
          * Restoring data if the cache is enabled.
-         */
-        
+         */        
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
             
             FileInputStream fis = null;
@@ -194,13 +208,14 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             try {
                 fis = openFileInput(Preferences.DATA_CACHE);
                 ois = new ObjectInputStream(fis);
+                
                 queue = (Queue) ois.readObject();
                 history = (History) ois.readObject();
                 shows = (ShowList) ois.readObject();
-                coming = (ArrayList<Object[]>) ois.readObject();
+                coming = (FuturePeriod) ois.readObject();
             }
             catch (Exception e) {
-                Log.e(TAG, " " + e.getLocalizedMessage());
+                Log.e(TAG, " " + e.getStackTrace());
             }
             finally {
                 try {
@@ -213,10 +228,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             }
         }
         
+        /**
+         * Instantiating all the lists.
+         */
         updateLabels(queue);
-        queueFragment = new QueueFragment(this, queue);
+        queueFragment = new QueueFragment(queue);
         queueFragment.setRetainInstance(true);
-        historyFragment = new HistoryFragment(this, history);
+        historyFragment = new HistoryFragment(history);
         historyFragment.setRetainInstance(true);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             showsFragment = new ShowsFragment(shows);
@@ -225,6 +243,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             comingFragment.setRetainInstance(true);
         }
         
+        /**
+         * Creation of the Adapter and adding all the fragments.
+         */
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(),
                 getSupportFragmentManager());
         pagerAdapter.addFragment(queueFragment);
@@ -234,8 +255,10 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             pagerAdapter.addFragment(comingFragment);
         }
         
+        /**
+         * Setting the adapter to the ViewPager and linking the Indicator to the pager.
+         */
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(0);
         pager.setAdapter(pagerAdapter);
         pager.setPageMargin(5);
         
@@ -249,7 +272,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      */
     void manualRefresh() {
         Log.v(TAG, "Refreshing");
-        // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             dialogFragmentManager.showSetupDialog();
             return;
@@ -405,6 +427,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         return super.onOptionsItemSelected(item);
     }
     
+    /**
+     * Shows the Dialog to choose an Add option (Nzb, Show ...)
+     */
     private void showAddDialog() {
         dialogFragmentManager.showAddDialog();
     }
@@ -443,7 +468,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      * regarding of the known status
      */
     private void pauseResume() {
-        SABnzbdController.pauseResumeQueue(queueFragment.getMessageHandler());
+        queueFragment.pauseResumeQueue();
     }
     
 }

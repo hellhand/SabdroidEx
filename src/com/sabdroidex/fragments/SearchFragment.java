@@ -51,12 +51,6 @@ public class SearchFragment extends SABFragment {
     }
 
     @Override
-    protected void clearAdapter() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public Object getDataCache() {
         // TODO Auto-generated method stub
         return null;

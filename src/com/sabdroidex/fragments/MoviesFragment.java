@@ -28,10 +28,6 @@ public class MoviesFragment extends SABFragment {
 
 	private static final String TAG = "ShowsFragment";
     private FragmentActivity mParent;
-
-    //private static ArrayList<String> rows = new ArrayList<String>();
-
-    //private ListView listView;
     
     /**
      *  Instantiating the Handler associated with this {@link Fragment}.
@@ -76,17 +72,14 @@ public class MoviesFragment extends SABFragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         LinearLayout searchView = (LinearLayout) inflater.inflate(R.layout.list, null);
-
-        //listView = (ListView) searchView.findViewById(R.id.movieList);
         searchView.removeAllViews();
-        //listView.setAdapter(new SearchListRowAdapter(mParent, rows));
 
         return searchView;
     }
 
     @Override
     public void onFragmentActivated() {
-
+        
     }
     
     /**
@@ -134,12 +127,6 @@ public class MoviesFragment extends SABFragment {
 
         alert.show();
 
-    }
-
-    @Override
-    protected void clearAdapter() {
-        // TODO Auto-generated method stub
-        
     }
     
     /**

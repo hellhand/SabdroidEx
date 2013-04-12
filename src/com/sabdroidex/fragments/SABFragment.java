@@ -32,37 +32,31 @@ public abstract class SABFragment extends Fragment {
     
     @Override
     protected void finalize() throws Throwable {
-        clearAdapter();
         super.finalize();
     }
     
     @Override
     public void onDestroyView() {
-        clearAdapter();
         super.onDestroyView();
     }
     
     @Override
     public void onDestroy() {
-        clearAdapter();
         super.onDestroy();
     }
     
     @Override
     public void onDetach() {
-        clearAdapter();
         super.onDetach();
     }
     
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        clearAdapter();
         super.onConfigurationChanged(newConfig);
     }
     
     @Override
     public void onPause() {
-        clearAdapter();
         super.onPause();
     }
     
@@ -70,6 +64,4 @@ public abstract class SABFragment extends Fragment {
     public ArrayAdapter<Object> getAdapter(ListView listView) {
         return listView == null ? null : (ArrayAdapter<Object>) listView.getAdapter();
     }
-    
-    abstract protected void clearAdapter();
 }

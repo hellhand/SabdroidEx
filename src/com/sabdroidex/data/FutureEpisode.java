@@ -1,11 +1,10 @@
 package com.sabdroidex.data;
 
-import java.io.Serializable;
-
 import com.sabdroidex.utils.json.JSONElement;
+import com.sabdroidex.utils.json.JSONSetter;
 
 @JSONElement
-public class FutureEpisode extends UnknowMappingElement implements Serializable {
+public class FutureEpisode extends UnknowMappingElement {
     
     /**
      * 
@@ -29,6 +28,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return airDate;
     }
     
+    @JSONSetter(name="airdate")
     public void setAirDate(String airDate) {
         this.airDate = airDate;
     }
@@ -37,6 +37,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return airs;
     }
     
+    @JSONSetter(name="airs")
     public void setAirs(String airs) {
         this.airs = airs;
     }
@@ -45,6 +46,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return epName;
     }
     
+    @JSONSetter(name="ep_name")
     public void setEpName(String epName) {
         this.epName = epName;
     }
@@ -61,6 +63,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return episode;
     }
     
+    @JSONSetter(name="episode")
     public void setEpisode(Integer episode) {
         this.episode = episode;
     }
@@ -69,6 +72,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return network;
     }
     
+    @JSONSetter(name="network")
     public void setNetwork(String network) {
         this.network = network;
     }
@@ -85,6 +89,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return quality;
     }
     
+    @JSONSetter(name="quality")
     public void setQuality(String quality) {
         this.quality = quality;
     }
@@ -93,6 +98,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return season;
     }
     
+    @JSONSetter(name="season")
     public void setSeason(Integer season) {
         this.season = season;
     }
@@ -101,6 +107,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return showName;
     }
     
+    @JSONSetter(name="show_name")
     public void setShowName(String showName) {
         this.showName = showName;
     }
@@ -117,6 +124,7 @@ public class FutureEpisode extends UnknowMappingElement implements Serializable 
         return tvdbId;
     }
     
+    @JSONSetter(name="tvdbid")
     public void setTvdbId(Integer tvdbId) {
         this.tvdbId = tvdbId;
     }

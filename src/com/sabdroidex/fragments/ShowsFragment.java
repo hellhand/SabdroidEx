@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +23,6 @@ import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.Show;
 import com.sabdroidex.data.ShowList;
-import com.sabdroidex.data.ShowSearch;
-import com.sabdroidex.fragments.dialogs.AddShowDialog;
 import com.sabdroidex.fragments.dialogs.ShowDetailsDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
@@ -60,23 +57,6 @@ public class ShowsFragment extends SABFragment {
                     Log.e(TAG, e.getLocalizedMessage());
                 }
             }
-            if (msg.what == SickBeardController.MESSAGE.SB_SEARCHTVDB.ordinal()) {
-                try {
-                    ShowSearch showSearch = (ShowSearch) msg.obj;
-                    selectShowPrompt(showSearch);
-                }
-                catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
-                }
-            }
-            if (msg.what == SickBeardController.MESSAGE.SHOW_ADDNEW.ordinal()) {
-                try {
-                    Toast.makeText(getParentActivity(), getString(R.string.add_show_dialog_title) + " : " + msg.obj, Toast.LENGTH_LONG);
-                }
-                catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
-                }
-            }
             if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
                 try {
                     if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
@@ -94,17 +74,8 @@ public class ShowsFragment extends SABFragment {
         showList = new ShowList();
     }
     
-    public ShowsFragment(ShowList historyRows) {
-        showList = historyRows;
-    }
-    
-    /**
-     * Getter for this {@link Fragment}'s message {@link Handler}
-     * 
-     * @return the message {@link Handler} for this {@link Activity}
-     */
-    public Handler getMessageHandler() {
-        return messageHandler;
+    public ShowsFragment(ShowList showsRows) {
+        showList = showsRows;
     }
     
     @Override
@@ -113,11 +84,10 @@ public class ShowsFragment extends SABFragment {
     }
     
     /**
-     * Refreshing the queue during startup or on user request. Asks to configure
+     * Refreshing the shows during startup or on user request. Asks to configure
      * if still not done
      */
     public void manualRefreshShows() {
-        // First run setup
         if (!Preferences.isEnabled(Preferences.SICKBEARD)) {
             return;
         }
@@ -160,6 +130,7 @@ public class ShowsFragment extends SABFragment {
         else {
             listView.setOnItemLongClickListener(new ListItemLongClickListener());
         }
+        
         manualRefreshShows();
         
         return showView;
@@ -177,18 +148,8 @@ public class ShowsFragment extends SABFragment {
     }
     
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-    
-    @Override
     public Object getDataCache() {
         return showList;
-    }
-    
-    @Override
-    protected void clearAdapter() {
-        
     }
     
     @Override
@@ -219,27 +180,6 @@ public class ShowsFragment extends SABFragment {
         
         String imageKey = ImageType.POSTER.name() + show.getTvdbId();
         ImageUtils.getImageWorker().loadImage(showPoster, ImageType.POSTER, imageKey, show.getTvdbId(), show.getShowName());
-    }
-    
-    /**
-     * Create and displays a pop-up dialog when the user wants to add a show to
-     * SickBeard
-     */
-    public void addShowPrompt() {
-        AddShowDialog addShowDialog = new AddShowDialog(messageHandler);
-        addShowDialog.show(getActivity().getSupportFragmentManager(), "addshow");
-    }
-    
-    /**
-     * Displays the propositions dialog with the resulting show names found
-     * after a user search to add a show to Sickbeard.
-     * 
-     * @param showSearch
-     *            The result of the search query
-     */
-    private void selectShowPrompt(final ShowSearch showSearch) {
-        AddShowDialog addShowDialog = new AddShowDialog(messageHandler);
-        addShowDialog.show(getActivity().getSupportFragmentManager(), "selectshow");
     }
     
     private class ListItemClickListener implements OnItemClickListener {

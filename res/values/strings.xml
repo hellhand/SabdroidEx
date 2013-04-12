@@ -139,7 +139,11 @@
                                     
 	<string name="comming_next">Next Episode : </string>
 	<string name="comming_airs">Airs : </string>
-		
+    <string name="comming_missed">Missed</string>
+    <string name="comming_today">Today</string>
+    <string name="comming_soon">Soon</string>
+    <string name="comming_later">Later</string>
+	
 	<string name="add_dialog_title">Add</string>
 	
 	<string name="add_show_dialog_title">Add new Show</string>

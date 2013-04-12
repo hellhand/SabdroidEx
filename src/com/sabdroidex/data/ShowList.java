@@ -25,7 +25,7 @@ public class ShowList implements Serializable {
         return showElements;
     }
 
-    @JSONSetter(name="data", type=JSONType.UNKNOWN_KEY_ELEMENTS, objectClazz=Show.class)
+    @JSONSetter(type=JSONType.UNKNOWN_KEY_ELEMENTS, objectClazz=Show.class)
     public void setShowElements(List<Show> showElements) {
         this.showElements = showElements;
     }
