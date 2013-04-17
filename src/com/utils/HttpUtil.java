@@ -121,8 +121,7 @@ public class HttpUtil {
         String responseBody = "";
         
         try {
-            urlc = getConnection(new URL(url));
-            
+            urlc = getConnection(new URL(url));            
             if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
                 is = new GZIPInputStream(urlc.getInputStream());
             }

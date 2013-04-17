@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.data.HistoryElement;
+import com.sabdroidex.data.sabnzbd.HistoryElement;
 
 public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
 

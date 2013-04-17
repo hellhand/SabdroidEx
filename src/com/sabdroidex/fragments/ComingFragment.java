@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ComingListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.FuturePeriod;
+import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABHandler;
 
@@ -113,10 +113,5 @@ public class ComingFragment extends SABFragment {
     @Override
     public Object getDataCache() {
         return futurePeriod;
-    }
-    
-    @Override
-    public void onFragmentActivated() {
-        manualRefreshComing();
     }
 }

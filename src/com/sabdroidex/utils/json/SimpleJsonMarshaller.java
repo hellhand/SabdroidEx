@@ -106,6 +106,7 @@ public class SimpleJsonMarshaller {
                             else {
                                 collection = (Collection<Object>) methods[i].getParameterTypes()[0].newInstance();
                             }
+                            
                             for (int j = 0; j < jsonArray.length(); j++) {
                                 Object element = jsonArray.get(j);
                                 if (setter.objectClazz() != Void.class) {

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.activity.ShowActivity;
-import com.sabdroidex.data.Show;
+import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
@@ -87,7 +87,7 @@ public class ShowDetailsDialog extends DialogFragment {
         TextView showLanguage = (TextView) view.findViewById(R.id.show_language);
         showLanguage.setText(show.getLanguage());
         
-        String imageKey = ImageType.POSTER.name() + show.getTvdbId();
-        ImageUtils.getImageWorker().loadImage(showPoster, ImageType.POSTER, imageKey, show.getTvdbId(), show.getShowName());
+        String imageKey = ImageType.SHOW_POSTER.name() + show.getTvdbId();
+        ImageUtils.getImageWorker().loadImage(showPoster, ImageType.SHOW_POSTER, imageKey, show.getTvdbId(), show.getShowName());
     }
 }

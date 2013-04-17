@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -52,6 +53,9 @@ public class FileUtil {
 
             fileInputStream.close();
         }
+        catch (final FileNotFoundException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
         catch (final IOException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -80,6 +84,9 @@ public class FileUtil {
             
             reader.close();
         }
+        catch (final FileNotFoundException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
         catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -106,6 +113,9 @@ public class FileUtil {
             bao.close();
 
             fileInputStream.close();
+        }
+        catch (final FileNotFoundException e) {
+            Log.e(TAG, e.getLocalizedMessage());
         }
         catch (final IOException e) {
             Log.e(TAG, e.getMessage());
@@ -145,5 +155,10 @@ public class FileUtil {
     public static String getFileName(final String path) {
         final File file = new File(path);
         return file.getName();
+    }
+    
+    public static void createDirectory(final String path) {
+        final File file = new File(path);
+        file.mkdirs();
     }
 }

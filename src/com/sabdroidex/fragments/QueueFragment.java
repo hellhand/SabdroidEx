@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
-import com.sabdroidex.data.Queue;
+import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.fragments.dialogs.QueueElementActionDialog;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
@@ -29,7 +29,7 @@ public class QueueFragment extends SABFragment {
     private static final String TAG = "QueueFragment";
     
     private boolean paused = false;
-    private static Queue mQueue;
+    private Queue mQueue;
     private Thread updater;
     private ListView mQueueList;
     
@@ -119,11 +119,6 @@ public class QueueFragment extends SABFragment {
         mQueueList.setOnItemLongClickListener(new ListItemLongClickListener());
         
         return mQueueList;
-    }
-    
-    @Override
-    public void onFragmentActivated() {
-        
     }
     
     @Override

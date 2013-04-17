@@ -1,6 +1,6 @@
 package com.sabdroidex.interfaces;
 
-import com.sabdroidex.data.SabnzbdStatus;
+import com.sabdroidex.data.sabnzbd.SabnzbdStatus;
 
 
 public interface UpdateableActivity {

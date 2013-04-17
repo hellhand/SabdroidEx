@@ -194,10 +194,10 @@
 	<string name="setting_couchpotato_url_summary">The CouchPotato server address</string>
 	<string name="setting_couchpotato_port">Server port</string>
 	<string name="setting_couchpotato_port_summary">The CouchPotato server port</string>
-	<string name="setting_couchpotato_url_extention">Server URl extension</string>
+	<string name="setting_couchpotato_url_extention">Server URl extention</string>
 	<string name="setting_couchpotato_profile">CouchPotato Profile</string>
 	<string name="setting_couchpotato_profile_summary">Select CouchPotato profile for download</string>
-	<string name="setting_couchpotato_url_extention_summary">Extension of the server URL of CouchPotato</string>
+	<string name="setting_couchpotato_url_extention_summary">Extention of the server URL of CouchPotato</string>
 	<string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
 	<string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
 	<string name="setting_couchpotato_auth">Authentification</string>
@@ -205,5 +205,33 @@
 	<string name="setting_couchpotato_auth_password">Password</string>
 	<string name="add_movie_dialog_title">Add new Movie</string>
 	<string name="add_movie_dialog_message">Enter name of movie to add</string>
+	<string name="movie_poster">Poster</string>
+	<string name="movie_title">Title: </string>
+	<string name="movie_status">Status: </string>
+	<string name="movie_rating">Rating: </string>
+	<string name="movie_release">Released: </string>
+	<string name="add_movie_selection_dialog_title">Select the movie to add to CouchPotato</string>
+	<string name="add_movie_not_found">No movie found</string>
+	<string name="tab_movies">Movies</string>
+	<string name="movie_plot">Plot</string>
+	<string name="movie_year">Year:</string>
+	<string name="setting_couchpotato_cache">Image Cache</string>
+	<string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
+	<string name="setting_couchpotato_lowres">Lowres Images</string>
+	<string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>
+	<string name="setting_couchpotato_nomedia">.Nomedia</string>
+	<string name="setting_couchpotato_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
+	<string name="movie_profile">Profile: </string>
+	<string name="movie_genres">Genres: </string>
+	<string name="movie_runtime">Runtime: </string>
+	<string name="menu_movie_delete">Delete movie</string>
+	<string name="menu_movie_edit_profile">Edit profile</string>
+	<string name="movie_release_name">Release name</string>
+	<string name="movie_release_status">Status</string>
+	<string name="movie_release_quality">Quality</string>
+	<string name="movie_release_size">Size</string>
+	<string name="movie_release_provider">Provider</string>
+	<string name="movie_release_titel">Movie Releases</string>
+	<string name="menu_movie_release">Show releases</string>
 
 </resources>

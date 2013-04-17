@@ -46,11 +46,6 @@ public class SearchFragment extends SABFragment {
     }
 
     @Override
-    public void onFragmentActivated() {
-
-    }
-
-    @Override
     public Object getDataCache() {
         // TODO Auto-generated method stub
         return null;

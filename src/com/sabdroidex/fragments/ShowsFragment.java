@@ -21,8 +21,8 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.Show;
-import com.sabdroidex.data.ShowList;
+import com.sabdroidex.data.sickbeard.Show;
+import com.sabdroidex.data.sickbeard.ShowList;
 import com.sabdroidex.fragments.dialogs.ShowDetailsDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
@@ -33,7 +33,7 @@ public class ShowsFragment extends SABFragment {
     
     private static final String TAG = ShowsFragment.class.getCanonicalName();
     
-    private static ShowList showList;
+    private ShowList showList;
     private ShowsListRowAdapter mShowsListRowAdapter;
     
     /**
@@ -151,12 +151,7 @@ public class ShowsFragment extends SABFragment {
     public Object getDataCache() {
         return showList;
     }
-    
-    @Override
-    public void onFragmentActivated() {
-        manualRefreshShows();
-    }
-    
+        
     public void setupShowElements(View view, Show show) {
         ImageView showPoster = (ImageView) view.findViewById(R.id.showPoster);
         
@@ -178,8 +173,8 @@ public class ShowsFragment extends SABFragment {
         TextView showLanguage = (TextView) view.findViewById(R.id.show_language);
         showLanguage.setText(show.getLanguage());
         
-        String imageKey = ImageType.POSTER.name() + show.getTvdbId();
-        ImageUtils.getImageWorker().loadImage(showPoster, ImageType.POSTER, imageKey, show.getTvdbId(), show.getShowName());
+        String imageKey = ImageType.SHOW_POSTER.name() + show.getTvdbId();
+        ImageUtils.getImageWorker().loadImage(showPoster, ImageType.SHOW_POSTER, imageKey, show.getTvdbId(), show.getShowName());
     }
     
     private class ListItemClickListener implements OnItemClickListener {

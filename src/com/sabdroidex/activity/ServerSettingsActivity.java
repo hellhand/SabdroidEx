@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
-import com.sabdroidex.data.SabnzbdConfig;
+import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 

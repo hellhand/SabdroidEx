@@ -16,6 +16,11 @@ import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 
+/**
+ * Activity for receiving intent action from IMDB application.
+ * @author roy
+ *
+ */
 public class CouchPotatoActivity extends Activity {
 	
 	private static Context context;
@@ -38,6 +43,9 @@ public class CouchPotatoActivity extends Activity {
         }
     };
 
+    /**
+     * Receive intent and if possible add movie to CouchPotato
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +71,10 @@ public class CouchPotatoActivity extends Activity {
         }
     }
 
+    /**
+     * Handle intent and add to CouchPotato
+     * @param intent
+     */
     private void handleSendIntent(Intent intent){
     	String idMDBi;
     	String text = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -75,6 +87,10 @@ public class CouchPotatoActivity extends Activity {
     	}
     }
     
+    /**
+     * Print text to screen
+     * @param text
+     */
     public static void makeToast(String text){
     	Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }

@@ -119,6 +119,7 @@
     </PreferenceCategory>
     
     <PreferenceCategory android:title="Couchpotato settings">
+        
         <CheckBoxPreference 
             android:key="couchpotato" 
             android:title="@string/setting_couchpotato"/>
@@ -149,6 +150,26 @@
         
         <CheckBoxPreference 
             android:dependency="couchpotato" 
+            android:title="@string/setting_couchpotato_cache" 
+            android:key="couchpotato_cache" 
+            android:summary="@string/setting_couchpotato_cache_summary" 
+            android:defaultValue="true"/>
+        
+        <CheckBoxPreference 
+            android:dependency="couchpotato" 
+            android:title="@string/setting_couchpotato_lowres" 
+            android:key="couchpotato_lowres" 
+            android:summary="@string/setting_couchpotato_lowres_summary"/>
+        
+        <CheckBoxPreference 
+            android:title="@string/setting_couchpotato_nomedia" 
+            android:key="couchpotato_nomedia" 
+            android:dependency="couchpotato" 
+            android:summary="@string/setting_couchpotato_nomedia_summary" 
+            android:defaultValue="true"/>
+        
+        <CheckBoxPreference 
+            android:dependency="couchpotato" 
             android:key="couchpotato_auth" 
             android:title="@string/setting_couchpotato_auth"/>
         
@@ -161,8 +182,8 @@
             android:title="@string/setting_couchpotato_auth_password" 
             android:dependency="couchpotato_auth" 
             android:key="couchpotato_auth_password"/>
-        
-    </PreferenceCategory>
+                
+	</PreferenceCategory>
     
     <PreferenceCategory android:title="Apache settings">
         <CheckBoxPreference 

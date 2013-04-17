@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.data.Show;
+import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
@@ -38,8 +38,8 @@ public class ShowSeasonAdapater extends BaseAdapter {
             seasonItem = (SeasonItem) convertView.getTag();
         }
         
-        String imageKey = ImageType.SEASON_POSTER.name() + show.getTvdbId() + show.getSeasonList().get(position);
-        ImageUtils.getImageWorker().loadImage(seasonItem.seasonPoster, ImageType.SEASON_POSTER, imageKey, show.getTvdbId(), show.getShowName(), show.getSeasonList().get(position));
+        String imageKey = ImageType.SHOW_SEASON_POSTER.name() + show.getTvdbId() + show.getSeasonList().get(position);
+        ImageUtils.getImageWorker().loadImage(seasonItem.seasonPoster, ImageType.SHOW_SEASON_POSTER, imageKey, show.getTvdbId(), show.getShowName(), show.getSeasonList().get(position));
         if (show.getSeasonList().get(position) == 0) {
             seasonItem.seasonName.setText(context.getResources().getString(R.string.show_specials));
         }

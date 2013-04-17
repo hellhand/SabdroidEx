@@ -9,8 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.data.Episode;
-import com.sabdroidex.data.Season;
+import com.sabdroidex.data.sickbeard.Episode;
+import com.sabdroidex.data.sickbeard.Season;
 
 public class SeasonEpisodeAdapater extends BaseAdapter {
     

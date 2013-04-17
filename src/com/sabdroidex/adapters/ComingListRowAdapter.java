@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.data.FutureEpisode;
-import com.sabdroidex.data.FuturePeriod;
+import com.sabdroidex.data.sickbeard.FutureEpisode;
+import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
@@ -82,8 +82,8 @@ public class ComingListRowAdapter extends BaseAdapter {
             comingItem.airs_.setVisibility(View.VISIBLE);
             comingItem.airs.setVisibility(View.VISIBLE);
             
-            String imageKey = ImageType.BANNER.name() + futureEpisode.getTvdbId();
-            ImageUtils.getImageWorker().loadImage(comingItem.banner, ImageType.BANNER, imageKey,
+            String imageKey = ImageType.SHOW_BANNER.name() + futureEpisode.getTvdbId();
+            ImageUtils.getImageWorker().loadImage(comingItem.banner, ImageType.SHOW_BANNER, imageKey,
                     futureEpisode.getTvdbId(), futureEpisode.getShowName());
             comingItem.title.setTextColor(Color.WHITE);
             comingItem.title.setBackgroundColor(Color.rgb(128, 128, 128));

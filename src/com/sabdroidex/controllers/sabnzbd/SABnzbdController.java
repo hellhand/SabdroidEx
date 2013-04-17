@@ -13,10 +13,10 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
-import com.sabdroidex.data.History;
-import com.sabdroidex.data.Queue;
-import com.sabdroidex.data.QueueElement;
-import com.sabdroidex.data.SabnzbdConfig;
+import com.sabdroidex.data.sabnzbd.History;
+import com.sabdroidex.data.sabnzbd.Queue;
+import com.sabdroidex.data.sabnzbd.QueueElement;
+import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;

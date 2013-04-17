@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+   <TableRow
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       android:id="@+id/movie_release_row"
+       android:layout_width="wrap_content"
+       android:layout_height="0dp"
+       android:layout_weight="1"
+       android:gravity="top|left" >
+
+       <TextView
+           android:id="@+id/movie_release_ind"
+           android:layout_width="10dp"
+           android:layout_height="match_parent"
+           android:layout_margin="4dp"
+           android:maxWidth="2dp"
+           android:overScrollFooter="@null"
+           android:textAppearance="?android:attr/textAppearanceSmall" />
+
+       <TextView
+           android:id="@+id/movie_release_name"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="10dp"
+           android:layout_weight="1"
+           android:text="@string/movie_release_name" />
+
+       <TextView
+           android:id="@+id/movie_release_size"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_margin="10dp"
+           android:layout_weight="1"
+           android:minWidth="100dp"
+           android:text="@string/movie_release_size" />
+
+       <ImageButton
+           android:id="@+id/movie_release_download"
+           android:layout_width="40dp"
+           android:layout_height="match_parent"
+           android:src="@drawable/movie_release_download" />
+
+       <ImageButton
+           android:id="@+id/movie_release_ignore"
+           android:layout_width="40dp"
+           android:layout_height="match_parent"
+           android:src="@drawable/movie_release_delete" />
+
+   </TableRow>

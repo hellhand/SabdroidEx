@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.data.Show;
+import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
@@ -58,8 +58,8 @@ public class ShowsListRowAdapter extends ArrayAdapter<Show> {
         }
         
         Show show = getItem(position);
-        String imageKey = ImageType.BANNER.name() + show.getTvdbId();
-        ImageUtils.getImageWorker().loadImage(showItem.banner, ImageType.BANNER, imageKey, show.getTvdbId(), show.getShowName());
+        String imageKey = ImageType.SHOW_BANNER.name() + show.getTvdbId();
+        ImageUtils.getImageWorker().loadImage(showItem.banner, ImageType.SHOW_BANNER, imageKey, show.getTvdbId(), show.getShowName());
         
         convertView.setId(position);
         convertView.setTag(showItem);

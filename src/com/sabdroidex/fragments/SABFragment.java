@@ -10,8 +10,6 @@ import android.widget.ListView;
 public abstract class SABFragment extends Fragment {
 
     public abstract int getTitle();
-
-    public abstract void onFragmentActivated();
     
     public abstract Object getDataCache();
     

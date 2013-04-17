@@ -15,11 +15,11 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
-import com.sabdroidex.data.FuturePeriod;
-import com.sabdroidex.data.Season;
-import com.sabdroidex.data.Show;
-import com.sabdroidex.data.ShowList;
-import com.sabdroidex.data.ShowSearch;
+import com.sabdroidex.data.sickbeard.FuturePeriod;
+import com.sabdroidex.data.sickbeard.Season;
+import com.sabdroidex.data.sickbeard.Show;
+import com.sabdroidex.data.sickbeard.ShowList;
+import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
@@ -212,7 +212,6 @@ public final class SickBeardController extends SABController {
         thread.start();
     }
     
-    //TODO correct this once and for all !!!
     /**
      * Makes a call to retrieve all the episodes that will be available soon or
      * those that have been missed.

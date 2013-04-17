@@ -32,11 +32,12 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
-import com.sabdroidex.data.FuturePeriod;
-import com.sabdroidex.data.History;
-import com.sabdroidex.data.Queue;
-import com.sabdroidex.data.SabnzbdStatus;
-import com.sabdroidex.data.ShowList;
+import com.sabdroidex.data.couchpotato.MovieList;
+import com.sabdroidex.data.sabnzbd.History;
+import com.sabdroidex.data.sabnzbd.Queue;
+import com.sabdroidex.data.sabnzbd.SabnzbdStatus;
+import com.sabdroidex.data.sickbeard.FuturePeriod;
+import com.sabdroidex.data.sickbeard.ShowList;
 import com.sabdroidex.fragments.ComingFragment;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.MoviesFragment;
@@ -157,6 +158,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 oos.writeObject(historyFragment.getDataCache());
                 oos.writeObject(showsFragment.getDataCache());
                 oos.writeObject(comingFragment.getDataCache());
+                oos.writeObject(moviesFragment.getDataCache());
             }
             catch (Exception e) {
                 Log.e(TAG, " " + e.getStackTrace());
@@ -197,10 +199,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         History history = new History();
         ShowList shows = new ShowList();
         FuturePeriod coming = new FuturePeriod();
+        MovieList movies = new MovieList();
         
         /**
          * Restoring data if the cache is enabled.
-         */        
+         */
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
             
             FileInputStream fis = null;
@@ -213,6 +216,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 history = (History) ois.readObject();
                 shows = (ShowList) ois.readObject();
                 coming = (FuturePeriod) ois.readObject();
+                movies = (MovieList) ois.readObject();
             }
             catch (Exception e) {
                 Log.e(TAG, " " + e.getStackTrace());
@@ -242,6 +246,10 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             comingFragment = new ComingFragment(coming);
             comingFragment.setRetainInstance(true);
         }
+        if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
+            moviesFragment = new MoviesFragment(movies);
+            moviesFragment.setRetainInstance(true);
+        }
         
         /**
          * Creation of the Adapter and adding all the fragments.
@@ -254,9 +262,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             pagerAdapter.addFragment(showsFragment);
             pagerAdapter.addFragment(comingFragment);
         }
+        if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
+            pagerAdapter.addFragment(moviesFragment);
+        }
         
         /**
-         * Setting the adapter to the ViewPager and linking the Indicator to the pager.
+         * Setting the adapter to the ViewPager and linking the Indicator to the
+         * pager.
          */
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
@@ -281,6 +293,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         if (Preferences.isSet(Preferences.SICKBEARD_URL) && Preferences.isEnabled(Preferences.SICKBEARD)) {
             showsFragment.manualRefreshShows();
             comingFragment.manualRefreshComing();
+        }
+        if (Preferences.isSet(Preferences.COUCHPOTATO_URL) && Preferences.isEnabled(Preferences.COUCHPOTATO)) {
+            moviesFragment.manualRefreshMovies();
         }
         getActionBarHelper().setRefreshActionItemState(true);
     }

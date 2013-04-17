@@ -3,7 +3,6 @@ package com.sabdroidex.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
-import java.util.logging.Logger;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -29,7 +28,7 @@ import com.utils.HttpUtil;
 public class ImageWorker {
     
     public static enum ImageType {
-        BANNER, POSTER, SEASON_POSTER
+        SHOW_BANNER, SHOW_POSTER, SHOW_SEASON_POSTER, MOVIE_POSTER
     };
     
     private static final String TAG = ImageWorker.class.getCanonicalName();
@@ -82,14 +81,17 @@ public class ImageWorker {
         }
         else if (cancelPotentialWork(key, imageView)) {
             BitmapWorkerTask task = null;
-            if (imageType == ImageType.BANNER) {
+            if (imageType == ImageType.SHOW_BANNER) {
                 task = new AsyncShowBanner(imageView, key);
             }
-            else if (imageType == ImageType.POSTER) {
+            else if (imageType == ImageType.SHOW_POSTER) {
                 task = new AsyncShowPoster(imageView, key);
             }
-            else if (imageType == ImageType.SEASON_POSTER) {
+            else if (imageType == ImageType.SHOW_SEASON_POSTER) {
                 task = new AsyncSeasonPoster(imageView, key);
+            }
+            else if (imageType == ImageType.MOVIE_POSTER) {
+                task = new AsyncMoviePoster(imageView, key);
             }
             
             final AsyncDrawable asyncDrawable = new AsyncDrawable(mResources, task);
@@ -201,6 +203,7 @@ public class ImageWorker {
                     Log.i(getClass().getCanonicalName(), "Loading Bitmap for : " + params[1]
                             + " ... trying to open file.");
                 }
+                FileUtil.createDirectory(folderPath);
                 bitmap = mBitmapReader.getBitmapFromFile(folderPath, fileName, key);
             }
             
@@ -217,7 +220,7 @@ public class ImageWorker {
                             + " not found ... trying to download file.");
                 }
                 String url = getImageURL(params);
-                String savePath = folderPath + File.separator + fileName;
+                String savePath = folderPath + fileName;
                 bitmap = mBitmapReader.getBitmapFromWeb(url, savePath, key);
             }
             
@@ -301,7 +304,7 @@ public class ImageWorker {
         
         @Override
         protected ImageType getImageType() {
-            return ImageType.BANNER;
+            return ImageType.SHOW_BANNER;
         }
         
     }
@@ -325,7 +328,7 @@ public class ImageWorker {
         
         @Override
         protected ImageType getImageType() {
-            return ImageType.POSTER;
+            return ImageType.SHOW_POSTER;
         }
         
     }
@@ -349,7 +352,30 @@ public class ImageWorker {
         
         @Override
         protected ImageType getImageType() {
-            return ImageType.SEASON_POSTER;
+            return ImageType.SHOW_SEASON_POSTER;
+        }
+        
+    }
+    
+    public class AsyncMoviePoster extends BitmapWorkerTask {
+        
+        public AsyncMoviePoster(ImageView imageView, String key) {
+            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mPosterBitmap), key);
+        }
+        
+        @Override
+        protected String getImageURL(Object... params) {
+            return (String) params[2];
+        }
+        
+        @Override
+        protected String getFilename(Object... params) {
+            return "poster.jpg";
+        }
+        
+        @Override
+        protected ImageType getImageType() {
+            return ImageType.MOVIE_POSTER;
         }
         
     }

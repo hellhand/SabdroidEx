@@ -13,7 +13,7 @@ import android.support.v4.app.DialogFragment;
 
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.Episode;
+import com.sabdroidex.data.sickbeard.Episode;
 
 public class ShowEpisodeDialog extends DialogFragment {
     

@@ -26,4 +26,8 @@
     <color name="default_title_indicator_footer_color">#FF6899FF</color>
     <color name="default_title_indicator_selected_color">#FFFFFFFF</color>
     <color name="default_title_indicator_text_color">#BBFFFFFF</color>
+    <color name="movie_release_current_release">#FFA200</color>
+    <color name="movie_release_next_release">#34B448</color>
+    <color name="movie_release_ignored_release">#FF0007</color>
+    <color name="movie_release_default">#EEEEEE</color>
 </resources>

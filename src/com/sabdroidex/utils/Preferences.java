@@ -43,6 +43,9 @@ public class Preferences {
     public static final String COUCHPOTATO_PORT = "couchpotato_port";
     public static final String COUCHPOTATO_URL_EXTENTION = "couchpotato_url_extention";
     public static final String COUCHPOTATO_SSL = "couchpotato_ssl";
+    public static final String COUCHPOTATO_CACHE = "couchpotato_cache";
+    public static final String COUCHPOTATO_LOWRES = "couchpotato_lowres";
+    public static final String COUCHPOTATO_NOMEDIA = "couchpotato_nomedia";
     public static final String COUCHPOTATO_AUTH = "couchpotato_auth";
     public static final String COUCHPOTATO_PROFILE = "couchpotato_profile";
     public static final String COUCHPOTATO_USERNAME = "couchpotato_auth_username";

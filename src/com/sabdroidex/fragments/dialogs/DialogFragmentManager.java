@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.ShowSearch;
+import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.utils.SABHandler;
 
 public class DialogFragmentManager implements DialogActionsListener {

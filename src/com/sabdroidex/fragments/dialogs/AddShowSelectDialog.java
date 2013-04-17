@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter;
 
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.ShowSearch;
-import com.sabdroidex.data.ShowSearchResult;
+import com.sabdroidex.data.sickbeard.ShowSearch;
+import com.sabdroidex.data.sickbeard.ShowSearchResult;
 
 
 public class AddShowSelectDialog extends DialogFragment {

@@ -19,7 +19,7 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ShowSeasonAdapater;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.Show;
+import com.sabdroidex.data.sickbeard.Show;
 
 public class ShowActivity extends ActionBarActivity {
     
@@ -27,7 +27,7 @@ public class ShowActivity extends ActionBarActivity {
     
     private ShowSeasonAdapater showSeasonAdapater;
     private Integer mShowId;
-    private static Show mShow;
+    private Show mShow;
     
     /**
      * Instantiating the Handler associated with this {@link Fragment}. It will
@@ -72,12 +72,12 @@ public class ShowActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        setContentView(R.layout.show_details);
+        setContentView(R.layout.grid);
         
         mShowId = getIntent().getExtras().getInt("tvdbid");
         showSeasonAdapater = new ShowSeasonAdapater(this, mShow);
         
-        GridView gridView = (GridView) findViewById(R.id.show_seasons_grid);
+        GridView gridView = (GridView) findViewById(R.id.elementGrid);
         gridView.setAdapter(showSeasonAdapater);
         gridView.setOnItemClickListener(itemClickListener);
         

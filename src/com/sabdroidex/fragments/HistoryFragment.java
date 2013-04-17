@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.HistoryListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
-import com.sabdroidex.data.History;
+import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -140,11 +140,6 @@ public class HistoryFragment extends SABFragment {
         manualRefreshHistory();
         
         return mHistoryList;
-    }
-    
-    @Override
-    public void onFragmentActivated() {
-        manualRefreshHistory();
     }
 
     @Override

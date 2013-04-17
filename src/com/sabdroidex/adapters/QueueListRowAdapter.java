@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.data.QueueElement;
+import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.utils.Formatter;
 
 public class QueueListRowAdapter extends ArrayAdapter<QueueElement> {

@@ -21,9 +21,9 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SeasonEpisodeAdapater;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
-import com.sabdroidex.data.Episode;
-import com.sabdroidex.data.Season;
-import com.sabdroidex.data.Show;
+import com.sabdroidex.data.sickbeard.Episode;
+import com.sabdroidex.data.sickbeard.Season;
+import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.fragments.dialogs.ShowEpisodeDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
@@ -103,10 +103,10 @@ public class SeasonActivity extends ActionBarActivity {
         seasonEpisodeAdapater = new SeasonEpisodeAdapater(this, mSeason);
         
         ImageView header = (ImageView) findViewById(R.id.image_header);
-        String imageKey = ImageType.SEASON_POSTER.name() + mShow.getTvdbId() + mSeasonNr;
-        ImageUtils.getImageWorker().loadImage(header, ImageType.SEASON_POSTER, imageKey, mShow.getTvdbId(), mShow.getShowName(), mSeasonNr);
+        String imageKey = ImageType.SHOW_SEASON_POSTER.name() + mShow.getTvdbId() + mSeasonNr;
+        ImageUtils.getImageWorker().loadImage(header, ImageType.SHOW_SEASON_POSTER, imageKey, mShow.getTvdbId(), mShow.getShowName(), mSeasonNr);
         
-        GridView gridView = (GridView) findViewById(R.id.elementGrid);
+        GridView gridView = (GridView) findViewById(R.id.episodeGrid);
         gridView.setAdapter(seasonEpisodeAdapater);
         gridView.setOnItemLongClickListener(longClickListener);
         
@@ -115,7 +115,7 @@ public class SeasonActivity extends ActionBarActivity {
         
         episodeCount = (TextView) findViewById(R.id.season_episode_count);
         
-        refresh();
+        refreshSeason();
     }
     
     /**
@@ -135,13 +135,13 @@ public class SeasonActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                refresh();
+                refreshSeason();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void refresh() {
+    private void refreshSeason() {
         SickBeardController.getSeason(messageHandler, mShow.getTvdbId().toString(), mSeasonNr.toString());
     }
 }
