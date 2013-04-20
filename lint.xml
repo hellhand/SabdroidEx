@@ -5,6 +5,7 @@
     <issue id="ButtonCase" severity="ignore" />
     <issue id="ButtonOrder" severity="ignore" />
     <issue id="ContentDescription" severity="ignore" />
+    <issue id="DefaultLocale" severity="ignore" />
     <issue id="Deprecated" severity="ignore" />
     <issue id="DisableBaselineAlignment" severity="ignore" />
     <issue id="DrawAllocation" severity="ignore" />

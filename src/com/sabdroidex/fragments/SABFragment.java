@@ -2,6 +2,8 @@ package com.sabdroidex.fragments;
 
 import java.util.ArrayList;
 
+import com.sabdroidex.data.JSONBased;
+
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.widget.ArrayAdapter;
@@ -11,7 +13,7 @@ public abstract class SABFragment extends Fragment {
 
     public abstract int getTitle();
     
-    public abstract Object getDataCache();
+    public abstract JSONBased getDataCache();
     
     /**
      * This function will serve as a retriever to get back the wanted data from

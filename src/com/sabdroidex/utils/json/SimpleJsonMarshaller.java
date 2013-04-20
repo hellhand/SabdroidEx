@@ -51,9 +51,6 @@ public class SimpleJsonMarshaller {
             for (int i = 0; i < methods.length; i++) {
                 JSONSetter setter = methods[i].getAnnotation(JSONSetter.class);
                 if (setter != null) {
-                    if (Debug.isDebuggerConnected()) {
-                        Log.d(TAG, methods[i].getName());
-                    }
                     if (setter.type() == JSONType.SIMPLE) {
                         try {
                             Object parameter = jsonObject.get(setter.name());

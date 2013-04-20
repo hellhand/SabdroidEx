@@ -1,26 +1,24 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:gravity="center_horizontal" >
 
     <ImageView
         android:id="@+id/movie_poster"
         android:layout_width="fill_parent"
-        android:layout_height="120dip"
-        android:scaleType="centerCrop"
-        android:layout_weight="0.75" />
+        android:layout_height="160dip"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/movie_title"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:background="#222222"
-        android:textColor="#EEEEEE"
-        android:paddingLeft="10dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/movie_poster"
+        android:background="#88222222"
         android:gravity="center_vertical"
+        android:paddingLeft="10dip"
+        android:textColor="#EEEEEE"
         android:textSize="25dip"
-        android:textStyle="bold"
-        android:layout_weight="1.25"/>
+        android:textStyle="bold" />
 
-</LinearLayout>
+</RelativeLayout>

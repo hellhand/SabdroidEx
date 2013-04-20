@@ -22,12 +22,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
 @JSONElement
-public class MovieList implements Serializable {
+public class MovieList implements JSONBased, Serializable {
 
 	/**
 	 * 
@@ -70,5 +71,4 @@ public class MovieList implements Serializable {
 		
 		this.movieElements = movieElements;
 	}
-	
 }

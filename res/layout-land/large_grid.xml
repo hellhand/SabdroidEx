@@ -6,11 +6,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:horizontalSpacing="5dp"
-    android:numColumns="4"
-    android:paddingBottom="8dip"
-    android:paddingLeft="2dip"
-    android:paddingRight="2dip"
-    android:paddingTop="8dip"
+    android:numColumns="2"
+    android:padding="2dip"
     android:stretchMode="columnWidth"
     android:verticalSpacing="5dp" >
 

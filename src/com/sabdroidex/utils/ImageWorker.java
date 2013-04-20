@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -28,15 +27,17 @@ import com.utils.HttpUtil;
 public class ImageWorker {
     
     public static enum ImageType {
-        SHOW_BANNER, SHOW_POSTER, SHOW_SEASON_POSTER, MOVIE_POSTER
+        SHOW_BANNER, SHOW_POSTER, SHOW_SEASON_POSTER, MOVIE_POSTER, MOVIE_BANNER
     };
     
     private static final String TAG = ImageWorker.class.getCanonicalName();
     
     private BitmapReader mBitmapReader = null;
     private Options bgOptions = null;
-    private Bitmap mPosterBitmap = null;
-    private Bitmap mBannerBitmap = null;
+    private Bitmap mSickbeardPosterBitmap = null;
+    private Bitmap mSickbeardBannerBitmap = null;
+    private Bitmap mCouchPosterBitmap = null;
+    private Bitmap mCouchBannerBitmap = null;
     private Resources mResources = null;
     
     public ImageWorker(Context context) {
@@ -47,12 +48,20 @@ public class ImageWorker {
         mBitmapReader = new BitmapReader(0.05f);
     }
     
-    public void setPosterTemp(int resId) {
-        mPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    public void setSickbeardPosterTemp(int resId) {
+        mSickbeardPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
     }
     
-    public void setBannerTemp(int resId) {
-        mBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    public void setSickbeardBannerTemp(int resId) {
+        mSickbeardBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    }
+
+    public void setmCouchPosterBitmap(int resId) {
+        this.mCouchPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);;
+    }
+    
+    public void setmCouchBannerBitmap(int resId) {
+        this.mCouchBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);;
     }
     
     /**
@@ -93,7 +102,9 @@ public class ImageWorker {
             else if (imageType == ImageType.MOVIE_POSTER) {
                 task = new AsyncMoviePoster(imageView, key);
             }
-            
+            else if (imageType == ImageType.MOVIE_BANNER) {
+                task = new AsyncMovieBanner(imageView, key);
+            }
             final AsyncDrawable asyncDrawable = new AsyncDrawable(mResources, task);
             imageView.setImageDrawable(asyncDrawable);
             task.execute(data);
@@ -288,7 +299,7 @@ public class ImageWorker {
     public class AsyncShowBanner extends BitmapWorkerTask {
         
         public AsyncShowBanner(ImageView imageView, String key) {
-            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mBannerBitmap), key);
+            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mSickbeardBannerBitmap), key);
         }
         
         @Override
@@ -312,7 +323,7 @@ public class ImageWorker {
     public class AsyncShowPoster extends BitmapWorkerTask {
         
         public AsyncShowPoster(ImageView imageView, String key) {
-            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mPosterBitmap), key);
+            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mSickbeardPosterBitmap), key);
         }
         
         @Override
@@ -336,7 +347,7 @@ public class ImageWorker {
     public class AsyncSeasonPoster extends BitmapWorkerTask {
         
         public AsyncSeasonPoster(ImageView imageView, String key) {
-            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mPosterBitmap), key);
+            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mSickbeardPosterBitmap), key);
         }
         
         @Override
@@ -360,7 +371,7 @@ public class ImageWorker {
     public class AsyncMoviePoster extends BitmapWorkerTask {
         
         public AsyncMoviePoster(ImageView imageView, String key) {
-            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mPosterBitmap), key);
+            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mCouchPosterBitmap), key);
         }
         
         @Override
@@ -376,6 +387,29 @@ public class ImageWorker {
         @Override
         protected ImageType getImageType() {
             return ImageType.MOVIE_POSTER;
+        }
+        
+    }
+    
+    public class AsyncMovieBanner extends BitmapWorkerTask {
+        
+        public AsyncMovieBanner(ImageView imageView, String key) {
+            super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mCouchBannerBitmap), key);
+        }
+        
+        @Override
+        protected String getImageURL(Object... params) {
+            return (String) params[2];
+        }
+        
+        @Override
+        protected String getFilename(Object... params) {
+            return "poster.jpg";
+        }
+        
+        @Override
+        protected ImageType getImageType() {
+            return ImageType.MOVIE_BANNER;
         }
         
     }
@@ -410,7 +444,6 @@ public class ImageWorker {
          * @param bitmap
          * @return size in bytes
          */
-        @TargetApi(12)
         public int getBitmapSize(Bitmap bitmap) {
             return bitmap.getRowBytes() * bitmap.getHeight();
         }

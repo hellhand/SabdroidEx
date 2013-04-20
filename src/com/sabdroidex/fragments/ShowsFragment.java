@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ShowsListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.data.sickbeard.ShowList;
 import com.sabdroidex.fragments.dialogs.ShowDetailsDialog;
@@ -33,7 +34,7 @@ public class ShowsFragment extends SABFragment {
     
     private static final String TAG = ShowsFragment.class.getCanonicalName();
     
-    private ShowList showList;
+    private static ShowList showList;
     private ShowsListRowAdapter mShowsListRowAdapter;
     
     /**
@@ -148,7 +149,7 @@ public class ShowsFragment extends SABFragment {
     }
     
     @Override
-    public Object getDataCache() {
+    public JSONBased getDataCache() {
         return showList;
     }
         

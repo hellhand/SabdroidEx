@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.fragments.dialogs.QueueElementActionDialog;
 import com.sabdroidex.interfaces.UpdateableActivity;
@@ -29,7 +30,7 @@ public class QueueFragment extends SABFragment {
     private static final String TAG = "QueueFragment";
     
     private boolean paused = false;
-    private Queue mQueue;
+    private static Queue mQueue;
     private Thread updater;
     private ListView mQueueList;
     
@@ -77,9 +78,7 @@ public class QueueFragment extends SABFragment {
     /**
      * 
      */
-    public QueueFragment() {
-        
-    }
+    public QueueFragment() {}
     
     public QueueFragment(Queue downloadRows) {
         mQueue = downloadRows;
@@ -141,7 +140,7 @@ public class QueueFragment extends SABFragment {
     }
     
     @Override
-    public Object getDataCache() {
+    public JSONBased getDataCache() {
         return mQueue;
     }
     

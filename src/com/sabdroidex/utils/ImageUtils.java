@@ -16,8 +16,10 @@ public class ImageUtils {
     public static synchronized void initImageWorker(Context context) {
         if (imageWorker == null) {
             imageWorker = new ImageWorker(context);
-            imageWorker.setPosterTemp(R.drawable.temp_poster);
-            imageWorker.setBannerTemp(R.drawable.temp_banner);
+            imageWorker.setSickbeardPosterTemp(R.drawable.temp_poster);
+            imageWorker.setSickbeardBannerTemp(R.drawable.temp_banner);
+            imageWorker.setmCouchPosterBitmap(R.drawable.couch_temp_poster);
+            imageWorker.setmCouchBannerBitmap(R.drawable.couch_temp_banner);
         }
     }
     

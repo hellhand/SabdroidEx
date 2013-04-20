@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.HistoryListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
@@ -143,10 +144,11 @@ public class HistoryFragment extends SABFragment {
     }
 
     @Override
-    public Object getDataCache() {
+    public JSONBased getDataCache() {
         return history;
     }
     
+    //TODO: Meh ... correct
     private class ListItemLongClickListener implements OnItemLongClickListener {
         
         @Override

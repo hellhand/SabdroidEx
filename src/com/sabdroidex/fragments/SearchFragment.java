@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SearchListRowAdapter;
+import com.sabdroidex.data.JSONBased;
 
 public class SearchFragment extends SABFragment {
 
@@ -46,7 +47,7 @@ public class SearchFragment extends SABFragment {
     }
 
     @Override
-    public Object getDataCache() {
+    public JSONBased getDataCache() {
         // TODO Auto-generated method stub
         return null;
     }

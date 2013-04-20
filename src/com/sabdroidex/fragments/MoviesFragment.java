@@ -44,6 +44,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.MovieGridAdapter;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.couchpotato.Movie;
 import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.fragments.dialogs.MovieDetailsDialog;
@@ -55,8 +56,8 @@ import com.sabdroidex.utils.SABDroidConstants;
 public class MoviesFragment extends SABFragment {
     
     private static final String TAG = "MovieFragment";
-    private MovieList movieList;
-    private GridView mMovieList;
+    private static MovieList mMovieList;
+    private GridView mMovieGrid;
     private MovieGridAdapter mMovieListRowAdapter;
     
     /**
@@ -89,10 +90,10 @@ public class MoviesFragment extends SABFragment {
             }
             else if (msg.what == CouchPotatoController.MESSAGE.MOVIE_LIST.ordinal()) {
                 
-                movieList = (MovieList) msg.obj;
+                mMovieList = (MovieList) msg.obj;
                 
                 if (mMovieListRowAdapter != null) {
-                    mMovieListRowAdapter.setDataSet(movieList.getMovieElements());
+                    mMovieListRowAdapter.setDataSet(mMovieList.getMovieElements());
                     mMovieListRowAdapter.notifyDataSetChanged();
                 }
             }
@@ -112,16 +113,14 @@ public class MoviesFragment extends SABFragment {
     /**
      * 
      */
-    public MoviesFragment() {
-        movieList = new MovieList();
-    }
+    public MoviesFragment() {}
     
     /**
      * 
      * @param downloadRows
      */
     public MoviesFragment(MovieList movieList) {
-        this.movieList = movieList;
+        mMovieList = movieList;
     }
     
     @Override
@@ -156,15 +155,15 @@ public class MoviesFragment extends SABFragment {
         SharedPreferences preferences = getActivity().getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
         
-        mMovieList = (GridView) inflater.inflate(R.layout.large_grid, null);
+        mMovieGrid = (GridView) inflater.inflate(R.layout.large_grid, null);
         
-        mMovieListRowAdapter = new MovieGridAdapter(getActivity(), movieList.getMovieElements());
-        mMovieList.setAdapter(mMovieListRowAdapter);
-        mMovieList.setOnItemLongClickListener(new ListItemLongClickListener());
+        mMovieListRowAdapter = new MovieGridAdapter(getActivity(), mMovieList.getMovieElements());
+        mMovieGrid.setAdapter(mMovieListRowAdapter);
+        mMovieGrid.setOnItemLongClickListener(new ListItemLongClickListener());
         
         manualRefreshMovies();
         
-        return mMovieList;
+        return mMovieGrid;
     }
     
     public void setupShowElements(View view, Movie movie) {
@@ -298,8 +297,8 @@ public class MoviesFragment extends SABFragment {
     }
     
     @Override
-    public Object getDataCache() {
-        return movieList;
+    public JSONBased getDataCache() {
+        return mMovieList;
     }
     
     private class ListItemLongClickListener implements OnItemLongClickListener {
@@ -310,7 +309,7 @@ public class MoviesFragment extends SABFragment {
          */
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-            Movie movie = movieList.getMovieElements().get(position);
+            Movie movie = mMovieList.getMovieElements().get(position);
             MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog(movie);
             movieDetailsDialog.show(getActivity().getSupportFragmentManager(), movie.getTitle());
             return true;

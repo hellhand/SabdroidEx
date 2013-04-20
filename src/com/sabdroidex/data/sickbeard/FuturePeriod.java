@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ListSeparatorHolder;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
-public class FuturePeriod extends UnknowMappingElement {
+public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     
     /**
      * Data Fields

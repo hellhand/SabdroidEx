@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ComingListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABHandler;
@@ -23,7 +24,7 @@ public class ComingFragment extends SABFragment {
     
     private static final String TAG = ComingFragment.class.getCanonicalName();
     
-    private FuturePeriod futurePeriod;
+    private static FuturePeriod mFuturePeriod;
     private ComingListRowAdapter mComingRowAdapter;
     
     /**
@@ -35,10 +36,10 @@ public class ComingFragment extends SABFragment {
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
                 try {
-                    futurePeriod = (FuturePeriod) msg.obj;
+                    mFuturePeriod = (FuturePeriod) msg.obj;
                     
                     if (mComingRowAdapter != null) {
-                        mComingRowAdapter.setDataSet(futurePeriod);
+                        mComingRowAdapter.setDataSet(mFuturePeriod);
                         mComingRowAdapter.notifyDataSetChanged();
                     }
                 }
@@ -54,12 +55,13 @@ public class ComingFragment extends SABFragment {
         }
     };
     
-    public ComingFragment() {
-        this.futurePeriod = new FuturePeriod();
-    }
+    /**
+     * 
+     */
+    public ComingFragment() {}
     
     public ComingFragment(FuturePeriod futurePeriod) {
-        this.futurePeriod = futurePeriod;
+        mFuturePeriod = futurePeriod;
     }
     
     @Override
@@ -96,7 +98,7 @@ public class ComingFragment extends SABFragment {
         LinearLayout comingView = (LinearLayout) inflater.inflate(R.layout.simplelist, null);
         ListView mListView = (ListView) comingView.findViewById(R.id.queueList);
         
-        mComingRowAdapter = new ComingListRowAdapter(getActivity().getApplicationContext(), futurePeriod);
+        mComingRowAdapter = new ComingListRowAdapter(getActivity().getApplicationContext(), mFuturePeriod);
         mListView.setAdapter(mComingRowAdapter);
         mListView.setDividerHeight(0);
         
@@ -111,7 +113,7 @@ public class ComingFragment extends SABFragment {
     }
     
     @Override
-    public Object getDataCache() {
-        return futurePeriod;
+    public JSONBased getDataCache() {
+        return mFuturePeriod;
     }
 }

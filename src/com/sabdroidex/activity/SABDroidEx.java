@@ -75,9 +75,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      * Creating the elements of the screen
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
+    protected void onCreate(Bundle savedInstanceState) {        
+    	super.onCreate(savedInstanceState);
         Log.v(TAG, "Starting SABDroidEx");
         
         setContentView(R.layout.header);
@@ -140,7 +139,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     
     /**
      * When the activity is stopped the status is saved so that data stays
-     * available offline if the data cache has been enabled.
+     * available off-line if the data cache has been enabled.
      */
     @Override
     protected void onStop() {
@@ -159,6 +158,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 oos.writeObject(showsFragment.getDataCache());
                 oos.writeObject(comingFragment.getDataCache());
                 oos.writeObject(moviesFragment.getDataCache());
+                oos.flush();
             }
             catch (Exception e) {
                 Log.e(TAG, " " + e.getStackTrace());
@@ -173,7 +173,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 }
             }
         }
-        super.onStop();
+    	super.onStop();
     }
     
     /**
@@ -211,15 +211,14 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             try {
                 fis = openFileInput(Preferences.DATA_CACHE);
                 ois = new ObjectInputStream(fis);
-                
                 queue = (Queue) ois.readObject();
                 history = (History) ois.readObject();
-                shows = (ShowList) ois.readObject();
+                shows = (ShowList) ois.readObject();                
                 coming = (FuturePeriod) ois.readObject();
                 movies = (MovieList) ois.readObject();
             }
             catch (Exception e) {
-                Log.e(TAG, " " + e.getStackTrace());
+                e.printStackTrace();
             }
             finally {
                 try {
@@ -237,18 +236,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
          */
         updateLabels(queue);
         queueFragment = new QueueFragment(queue);
-        queueFragment.setRetainInstance(true);
         historyFragment = new HistoryFragment(history);
-        historyFragment.setRetainInstance(true);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
             showsFragment = new ShowsFragment(shows);
-            showsFragment.setRetainInstance(true);
             comingFragment = new ComingFragment(coming);
-            comingFragment.setRetainInstance(true);
         }
         if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
             moviesFragment = new MoviesFragment(movies);
-            moviesFragment.setRetainInstance(true);
         }
         
         /**
@@ -485,5 +479,4 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     private void pauseResume() {
         queueFragment.pauseResumeQueue();
     }
-    
 }

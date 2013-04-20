@@ -4,19 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
 @JSONElement
-public class ShowList implements Serializable {
+public class ShowList implements JSONBased, Serializable {
     
     /**
      * 
      */
     private static final long serialVersionUID = -214015312686586531L;
     private List<Show> showElements;
-
     
     public List<Show> getShowElements() {
         if (showElements == null) {

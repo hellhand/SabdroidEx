@@ -5,13 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:horizontalSpacing="10dp"
+    android:horizontalSpacing="5dp"
     android:numColumns="1"
-    android:paddingBottom="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp"
+    android:padding="2dip"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="10dp" >
+    android:verticalSpacing="5dp" >
 
 </GridView>

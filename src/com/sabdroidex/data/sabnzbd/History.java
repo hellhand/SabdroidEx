@@ -3,17 +3,17 @@ package com.sabdroidex.data.sabnzbd;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
 
 
-public class History extends SabnzbdStatus {
+public class History extends SabnzbdStatus implements JSONBased {
 
     /**
-     * 
+     * Default fields
      */
     private static final long serialVersionUID = -2512044996381104486L;
-    
     private String totalSize;
     private String monthSize;
     private String weekSize;

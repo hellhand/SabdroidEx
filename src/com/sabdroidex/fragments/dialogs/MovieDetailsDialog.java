@@ -21,6 +21,10 @@ public class MovieDetailsDialog extends DialogFragment {
     
     private Movie mMovie;
     
+    public MovieDetailsDialog() {
+        this.mMovie = new Movie();
+    }
+    
     public MovieDetailsDialog(Movie movie) {
         this.mMovie = movie;
     }

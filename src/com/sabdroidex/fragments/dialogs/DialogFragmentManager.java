@@ -44,7 +44,7 @@ public class DialogFragmentManager implements DialogActionsListener {
     /**
      * This is the parent activity which is used to summon the dialogs.
      */
-    private FragmentActivity mActivity;
+    private static FragmentActivity mActivity;
     
     /**
      * Constructor
@@ -52,14 +52,15 @@ public class DialogFragmentManager implements DialogActionsListener {
      * @param activity
      */
     public DialogFragmentManager(FragmentActivity activity) {
-        this.mActivity = activity;
+        mActivity = activity;
     }
     
     /**
      * Displays a dialog proposing to add a nzb, show, movie, ...
      */
     public void showAddDialog() {
-        AddDialog addDialog = new AddDialog(this);
+        AddDialog addDialog = new AddDialog();
+        AddDialog.setAddDialogListener(this);
         addDialog.show(mActivity.getSupportFragmentManager(), "add");
     }
     
@@ -68,7 +69,8 @@ public class DialogFragmentManager implements DialogActionsListener {
      */
     @Override
     public void showAddNzbDialog() {
-        AddNzbDialog addNzbDialog = new AddNzbDialog(messageHandler);
+        AddNzbDialog addNzbDialog = new AddNzbDialog();
+        AddNzbDialog.setMessageHandler(messageHandler);
         addNzbDialog.show(mActivity.getSupportFragmentManager(), "addnzb");
     }
     
