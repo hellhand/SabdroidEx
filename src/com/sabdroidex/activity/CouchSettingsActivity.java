@@ -63,7 +63,7 @@ public class CouchSettingsActivity extends PreferenceActivity {
         
         @SuppressWarnings({ "unchecked", "deprecation" })
         public void handleMessage(Message msg) {
-            if (msg.what == CouchPotatoController.MESSAGE.PROFILE_LIST.ordinal()) {
+            if (msg.what == CouchPotatoController.MESSAGE.PROFILE_LIST.hashCode()) {
                 ArrayList<String> labels, id;
                 Object[] results = (Object[]) msg.obj;
                 HashMap<Integer, String> profiles = (HashMap<Integer, String>) results[0];

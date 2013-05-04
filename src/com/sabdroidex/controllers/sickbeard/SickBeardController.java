@@ -73,7 +73,7 @@ public final class SickBeardController extends SABController {
                     
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOW_ADDNEW.ordinal();
+                    message.what = MESSAGE.SHOW_ADDNEW.hashCode();
                     message.obj = results[1];
                     message.sendToTarget();
                     
@@ -130,7 +130,7 @@ public final class SickBeardController extends SABController {
                         
                         Message message = new Message();
                         message.setTarget(messageHandler);
-                        message.what = MESSAGE.SB_SEARCHTVDB.ordinal();
+                        message.what = MESSAGE.SB_SEARCHTVDB.hashCode();
                         message.obj = showSearch;
                         message.sendToTarget();
                     }
@@ -189,7 +189,7 @@ public final class SickBeardController extends SABController {
                     
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOWS.ordinal();
+                    message.what = MESSAGE.SHOWS.hashCode();
                     message.obj = showList;
                     message.sendToTarget();
                 }
@@ -251,7 +251,7 @@ public final class SickBeardController extends SABController {
                     
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.FUTURE.ordinal();
+                    message.what = MESSAGE.FUTURE.hashCode();
                     message.obj = futurePeriod;
                     message.sendToTarget();
                 }
@@ -312,7 +312,7 @@ public final class SickBeardController extends SABController {
                     
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOW.ordinal();
+                    message.what = MESSAGE.SHOW.hashCode();
                     message.obj = show;
                     message.sendToTarget();
                 }
@@ -370,7 +370,7 @@ public final class SickBeardController extends SABController {
                     
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOW_SEASONS.ordinal();
+                    message.what = MESSAGE.SHOW_SEASONS.hashCode();
                     message.obj = season;
                     message.sendToTarget();
                 }

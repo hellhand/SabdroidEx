@@ -1,4 +1,4 @@
-package com.sabdroidex.fragments.dialogs;
+package com.sabdroidex.fragments.dialogs.sickbeard;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

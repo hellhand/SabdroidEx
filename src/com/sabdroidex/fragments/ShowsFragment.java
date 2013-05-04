@@ -24,7 +24,7 @@ import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.data.sickbeard.ShowList;
-import com.sabdroidex.fragments.dialogs.ShowDetailsDialog;
+import com.sabdroidex.fragments.dialogs.sickbeard.ShowDetailsDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 import com.sabdroidex.utils.Preferences;
@@ -44,7 +44,7 @@ public class ShowsFragment extends SABFragment {
         
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SickBeardController.MESSAGE.SHOWS.ordinal()) {
+            if (msg.what == SickBeardController.MESSAGE.SHOWS.hashCode()) {
                 try {
                     showList = (ShowList) msg.obj;
                     
@@ -58,7 +58,7 @@ public class ShowsFragment extends SABFragment {
                     Log.e(TAG, e.getLocalizedMessage());
                 }
             }
-            if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
+            if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
                         Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();

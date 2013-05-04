@@ -1,4 +1,4 @@
-package com.sabdroidex.fragments.dialogs;
+package com.sabdroidex.fragments.dialogs.sabnzbd;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,12 +14,15 @@ import com.utils.FileUtil;
 
 public class AddNzbFileDialog extends DialogFragment {
     
-    private Handler messageHandler;
-    private String path;
+    private static Handler messageHandler;
+    private static String path;
     
-    public AddNzbFileDialog(Handler messageHandler, String path) {
-        this.messageHandler = messageHandler;
-        this.path = path;
+    public static void setMessageHandler(Handler messageHandler) {
+        AddNzbFileDialog.messageHandler = messageHandler;
+    }    
+    
+    public static void setPath(String path) {
+        AddNzbFileDialog.path = path;
     }
     
     /**

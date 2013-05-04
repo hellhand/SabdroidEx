@@ -142,7 +142,7 @@ public final class SABnzbdController extends SABController {
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
-                        message.what = MESSAGE.GET_CONFIG.ordinal();
+                        message.what = MESSAGE.GET_CONFIG.hashCode();
                         message.obj = config;
                         message.sendToTarget();
                     }
@@ -188,7 +188,7 @@ public final class SABnzbdController extends SABController {
                     
                     final Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.GET_CONFIG.ordinal();
+                    message.what = MESSAGE.GET_CONFIG.hashCode();
                     message.obj = results;
                     message.sendToTarget();
                 }
@@ -227,7 +227,7 @@ public final class SABnzbdController extends SABController {
         /**
          * Checking the URL extension
          */
-        if ("".equals(Preferences.get(Preferences.SICKBEARD_URL_EXTENTION))) {
+        if ("".equals(Preferences.get(Preferences.SABNZBD_URL_EXTENTION))) {
             url = url.replace("[SABNZBD_URL_EXTENTION]", Preferences.get(Preferences.SABNZBD_URL_EXTENTION));
         }
         else {
@@ -493,7 +493,7 @@ public final class SABnzbdController extends SABController {
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
-                        message.what = MESSAGE.HISTORY.ordinal();
+                        message.what = MESSAGE.HISTORY.hashCode();
                         message.obj = history;
                         message.sendToTarget();
                     }
@@ -551,7 +551,7 @@ public final class SABnzbdController extends SABController {
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
-                        message.what = MESSAGE.QUEUE.ordinal();
+                        message.what = MESSAGE.QUEUE.hashCode();
                         message.obj = queue;
                         message.sendToTarget();
                     }

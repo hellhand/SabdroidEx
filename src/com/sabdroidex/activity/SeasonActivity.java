@@ -24,7 +24,7 @@ import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.sickbeard.Episode;
 import com.sabdroidex.data.sickbeard.Season;
 import com.sabdroidex.data.sickbeard.Show;
-import com.sabdroidex.fragments.dialogs.ShowEpisodeDialog;
+import com.sabdroidex.fragments.dialogs.sickbeard.ShowEpisodeDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
@@ -46,7 +46,7 @@ public class SeasonActivity extends ActionBarActivity {
         
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SickBeardController.MESSAGE.SHOW_SEASONS.ordinal() && msg.obj instanceof Season) {
+            if (msg.what == SickBeardController.MESSAGE.SHOW_SEASONS.hashCode() && msg.obj instanceof Season) {
                 mSeason = (Season) msg.obj;
                 seasonEpisodeAdapater.setSeason(mSeason);
                 seasonEpisodeAdapater.notifyDataSetChanged();
@@ -57,7 +57,7 @@ public class SeasonActivity extends ActionBarActivity {
                 String title = mShow.getShowName() + " - " + getString(R.string.show_season) + " " + mSeasonNr;
                 setTitle(title);
             }
-            if (msg.what == SickBeardController.MESSAGE.EPISODE_SETSTATUS.ordinal()) {
+            if (msg.what == SickBeardController.MESSAGE.EPISODE_SETSTATUS.hashCode()) {
                 try {
                     String text = getString(R.string.episode_status_set_to) + " : " + msg.obj;
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();

@@ -130,11 +130,13 @@
             android:key="couchpotato_url" 
             android:dependency="couchpotato"/>
         
-        <EditTextPreference 
+        <EditTextPreference
+            android:defaultValue="8080"
             android:title="@string/setting_couchpotato_port" 
             android:dependency="couchpotato" 
             android:summary="@string/setting_couchpotato_port_summary" 
-            android:key="couchpotato_port" />
+            android:key="couchpotato_port"
+            android:numeric="integer" />
         
         <EditTextPreference 
             android:title="@string/setting_couchpotato_url_extention" 
@@ -205,7 +207,7 @@
             android:summary="@string/setting_apache_password"/>
         
     </PreferenceCategory>
-    
+    <!-- 
     <PreferenceCategory android:title="Search providers settings" >
         
         <PreferenceScreen
@@ -215,7 +217,7 @@
         </PreferenceScreen>
         
     </PreferenceCategory>
-    
+     -->
     <PreferenceCategory android:title="Global settings" >
         
         <CheckBoxPreference

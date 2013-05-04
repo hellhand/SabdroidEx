@@ -41,7 +41,7 @@ public class HistoryFragment extends SABFragment {
         @Override
         public void handleMessage(Message msg) {
             
-            if (msg.what == SABnzbdController.MESSAGE.HISTORY.ordinal()) {
+            if (msg.what == SABnzbdController.MESSAGE.HISTORY.hashCode()) {
                 try {
                     history = (History) msg.obj;
     
@@ -63,7 +63,7 @@ public class HistoryFragment extends SABFragment {
                 }
             }
             
-            if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
+            if (msg.what == SABnzbdController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     ((UpdateableActivity) getParentActivity()).updateState(false);
                     if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
@@ -71,7 +71,7 @@ public class HistoryFragment extends SABFragment {
                     }
                 }
                 catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    // Logging this is useless
                 }
                 
             }

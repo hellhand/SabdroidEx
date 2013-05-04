@@ -1,4 +1,4 @@
-package com.sabdroidex.fragments.dialogs;
+package com.sabdroidex.fragments.dialogs.sickbeard;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -29,7 +29,7 @@ public class CouchPotatoActivity extends Activity {
    private final Handler messageHandler = new Handler() {
 
         public void handleMessage(Message msg) {
-            if (msg.what == CouchPotatoController.MESSAGE.UPDATE.ordinal()) {
+            if (msg.what == CouchPotatoController.MESSAGE.UPDATE.hashCode()) {
             	if ("Error".equals(msg.obj)){
              		makeToast("Failed to add movie\nCheck settings!");
              		finish();

@@ -19,7 +19,7 @@ import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.Queue;
-import com.sabdroidex.fragments.dialogs.QueueElementActionDialog;
+import com.sabdroidex.fragments.dialogs.sabnzbd.QueueElementActionDialog;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -39,7 +39,7 @@ public class QueueFragment extends SABFragment {
         
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SABnzbdController.MESSAGE.QUEUE.ordinal()) {
+            if (msg.what == SABnzbdController.MESSAGE.QUEUE.hashCode()) {
                 try {
                     mQueue = (Queue) msg.obj;
                     
@@ -61,7 +61,7 @@ public class QueueFragment extends SABFragment {
                 }
             }
             
-            if (msg.what == SABnzbdController.MESSAGE.UPDATE.ordinal()) {
+            if (msg.what == SABnzbdController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     ((UpdateableActivity) getParentActivity()).updateState(false);
                     if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
@@ -69,7 +69,7 @@ public class QueueFragment extends SABFragment {
                     }
                 }
                 catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    // Logging this is useless
                 }
             }
         }

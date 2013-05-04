@@ -20,7 +20,7 @@ public abstract class SABController {
         
         final Message message = new Message();
         message.setTarget(messageHandler);
-        message.what = MESSAGE.UPDATE.ordinal();
+        message.what = MESSAGE.UPDATE.hashCode();
         message.obj = text;
         message.sendToTarget();
     }

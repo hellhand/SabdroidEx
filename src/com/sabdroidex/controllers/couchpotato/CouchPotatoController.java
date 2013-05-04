@@ -18,7 +18,6 @@
 package com.sabdroidex.controllers.couchpotato;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,29 +31,30 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.data.couchpotato.MovieList;
+import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.HttpUtil;
 
 public final class CouchPotatoController {
-    
+
     private static final String TAG = "CouchPotatoController";
-    
+
     private static boolean executingRefreshMovies = false;
     private static boolean executingCommand = false;
-    
+
     private static HashMap<Integer, String> profiles;
     private static HashMap<Integer, String> status;
     public static boolean paused = false;
     private static String api_key = "";
-    
+
     private static final String URL_TEMPLATE = "[COUCHPOTATO_URL]/[COUCHPOTATO_URL_EXTENTION]api/[API]/[COMMAND]/";
     private static final String API_TEMPLATE = "[COUCHPOTATO_URL]/[COUCHPOTATO_URL_EXTENTION]getkey/?p=[PASSWORD]&u=[USERNAME]";
-    
+
     public static enum MESSAGE {
         MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD;
     }
-    
+
     /**
      * This function handle the API calls to Sabnzbd to define the URL and
      * parameters
@@ -69,7 +69,7 @@ public final class CouchPotatoController {
     public static String makeApiCall(String command) throws Exception {
         return makeApiCall(command, "");
     }
-    
+
     /**
      * This function handle the API calls to Couchpotato to define the URL and
      * parameters
@@ -84,7 +84,7 @@ public final class CouchPotatoController {
      *             communication with the server
      */
     public static String makeApiCall(String command, String... extraParams) throws Exception {
-        
+
         /**
          * Check if the API key is already retrieved, otherwise retrieve it
          */
@@ -93,7 +93,7 @@ public final class CouchPotatoController {
             getStatusList();
             getProfiles();
         }
-        
+
         /**
          * Correcting the command names to be understood by CouchPotato
          */
@@ -102,27 +102,21 @@ public final class CouchPotatoController {
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
         url = url.replace("[API]", api_key);
-        int i = 0;
-        
-        for (String xTraParam : extraParams) {
+
+        for (final String xTraParam : extraParams) {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
-                if (i == 0) {
-                    url = url + xTraParam;
-                    i++;
-                    continue;
-                }
-                url = url + "&" + xTraParam;
+                url = url.endsWith("/") ? url + "?" + xTraParam : url + "&" + xTraParam;
             }
         }
-        
+
         url = url.replace(" ", "%20");
         Log.d(TAG, url);
-        
+
         char[] result = HttpUtil.getInstance().getDataAsCharArray(url, parameterMap);
-        
+
         return result != null ? new String(result) : "";
     }
-    
+
     /**
      * This function gets the URL used to connect to the CouchPotato server
      * 
@@ -130,7 +124,7 @@ public final class CouchPotatoController {
      */
     private static String getFormattedUrl() {
         String url = URL_TEMPLATE;
-        
+
         /**
          * Checking if there is a port to concatenate to the URL
          */
@@ -138,10 +132,9 @@ public final class CouchPotatoController {
             url = url.replace("[COUCHPOTATO_URL]", Preferences.get(Preferences.COUCHPOTATO_URL));
         }
         else {
-            url = url.replace("[COUCHPOTATO_URL]",
-                    Preferences.get(Preferences.COUCHPOTATO_URL) + ":" + Preferences.get(Preferences.COUCHPOTATO_PORT));
+            url = url.replace("[COUCHPOTATO_URL]", Preferences.get(Preferences.COUCHPOTATO_URL) + ":" + Preferences.get(Preferences.COUCHPOTATO_PORT));
         }
-        
+
         /**
          * Checking the url extention
          */
@@ -149,9 +142,9 @@ public final class CouchPotatoController {
             url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION));
         }
         else {
-            url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION));
+            url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION) + "/");
         }
-        
+
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
             if (Preferences.isEnabled(Preferences.COUCHPOTATO_SSL)) {
                 url = "https://" + url;
@@ -160,10 +153,10 @@ public final class CouchPotatoController {
                 url = "http://" + url;
             }
         }
-        
+
         return url;
     }
-    
+
     /**
      * Retrieve API_URL of couchpotato by using username & password.
      * 
@@ -171,7 +164,7 @@ public final class CouchPotatoController {
      */
     private static String getApiUrl() {
         String url = API_TEMPLATE;
-        
+
         /**
          * Checking if there is a port to concatenate to the URL
          */
@@ -179,10 +172,9 @@ public final class CouchPotatoController {
             url = url.replace("[COUCHPOTATO_URL]", Preferences.get(Preferences.COUCHPOTATO_URL));
         }
         else {
-            url = url.replace("[COUCHPOTATO_URL]",
-                    Preferences.get(Preferences.COUCHPOTATO_URL) + ":" + Preferences.get(Preferences.COUCHPOTATO_PORT));
+            url = url.replace("[COUCHPOTATO_URL]", Preferences.get(Preferences.COUCHPOTATO_URL) + ":" + Preferences.get(Preferences.COUCHPOTATO_PORT));
         }
-        
+
         /**
          * Checking the url extention
          */
@@ -190,10 +182,9 @@ public final class CouchPotatoController {
             url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION));
         }
         else {
-            url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION)
-                    + "/");
+            url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION) + "/");
         }
-        
+
         /**
          * Check if user credentials are being used
          */
@@ -215,7 +206,7 @@ public final class CouchPotatoController {
         else {
             url = url.replace("[PASSWORD]", "");
         }
-        
+
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
             if (Preferences.isEnabled(Preferences.COUCHPOTATO_SSL)) {
                 url = "https://" + url;
@@ -227,7 +218,7 @@ public final class CouchPotatoController {
         Log.d(TAG, url);
         return url;
     }
-    
+
     /**
      * Retrieving API key from CouchPotato
      * 
@@ -237,9 +228,9 @@ public final class CouchPotatoController {
         String url = getApiUrl();
         Map<String, String> Parameters = getAdditionalParameters();
         try {
-            
+
             String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, Parameters));
-            
+
             JSONObject jsonObject = new JSONObject(result);
             if (jsonObject.getBoolean("success")) {
                 api_key = jsonObject.getString("api_key");
@@ -252,7 +243,7 @@ public final class CouchPotatoController {
             Log.w(TAG, " " + e.getLocalizedMessage());
         }
     }
-    
+
     /**
      * Add movie to couchpotato
      * 
@@ -265,29 +256,31 @@ public final class CouchPotatoController {
      * @param movieTitle
      *            Title of movie to add
      */
-    public static void addMovie(final Handler messageHandler, final String profile, final String idIMDb,
-            final String movieTitle) {
+    public static void addMovie(final Handler messageHandler, final String profile, final String idIMDb, final String movieTitle) {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
-                    String result = makeApiCall(MESSAGE.MOVIE_ADD.toString().toLowerCase(), "profile_id=" + profile,
-                            "identifier=" + idIMDb, "title=" + movieTitle);
-                    
+                    String result = makeApiCall(MESSAGE.MOVIE_ADD.toString().toLowerCase(), "profile_id=" + profile, "identifier=" + idIMDb, "title="
+                            + movieTitle);
+
                     JSONObject jsonObject = new JSONObject(result);
-                    
-                    if (jsonObject.isNull("added")) {
-                        sendUpdateMessageStatus(messageHandler, "");
-                    }
-                    
+                    result = (String) jsonObject.get("added");
+
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.MOVIE_ADD.hashCode();
+                    message.obj = result;
+                    message.sendToTarget();
+
                     Thread.sleep(500);
                     CouchPotatoController.refreshMovies(messageHandler);
-                    
+
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
@@ -305,7 +298,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Retrieve possible download profiles from CouchPotato
      */
@@ -313,21 +306,20 @@ public final class CouchPotatoController {
         if ("".equals(Preferences.get(Preferences.COUCHPOTATO_URL))) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
                     String result = makeApiCall(MESSAGE.STATUS_LIST.toString().toLowerCase());
                     JSONObject jsonObject = new JSONObject(result);
-                    
+
                     if (jsonObject.getBoolean("success")) {
                         JSONArray profileList = jsonObject.getJSONArray("list");
                         status = new HashMap<Integer, String>();
                         for (int i = 0; i < profileList.length(); i++) {
-                            status.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i)
-                                    .getString("label"));
+                            status.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i).getString("label"));
                         }
                     }
                 }
@@ -345,7 +337,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Retrieve possible download profiles from CouchPotato
      * 
@@ -356,30 +348,27 @@ public final class CouchPotatoController {
         if (executingCommand || "".equals(Preferences.get(Preferences.COUCHPOTATO_URL))) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
                     String result = makeApiCall(MESSAGE.STATUS_LIST.toString().toLowerCase());
-                    
-                    final Object results[] = new Object[1];
+
                     JSONObject jsonObject = new JSONObject(result);
-                    
+
                     if (jsonObject.getBoolean("success")) {
                         JSONArray profileList = jsonObject.getJSONArray("list");
                         status = new HashMap<Integer, String>();
                         for (int i = 0; i < profileList.length(); i++) {
-                            status.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i)
-                                    .getString("label"));
+                            status.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i).getString("label"));
                         }
-                        results[0] = status;
-                        
+
                         Message message = new Message();
                         message.setTarget(messageHandler);
-                        message.what = MESSAGE.PROFILE_LIST.ordinal();
-                        message.obj = results;
+                        message.what = MESSAGE.PROFILE_LIST.hashCode();
+                        message.obj = status;
                         message.sendToTarget();
                     }
                 }
@@ -397,7 +386,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Retrieve possible download profiles from CouchPotato
      */
@@ -405,21 +394,20 @@ public final class CouchPotatoController {
         if ("".equals(Preferences.get(Preferences.COUCHPOTATO_URL))) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
                     String result = makeApiCall(MESSAGE.PROFILE_LIST.toString().toLowerCase());
                     JSONObject jsonObject = new JSONObject(result);
-                    
+
                     if (jsonObject.getBoolean("success")) {
                         profiles = new HashMap<Integer, String>();
                         JSONArray profileList = jsonObject.getJSONArray("list");
                         for (int i = 0; i < profileList.length(); i++) {
-                            profiles.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i)
-                                    .getString("label"));
+                            profiles.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i).getString("label"));
                         }
                     }
                 }
@@ -437,7 +425,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Retrieve possible download profiles from CouchPotat
      * 
@@ -448,31 +436,28 @@ public final class CouchPotatoController {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
                     String result = makeApiCall(MESSAGE.PROFILE_LIST.toString().toLowerCase());
-                    
-                    final Object results[] = new Object[1];
+
                     JSONObject jsonObject = new JSONObject(result);
-                    
+
                     if (jsonObject.getBoolean("success") && profiles == null) {
                         profiles = new HashMap<Integer, String>();
                         JSONArray profileList = jsonObject.getJSONArray("list");
                         for (int i = 0; i < profileList.length(); i++) {
-                            profiles.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i)
-                                    .getString("label"));
+                            profiles.put(profileList.getJSONObject(i).getInt("id"), profileList.getJSONObject(i).getString("label"));
                         }
                     }
-                    results[0] = profiles;
-                    
+
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.PROFILE_LIST.ordinal();
-                    message.obj = results;
+                    message.what = MESSAGE.PROFILE_LIST.hashCode();
+                    message.obj = profiles;
                     message.sendToTarget();
                 }
                 catch (IOException e) {
@@ -486,12 +471,12 @@ public final class CouchPotatoController {
                 }
             }
         };
-        
+
         executingCommand = true;
         sendUpdateMessageStatus(messageHandler, MESSAGE.MOVIE_DELETE.toString());
         thread.start();
     }
-    
+
     /**
      * This function refreshes the elements from movies.
      * 
@@ -501,17 +486,17 @@ public final class CouchPotatoController {
         if (executingRefreshMovies || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 try {
-                    
+
                     String result = makeApiCall(MESSAGE.MOVIE_LIST.toString().toLowerCase());
                     JSONObject jsonObject = new JSONObject(result);
                     MovieList movieList = null;
-                    
+
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
@@ -519,10 +504,10 @@ public final class CouchPotatoController {
                         SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(MovieList.class);
                         movieList = (MovieList) jsonMarshaller.unmarshal(jsonObject);
                     }
-                    
+
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.MOVIE_LIST.ordinal();
+                    message.what = MESSAGE.MOVIE_LIST.hashCode();
                     message.obj = movieList;
                     message.sendToTarget();
                 }
@@ -540,7 +525,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Delete a move Based on ID
      * 
@@ -553,20 +538,20 @@ public final class CouchPotatoController {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 String movieIds = "";
-                
+
                 for (int i = 0; i < ids.length; i++) {
                     if (i == 0)
                         movieIds += Integer.toString(ids[i]);
                     else
                         movieIds += "," + Integer.toString(ids[i]);
                 }
-                
+
                 try {
                     String result = makeApiCall(MESSAGE.MOVIE_DELETE.toString().toLowerCase(), "id=" + movieIds);
                     JSONObject jsonObject = new JSONObject(result);
@@ -579,10 +564,10 @@ public final class CouchPotatoController {
                     else {
                         sendUpdateMessageStatus(messageHandler, "Failed");
                     }
-                    
+
                     Thread.sleep(100);
                     CouchPotatoController.refreshMovies(messageHandler);
-                    
+
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
@@ -600,7 +585,7 @@ public final class CouchPotatoController {
         sendUpdateMessageStatus(messageHandler, MESSAGE.MOVIE_DELETE.toString());
         thread.start();
     }
-    
+
     /**
      * Edit a move Based on ID and Profile_ID
      * 
@@ -615,24 +600,23 @@ public final class CouchPotatoController {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
                 String movieIds = "";
-                
+
                 for (int i = 0; i < ids.length; i++) {
                     if (i == 0)
                         movieIds += Integer.toString(ids[i]);
                     else
                         movieIds += "," + Integer.toString(ids[i]);
                 }
-                
+
                 try {
-                    String result = makeApiCall(MESSAGE.MOVIE_EDIT.toString().toLowerCase(),
-                            "profile_id=" + profile_id, "id=" + movieIds);
-                    
+                    String result = makeApiCall(MESSAGE.MOVIE_EDIT.toString().toLowerCase(), "profile_id=" + profile_id, "id=" + movieIds);
+
                     JSONObject jsonObject = new JSONObject(result);
                     if (jsonObject.getBoolean("success")) {
                         sendUpdateMessageStatus(messageHandler, "Edited");
@@ -642,7 +626,7 @@ public final class CouchPotatoController {
                     }
                     Thread.sleep(100);
                     CouchPotatoController.refreshMovies(messageHandler);
-                    
+
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
@@ -660,7 +644,7 @@ public final class CouchPotatoController {
         sendUpdateMessageStatus(messageHandler, MESSAGE.MOVIE_EDIT.toString());
         thread.start();
     }
-    
+
     /**
      * Search for a movie based on title
      * 
@@ -673,36 +657,31 @@ public final class CouchPotatoController {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
-                
+
                 try {
-                    
+
                     String result = makeApiCall(MESSAGE.MOVIE_SEARCH.toString().toLowerCase(), "q=" + searchTitle);
-                    Object results[] = new Object[1];
-                    ArrayList<Object[]> rows = new ArrayList<Object[]>();
-                    
                     JSONObject jsonObject = new JSONObject(result);
-                    
-                    JSONArray movies = jsonObject.getJSONArray("movies");
-                    for (int i = 0; i < movies.length(); i++) {
-                        Object[] rowValues = new Object[2];
-                        rowValues[0] = movies.getJSONObject(i).getString("original_title");
-                        rowValues[1] = movies.getJSONObject(i).getString("imdb");
-                        rows.add(rowValues);
+                    MovieSearch movieList = null;
+
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
-                    
-                    results[0] = rows;
-                    
+                    else {
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(MovieSearch.class);
+                        movieList = (MovieSearch) jsonMarshaller.unmarshal(jsonObject);
+                    }
+
                     Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.MOVIE_SEARCH.ordinal();
-                    message.obj = results;
+                    message.what = MESSAGE.MOVIE_SEARCH.hashCode();
+                    message.obj = movieList;
                     message.sendToTarget();
-                    
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
@@ -718,7 +697,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Ignore a release
      * 
@@ -731,17 +710,17 @@ public final class CouchPotatoController {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
-                
+
                 try {
                     String result = makeApiCall(MESSAGE.RELEASE_IGNORE.toString().toLowerCase(), "id=" + releaseId);
                     JSONObject jsonObject = new JSONObject(result);
                     Log.d(TAG, jsonObject.toString());
-                    
+
                 }
                 catch (RuntimeException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
@@ -757,7 +736,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Download a release of a movie
      * 
@@ -770,17 +749,17 @@ public final class CouchPotatoController {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        
+
         Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
-                
+
                 try {
                     String result = makeApiCall(MESSAGE.RELEASE_DOWNLOAD.toString().toLowerCase(), "id=" + releaseId);
                     JSONObject jsonObject = new JSONObject(result);
                     Log.d(TAG, jsonObject.toString());
-                    
+
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
@@ -796,7 +775,7 @@ public final class CouchPotatoController {
         executingCommand = true;
         thread.start();
     }
-    
+
     /**
      * Get Additional Parameters
      * 
@@ -804,17 +783,16 @@ public final class CouchPotatoController {
      */
     private static Map<String, String> getAdditionalParameters() {
         HashMap<String, String> parameterMap = new HashMap<String, String>();
-        
+
         if (Preferences.isEnabled(Preferences.APACHE)) {
-            String apache_auth = Preferences.get(Preferences.APACHE_USERNAME) + ":"
-                    + Preferences.get(Preferences.APACHE_PASSWORD);
+            String apache_auth = Preferences.get(Preferences.APACHE_USERNAME) + ":" + Preferences.get(Preferences.APACHE_PASSWORD);
             String encoding = new String(Base64.encode(apache_auth.getBytes(), Base64.NO_WRAP));
             parameterMap.put("Authorization", "Basic " + encoding);
         }
-        
+
         return parameterMap;
     }
-    
+
     /**
      * Get Profile based on ID key
      * 
@@ -830,12 +808,12 @@ public final class CouchPotatoController {
             getProfiles(messageHandler);
         else
             result = profiles.get(key);
-        
+
         if (result == null)
             result = "Unknown";
         return !result.isEmpty() ? result : "Unknown";
     }
-    
+
     /**
      * Get Status based on ID key
      * 
@@ -850,12 +828,12 @@ public final class CouchPotatoController {
         if (status == null)
             getStatusList(messageHandler);
         result = status.get(key);
-        
+
         if (result == null)
             result = "Unknown";
         return !result.isEmpty() ? result : "Unknown";
     }
-    
+
     /**
      * Get Profile based on ID key
      * 
@@ -871,12 +849,12 @@ public final class CouchPotatoController {
             getProfiles();
         else
             result = profiles.get(key);
-        
+
         if (result == null)
             result = "Unknown";
         return !result.isEmpty() ? result : "Unknown";
     }
-    
+
     /**
      * Get Status based on ID key
      * 
@@ -891,12 +869,13 @@ public final class CouchPotatoController {
         if (status == null)
             getStatusList();
         else
-            result = status.get(key);;
+            result = status.get(key);
+        ;
         if (result == null)
             result = "Unknown";
         return !result.isEmpty() ? result : "Unknown";
     }
-    
+
     /**
      * Receive keyset from Profile List
      * 
@@ -905,7 +884,7 @@ public final class CouchPotatoController {
     public static HashMap<Integer, String> getAllProfiles() {
         return profiles;
     }
-    
+
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar
      * 
@@ -915,10 +894,10 @@ public final class CouchPotatoController {
      *            The text to write in the message
      */
     private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
-        
+
         Message message = new Message();
         message.setTarget(messageHandler);
-        message.what = MESSAGE.UPDATE.ordinal();
+        message.what = MESSAGE.UPDATE.hashCode();
         message.obj = text;
         message.sendToTarget();
     }

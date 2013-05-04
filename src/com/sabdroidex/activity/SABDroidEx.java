@@ -12,20 +12,16 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.actionbarcompat.ActionBarActivity;
@@ -335,7 +331,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        setupSearchView(menu);
+        //setupSearchView(menu);
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -343,7 +339,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      * Setting up the Search View
      * 
      * @param menu
-     */
+     *
     private void setupSearchView(Menu menu) {
         // Place an action bar item for searching.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -358,6 +354,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             MenuItemCompat.setActionView(item, searchView);
         }
     }
+     */
     
     /**
      * Listener for the search text field contents.

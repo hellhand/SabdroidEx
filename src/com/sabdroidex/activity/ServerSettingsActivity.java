@@ -75,7 +75,7 @@ public class ServerSettingsActivity extends PreferenceActivity {
 
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SABnzbdController.MESSAGE.GET_CONFIG.ordinal()) {
+            if (msg.what == SABnzbdController.MESSAGE.GET_CONFIG.hashCode()) {
                 SabnzbdConfig config = (SabnzbdConfig) msg.obj;
 
                 setPreferenceValue(Preferences.SERVER_BANDWITH, config.getMisc().getBanwidthLimit());

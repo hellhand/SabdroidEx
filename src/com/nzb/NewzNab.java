@@ -73,7 +73,7 @@ public class NewzNab {
 
                         Message message = new Message();
                         message.setTarget(messageHandler);
-                        message.what = MESSAGE.SEARCH.ordinal();
+                        message.what = MESSAGE.SEARCH.hashCode();
                         message.obj = results;
                         message.sendToTarget();
                     }
@@ -171,7 +171,7 @@ public class NewzNab {
 
         Message message = new Message();
         message.setTarget(messageHandler);
-        message.what = MESSAGE.UPDATE.ordinal();
+        message.what = MESSAGE.UPDATE.hashCode();
         message.obj = text;
         message.sendToTarget();
     }

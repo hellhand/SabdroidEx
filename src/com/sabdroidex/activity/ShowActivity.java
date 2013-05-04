@@ -37,7 +37,7 @@ public class ShowActivity extends ActionBarActivity {
         
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SickBeardController.MESSAGE.SHOW.ordinal() && msg.obj instanceof Show) {
+            if (msg.what == SickBeardController.MESSAGE.SHOW.hashCode() && msg.obj instanceof Show) {
                 mShow = (Show) msg.obj;
                 mShow.setTvdbId(mShowId);
                 showSeasonAdapater.setShow(mShow);

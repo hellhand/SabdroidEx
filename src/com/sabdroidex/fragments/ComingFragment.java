@@ -34,7 +34,7 @@ public class ComingFragment extends SABFragment {
         
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SickBeardController.MESSAGE.FUTURE.ordinal()) {
+            if (msg.what == SickBeardController.MESSAGE.FUTURE.hashCode()) {
                 try {
                     mFuturePeriod = (FuturePeriod) msg.obj;
                     
@@ -47,7 +47,7 @@ public class ComingFragment extends SABFragment {
                     Log.e(TAG, e.getLocalizedMessage());
                 }
             }
-            if (msg.what == SickBeardController.MESSAGE.UPDATE.ordinal()) {
+            if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
                 if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
                     Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
                 }
