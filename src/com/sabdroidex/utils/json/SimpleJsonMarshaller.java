@@ -75,8 +75,15 @@ public class SimpleJsonMarshaller {
                             if (Debug.isDebuggerConnected()) {
                                 Log.w(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
-                            Object parameter = methods[i].getParameterTypes()[0].newInstance();
-                            methods[i].invoke(result, parameter);
+                            try {
+                                Object parameter = methods[i].getParameterTypes()[0].newInstance();
+                                methods[i].invoke(result, parameter);
+                            }
+                            catch (Exception e) {
+                                if (Debug.isDebuggerConnected()) {
+                                    Log.e(TAG, methods[i].getName() + " " + e.getLocalizedMessage());
+                                }
+                            }
                         }
                     }
                     else if (setter.type() == JSONType.JSON_OBJECT) {
