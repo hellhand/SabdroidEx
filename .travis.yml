@@ -1,0 +1,17 @@
+language: java
+
+jdk: oraclejdk7
+
+before_script:
+  - sudo apt-get update -qq
+  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
+  - wget http://dl.google.com/android/android-sdk_r21.1-linux.tgz
+  - tar xzvf android-sdk_r21.1-linux.tgz > /dev/null
+  - export ANDROID_HOME=`pwd`/android-sdk-linux/
+  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  - android-sdk-linux/tools/android -s update sdk --filter android-16,platform-tool --no-ui
+  - android-sdk-linux/tools/android -s update project --path . --target "android-16"
+
+script:
+  - ant clean
+  - ant debug
