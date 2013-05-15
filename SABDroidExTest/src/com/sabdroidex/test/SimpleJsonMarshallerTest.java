@@ -8,12 +8,12 @@ import org.json.JSONObject;
 
 import android.test.AndroidTestCase;
 
-import com.sabdroidex.data.FuturePeriod;
-import com.sabdroidex.data.SabnzbdConfig;
-import com.sabdroidex.data.Season;
-import com.sabdroidex.data.Show;
-import com.sabdroidex.data.ShowList;
-import com.sabdroidex.data.ShowSearch;
+import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
+import com.sabdroidex.data.sickbeard.FuturePeriod;
+import com.sabdroidex.data.sickbeard.Season;
+import com.sabdroidex.data.sickbeard.Show;
+import com.sabdroidex.data.sickbeard.ShowList;
+import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 
 
