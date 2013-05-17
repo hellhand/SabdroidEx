@@ -20,10 +20,10 @@ import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class ShowDetailsDialog extends DialogFragment {
     
-    private Show mShow;
+    private static Show mShow;
     
-    public ShowDetailsDialog(Show show) {
-        this.mShow = show;
+    public static void setShow(Show mShow) {
+        ShowDetailsDialog.mShow = mShow;
     }
     
     @Override

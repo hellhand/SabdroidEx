@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.test.AndroidTestCase;
 
+import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.Season;
@@ -130,5 +131,21 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         assertNotNull(futurePeriod);
         assertTrue(futurePeriod.getMissed().size() > 0);
         assertTrue(futurePeriod.getToday().size() > 0);
+    }
+    
+    public void testMarshaller_MovieList() throws IOException, JSONException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        StringBuffer stringBuffer = new StringBuffer();
+        
+        InputStream stream = getClass().getResourceAsStream("movielist.json");
+        int c;
+        while ((c = stream.read()) != -1) {
+            stringBuffer.append((char) c);
+        }
+        
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());        
+        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(MovieList.class);
+        MovieList movieList = (MovieList) simpleJsonMarshaller.unmarshal(jsonObject);
+        assertNotNull(movieList);
+        assertTrue(movieList.getMovieElements().size() > 0);
     }
 }

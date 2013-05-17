@@ -48,9 +48,9 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class MoviesFragment extends SABFragment {
 
-    private static final String TAG = "MovieFragment";
+    private static final String TAG = MoviesFragment.class.getCanonicalName();
+    
     private static MovieList mMovieList;
-    private GridView mMovieGrid;
     private MovieGridAdapter mMovieListRowAdapter;
 
     /**
@@ -127,7 +127,7 @@ public class MoviesFragment extends SABFragment {
         SharedPreferences preferences = getActivity().getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
 
-        mMovieGrid = (GridView) inflater.inflate(R.layout.large_grid, null);
+        GridView mMovieGrid = (GridView) inflater.inflate(R.layout.large_grid, null);
 
         mMovieListRowAdapter = new MovieGridAdapter(getActivity(), mMovieList.getMovieElements());
         mMovieGrid.setAdapter(mMovieListRowAdapter);
@@ -138,7 +138,7 @@ public class MoviesFragment extends SABFragment {
         return mMovieGrid;
     }
 
-    public void setupShowElements(View view, Movie movie) {
+    public void setupMovieElements(View view, Movie movie) {
 
         ImageView moviePoster = (ImageView) view.findViewById(R.id.moviePoster);
 
@@ -169,7 +169,7 @@ public class MoviesFragment extends SABFragment {
 
         String imageKey = ImageType.MOVIE_POSTER.name() + movie.getMovieID();
         ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(), movie.getTitle(),
-                movie.getLibrary().getInfo().getPosters().getSimplePoster());
+                movie.getLibrary().getInfo().getPosters().getOriginalPoster());
     }
 
     /*

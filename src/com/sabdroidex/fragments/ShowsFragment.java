@@ -2,24 +2,28 @@ package com.sabdroidex.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
-import com.sabdroidex.adapters.ShowsListRowAdapter;
+import com.sabdroidex.activity.ShowActivity;
+import com.sabdroidex.adapters.ShowsGridAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.Show;
@@ -31,31 +35,30 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABHandler;
 
 public class ShowsFragment extends SABFragment {
-    
+
     private static final String TAG = ShowsFragment.class.getCanonicalName();
-    
+
     private static ShowList showList;
-    private ShowsListRowAdapter mShowsListRowAdapter;
-    
+    private GridView showGrid;
+    private ShowsGridAdapter mShowsGridAdapter;
+
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
     private final SABHandler messageHandler = new SABHandler() {
-        
+
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.SHOWS.hashCode()) {
-                try {
-                    showList = (ShowList) msg.obj;
-                    
-                    if (mShowsListRowAdapter != null) {
-                        mShowsListRowAdapter.clear();
-                        mShowsListRowAdapter.addAll(showList.getShowElements());
-                        mShowsListRowAdapter.notifyDataSetChanged();
+
+                showList = (ShowList) msg.obj;
+
+                if (mShowsGridAdapter != null) {
+                    mShowsGridAdapter.setDataSet(showList.getShowElements());
+                    mShowsGridAdapter.notifyDataSetChanged();
+                    if (showList.getShowElements().size() > 0) {
+                        showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
                     }
-                }
-                catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
                 }
             }
             if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
@@ -70,20 +73,27 @@ public class ShowsFragment extends SABFragment {
             }
         }
     };
-    
+
+    /**
+     * 
+     */
     public ShowsFragment() {
         showList = new ShowList();
     }
-    
+
+    /**
+     * 
+     * @param showsRows
+     */
     public ShowsFragment(ShowList showsRows) {
         showList = showsRows;
     }
-    
+
     @Override
     public int getTitle() {
         return R.string.tab_shows;
     }
-    
+
     /**
      * Refreshing the shows during startup or on user request. Asks to configure
      * if still not done
@@ -94,117 +104,132 @@ public class ShowsFragment extends SABFragment {
         }
         SickBeardController.refreshShows(messageHandler);
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         messageHandler.setActivity(getActivity());
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        
-        LinearLayout showView;
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            showView = (LinearLayout) inflater.inflate(R.layout.show_list, null);
+
+        mShowsGridAdapter = new ShowsGridAdapter(getActivity().getApplicationContext(), showList.getShowElements());
+
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.show_list, null);
+        showGrid = (GridView) linearLayout.findViewById(R.id.elementGrid);
+        showGrid.setAdapter(mShowsGridAdapter);
+
+        LinearLayout layout = (LinearLayout) linearLayout.findViewById(R.id.showStatus);
+        if (layout != null) {
+            showGrid.setOnItemClickListener(new GridItemClickListener());
+            showGrid.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            mShowsGridAdapter.showOverlay(true);
         }
         else {
-            showView = (LinearLayout) inflater.inflate(R.layout.simplelist, null);
+            showGrid.setOnItemLongClickListener(new GridItemLongClickListener());
         }
-        
-        ListView listView = (ListView) showView.findViewById(R.id.queueList);
-        
-        mShowsListRowAdapter = new ShowsListRowAdapter(getActivity().getApplicationContext(), showList.getShowElements());
-        listView.setAdapter(mShowsListRowAdapter);
-        ListItemClickListener listItemClickListener = new ListItemClickListener();
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            listView.setOnItemClickListener(listItemClickListener);
-            listView.setItemChecked(0, true);
-        }
-        else {
-            listView.setOnItemLongClickListener(new ListItemLongClickListener());
-        }
-        
+
         manualRefreshShows();
-        
-        return showView;
+
+        return linearLayout;
     }
-    
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        if (showList.getShowElements().size() > 0) {
+            showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
+        }
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        if ((getActivity().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-                && getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (showList.getShowElements().size() > 0) {
-                getView().findViewById(R.id.show_list_right_pane).setVisibility(View.VISIBLE);
-            }
-        }
         super.onActivityCreated(savedInstanceState);
     }
-    
+
     @Override
     public JSONBased getDataCache() {
         return showList;
     }
-        
+
     public void setupShowElements(View view, Show show) {
         ImageView showPoster = (ImageView) view.findViewById(R.id.showPoster);
-        
+
         TextView showName = (TextView) view.findViewById(R.id.show_name);
         showName.setText(show.getShowName());
-        
+
         TextView showStatus = (TextView) view.findViewById(R.id.show_status);
         showStatus.setText(show.getStatus());
-        
+
         TextView showQuality = (TextView) view.findViewById(R.id.show_quality);
         showQuality.setText(show.getQuality());
-        
+
         TextView showNextEpisode = (TextView) view.findViewById(R.id.show_next_episode);
         showNextEpisode.setText(show.getNextEpAirdate());
-        
+
         TextView showNetwork = (TextView) view.findViewById(R.id.show_network);
         showNetwork.setText(show.getNetwork());
-        
+
         TextView showLanguage = (TextView) view.findViewById(R.id.show_language);
         showLanguage.setText(show.getLanguage());
+
+        Button moreButton = (Button) view.findViewById(R.id.more_button);
+        moreButton.setOnClickListener(new MoreButtonClickListener(show));
         
         String imageKey = ImageType.SHOW_POSTER.name() + show.getTvdbId();
         ImageUtils.getImageWorker().loadImage(showPoster, ImageType.SHOW_POSTER, imageKey, show.getTvdbId(), show.getShowName());
     }
-    
-    private class ListItemClickListener implements OnItemClickListener {
-        
+
+    private class GridItemClickListener implements OnItemClickListener {
+
         /**
          * When an item is selected by a click the show details are displayed at
          * the side of the ListView
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // Setup of the show details
             setupShowElements(getView(), showList.getShowElements().get(position));
-            mShowsListRowAdapter.notifyDataSetInvalidated();
+            showGrid.invalidateViews();
         }
-        
+
     }
-    
-    private class ListItemLongClickListener implements OnItemLongClickListener {
-        
+
+    private class GridItemLongClickListener implements OnItemLongClickListener {
+
         /**
          * When an item is selected by a long click a Dialog appears to display
          * the show details.
          */
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-            ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog(showList.getShowElements().get(position));
+            ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog();
+            ShowDetailsDialog.setShow(showList.getShowElements().get(position));
             showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
             return true;
         }
+
+    }
+    
+    private class MoreButtonClickListener implements OnClickListener {
         
+        private Show show;
+        
+        public MoreButtonClickListener(Show show) {
+            this.show = show;
+        }
+        
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getActivity().getBaseContext(), ShowActivity.class);
+            intent.putExtra("tvdbid", show.getTvdbId());
+            getActivity().startActivity(intent);
+        }
     }
 }

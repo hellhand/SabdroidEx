@@ -14,4 +14,5 @@ before_script:
 
 script:
   - ant clean
-  - ant debug
+  - ant release
+  - if [ -f ./bin/SABDroidEx-release-unsigned.apk ]; then curl -T ./bin/SABDroidEx-release-unsigned.apk -usabdroidex:2eb633ac0a9b597a8ddae8ddfb422c9799a27fb34087e92bb2ae6dc4ddf1f9f1 https://api.bintray.com/content/sabdroidex/SabdroidEx/SabdroidEx/latest/SABDroidEx.apk; fi

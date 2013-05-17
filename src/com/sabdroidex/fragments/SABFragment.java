@@ -2,12 +2,12 @@ package com.sabdroidex.fragments;
 
 import java.util.ArrayList;
 
-import com.sabdroidex.data.JSONBased;
-
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.sabdroidex.data.JSONBased;
 
 public abstract class SABFragment extends Fragment {
 

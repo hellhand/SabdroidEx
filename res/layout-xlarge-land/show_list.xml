@@ -3,16 +3,14 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:orientation="horizontal" >
-
+    
     <include
-        android:id="@+id/show_list_left_pane"
         android:layout_width="540dip"
         android:layout_height="wrap_content"
         android:layout_marginRight="1dip"
-        layout="@layout/simplelist" />
+        layout="@layout/small_grid" />
 
     <include
-        android:id="@+id/show_list_right_pane"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="2dip"

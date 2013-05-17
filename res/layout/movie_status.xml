@@ -18,8 +18,7 @@
             android:layout_marginBottom="8dip"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/movie_poster"
-            android:src="@drawable/temp_poster" />
+            android:contentDescription="@string/movie_poster" />
 
         <TableRow
             android:layout_width="wrap_content"

@@ -3,10 +3,6 @@ package com.sabdroidex.fragments.dialogs.couchpotato;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sabdroidex.R;
-import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
-import com.sabdroidex.data.couchpotato.Movie;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,6 +10,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+
+import com.sabdroidex.R;
+import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
+import com.sabdroidex.data.couchpotato.Movie;
 
 public class MovieProfileDialog extends DialogFragment {
     

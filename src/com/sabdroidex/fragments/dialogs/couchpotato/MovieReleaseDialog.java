@@ -1,9 +1,5 @@
 package com.sabdroidex.fragments.dialogs.couchpotato;
 
-import com.sabdroidex.R;
-import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
-import com.sabdroidex.data.couchpotato.Movie;
-
 import android.app.Dialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +11,10 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.sabdroidex.R;
+import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
+import com.sabdroidex.data.couchpotato.Movie;
 
 public class MovieReleaseDialog extends DialogFragment {
 

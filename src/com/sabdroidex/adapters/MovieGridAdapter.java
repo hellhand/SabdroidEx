@@ -68,7 +68,7 @@ public class MovieGridAdapter extends BaseAdapter {
         Movie movie = (Movie) getItem(position);
         String imageKey = ImageType.MOVIE_POSTER.name() + movie.getMovieID();
         ImageUtils.getImageWorker().loadImage(movieItem.poster, ImageType.MOVIE_BANNER, imageKey, movie.getMovieID(),
-                movie.getTitle(), movie.getLibrary().getInfo().getPosters().getSimplePoster());
+                movie.getTitle(), movie.getLibrary().getInfo().getPosters().getOriginalPoster());
         movieItem.title.setText(movie.getTitle());
         
         convertView.setId(position);

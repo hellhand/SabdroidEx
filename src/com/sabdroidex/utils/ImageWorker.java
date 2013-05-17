@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -45,7 +46,7 @@ public class ImageWorker {
         bgOptions = new Options();
         bgOptions.inPurgeable = true;
         bgOptions.inPreferredConfig = Config.RGB_565;
-        mBitmapReader = new BitmapReader(0.05f);
+        mBitmapReader = new BitmapReader(0.25f);
     }
     
     public void setSickbeardPosterTemp(int resId) {
@@ -390,7 +391,7 @@ public class ImageWorker {
         }
         
     }
-    
+
     public class AsyncMovieBanner extends BitmapWorkerTask {
         
         public AsyncMovieBanner(ImageView imageView, String key) {
@@ -444,7 +445,11 @@ public class ImageWorker {
          * @param bitmap
          * @return size in bytes
          */
+        @TargetApi(12)
         public int getBitmapSize(Bitmap bitmap) {
+            if (SABDroidConstants.hasHoneycombMR1()) {
+                return bitmap.getByteCount();
+            }
             return bitmap.getRowBytes() * bitmap.getHeight();
         }
         

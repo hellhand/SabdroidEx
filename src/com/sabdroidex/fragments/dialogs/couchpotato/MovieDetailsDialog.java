@@ -37,7 +37,7 @@ public class MovieDetailsDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity().getBaseContext());
         ScrollView mMovieView = (ScrollView) inflater.inflate(R.layout.movie_status, null);
         
-        setupShowElements(mMovieView, mMovie);
+        setupMovieElements(mMovieView, mMovie);
 
         builder.setPositiveButton(R.string.more, new DialogInterface.OnClickListener() {
             
@@ -66,7 +66,7 @@ public class MovieDetailsDialog extends DialogFragment {
         super.onDismiss(dialog);
     }
     
-    public void setupShowElements(View view, Movie movie) {
+    public void setupMovieElements(View view, Movie movie) {
         
         ImageView moviePoster = (ImageView) view.findViewById(R.id.moviePoster);
         
@@ -96,6 +96,6 @@ public class MovieDetailsDialog extends DialogFragment {
         
         String imageKey = ImageType.MOVIE_POSTER.name() + movie.getMovieID();
         ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(),
-                movie.getTitle(), movie.getLibrary().getInfo().getPosters().getSimplePoster());
+                movie.getTitle(), movie.getLibrary().getInfo().getPosters().getOriginalPoster());
     }
 }
