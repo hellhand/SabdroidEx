@@ -70,7 +70,7 @@ public class MovieDetailsDialog extends DialogFragment {
         
         ImageView moviePoster = (ImageView) view.findViewById(R.id.moviePoster);
         
-        TextView movieTitle = (TextView) view.findViewById(R.id.movie_title);
+        TextView movieTitle = (TextView) view.findViewById(R.id.movie_name);
         movieTitle.setText(movie.getTitle());
         
         TextView movieProfile = (TextView) view.findViewById(R.id.movie_profile);

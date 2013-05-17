@@ -182,7 +182,7 @@ public class ShowsFragment extends SABFragment {
 
         Button moreButton = (Button) view.findViewById(R.id.more_button);
         moreButton.setOnClickListener(new MoreButtonClickListener(show));
-        
+
         String imageKey = ImageType.SHOW_POSTER.name() + show.getTvdbId();
         ImageUtils.getImageWorker().loadImage(showPoster, ImageType.SHOW_POSTER, imageKey, show.getTvdbId(), show.getShowName());
     }
@@ -195,6 +195,13 @@ public class ShowsFragment extends SABFragment {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (getView() == null) {
+                /**
+                 * This can be caused when a click is called in the Handler
+                 * whilst the parent view is null
+                 */
+                return;
+            }
             setupShowElements(getView(), showList.getShowElements().get(position));
             showGrid.invalidateViews();
         }
@@ -216,15 +223,15 @@ public class ShowsFragment extends SABFragment {
         }
 
     }
-    
+
     private class MoreButtonClickListener implements OnClickListener {
-        
+
         private Show show;
-        
+
         public MoreButtonClickListener(Show show) {
             this.show = show;
         }
-        
+
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(getActivity().getBaseContext(), ShowActivity.class);

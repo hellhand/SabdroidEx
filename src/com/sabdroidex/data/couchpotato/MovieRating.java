@@ -32,25 +32,25 @@ public class MovieRating implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 550495028366908978L;
-	private List<Double> imdbListRating;
+	private List<Number> imdbListRating;
 
 	/**
 	 * @param imdbRating the imdbRating to set
 	 */
 	@JSONSetter(name = "imdb", type=JSONType.LIST)
-	public void setImdbListRating(List<Double> imdbRating) {
+	public void setImdbListRating(List<Number> imdbRating) {
 		this.imdbListRating = imdbRating;
 	}
 	
-	public Double getImdbVotes(){
+	public Integer getImdbVotes(){
 		if(imdbListRating == null)
-			return 0.0;
-		return imdbListRating.get(1);
+			return 0;
+		return (Integer) imdbListRating.get(1);
 	}
 	
 	public Double getImdbRating(){
 		if(imdbListRating == null)
 			return 0.0;
-		return imdbListRating.get(0);
+		return (Double) imdbListRating.get(0);
 	}
 }

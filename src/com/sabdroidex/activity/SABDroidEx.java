@@ -28,6 +28,7 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.data.sabnzbd.Queue;
@@ -53,10 +54,10 @@ import com.viewpagerindicator.TabPageIndicator;
  * Main SABDroid Activity
  */
 public class SABDroidEx extends ActionBarActivity implements UpdateableActivity {
-    
+
     private static final String TAG = SABDroidEx.class.getCanonicalName();
     private static String APPLICATION_VERSION;
-    
+
     /**
      * The Fragments that will take place in the ViewPager
      */
@@ -66,30 +67,30 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     private ComingFragment comingFragment;
     private MoviesFragment moviesFragment;
     private DialogFragmentManager dialogFragmentManager;
-    
+
     /**
      * Creating the elements of the screen
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {        
-    	super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Log.v(TAG, "Starting SABDroidEx");
-        
+
         setContentView(R.layout.header);
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
         NoMediaChecker.check(Environment.getExternalStorageDirectory().getAbsolutePath());
         ImageUtils.initImageWorker(getApplicationContext());
-        
+
         dialogFragmentManager = new DialogFragmentManager(this);
-        
+
         try {
             APPLICATION_VERSION = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         }
         catch (NameNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }
-        
+
         if (!Preferences.get(Preferences.VERSION).equals(APPLICATION_VERSION)) {
             Log.i(TAG, "New version detected : Opening version popup");
             deleteFile(Preferences.DATA_CACHE);
@@ -98,7 +99,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
         createLists();
     }
-    
+
     @Override
     public void onNewIntent(final Intent newIntent) {
         super.onNewIntent(newIntent);
@@ -108,7 +109,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             doSearchQuery(newIntent, "onNewIntent()");
         }
     }
-    
+
     @Override
     protected void onStart() {
         final Intent intent = getIntent();
@@ -132,7 +133,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
         super.onStart();
     }
-    
+
     /**
      * When the activity is stopped the status is saved so that data stays
      * available off-line if the data cache has been enabled.
@@ -169,9 +170,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 }
             }
         }
-    	super.onStop();
+        super.onStop();
     }
-    
+
     /**
      * 
      * @param queryIntent
@@ -182,12 +183,12 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         Set<String> keySet = bundle.keySet();
         System.out.println((String) bundle.get((String) keySet.toArray()[1]));
     }
-    
+
     /**
      * Creating the whole ViewPager content
      */
     private void createLists() {
-        
+
         /**
          * Creating default empty data.
          */
@@ -196,22 +197,31 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         ShowList shows = new ShowList();
         FuturePeriod coming = new FuturePeriod();
         MovieList movies = new MovieList();
-        
+
         /**
          * Restoring data if the cache is enabled.
          */
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
-            
+
             FileInputStream fis = null;
             ObjectInputStream ois = null;
             try {
                 fis = openFileInput(Preferences.DATA_CACHE);
                 ois = new ObjectInputStream(fis);
-                queue = (Queue) ois.readObject();
-                history = (History) ois.readObject();
-                shows = (ShowList) ois.readObject();                
-                coming = (FuturePeriod) ois.readObject();
-                movies = (MovieList) ois.readObject();
+
+                while (ois.available() > 0) {
+                    JSONBased element = (JSONBased) ois.readObject();
+                    if (element instanceof Queue)
+                        queue = (Queue) element;
+                    if (element instanceof History)
+                        history = (History) element;
+                    if (element instanceof ShowList)
+                        shows = (ShowList) element;
+                    if (element instanceof FuturePeriod)
+                        coming = (FuturePeriod) element;
+                    if (element instanceof MovieList)
+                        movies = (MovieList) element;
+                }
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -226,7 +236,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 }
             }
         }
-        
+
         /**
          * Instantiating all the lists.
          */
@@ -240,12 +250,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
             moviesFragment = new MoviesFragment(movies);
         }
-        
+
         /**
          * Creation of the Adapter and adding all the fragments.
          */
-        SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(),
-                getSupportFragmentManager());
+        SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(), getSupportFragmentManager());
         pagerAdapter.addFragment(queueFragment);
         pagerAdapter.addFragment(historyFragment);
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
@@ -255,7 +264,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
             pagerAdapter.addFragment(moviesFragment);
         }
-        
+
         /**
          * Setting the adapter to the ViewPager and linking the Indicator to the
          * pager.
@@ -263,11 +272,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
         pager.setPageMargin(5);
-        
+
         TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
         tabPageIndicator.setViewPager(pager);
     }
-    
+
     /**
      * Refreshing the queue during startup or on user request. Asks to configure
      * if still not done
@@ -289,7 +298,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
         getActionBarHelper().setRefreshActionItemState(true);
     }
-    
+
     /**
      * This method is used to refresh the contents of the status panel.
      */
@@ -302,20 +311,18 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             Double kbpersec = new Double(status.getKbPerSec());
             String mb = status.getMb();
             String diskspace2 = status.getDiskSpace2();
-            
-            ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " "
-                    + getString(R.string.header_free_unit));
-            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / "
-                    + Formatter.formatShort(Double.parseDouble(mb)) + " MB");
-            ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " "
-                    + getString(R.string.header_speed_unit));
+
+            ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " " + getString(R.string.header_free_unit));
+            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb))
+                    + " MB");
+            ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " " + getString(R.string.header_speed_unit));
             ((TextView) findViewById(R.id.headerEta)).setText(Calculator.calculateETA(mbleft, kbpersec));
         }
         catch (Exception exception) {
             Log.w(TAG, "Error Updating Labels");
         }
     }
-    
+
     /**
      * This method is used to set the refresh button as active or not
      */
@@ -323,7 +330,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     public void updateState(boolean showAsUpdate) {
         getActionBarHelper().setRefreshActionItemState(showAsUpdate);
     }
-    
+
     /**
      * This creates the menu items as they will be by default
      */
@@ -331,48 +338,48 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        //setupSearchView(menu);
+        // setupSearchView(menu);
         return super.onCreateOptionsMenu(menu);
     }
-    
+
     /**
      * Setting up the Search View
      * 
      * @param menu
-     *
-    private void setupSearchView(Menu menu) {
-        // Place an action bar item for searching.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            MenuItem searchItem = menu.findItem(R.id.menu_search);
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        }
-        View searchView = SearchViewCompat.newSearchView(getApplicationContext());
-        if (searchView != null) {
-            SearchViewCompat.setOnQueryTextListener(searchView, queryTextListener);
-            MenuItem item = menu.findItem(R.id.menu_search);
-            MenuItemCompat.setActionView(item, searchView);
-        }
-    }
+     * 
+     *            private void setupSearchView(Menu menu) { // Place an action
+     *            bar item for searching. if (Build.VERSION.SDK_INT >=
+     *            Build.VERSION_CODES.ICE_CREAM_SANDWICH) { MenuItem searchItem
+     *            = menu.findItem(R.id.menu_search);
+     *            searchItem.setShowAsActionFlags
+     *            (MenuItem.SHOW_AS_ACTION_IF_ROOM |
+     *            MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW); } View
+     *            searchView =
+     *            SearchViewCompat.newSearchView(getApplicationContext()); if
+     *            (searchView != null) {
+     *            SearchViewCompat.setOnQueryTextListener(searchView,
+     *            queryTextListener); MenuItem item =
+     *            menu.findItem(R.id.menu_search);
+     *            MenuItemCompat.setActionView(item, searchView); } }
      */
-    
+
     /**
      * Listener for the search text field contents.
      */
     OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
-        
+
         @Override
         public boolean onQueryTextChange(String newText) {
             return super.onQueryTextChange(newText);
         }
-        
+
         @Override
         public boolean onQueryTextSubmit(String query) {
             System.out.println(query);
             return super.onQueryTextSubmit(query);
         }
     };
-    
+
     /**
      * This is called each time the Menu Button or Menu UI Element is pressed.
      * It allows to update the menu according to what we need
@@ -398,7 +405,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
         return super.onPrepareOptionsMenu(menu);
     }
-    
+
     /**
      * Handles item selections in the Menu
      */
@@ -432,14 +439,14 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     /**
      * Shows the Dialog to choose an Add option (Nzb, Show ...)
      */
     private void showAddDialog() {
         dialogFragmentManager.showAddDialog();
     }
-    
+
     /**
      * Clears the application version. For testing purposes.
      */
@@ -447,28 +454,28 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         Preferences.put(Preferences.VERSION, "");
         deleteFile(Preferences.DATA_CACHE);
     }
-    
+
     /**
      * Displaying the application settings
      */
     private void showSettings() {
         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
     }
-    
+
     /**
      * Displaying the Sabnzbd server settings
      */
     private void showServerSettings() {
         startActivity(new Intent(getApplicationContext(), ServerSettingsActivity.class));
     }
-    
+
     /**
      * Displaying the Couchpotato server settings
      */
     private void showCouchSettings() {
         startActivity(new Intent(getApplicationContext(), CouchSettingsActivity.class));
     }
-    
+
     /**
      * This method invokes either the pause or resume functionality of sabnzbd
      * regarding of the known status

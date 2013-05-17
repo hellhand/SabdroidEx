@@ -21,7 +21,6 @@ public class ShowsGridAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private List<Show> mItems;
     private boolean showOverlay;
-    private long selectedItem;
 
     public ShowsGridAdapter(Context context, List<Show> items) {
         this.mContext = context;
@@ -57,7 +56,7 @@ public class ShowsGridAdapter extends BaseAdapter {
 
         if (showOverlay) {
             if (((GridView) parent).getCheckedItemPosition() == position) {
-                showItem.overlay.getLayoutParams().height = -1;
+
                 showItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
                 showItem.overlay.setVisibility(View.VISIBLE);
             }
@@ -96,13 +95,5 @@ public class ShowsGridAdapter extends BaseAdapter {
 
     public void showOverlay(boolean showOverlay) {
         this.showOverlay = showOverlay;
-    }
-
-    public void setCurrentSelection(long id) {
-        this.selectedItem = id;
-    }
-
-    public long getCurrentSelection() {
-        return this.selectedItem;
     }
 }
