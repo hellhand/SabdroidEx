@@ -11,7 +11,7 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License.
+  limitations under the License.
 -->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
@@ -27,7 +27,7 @@
         <item name="actionbarCompatItemHomeStyle">@style/ActionBarCompatHomeItem</item>
         <item name="actionbarCompatProgressIndicatorStyle">@style/ActionBarCompatProgressIndicator</item>
     </style>
-        
+
     <style name="ActionBarCompat">
         <item name="android:background">#eee</item>
     </style>
@@ -67,7 +67,7 @@
         <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator</item>
         <item name="vpiTabTextStyle">@style/Widget.TabPageIndicator.Text</item>
     </style>
-        
+
     <style name="Widget"></style>
 
     <style name="Widget.TitlePageIndicator" parent="Widget">
@@ -104,5 +104,22 @@
     </style>
 
     <style name="TextAppearance.TabPageIndicator" parent="Widget"></style>
+
+    <style name="ContactListSeparatorTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">32dip</item>
+        <!-- See comments for @dimen/list_section_divider_min_height -->
+        <item name="android:minHeight">@dimen/list_section_divider_min_height</item>
+        <item name="android:background">@drawable/list_section_divider_holo_custom</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/people_app_theme_color</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">8dip</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 
 </resources>

@@ -115,7 +115,7 @@ public class MoviesFragment extends SABFragment {
         if (!Preferences.isEnabled(Preferences.COUCHPOTATO)) {
             return;
         }
-        CouchPotatoController.refreshMovies(messageHandler);
+        CouchPotatoController.refreshMovies(messageHandler,"");
     }
 
     @Override
@@ -224,7 +224,8 @@ public class MoviesFragment extends SABFragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
             Movie movie = movieList.getMovieElements().get(position);
-            MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog(movie);
+            MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog();
+            MovieDetailsDialog.setMovie(movie);
             movieDetailsDialog.show(getActivity().getSupportFragmentManager(), movie.getTitle());
             return true;
         }

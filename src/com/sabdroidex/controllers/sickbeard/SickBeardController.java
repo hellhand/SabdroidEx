@@ -3,15 +3,12 @@ package com.sabdroidex.controllers.sickbeard;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONObject;
 
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
@@ -22,6 +19,7 @@ import com.sabdroidex.data.sickbeard.ShowList;
 import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
 public final class SickBeardController extends SABController {
@@ -458,7 +456,6 @@ public final class SickBeardController extends SABController {
          * Correcting the command names to be understood by SickBeard
          */
         command = command.replace('_', '.');
-        Map<String, String> parameterMap = getAdditionalParameters();
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
         
@@ -472,7 +469,7 @@ public final class SickBeardController extends SABController {
             Log.d(TAG, url);
         }
         
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, parameterMap));
+        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
         return result;
     }
     
@@ -583,19 +580,6 @@ public final class SickBeardController extends SABController {
             credentials += "&ma_password=" + password;
         }
         return credentials;
-    }
-    
-    private static Map<String, String> getAdditionalParameters() {
-        HashMap<String, String> parameterMap = new HashMap<String, String>();
-        
-        if (Preferences.isEnabled(Preferences.APACHE)) {
-            String apache_auth = Preferences.get(Preferences.APACHE_USERNAME) + ":"
-                    + Preferences.get(Preferences.APACHE_PASSWORD);
-            String encoding = new String(Base64.encode(apache_auth.getBytes(), Base64.NO_WRAP));
-            parameterMap.put("Authorization", "Basic " + encoding);
-        }
-        
-        return parameterMap;
     }
     
     public static String getSeasonPosterURL(String command, Integer tvdbid, Integer season) {

@@ -39,7 +39,7 @@ public class SearchFragment extends SABFragment {
 
         LinearLayout searchView = (LinearLayout) inflater.inflate(R.layout.list, null);
 
-        listView = (ListView) searchView.findViewById(R.id.queueList);
+        listView = (ListView) searchView.findViewById(R.id.simpleList);
         searchView.removeAllViews();
         listView.setAdapter(new SearchListRowAdapter(mParent, rows));
 

@@ -2,14 +2,11 @@ package com.sabdroidex.controllers.sabnzbd;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONObject;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
@@ -19,6 +16,7 @@ import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
 /**
@@ -306,7 +304,6 @@ public final class SABnzbdController extends SABController {
     public static String makeApiCall(final String command, final String... extraParams) throws Exception {
         
         String url = getFormattedUrl();
-        Map<String, String> parameterMap = getAdditionalParameters();
         
         url = url.replace("[COMMAND]", command);
         url = url + getPreferencesParams();
@@ -317,20 +314,8 @@ public final class SABnzbdController extends SABController {
             }
         }
         
-        final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, parameterMap));
+        final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
         return result;
-    }
-    
-    private static Map<String, String> getAdditionalParameters() {
-        HashMap<String, String> parameterMap = new HashMap<String, String>();
-        
-        if (Preferences.isEnabled(Preferences.APACHE)) {
-            String apache_auth = Preferences.get(Preferences.APACHE_USERNAME) + ":" + Preferences.get(Preferences.APACHE_PASSWORD);
-            String encoding = new String(Base64.encode(apache_auth.getBytes(), Base64.NO_WRAP));
-            parameterMap.put("Authorization", "Basic " + encoding);
-        }
-        
-        return parameterMap;
     }
     
     /**

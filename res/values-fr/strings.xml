@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SABDroidEx</string>
+    <string name="app_name">SabdroidEx</string>
 	<string name="new_version">Infos Nouvelle Version</string>
 
 	<string name="header_speed">Vitesse </string>

@@ -14,7 +14,6 @@ import com.sabdroidex.data.sickbeard.Season;
 
 public class SeasonEpisodeAdapater extends BaseAdapter {
     
-    private Context context;
     private LayoutInflater inflater;
     private Season season;
     
@@ -38,8 +37,7 @@ public class SeasonEpisodeAdapater extends BaseAdapter {
     }
     
     public SeasonEpisodeAdapater(Context context, Season season) {
-        this.context = context;
-        this.inflater = LayoutInflater.from(this.context);
+        this.inflater = LayoutInflater.from(context);
         this.season = season;
     }
     

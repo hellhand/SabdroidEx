@@ -19,7 +19,6 @@ package com.sabdroidex.controllers.couchpotato;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,13 +26,13 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 
 import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
 public final class CouchPotatoController {
@@ -98,7 +97,6 @@ public final class CouchPotatoController {
          * Correcting the command names to be understood by CouchPotato
          */
         command = command.replace('_', '.');
-        Map<String, String> parameterMap = getAdditionalParameters();
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
         url = url.replace("[API]", api_key);
@@ -112,9 +110,8 @@ public final class CouchPotatoController {
         url = url.replace(" ", "%20");
         Log.d(TAG, url);
 
-        char[] result = HttpUtil.getInstance().getDataAsCharArray(url, parameterMap);
-
-        return result != null ? new String(result) : "";
+        final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
+        return result;
     }
 
     /**
@@ -226,10 +223,9 @@ public final class CouchPotatoController {
      */
     private static void getApiKey() {
         String url = getApiUrl();
-        Map<String, String> Parameters = getAdditionalParameters();
         try {
 
-            String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, Parameters));
+            final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
 
             JSONObject jsonObject = new JSONObject(result);
             if (jsonObject.getBoolean("success")) {
@@ -279,7 +275,7 @@ public final class CouchPotatoController {
                     message.sendToTarget();
 
                     Thread.sleep(500);
-                    CouchPotatoController.refreshMovies(messageHandler);
+                    CouchPotatoController.refreshMovies(messageHandler, "active,done");
 
                 }
                 catch (IOException e) {
@@ -481,8 +477,11 @@ public final class CouchPotatoController {
      * This function refreshes the elements from movies.
      * 
      * @param messageHandler
+     *            The message handler that will receive the result
+     * @param status
+     *            The status we want to fetch
      */
-    public static void refreshMovies(final Handler messageHandler) {
+    public static void refreshMovies(final Handler messageHandler, final String status) {
         if (executingRefreshMovies || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
@@ -493,7 +492,7 @@ public final class CouchPotatoController {
             public void run() {
                 try {
 
-                    String result = makeApiCall(MESSAGE.MOVIE_LIST.toString().toLowerCase());
+                    String result = makeApiCall(MESSAGE.MOVIE_LIST.toString().toLowerCase(), "status=" + status);
                     JSONObject jsonObject = new JSONObject(result);
                     MovieList movieList = null;
 
@@ -556,17 +555,20 @@ public final class CouchPotatoController {
                     String result = makeApiCall(MESSAGE.MOVIE_DELETE.toString().toLowerCase(), "id=" + movieIds);
                     JSONObject jsonObject = new JSONObject(result);
                     if (jsonObject.getBoolean("success") && ids.length != 1) {
+                        // TODO: Resource bundle
                         sendUpdateMessageStatus(messageHandler, "Deleted movies");
                     }
                     else if (jsonObject.getBoolean("success") && ids.length == 1) {
+                        // TODO: Resource bundle
                         sendUpdateMessageStatus(messageHandler, "Deleted movie");
                     }
                     else {
+                        // TODO: Resource bundle
                         sendUpdateMessageStatus(messageHandler, "Failed");
                     }
 
                     Thread.sleep(100);
-                    CouchPotatoController.refreshMovies(messageHandler);
+                    CouchPotatoController.refreshMovies(messageHandler, "");
 
                 }
                 catch (IOException e) {
@@ -619,13 +621,15 @@ public final class CouchPotatoController {
 
                     JSONObject jsonObject = new JSONObject(result);
                     if (jsonObject.getBoolean("success")) {
+                        // TODO: Resource bundle
                         sendUpdateMessageStatus(messageHandler, "Edited");
                     }
                     else {
+                        // TODO: Resource bundle
                         sendUpdateMessageStatus(messageHandler, "Failed");
                     }
                     Thread.sleep(100);
-                    CouchPotatoController.refreshMovies(messageHandler);
+                    CouchPotatoController.refreshMovies(messageHandler, "active,done");
 
                 }
                 catch (IOException e) {
@@ -670,6 +674,7 @@ public final class CouchPotatoController {
                     MovieSearch movieList = null;
 
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        // TODO: Resource bundle
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
                     else {
@@ -774,23 +779,6 @@ public final class CouchPotatoController {
         };
         executingCommand = true;
         thread.start();
-    }
-
-    /**
-     * Get Additional Parameters
-     * 
-     * @return Parameters
-     */
-    private static Map<String, String> getAdditionalParameters() {
-        HashMap<String, String> parameterMap = new HashMap<String, String>();
-
-        if (Preferences.isEnabled(Preferences.APACHE)) {
-            String apache_auth = Preferences.get(Preferences.APACHE_USERNAME) + ":" + Preferences.get(Preferences.APACHE_PASSWORD);
-            String encoding = new String(Base64.encode(apache_auth.getBytes(), Base64.NO_WRAP));
-            parameterMap.put("Authorization", "Basic " + encoding);
-        }
-
-        return parameterMap;
     }
 
     /**

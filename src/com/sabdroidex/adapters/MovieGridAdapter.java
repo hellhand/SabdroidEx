@@ -35,15 +35,13 @@ import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class MovieGridAdapter extends BaseAdapter {
 
-    private Context mContext;
     private LayoutInflater mInflater;
     private List<Movie> mItems;
     private boolean showOverlay;
     
     public MovieGridAdapter(Context context, List<Movie> items) {
-        this.mContext = context;
         this.mItems = items;
-        this.mInflater = LayoutInflater.from(this.mContext);
+        this.mInflater = LayoutInflater.from(context);
     }
     
     public void setDataSet(List<Movie> movieElements) {
@@ -63,10 +61,6 @@ public class MovieGridAdapter extends BaseAdapter {
             movieItem.poster = (ImageView) convertView.findViewById(R.id.movie_poster);
             movieItem.title = (TextView) convertView.findViewById(R.id.movie_title);
             movieItem.overlay = (ImageView) convertView.findViewById(R.id.movieOverlay);
-            if (showOverlay) {
-                movieItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
-                movieItem.overlay.setVisibility(View.INVISIBLE);
-            }
         }
         else {
         	movieItem = (MovieListItem) convertView.getTag();
@@ -74,7 +68,6 @@ public class MovieGridAdapter extends BaseAdapter {
         
         if (showOverlay) {
             if (((GridView) parent).getCheckedItemPosition() == position) {
-
                 movieItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
                 movieItem.overlay.setVisibility(View.VISIBLE);
             }

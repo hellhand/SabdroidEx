@@ -28,11 +28,11 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.HostnameVerifier;
@@ -41,14 +41,34 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
 public class HttpUtil {
-    
+
     private static final String BNL = "\r\n";
     private static final String ACCEPT_ENCODING = "Accept-Encoding";
     private static final String USER_AGENT = "User-Agent";
@@ -57,21 +77,21 @@ public class HttpUtil {
     private static final String GZIP = "gzip";
     private static final String UTF_8 = "UTF-8";
     private static final HttpUtil _instance = new HttpUtil();
-    
+
     private HttpUtil() {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpParams params = httpClient.getParams();
         HttpConnectionParams.setConnectionTimeout(params, 5000);
         HttpConnectionParams.setSoTimeout(params, 5000);
     }
-    
+
     public static HttpUtil getInstance() {
         return _instance;
     }
-    
+
     static {
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            
+
             public boolean verify(String hostname, SSLSession session) {
                 return true;
             }
@@ -79,21 +99,21 @@ public class HttpUtil {
         try {
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(null, new X509TrustManager[] { new X509TrustManager() {
-                
+
                 public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                     /**
                      * We accept all certificates as Sickbeard's is self signed
                      * and cannot be verified
                      */
                 }
-                
+
                 public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                     /**
                      * We accept all certificates as Sickbeard's is self signed
                      * and cannot be verified
                      */
                 }
-                
+
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
                 }
@@ -104,7 +124,7 @@ public class HttpUtil {
             Log.e("ERROR", " " + e.getLocalizedMessage());
         }
     }
-    
+
     /**
      * Gets data from URL as String throws {@link RuntimeException} If anything
      * goes wrong
@@ -119,19 +139,19 @@ public class HttpUtil {
         InputStreamReader re = null;
         BufferedReader rd = null;
         String responseBody = "";
-        
+
         try {
-            urlc = getConnection(new URL(url));            
+            urlc = getConnection(new URL(url));
             if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
                 is = new GZIPInputStream(urlc.getInputStream());
             }
             else {
                 is = urlc.getInputStream();
             }
-            
+
             re = new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8));
             rd = new BufferedReader(re);
-            
+
             String line = "";
             while ((line = rd.readLine()) != null) {
                 responseBody += line;
@@ -153,7 +173,7 @@ public class HttpUtil {
         }
         return responseBody;
     }
-    
+
     /**
      * Gets data from URL as byte[] throws {@link RuntimeException} If anything
      * goes wrong
@@ -163,46 +183,22 @@ public class HttpUtil {
      * @throws
      * @throws ServerConnectinoException
      */
-    public byte[] getDataAsByteArray(String url) throws IOException {
-        byte[] dat = null;
-        URLConnection urlc = null;
-        InputStream is = null;
-        ByteArrayOutputStream bao = null;
+    public byte[] getDataAsByteArray(String url, CredentialsProvider cp) throws IOException {
+    	HttpClient httpClient = getNewHttpClient();
+
+        URL urlObj = new URL(url);
+        HttpHost host = new HttpHost(urlObj.getHost(), urlObj.getPort(), urlObj.getProtocol());
+
+        HttpContext credContext = new BasicHttpContext();
+        credContext.setAttribute(ClientContext.CREDS_PROVIDER, cp);
+
+        HttpGet job = new HttpGet(url);
+        HttpResponse response = httpClient.execute(host, job, credContext);
         
-        try {
-            urlc = getConnection(new URL(url));
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            
-            bao = new ByteArrayOutputStream();
-            byte[] buf = new byte[4096];
-            for (;;) {
-                int nb = is.read(buf);
-                if (nb <= 0)
-                    break;
-                bao.write(buf, 0, nb);
-            }
-            dat = bao.toByteArray();
-        }
-        catch (IOException exception) {
-            throw exception;
-        }
-        finally {
-            try {
-                bao.close();
-                is.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
-        }
-        return dat;
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toByteArray(entity);
     }
-    
+
     /**
      * Gets data from URL as char[] throws {@link RuntimeException} If anything
      * goes wrong
@@ -210,42 +206,39 @@ public class HttpUtil {
      * @return The content of the URL as a char[]
      * @throws IOException
      */
-    public byte[] postDataAsByteArray(String url, String contentType, String contentName, byte[] content)
-            throws IOException {
-        
+    public byte[] postDataAsByteArray(String url, String contentType, String contentName, byte[] content) throws IOException {
+
         URLConnection urlc = null;
         OutputStream os = null;
         InputStream is = null;
         ByteArrayOutputStream bis = null;
         byte[] dat = null;
         final String boundary = "" + new Date().getTime();
-        
+
         try {
             urlc = new URL(url).openConnection();
             urlc.setDoOutput(true);
-            urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------"
-                    + boundary);
+            urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------" + boundary);
             os = urlc.getOutputStream();
-            
+
             String message1 = "-----------------------------" + boundary + HttpUtil.BNL;
-            message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\""
-                    + HttpUtil.BNL;
+            message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\"" + HttpUtil.BNL;
             message1 += "Content-Type: " + contentType + HttpUtil.BNL;
             message1 += HttpUtil.BNL;
             String message2 = HttpUtil.BNL + "-----------------------------" + boundary + "--" + HttpUtil.BNL;
-            
+
             os.write(message1.getBytes());
             os.write(content);
             os.write(message2.getBytes());
             os.flush();
-            
+
             if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
                 is = new GZIPInputStream(urlc.getInputStream());
             }
             else {
                 is = urlc.getInputStream();
             }
-            
+
             bis = new ByteArrayOutputStream();
             int ch;
             while ((ch = is.read()) != -1) {
@@ -268,7 +261,32 @@ public class HttpUtil {
         }
         return dat;
     }
-    
+
+    static HttpClient getNewHttpClient() {
+        try {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
+
+            SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+            HttpParams params = new BasicHttpParams();
+            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+
+            SchemeRegistry registry = new SchemeRegistry();
+            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            registry.register(new Scheme("https", sf, 443));
+
+            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+
+            return new DefaultHttpClient(ccm, params);
+        }
+        catch (Exception e) {
+            return new DefaultHttpClient();
+        }
+    }
+
     /**
      * Gets data from URL as char[] throws {@link RuntimeException} If anything
      * goes wrong
@@ -278,44 +296,22 @@ public class HttpUtil {
      * @return The content of the URL as a char[]
      * @throws IOException
      */
-    public synchronized char[] getDataAsCharArray(String url, Map<String, String> parameterMap) throws IOException {
-        
-        CharArrayWriter dat = null;
-        URLConnection urlc = null;
-        InputStream is = null;
-        BufferedReader reader = null;
-        
-        try {
-            dat = new CharArrayWriter();
-            urlc = getConnection(new URL(url), parameterMap);
-            if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
-                is = new GZIPInputStream(urlc.getInputStream());
-            }
-            else {
-                is = urlc.getInputStream();
-            }
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8)));
-            
-            int c;
-            while ((c = reader.read()) != -1) {
-                dat.append((char) c);
-            }
-        }
-        catch (IOException exception) {
-            throw exception;
-        }
-        finally {
-            try {
-                reader.close();
-                is.close();
-            }
-            catch (Exception e) {
-                // we do not care about this
-            }
-        }
-        return dat.toCharArray();
+    public synchronized char[] getDataAsCharArray(String url, CredentialsProvider cp) throws IOException {
+        HttpClient httpClient = getNewHttpClient();
+
+        URL urlObj = new URL(url);
+        HttpHost host = new HttpHost(urlObj.getHost(), urlObj.getPort(), urlObj.getProtocol());
+
+        HttpContext credContext = new BasicHttpContext();
+        credContext.setAttribute(ClientContext.CREDS_PROVIDER, cp);
+
+        HttpGet job = new HttpGet(url);
+        HttpResponse response = httpClient.execute(host, job, credContext);
+
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toString(entity).toCharArray();
     }
-    
+
     /**
      * Gets data from URL as char[] throws {@link RuntimeException} If anything
      * goes wrong
@@ -323,37 +319,34 @@ public class HttpUtil {
      * @return The content of the URL as a char[]
      * @throws IOException
      */
-    public char[] postDataAsCharArray(String url, String contentType, String contentName, char[] content)
-            throws IOException {
-        
+    public char[] postDataAsCharArray(String url, String contentType, String contentName, char[] content) throws IOException {
+
         URLConnection urlc = null;
         OutputStream os = null;
         InputStream is = null;
         CharArrayWriter dat = null;
         BufferedReader reader = null;
         String boundary = "" + new Date().getTime();
-        
+
         try {
             urlc = new URL(url).openConnection();
             urlc.setDoOutput(true);
-            urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------"
-                    + boundary);
-            
+            urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "multipart/form-data; boundary=---------------------------" + boundary);
+
             String message1 = "-----------------------------" + boundary + HttpUtil.BNL;
-            message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\""
-                    + HttpUtil.BNL;
+            message1 += "Content-Disposition: form-data; name=\"nzbfile\"; filename=\"" + contentName + "\"" + HttpUtil.BNL;
             message1 += "Content-Type: " + contentType + HttpUtil.BNL;
             message1 += HttpUtil.BNL;
             String message2 = HttpUtil.BNL + "-----------------------------" + boundary + "--" + HttpUtil.BNL;
-            
+
             os = urlc.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Charset.forName(HttpUtil.UTF_8)));
-            
+
             writer.write(message1);
             writer.write(content);
             writer.write(message2);
             writer.flush();
-            
+
             dat = new CharArrayWriter();
             if (urlc.getContentEncoding() != null && urlc.getContentEncoding().equalsIgnoreCase(HttpUtil.GZIP)) {
                 is = new GZIPInputStream(urlc.getInputStream());
@@ -362,7 +355,7 @@ public class HttpUtil {
                 is = urlc.getInputStream();
             }
             reader = new BufferedReader(new InputStreamReader(is, Charset.forName(HttpUtil.UTF_8)));
-            
+
             int c;
             while ((c = reader.read()) != -1) {
                 dat.append((char) c);
@@ -381,29 +374,28 @@ public class HttpUtil {
                 // we do not care about this
             }
         }
-        
+
         return dat.toCharArray();
     }
-    
+
     private static final URLConnection getConnection(URL url) throws IOException {
         URLConnection urlc;
-        
+
         urlc = url.openConnection();
         urlc.setUseCaches(false);
         urlc.setRequestProperty(HttpUtil.CONTENT_TYPE, "application/x-www-form-urlencoded");
         urlc.setRequestProperty(HttpUtil.USER_AGENT,
                 "Mozilla/5.0 (X11; U; Linux x86_64; en-GB; rv:1.9.1.9) Gecko/20100414 Iceweasel/3.5.9 (like Firefox/3.5.9)");
         urlc.setRequestProperty(HttpUtil.ACCEPT_ENCODING, HttpUtil.GZIP);
-        
+
         return urlc;
     }
-    
-    private URLConnection getConnection(URL url, Map<String, String> parameterMap) throws IOException {
-        URLConnection urlc = getConnection(url);
-        for (String key : parameterMap.keySet()) {
-            urlc.setRequestProperty(key, parameterMap.get(key));
-        }
-        return urlc;
-    }
-    
+
+    /*
+     * private URLConnection getConnection(URL url, Map<String, String>
+     * parameterMap) throws IOException { URLConnection urlc =
+     * getConnection(url); for (String key : parameterMap.keySet()) {
+     * urlc.setRequestProperty(key, parameterMap.get(key)); } return urlc; }
+     */
+
 }

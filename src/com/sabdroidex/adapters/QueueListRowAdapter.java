@@ -17,7 +17,6 @@ import com.utils.Formatter;
 
 public class QueueListRowAdapter extends ArrayAdapter<QueueElement> {
 
-    private Context mContext;
     private LayoutInflater mInflater;
     private QueueListItem mQueueListItem;
 
@@ -28,8 +27,7 @@ public class QueueListRowAdapter extends ArrayAdapter<QueueElement> {
     
     public QueueListRowAdapter(Context context, List<QueueElement> items) {
         super(context, R.layout.list_item, items);
-        this.mContext = context;
-        this.mInflater = LayoutInflater.from(this.mContext);
+        this.mInflater = LayoutInflater.from(context);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

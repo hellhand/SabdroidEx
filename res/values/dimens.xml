@@ -27,5 +27,6 @@
     <dimen name="default_title_indicator_text_size">15sp</dimen>
     <dimen name="default_title_indicator_title_padding">5dp</dimen>
     <dimen name="default_title_indicator_top_padding">7dp</dimen>
-
+    <dimen name="list_section_divider_min_height">16dip</dimen>
+    
 </resources>

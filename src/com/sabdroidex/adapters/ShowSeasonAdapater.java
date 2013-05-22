@@ -15,13 +15,11 @@ import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class ShowSeasonAdapater extends BaseAdapter {
     
-    private final Context context;
     private final LayoutInflater inflater;
     private Show show;
     
     public ShowSeasonAdapater(Context context, Show show) {
-        this.context = context;
-        this.inflater = LayoutInflater.from(this.context);
+        this.inflater = LayoutInflater.from(context);
         this.show = show;
     }
     
@@ -41,10 +39,10 @@ public class ShowSeasonAdapater extends BaseAdapter {
         String imageKey = ImageType.SHOW_SEASON_POSTER.name() + show.getTvdbId() + show.getSeasonList().get(position);
         ImageUtils.getImageWorker().loadImage(seasonItem.seasonPoster, ImageType.SHOW_SEASON_POSTER, imageKey, show.getTvdbId(), show.getShowName(), show.getSeasonList().get(position));
         if (show.getSeasonList().get(position) == 0) {
-            seasonItem.seasonName.setText(context.getResources().getString(R.string.show_specials));
+            seasonItem.seasonName.setText(R.string.show_specials);
         }
         else {
-            seasonItem.seasonName.setText(context.getResources().getString(R.string.show_season) + " " + show.getSeasonList().get(position));
+            seasonItem.seasonName.setText(inflater.getContext().getString(R.string.show_season) + " " + show.getSeasonList().get(position));
         }
         seasonItem.showName.setText(show.getShowName());
         

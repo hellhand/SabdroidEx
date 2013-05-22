@@ -17,15 +17,13 @@ import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class ShowsGridAdapter extends BaseAdapter {
 
-    private final Context mContext;
     private final LayoutInflater mInflater;
     private List<Show> mItems;
     private boolean showOverlay;
 
     public ShowsGridAdapter(Context context, List<Show> items) {
-        this.mContext = context;
         this.mItems = items;
-        this.mInflater = LayoutInflater.from(this.mContext);
+        this.mInflater = LayoutInflater.from(context);
     }
 
     public void setDataSet(List<Show> showElements) {
@@ -45,10 +43,6 @@ public class ShowsGridAdapter extends BaseAdapter {
             showItem = new ShowsListItem();
             showItem.banner = (ImageView) convertView.findViewById(R.id.showBanner);
             showItem.overlay = (ImageView) convertView.findViewById(R.id.showOverlay);
-            if (showOverlay) {
-                showItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
-                showItem.overlay.setVisibility(View.INVISIBLE);
-            }
         }
         else {
             showItem = (ShowsListItem) convertView.getTag();
@@ -56,7 +50,6 @@ public class ShowsGridAdapter extends BaseAdapter {
 
         if (showOverlay) {
             if (((GridView) parent).getCheckedItemPosition() == position) {
-
                 showItem.overlay.setImageResource(R.drawable.list_arrow_selected_holo);
                 showItem.overlay.setVisibility(View.VISIBLE);
             }

@@ -1,9 +1,6 @@
 package com.sabdroidex.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
@@ -23,6 +20,7 @@ import com.sabdroidex.adapters.HistoryListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.History;
+import com.sabdroidex.fragments.dialogs.sabnzbd.HistoryRemoveDialog;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -148,41 +146,20 @@ public class HistoryFragment extends SABFragment {
         return history;
     }
     
-    //TODO: Meh ... correct
+    /**
+     * This class handles long click on an item in the history list.
+     * It displays a pop-up allowing the user to remove the element from the history list.
+     * @author Marc
+     *
+     */
     private class ListItemLongClickListener implements OnItemLongClickListener {
         
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-            
-            AlertDialog dialog = null;
-            OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                
-                @Override
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setNegativeButton(android.R.string.cancel, onClickListener);
-            builder.setTitle(history.getHistoryElements().get(position).getName());
-            String[] options = new String[1];
-            options[0] = getActivity().getResources().getString(R.string.menu_delete);
-            
-            builder.setItems(options, new OnClickListener() {
-                
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case 0:
-                            SABnzbdController.removeHistoryItem(messageHandler, history.getHistoryElements().get(position).getNzoId());
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            });
-            dialog = builder.create();
-            dialog.show();
+            HistoryRemoveDialog historyRemoveDialog = new HistoryRemoveDialog();
+            HistoryRemoveDialog.setMessageHandler(messageHandler);
+            HistoryRemoveDialog.setHistoryElement(history.getHistoryElements().get(position));
+            historyRemoveDialog.show(getFragmentManager(), "historyRemove");
             return true;
         }
     }

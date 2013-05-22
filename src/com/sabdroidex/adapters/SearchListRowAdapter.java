@@ -14,7 +14,6 @@ import com.sabdroidex.R;
 
 public class SearchListRowAdapter extends ArrayAdapter<String> {
 
-    private Context mContext;
     private LayoutInflater mInflater;
     private QueueListItem mQueueListItem;
     private ArrayList<String> mItems;
@@ -26,9 +25,8 @@ public class SearchListRowAdapter extends ArrayAdapter<String> {
 
     public SearchListRowAdapter(Context context, ArrayList<String> items) {
         super(context, R.layout.list_item, items);
-        this.mContext = context;
         this.mItems = items;
-        this.mInflater = LayoutInflater.from(this.mContext);
+        this.mInflater = LayoutInflater.from(context);
 
         mItems = new ArrayList<String>();
         mItems.add("10#10#10#10");

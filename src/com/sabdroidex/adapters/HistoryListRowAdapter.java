@@ -15,7 +15,6 @@ import com.sabdroidex.data.sabnzbd.HistoryElement;
 
 public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
 
-    private Context mContext;
     private LayoutInflater mInflater;
     private HistoryListItem mHistoryListItem;
     private List<HistoryElement> mItems;
@@ -27,9 +26,8 @@ public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
 
     public HistoryListRowAdapter(Context context, List<HistoryElement> items) {
         super(context, R.layout.list_item, items);
-        this.mContext = context;
         this.mItems = items;
-        this.mInflater = LayoutInflater.from(this.mContext);
+        this.mInflater = LayoutInflater.from(context);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

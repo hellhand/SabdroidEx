@@ -95,16 +95,16 @@ public class ComingFragment extends SABFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         
-        LinearLayout comingView = (LinearLayout) inflater.inflate(R.layout.simplelist, null);
-        ListView mListView = (ListView) comingView.findViewById(R.id.queueList);
+        LinearLayout comingView = (LinearLayout) inflater.inflate(R.layout.pinned_header_list, null);
+        ListView mListView = (ListView) comingView.findViewById(R.id.simpleList);
         
         mComingRowAdapter = new ComingListRowAdapter(getActivity().getApplicationContext(), mFuturePeriod);
         mListView.setAdapter(mComingRowAdapter);
-        mListView.setDividerHeight(0);
+        comingView.removeAllViews();
         
         manualRefreshComing();
         
-        return comingView;
+        return mListView;
     }
     
     @Override

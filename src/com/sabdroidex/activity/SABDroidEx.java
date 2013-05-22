@@ -51,7 +51,7 @@ import com.utils.Formatter;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
- * Main SABDroid Activity
+ * Main SabdroidEx Activity
  */
 public class SABDroidEx extends ActionBarActivity implements UpdateableActivity {
 
@@ -185,22 +185,21 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     }
 
     /**
-     * Creating the whole ViewPager content
+     * Creating the whole ViewPager content If possible we pre-fill with tha
+     * data that was stored in the cache file
      */
     private void createLists() {
 
-        /**
-         * Creating default empty data.
-         */
+        // Creating default empty data.
+        // This is needed if the cache is disabled or cannot be accessed in a
+        // way or another
         Queue queue = new Queue();
         History history = new History();
         ShowList shows = new ShowList();
         FuturePeriod coming = new FuturePeriod();
         MovieList movies = new MovieList();
 
-        /**
-         * Restoring data if the cache is enabled.
-         */
+        // Restoring data if the cache is enabled.
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
 
             FileInputStream fis = null;
@@ -208,9 +207,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             try {
                 fis = openFileInput(Preferences.DATA_CACHE);
                 ois = new ObjectInputStream(fis);
-
-                while (ois.available() > 0) {
-                    JSONBased element = (JSONBased) ois.readObject();
+                // We read every object stored in the cache file and associate
+                // the to the correct field
+                // as we do not know the order of the objects this has to be
+                // done.
+                // (the user might only have enabled couchpotato and not
+                // sickbeard)
+                for (JSONBased element = null; (element = (JSONBased) ois.readObject()) != null;) {
                     if (element instanceof Queue)
                         queue = (Queue) element;
                     if (element instanceof History)
@@ -237,9 +240,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             }
         }
 
-        /**
-         * Instantiating all the lists.
-         */
+        // Instantiating all the fragments that are needed
         updateLabels(queue);
         queueFragment = new QueueFragment(queue);
         historyFragment = new HistoryFragment(history);
@@ -251,9 +252,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             moviesFragment = new MoviesFragment(movies);
         }
 
-        /**
-         * Creation of the Adapter and adding all the fragments.
-         */
+        // Creation of the Adapter for the pager and adding all the fragments.
         SABDroidExPagerAdapter pagerAdapter = new SABDroidExPagerAdapter(getApplicationContext(), getSupportFragmentManager());
         pagerAdapter.addFragment(queueFragment);
         pagerAdapter.addFragment(historyFragment);
@@ -265,10 +264,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
             pagerAdapter.addFragment(moviesFragment);
         }
 
-        /**
-         * Setting the adapter to the ViewPager and linking the Indicator to the
-         * pager.
-         */
+        // Setting the adapter to the ViewPager and linking the Indicator to the
+        // pager.
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(pagerAdapter);
         pager.setPageMargin(5);
@@ -282,7 +279,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      * if still not done
      */
     void manualRefresh() {
-        Log.v(TAG, "Refreshing");
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             dialogFragmentManager.showSetupDialog();
             return;

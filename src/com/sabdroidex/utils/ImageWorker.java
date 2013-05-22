@@ -22,17 +22,18 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
+import com.utils.ApacheCredentialProvider;
 import com.utils.FileUtil;
 import com.utils.HttpUtil;
 
 public class ImageWorker {
-    
+
     public static enum ImageType {
         SHOW_BANNER, SHOW_POSTER, SHOW_SEASON_POSTER, MOVIE_POSTER, MOVIE_BANNER
     };
-    
+
     private static final String TAG = ImageWorker.class.getCanonicalName();
-    
+
     private BitmapReader mBitmapReader = null;
     private Options bgOptions = null;
     private Bitmap mSickbeardPosterBitmap = null;
@@ -40,7 +41,7 @@ public class ImageWorker {
     private Bitmap mCouchPosterBitmap = null;
     private Bitmap mCouchBannerBitmap = null;
     private Resources mResources = null;
-    
+
     public ImageWorker(Context context) {
         mResources = context.getResources();
         bgOptions = new Options();
@@ -48,23 +49,25 @@ public class ImageWorker {
         bgOptions.inPreferredConfig = Config.RGB_565;
         mBitmapReader = new BitmapReader(0.25f);
     }
-    
+
     public void setSickbeardPosterTemp(int resId) {
         mSickbeardPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
     }
-    
+
     public void setSickbeardBannerTemp(int resId) {
         mSickbeardBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
     }
 
     public void setmCouchPosterBitmap(int resId) {
-        this.mCouchPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);;
+        this.mCouchPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+        ;
     }
-    
+
     public void setmCouchBannerBitmap(int resId) {
-        this.mCouchBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);;
+        this.mCouchBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+        ;
     }
-    
+
     /**
      * Load an image specified by the data parameter into an ImageView (override
      * {@link ImageWorker#processBitmap(Object)} to define the processing
@@ -82,7 +85,7 @@ public class ImageWorker {
         if (data == null) {
             return;
         }
-        
+
         Bitmap bitmap = null;
         bitmap = mBitmapReader.getBitmapFromMemCache(key);
         if (bitmap != null) {
@@ -111,7 +114,7 @@ public class ImageWorker {
             task.execute(data);
         }
     }
-    
+
     /**
      * Returns true if the current work has been canceled or if there was no
      * work in progress on this image view. Returns false if the work in
@@ -119,7 +122,7 @@ public class ImageWorker {
      */
     public static boolean cancelPotentialWork(Object key, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-        
+
         if (bitmapWorkerTask != null) {
             final Object bitmapData = bitmapWorkerTask.key;
             if (!bitmapData.equals(key)) {
@@ -133,7 +136,7 @@ public class ImageWorker {
         }
         return true;
     }
-    
+
     /**
      * @param imageView
      *            Any imageView
@@ -150,75 +153,76 @@ public class ImageWorker {
         }
         return null;
     }
-    
+
     public class AsyncDrawable extends BitmapDrawable {
-        
+
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-        
+
         public AsyncDrawable(Resources res, BitmapWorkerTask bitmapWorkerTask) {
             super(res, bitmapWorkerTask.getLoadingBitmap());
             bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
         }
-        
+
         public BitmapWorkerTask getBitmapWorkerTask() {
             return bitmapWorkerTaskReference.get();
         }
     }
-    
+
     public abstract class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
-        
+
         private static final int FADE_IN_TIME = 127;
-        
+
         private WeakReference<ImageView> weakViewReference = null;
         private WeakReference<Bitmap> mLoadingBitmap = null;
         public String key = null;
-        
+
         private boolean mFade = false;
-        
+
         protected BitmapWorkerTask(WeakReference<ImageView> weakViewReference, WeakReference<Bitmap> bitmap, String key) {
             this.weakViewReference = weakViewReference;
             this.mLoadingBitmap = bitmap;
             this.key = key;
         }
-        
+
         protected Bitmap getLoadingBitmap() {
             return mLoadingBitmap.get();
         }
-        
+
         /**
-         * TODO: rewrite this jdoc
+         * This background tasks loads the needed bitmap. If the cache is
+         * enabled, it loads it from the external storage, if not or if it does
+         * not exists it will try to download it.
          */
         @Override
         protected Bitmap doInBackground(Object... params) {
             Options bgOptions = new Options();
             Bitmap bitmap = null;
-            
+
             if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
                 bgOptions.inSampleSize = 2;
             }
             else {
                 bgOptions.inSampleSize = 1;
             }
-            
-            String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                    + "SABDroidEx" + File.separator + params[1] + File.separator;
+
+            String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[1]
+                    + File.separator;
             folderPath = folderPath.replace(":", "");
-            
+
             String fileName = getFilename(params);
-            
+
             /**
              * If the cache is enabled we try to read the file from the device
              * (Default is enabled)
              */
             if (!isCancelled() && bitmap == null && Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
                 if (Debug.isDebuggerConnected()) {
-                    Log.i(getClass().getCanonicalName(), "Loading Bitmap for : " + params[1]
-                            + " ... trying to open file.");
+                    Log.i(getClass().getCanonicalName(), "Loading Bitmap for : " + params[1] + " ... trying to open file.");
                 }
                 FileUtil.createDirectory(folderPath);
                 bitmap = mBitmapReader.getBitmapFromFile(folderPath, fileName, key);
             }
-            
+
             /**
              * The bitmap object is null if the BitmapFactory has been unable to
              * decode the Bitmap or if the File does not exists.
@@ -228,17 +232,16 @@ public class ImageWorker {
                  * We get the banner from the server
                  */
                 if (Debug.isDebuggerConnected()) {
-                    Log.i(getClass().getCanonicalName(), "Bitmap for : " + params[1]
-                            + " not found ... trying to download file.");
+                    Log.i(getClass().getCanonicalName(), "Bitmap for : " + params[1] + " not found ... trying to download file.");
                 }
                 String url = getImageURL(params);
                 String savePath = folderPath + fileName;
                 bitmap = mBitmapReader.getBitmapFromWeb(url, savePath, key);
             }
-            
+
             return bitmap;
         }
-        
+
         @Override
         protected void onPostExecute(Bitmap result) {
             if (isCancelled()) {
@@ -252,20 +255,20 @@ public class ImageWorker {
             }
             weakViewReference.clear();
         }
-        
+
         @Override
         protected void onCancelled(Bitmap result) {
             result = null;
             weakViewReference.clear();
             super.onCancelled(result);
         }
-        
+
         private void setImage(ImageView imageView, Bitmap bitmap) {
             if (mFade) {
                 // Create a transition and set the resulting image to be
                 // displayed
-                TransitionDrawable td = new TransitionDrawable(new Drawable[] {
-                        new BitmapDrawable(mResources, mLoadingBitmap.get()), new BitmapDrawable(mResources, bitmap) });
+                TransitionDrawable td = new TransitionDrawable(new Drawable[] { new BitmapDrawable(mResources, mLoadingBitmap.get()),
+                        new BitmapDrawable(mResources, bitmap) });
                 imageView.setImageDrawable(td);
                 td.startTransition(FADE_IN_TIME);
             }
@@ -273,7 +276,7 @@ public class ImageWorker {
                 imageView.setImageBitmap(bitmap);
             }
         }
-        
+
         /**
          * Returns the ImageView associated with this task as long as the
          * ImageView's task still points to this task as well. Returns null
@@ -282,151 +285,148 @@ public class ImageWorker {
         private ImageView getAttachedImageView() {
             final ImageView imageView = weakViewReference.get();
             final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-            
+
             if (this == bitmapWorkerTask) {
                 return imageView;
             }
-            
+
             return null;
         }
-        
+
         protected abstract String getImageURL(Object... params);
-        
+
         protected abstract String getFilename(Object... params);
-        
+
         protected abstract ImageType getImageType();
     }
-    
+
     public class AsyncShowBanner extends BitmapWorkerTask {
-        
+
         public AsyncShowBanner(ImageView imageView, String key) {
             super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mSickbeardBannerBitmap), key);
         }
-        
+
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getImageURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(),
-                    (Integer) params[0]);
+            return SickBeardController.getImageURL(SickBeardController.MESSAGE.SHOW_GETBANNER.toString().toLowerCase(), (Integer) params[0]);
         }
-        
+
         @Override
         protected String getFilename(Object... params) {
             return "banner.jpg";
         }
-        
+
         @Override
         protected ImageType getImageType() {
             return ImageType.SHOW_BANNER;
         }
-        
+
     }
-    
+
     public class AsyncShowPoster extends BitmapWorkerTask {
-        
+
         public AsyncShowPoster(ImageView imageView, String key) {
             super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mSickbeardPosterBitmap), key);
         }
-        
+
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getPosterURL(
-                    SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[0]);
+            return SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[0]);
         }
-        
+
         @Override
         protected String getFilename(Object... params) {
             return "poster.jpg";
         }
-        
+
         @Override
         protected ImageType getImageType() {
             return ImageType.SHOW_POSTER;
         }
-        
+
     }
-    
+
     public class AsyncSeasonPoster extends BitmapWorkerTask {
-        
+
         public AsyncSeasonPoster(ImageView imageView, String key) {
             super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mSickbeardPosterBitmap), key);
         }
-        
+
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getSeasonPosterURL(SickBeardController.MESSAGE.SHOW_SEASONLIST.toString()
-                    .toLowerCase(), (Integer) params[0], (Integer) params[2]);
+            return SickBeardController.getSeasonPosterURL(SickBeardController.MESSAGE.SHOW_SEASONLIST.toString().toLowerCase(), (Integer) params[0],
+                    (Integer) params[2]);
         }
-        
+
         @Override
         protected String getFilename(Object... params) {
             return "season-" + (Integer) params[2] + ".jpg";
         }
-        
+
         @Override
         protected ImageType getImageType() {
             return ImageType.SHOW_SEASON_POSTER;
         }
-        
+
     }
-    
+
     public class AsyncMoviePoster extends BitmapWorkerTask {
-        
+
         public AsyncMoviePoster(ImageView imageView, String key) {
             super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mCouchPosterBitmap), key);
         }
-        
+
         @Override
         protected String getImageURL(Object... params) {
             return (String) params[2];
         }
-        
+
         @Override
         protected String getFilename(Object... params) {
             return "poster.jpg";
         }
-        
+
         @Override
         protected ImageType getImageType() {
             return ImageType.MOVIE_POSTER;
         }
-        
+
     }
 
     public class AsyncMovieBanner extends BitmapWorkerTask {
-        
+
         public AsyncMovieBanner(ImageView imageView, String key) {
             super(new WeakReference<ImageView>(imageView), new WeakReference<Bitmap>(mCouchBannerBitmap), key);
         }
-        
+
         @Override
         protected String getImageURL(Object... params) {
             return (String) params[2];
         }
-        
+
         @Override
         protected String getFilename(Object... params) {
             return "poster.jpg";
         }
-        
+
         @Override
         protected ImageType getImageType() {
             return ImageType.MOVIE_BANNER;
         }
-        
+
     }
-    
+
     public class BitmapReader {
-        
+
         private LruCache<String, Bitmap> mMemoryCache;
-        
+
         public BitmapReader(float percent) {
             if (percent < 0.05f || percent > 0.8f) {
-                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be "
-                        + "between 0.05 and 0.8 (inclusive)");
+                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be " + "between 0.05 and 0.8 (inclusive)");
             }
             int memCacheSize = Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
             mMemoryCache = new LruCache<String, Bitmap>(memCacheSize) {
-                
+
                 /**
                  * Measure item size in kilobytes rather than units which is
                  * more practical for a bitmap cache
@@ -438,7 +438,7 @@ public class ImageWorker {
                 }
             };
         }
-        
+
         /**
          * Get the size in bytes of a bitmap.
          * 
@@ -452,7 +452,7 @@ public class ImageWorker {
             }
             return bitmap.getRowBytes() * bitmap.getHeight();
         }
-        
+
         /**
          * Get from memory cache.
          * 
@@ -463,12 +463,19 @@ public class ImageWorker {
         public Bitmap getBitmapFromMemCache(String data) {
             return mMemoryCache.get(data);
         }
-        
+
+        /**
+         * This method reads the targeted Bitmap from the local storage.
+         * @param folderPath The path in where to open the file
+         * @param fileName The name of the file to open in the given folderPath
+         * @param key The key representing the file in the memory cache.
+         * @return The bitmap that is stored in the memory cache.
+         */
         public Bitmap getBitmapFromFile(String folderPath, String fileName, String key) {
-            
+
             Bitmap bitmap = null;
             byte[] data;
-            
+
             /**
              * Trying to find Image on Local System
              */
@@ -482,31 +489,38 @@ public class ImageWorker {
             catch (Throwable e) {
                 Log.e(TAG, " " + e.getLocalizedMessage());
             }
-            
+
             return mMemoryCache.get(key);
         }
-        
+
+        /**
+         * This method downloads the targeted Bitmap from the web and saves it if needed.
+         * @param url The url from the Bitmap
+         * @param savePath The full path in where to save the file
+         * @param key The key representing the file in the memory cache.
+         * @return The bitmap that is stored in the memory cache.
+         */
         public Bitmap getBitmapFromWeb(String url, String savePath, String key) {
-            
+
             Bitmap bitmap = null;
             byte[] data;
             try {
-                data = HttpUtil.getInstance().getDataAsByteArray(url);
+                data = HttpUtil.getInstance().getDataAsByteArray(url, ApacheCredentialProvider.getCredentialsProvider());
                 bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, bgOptions);
-                
+
                 /**
-                 * If the user enabled cache (Default is enabled)
+                 * If the cache is enabled ... (Default is enabled)
                  */
                 if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
                     /**
-                     * And save it on the device
+                     * ... save it on the device
                      */
                     FileOutputStream fileOutputStream = new FileOutputStream(savePath);
                     fileOutputStream.write(data);
                     fileOutputStream.flush();
                     fileOutputStream.close();
                 }
-                
+
                 if (bitmap != null) {
                     mMemoryCache.put(key, bitmap);
                 }

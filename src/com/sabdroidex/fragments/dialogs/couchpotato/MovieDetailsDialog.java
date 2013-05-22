@@ -19,14 +19,10 @@ import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class MovieDetailsDialog extends DialogFragment {
     
-    private Movie mMovie;
+    private static Movie movie;
     
-    public MovieDetailsDialog() {
-        this.mMovie = new Movie();
-    }
-    
-    public MovieDetailsDialog(Movie movie) {
-        this.mMovie = movie;
+    public static void setMovie(Movie movie) {
+        MovieDetailsDialog.movie = movie;
     }
     
     @Override
@@ -37,7 +33,7 @@ public class MovieDetailsDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity().getBaseContext());
         ScrollView mMovieView = (ScrollView) inflater.inflate(R.layout.movie_status, null);
         
-        setupMovieElements(mMovieView, mMovie);
+        setupMovieElements(mMovieView, MovieDetailsDialog.movie);
 
         builder.setPositiveButton(R.string.more, new DialogInterface.OnClickListener() {
             
@@ -62,7 +58,7 @@ public class MovieDetailsDialog extends DialogFragment {
     
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mMovie = null;
+        MovieDetailsDialog.movie = null;
         super.onDismiss(dialog);
     }
     
@@ -70,7 +66,7 @@ public class MovieDetailsDialog extends DialogFragment {
         
         ImageView moviePoster = (ImageView) view.findViewById(R.id.moviePoster);
         
-        TextView movieTitle = (TextView) view.findViewById(R.id.movie_name);
+        TextView movieTitle = (TextView) view.findViewById(R.id.movie_title);
         movieTitle.setText(movie.getTitle());
         
         TextView movieProfile = (TextView) view.findViewById(R.id.movie_profile);
