@@ -70,9 +70,8 @@ public class ComingListRowAdapter extends PinnedHeaderListAdapter {
         if (v.getTag() == null) {
             comingItem = new ShowsListItem();
             comingItem.banner = (ImageView) v.findViewById(R.id.coming_show_banner);
-            comingItem.next_ = (TextView) v.findViewById(R.id.coming_next_episode_);
             comingItem.next = (TextView) v.findViewById(R.id.coming_next_episode);
-            comingItem.airs_ = (TextView) v.findViewById(R.id.coming_airs_);
+            comingItem.airDate = (TextView) v.findViewById(R.id.coming_air_date);
             comingItem.airs = (TextView) v.findViewById(R.id.coming_airs);
         }
         else {
@@ -85,11 +84,11 @@ public class ComingListRowAdapter extends PinnedHeaderListAdapter {
         ImageUtils.getImageWorker().loadImage(comingItem.banner, ImageType.SHOW_BANNER, imageKey, futureEpisode.getTvdbId(), futureEpisode.getShowName());
 
         String nextDescriptor = String.format("%02dx%02d", futureEpisode.getEpisode(), futureEpisode.getSeason());
-        String nextDetails = String.format("%s %s", futureEpisode.getEpName(), futureEpisode.getAirDate());
-        String next = nextDescriptor + " - " + nextDetails;
+        String next = nextDescriptor + " - " + futureEpisode.getEpName();
         String airs = String.format("%s %s [%s]", futureEpisode.getAirs(), futureEpisode.getNetwork(), futureEpisode.getQuality());
 
         comingItem.next.setText(next);
+        comingItem.airDate.setText(futureEpisode.getAirDate());
         comingItem.airs.setText(airs);
 
         v.setId(position);
@@ -112,9 +111,8 @@ public class ComingListRowAdapter extends PinnedHeaderListAdapter {
     class ShowsListItem {
 
         ImageView banner;
-        TextView next_;
         TextView next;
-        TextView airs_;
+        TextView airDate;
         TextView airs;
     }
 

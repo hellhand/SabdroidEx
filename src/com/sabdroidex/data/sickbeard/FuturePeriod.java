@@ -21,7 +21,7 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     private List<FutureEpisode> later;
 
     public int getMissedTitle() {
-        return R.string.comming_missed;
+        return R.string.coming_missed;
     }
 
     public List<FutureEpisode> getMissed() {
@@ -41,7 +41,7 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     }
 
     public int getTodayTitle() {
-        return R.string.comming_today;
+        return R.string.coming_today;
     }
 
     public List<FutureEpisode> getToday() {
@@ -61,7 +61,7 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     }
 
     public int getSoonTitle() {
-        return R.string.comming_soon;
+        return R.string.coming_soon;
     }
 
     public List<FutureEpisode> getSoon() {
@@ -81,7 +81,7 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     }
 
     public int getLaterTitle() {
-        return R.string.comming_later;
+        return R.string.coming_later;
     }
 
     public List<FutureEpisode> getLater() {

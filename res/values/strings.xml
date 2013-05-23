@@ -105,11 +105,9 @@
 	<string name="tab_search">Search</string>
 	<string name="tab_shows">Shows</string>
     <string name="tab_coming">Coming</string>
+    <string name="tab_movies">Movies</string>
 
     <string name="adapter_done">Done</string>
-
-	<string name="close">Close</string>
-	<string name="more">More</string>
     
     <string name="no_poster">No poster found</string>
     
@@ -137,12 +135,13 @@
     <string name="episode_status_set">Set episode status</string>
     <string name="episode_status_set_to">Episode status change</string>
                                     
-	<string name="comming_next">Next Episode : </string>
-	<string name="comming_airs">Airs : </string>
-    <string name="comming_missed">Missed</string>
-    <string name="comming_today">Today</string>
-    <string name="comming_soon">Soon</string>
-    <string name="comming_later">Later</string>
+	<string name="coming_next">Next Episode : </string>
+	<string name="coming_airs">Airs : </string>
+    <string name="coming_air_date">Air date : </string>
+    <string name="coming_missed">Missed</string>
+    <string name="coming_today">Today</string>
+    <string name="coming_soon">Soon</string>
+    <string name="coming_later">Later</string>
 	
 	<string name="add_dialog_title">Add</string>
 	
@@ -150,7 +149,6 @@
 	<string name="add_show_dialog_message">Enter the Name of the Show to add to Sickbeard:</string>
 	<string name="add_show_background_search">Background search started</string>
 	<string name="add_show_not_found">No show found</string>
-
 	<string name="add_show_selection_dialog_title">Select the Show to add to Sickbeard</string>
 	
     <string name="add_nzb_dialog_title">Add new NZB</string>
@@ -203,35 +201,42 @@
 	<string name="setting_couchpotato_auth">Authentification</string>
 	<string name="setting_couchpotato_auth_username">Username</string>
 	<string name="setting_couchpotato_auth_password">Password</string>
+
 	<string name="add_movie_dialog_title">Add new Movie</string>
 	<string name="add_movie_dialog_message">Enter name of movie to add</string>
+    <string name="add_movie_selection_dialog_title">Select the movie to add to CouchPotato</string>
+    <string name="add_movie_not_found">No movie found</string>
+
 	<string name="movie_poster">Poster</string>
 	<string name="movie_title">Title: </string>
 	<string name="movie_status">Status: </string>
 	<string name="movie_rating">Rating: </string>
 	<string name="movie_release">Released: </string>
-	<string name="add_movie_selection_dialog_title">Select the movie to add to CouchPotato</string>
-	<string name="add_movie_not_found">No movie found</string>
-	<string name="tab_movies">Movies</string>
-	<string name="movie_plot">Plot</string>
-	<string name="movie_year">Year:</string>
+	<string name="movie_plot">Plot: </string>
+	<string name="movie_year">Year: </string>
+    <string name="movie_profile">Profile: </string>
+    <string name="movie_genres">Genres: </string>
+    <string name="movie_runtime">Runtime: </string>
+
 	<string name="setting_couchpotato_cache">Image Cache</string>
 	<string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
 	<string name="setting_couchpotato_lowres">Lowres Images</string>
 	<string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>
 	<string name="setting_couchpotato_nomedia">.Nomedia</string>
 	<string name="setting_couchpotato_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
-	<string name="movie_profile">Profile: </string>
-	<string name="movie_genres">Genres: </string>
-	<string name="movie_runtime">Runtime: </string>
-	<string name="menu_movie_delete">Delete movie</string>
-	<string name="menu_movie_edit_profile">Edit profile</string>
-	<string name="movie_release_name">Release name</string>
+
+    <string name="movie_release_name">Release name</string>
 	<string name="movie_release_status">Status</string>
 	<string name="movie_release_quality">Quality</string>
 	<string name="movie_release_size">Size</string>
 	<string name="movie_release_provider">Provider</string>
 	<string name="movie_release_titel">Movie Releases</string>
-	<string name="menu_movie_release">Show releases</string>
+
+    <string name="menu_movie_release">Show releases</string>
+    <string name="menu_movie_delete">Delete movie</string>
+    <string name="menu_movie_edit_profile">Edit profile</string>
+
+    <string name="close">Close</string>
+    <string name="more">More</string>
 
 </resources>
