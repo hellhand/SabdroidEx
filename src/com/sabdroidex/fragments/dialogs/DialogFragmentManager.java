@@ -3,7 +3,6 @@ package com.sabdroidex.fragments.dialogs;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
@@ -20,7 +19,10 @@ import com.sabdroidex.utils.SABHandler;
 public class DialogFragmentManager implements DialogActionsListener {
 
     private static final String TAG = DialogFragmentManager.class.getCanonicalName();
-
+    /**
+     * This is the parent activity which is used to summon the dialogs.
+     */
+    private static FragmentActivity mActivity;
     /**
      * Instantiating the Handler associated with this
      * {@link DialogFragmentManager}.
@@ -32,8 +34,7 @@ public class DialogFragmentManager implements DialogActionsListener {
                 try {
                     ShowSearch showSearch = (ShowSearch) msg.obj;
                     showAddShowSelectionDialog(showSearch);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.w(TAG, e.getLocalizedMessage());
                 }
             }
@@ -41,8 +42,7 @@ public class DialogFragmentManager implements DialogActionsListener {
                 try {
                     String text = mActivity.getString(R.string.add_show_dialog_title) + " : " + msg.obj;
                     Toast.makeText(mActivity, text, Toast.LENGTH_LONG).show();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.w(TAG, e.getLocalizedMessage());
                 }
             }
@@ -50,32 +50,25 @@ public class DialogFragmentManager implements DialogActionsListener {
                 try {
                     MovieSearch movieSearch = (MovieSearch) msg.obj;
                     showAddMovieSelectionDialog(movieSearch);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.w(TAG, e.getLocalizedMessage());
                 }
-                
+
             }
             if (msg.what == CouchPotatoController.MESSAGE.MOVIE_ADD.hashCode()) {
                 // TODO: USE the resource bundle no hard coded strings !!!!!!
                 if ("Error".equals(msg.obj)) {
                     Toast.makeText(mActivity, "Failed to add movie\nCheck settings!", Toast.LENGTH_LONG).show();
-                }
-                else if (!"".equals(msg.obj)) {
+                } else if (!"".equals(msg.obj)) {
                     Toast.makeText(mActivity, "Added: " + msg.obj, Toast.LENGTH_LONG).show();
                 }
             }
-        };
+        }
     };
 
     /**
-     * This is the parent activity which is used to summon the dialogs.
-     */
-    private static FragmentActivity mActivity;
-
-    /**
      * Constructor
-     * 
+     *
      * @param activity
      */
     public DialogFragmentManager(FragmentActivity activity) {
@@ -125,9 +118,8 @@ public class DialogFragmentManager implements DialogActionsListener {
     /**
      * Displays the propositions dialog with the resulting show names found
      * after a user search to add a show to Sickbeard.
-     * 
-     * @param showSearch
-     *            The result of the search query
+     *
+     * @param showSearch The result of the search query
      */
     private void showAddShowSelectionDialog(final ShowSearch showSearch) {
         AddShowSelectDialog addShowSelectDialog = new AddShowSelectDialog();
@@ -146,9 +138,8 @@ public class DialogFragmentManager implements DialogActionsListener {
     /**
      * Displays the propositions dialog with the resulting movie titles found
      * after a user search to add a movie to CouchPotato.
-     * 
-     * @param result
-     *            The result of the search query
+     *
+     * @param movieSearch The result of the search query that will be used to generate the proposition list in the {@link AddMovieSelectDialog}
      */
     private void showAddMovieSelectionDialog(final MovieSearch movieSearch) {
         AddMovieSelectDialog addMovieSelectDialog = new AddMovieSelectDialog();
@@ -156,7 +147,7 @@ public class DialogFragmentManager implements DialogActionsListener {
         AddMovieSelectDialog.setMovieList(movieSearch);
         addMovieSelectDialog.show(mActivity.getSupportFragmentManager(), "selectmovie");
     }
-    
+
     /**
      * Displays a dialog to invite the user to setup his configuration
      */

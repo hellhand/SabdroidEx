@@ -10,13 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SeasonEpisodeAdapater;
@@ -51,7 +46,7 @@ public class SeasonActivity extends ActionBarActivity {
                 seasonEpisodeAdapater.setSeason(mSeason);
                 seasonEpisodeAdapater.notifyDataSetChanged();
                 
-                String count = new Integer(mSeason.getEpisodes().size()).toString();
+                String count = Integer.toString(mSeason.getEpisodes().size());
                 episodeCount.setText(count);
                 
                 String title = mShow.getShowName() + " - " + getString(R.string.show_season) + " " + mSeasonNr;
@@ -59,6 +54,7 @@ public class SeasonActivity extends ActionBarActivity {
             }
             if (msg.what == SickBeardController.MESSAGE.EPISODE_SETSTATUS.hashCode()) {
                 try {
+                    //TODO: resource bundle
                     String text = getString(R.string.episode_status_set_to) + " : " + msg.obj;
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
                 }

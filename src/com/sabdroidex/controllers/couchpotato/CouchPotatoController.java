@@ -17,23 +17,21 @@
 
 package com.sabdroidex.controllers.couchpotato;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public final class CouchPotatoController {
 
@@ -51,7 +49,7 @@ public final class CouchPotatoController {
     private static final String API_TEMPLATE = "[COUCHPOTATO_URL]/[COUCHPOTATO_URL_EXTENTION]getkey/?p=[PASSWORD]&u=[USERNAME]";
 
     public static enum MESSAGE {
-        MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD;
+        MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD
     }
 
     /**
@@ -87,7 +85,8 @@ public final class CouchPotatoController {
         /**
          * Check if the API key is already retrieved, otherwise retrieve it
          */
-        if (api_key.isEmpty()) {
+        //Using equals("") as isEmpty only starts on apiL9
+        if (api_key.equals("")) {
             getApiKey();
             getStatusList();
             getProfiles();
@@ -502,13 +501,13 @@ public final class CouchPotatoController {
                     else {
                         SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(MovieList.class);
                         movieList = (MovieList) jsonMarshaller.unmarshal(jsonObject);
+                        
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.MOVIE_LIST.hashCode();
+                        message.obj = movieList;
+                        message.sendToTarget();
                     }
-
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.MOVIE_LIST.hashCode();
-                    message.obj = movieList;
-                    message.sendToTarget();
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getMessage());
@@ -786,49 +785,6 @@ public final class CouchPotatoController {
      * 
      * @param key
      *            Identifier of Profile
-     * @param messageHandler
-     *            MessageHandler
-     * @return Profile
-     */
-    public synchronized static String getProfile(Integer key, final Handler messageHandler) {
-        String result = "";
-        if (profiles == null)
-            getProfiles(messageHandler);
-        else
-            result = profiles.get(key);
-
-        if (result == null)
-            result = "Unknown";
-        return !result.isEmpty() ? result : "Unknown";
-    }
-
-    /**
-     * Get Status based on ID key
-     * 
-     * @param key
-     *            Identifier of status
-     * @param messageHandler
-     *            MessageHandler
-     * @return Status
-     */
-    public synchronized static String getStatus(Integer key, final Handler messageHandler) {
-        String result = "";
-        if (status == null)
-            getStatusList(messageHandler);
-        result = status.get(key);
-
-        if (result == null)
-            result = "Unknown";
-        return !result.isEmpty() ? result : "Unknown";
-    }
-
-    /**
-     * Get Profile based on ID key
-     * 
-     * @param key
-     *            Identifier of Profile
-     * @param messageHandler
-     *            MessageHandler
      * @return Profile
      */
     public synchronized static String getProfile(Integer key) {
@@ -837,10 +793,11 @@ public final class CouchPotatoController {
             getProfiles();
         else
             result = profiles.get(key);
-
-        if (result == null)
+        //todo: resource bundle
+        //Using equals("") as isEmpty only starts on apiL9
+        if (result == null || result.equals(""))
             result = "Unknown";
-        return !result.isEmpty() ? result : "Unknown";
+        return result;
     }
 
     /**
@@ -848,8 +805,6 @@ public final class CouchPotatoController {
      * 
      * @param key
      *            Identifier of status
-     * @param messageHandler
-     *            MessageHandler
      * @return Status
      */
     public synchronized static String getStatus(Integer key) {
@@ -858,10 +813,11 @@ public final class CouchPotatoController {
             getStatusList();
         else
             result = status.get(key);
-        ;
-        if (result == null)
+        //todo: resource bundle
+        //Using equals("") as isEmpty only starts on apiL9
+        if (result == null || result.equals(""))
             result = "Unknown";
-        return !result.isEmpty() ? result : "Unknown";
+        return result;
     }
 
     /**

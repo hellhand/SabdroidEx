@@ -1,9 +1,5 @@
 package com.sabdroidex.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.ref.WeakReference;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
@@ -20,20 +16,18 @@ import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
-
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.utils.ApacheCredentialProvider;
 import com.utils.FileUtil;
 import com.utils.HttpUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.ref.WeakReference;
+
 public class ImageWorker {
 
-    public static enum ImageType {
-        SHOW_BANNER, SHOW_POSTER, SHOW_SEASON_POSTER, MOVIE_POSTER, MOVIE_BANNER
-    };
-
     private static final String TAG = ImageWorker.class.getCanonicalName();
-
     private BitmapReader mBitmapReader = null;
     private Options bgOptions = null;
     private Bitmap mSickbeardPosterBitmap = null;
@@ -50,71 +44,6 @@ public class ImageWorker {
         mBitmapReader = new BitmapReader(0.25f);
     }
 
-    public void setSickbeardPosterTemp(int resId) {
-        mSickbeardPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
-    }
-
-    public void setSickbeardBannerTemp(int resId) {
-        mSickbeardBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
-    }
-
-    public void setmCouchPosterBitmap(int resId) {
-        this.mCouchPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
-        ;
-    }
-
-    public void setmCouchBannerBitmap(int resId) {
-        this.mCouchBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
-        ;
-    }
-
-    /**
-     * Load an image specified by the data parameter into an ImageView (override
-     * {@link ImageWorker#processBitmap(Object)} to define the processing
-     * logic). A memory and disk cache will be used if an {@link ImageCache} has
-     * been set using {@link ImageWorker#setImageCache(ImageCache)}. If the
-     * image is found in the memory cache, it is set immediately, otherwise an
-     * {@link AsyncTask} will be created to asynchronously load the bitmap.
-     * 
-     * @param data
-     *            The URL of the image to download.
-     * @param imageView
-     *            The ImageView to bind the downloaded image to.
-     */
-    public void loadImage(ImageView imageView, ImageType imageType, String key, Object... data) {
-        if (data == null) {
-            return;
-        }
-
-        Bitmap bitmap = null;
-        bitmap = mBitmapReader.getBitmapFromMemCache(key);
-        if (bitmap != null) {
-            // Bitmap found in memory cache
-            imageView.setImageBitmap(bitmap);
-        }
-        else if (cancelPotentialWork(key, imageView)) {
-            BitmapWorkerTask task = null;
-            if (imageType == ImageType.SHOW_BANNER) {
-                task = new AsyncShowBanner(imageView, key);
-            }
-            else if (imageType == ImageType.SHOW_POSTER) {
-                task = new AsyncShowPoster(imageView, key);
-            }
-            else if (imageType == ImageType.SHOW_SEASON_POSTER) {
-                task = new AsyncSeasonPoster(imageView, key);
-            }
-            else if (imageType == ImageType.MOVIE_POSTER) {
-                task = new AsyncMoviePoster(imageView, key);
-            }
-            else if (imageType == ImageType.MOVIE_BANNER) {
-                task = new AsyncMovieBanner(imageView, key);
-            }
-            final AsyncDrawable asyncDrawable = new AsyncDrawable(mResources, task);
-            imageView.setImageDrawable(asyncDrawable);
-            task.execute(data);
-        }
-    }
-
     /**
      * Returns true if the current work has been canceled or if there was no
      * work in progress on this image view. Returns false if the work in
@@ -128,8 +57,7 @@ public class ImageWorker {
             if (!bitmapData.equals(key)) {
                 bitmapWorkerTask.cancel(true);
                 Log.d(TAG, "cancelPotentialWork - cancelled work for " + key);
-            }
-            else {
+            } else {
                 // The same work is already in progress.
                 return false;
             }
@@ -138,8 +66,7 @@ public class ImageWorker {
     }
 
     /**
-     * @param imageView
-     *            Any imageView
+     * @param imageView Any imageView
      * @return Retrieve the currently active work task (if any) associated with
      *         this imageView. null if there is no such task.
      */
@@ -152,6 +79,62 @@ public class ImageWorker {
             }
         }
         return null;
+    }
+
+    public void setSickbeardPosterTemp(int resId) {
+        mSickbeardPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    }
+
+    public void setSickbeardBannerTemp(int resId) {
+        mSickbeardBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    }
+
+    public void setCouchPosterBitmap(int resId) {
+        this.mCouchPosterBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    }
+
+    public void setCouchBannerBitmap(int resId) {
+        this.mCouchBannerBitmap = BitmapFactory.decodeResource(mResources, resId, bgOptions);
+    }
+
+    /**
+     * Load an image specified by the data parameter into an ImageView.
+     * A memory and disk cache will be used if neither are found, the image will be downloaded onto the device.
+     *
+     * @param data      The URL of the image to download.
+     * @param imageView The ImageView to bind the downloaded image to.
+     */
+    public void loadImage(ImageView imageView, ImageType imageType, String key, Object... data) {
+        if (data == null) {
+            return;
+        }
+
+        Bitmap bitmap = null;
+        bitmap = mBitmapReader.getBitmapFromMemCache(key);
+        if (bitmap != null) {
+            // Bitmap found in memory cache
+            imageView.setImageBitmap(bitmap);
+        } else if (cancelPotentialWork(key, imageView)) {
+            BitmapWorkerTask task = null;
+            if (imageType == ImageType.SHOW_BANNER) {
+                task = new AsyncShowBanner(imageView, key);
+            } else if (imageType == ImageType.SHOW_POSTER) {
+                task = new AsyncShowPoster(imageView, key);
+            } else if (imageType == ImageType.SHOW_SEASON_POSTER) {
+                task = new AsyncSeasonPoster(imageView, key);
+            } else if (imageType == ImageType.MOVIE_POSTER) {
+                task = new AsyncMoviePoster(imageView, key);
+            } else if (imageType == ImageType.MOVIE_BANNER) {
+                task = new AsyncMovieBanner(imageView, key);
+            }
+            final AsyncDrawable asyncDrawable = new AsyncDrawable(mResources, task);
+            imageView.setImageDrawable(asyncDrawable);
+            task.execute(data);
+        }
+    }
+
+    public static enum ImageType {
+        SHOW_BANNER, SHOW_POSTER, SHOW_SEASON_POSTER, MOVIE_POSTER, MOVIE_BANNER
     }
 
     public class AsyncDrawable extends BitmapDrawable {
@@ -171,11 +154,9 @@ public class ImageWorker {
     public abstract class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
 
         private static final int FADE_IN_TIME = 127;
-
+        public String key = null;
         private WeakReference<ImageView> weakViewReference = null;
         private WeakReference<Bitmap> mLoadingBitmap = null;
-        public String key = null;
-
         private boolean mFade = false;
 
         protected BitmapWorkerTask(WeakReference<ImageView> weakViewReference, WeakReference<Bitmap> bitmap, String key) {
@@ -200,8 +181,7 @@ public class ImageWorker {
 
             if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
                 bgOptions.inSampleSize = 2;
-            }
-            else {
+            } else {
                 bgOptions.inSampleSize = 1;
             }
 
@@ -267,12 +247,11 @@ public class ImageWorker {
             if (mFade) {
                 // Create a transition and set the resulting image to be
                 // displayed
-                TransitionDrawable td = new TransitionDrawable(new Drawable[] { new BitmapDrawable(mResources, mLoadingBitmap.get()),
-                        new BitmapDrawable(mResources, bitmap) });
+                TransitionDrawable td = new TransitionDrawable(new Drawable[]{new BitmapDrawable(mResources, mLoadingBitmap.get()),
+                        new BitmapDrawable(mResources, bitmap)});
                 imageView.setImageDrawable(td);
                 td.startTransition(FADE_IN_TIME);
-            }
-            else {
+            } else {
                 imageView.setImageBitmap(bitmap);
             }
         }
@@ -360,7 +339,7 @@ public class ImageWorker {
 
         @Override
         protected String getFilename(Object... params) {
-            return "season-" + (Integer) params[2] + ".jpg";
+            return "season-" + params[2] + ".jpg";
         }
 
         @Override
@@ -441,7 +420,7 @@ public class ImageWorker {
 
         /**
          * Get the size in bytes of a bitmap.
-         * 
+         *
          * @param bitmap
          * @return size in bytes
          */
@@ -455,9 +434,8 @@ public class ImageWorker {
 
         /**
          * Get from memory cache.
-         * 
-         * @param data
-         *            Unique identifier for which item to get
+         *
+         * @param data Unique identifier for which item to get
          * @return The bitmap if found in cache, null otherwise
          */
         public Bitmap getBitmapFromMemCache(String data) {
@@ -466,9 +444,10 @@ public class ImageWorker {
 
         /**
          * This method reads the targeted Bitmap from the local storage.
+         *
          * @param folderPath The path in where to open the file
-         * @param fileName The name of the file to open in the given folderPath
-         * @param key The key representing the file in the memory cache.
+         * @param fileName   The name of the file to open in the given folderPath
+         * @param key        The key representing the file in the memory cache.
          * @return The bitmap that is stored in the memory cache.
          */
         public Bitmap getBitmapFromFile(String folderPath, String fileName, String key) {
@@ -485,8 +464,7 @@ public class ImageWorker {
                 if (bitmap != null) {
                     mMemoryCache.put(key, bitmap);
                 }
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 Log.e(TAG, " " + e.getLocalizedMessage());
             }
 
@@ -495,9 +473,10 @@ public class ImageWorker {
 
         /**
          * This method downloads the targeted Bitmap from the web and saves it if needed.
-         * @param url The url from the Bitmap
+         *
+         * @param url      The url from the Bitmap
          * @param savePath The full path in where to save the file
-         * @param key The key representing the file in the memory cache.
+         * @param key      The key representing the file in the memory cache.
          * @return The bitmap that is stored in the memory cache.
          */
         public Bitmap getBitmapFromWeb(String url, String savePath, String key) {
@@ -524,8 +503,7 @@ public class ImageWorker {
                 if (bitmap != null) {
                     mMemoryCache.put(key, bitmap);
                 }
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 Log.e(TAG, " " + e.getLocalizedMessage());
             }
             return mMemoryCache.get(key);

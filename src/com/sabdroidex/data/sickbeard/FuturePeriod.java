@@ -1,13 +1,13 @@
 package com.sabdroidex.data.sickbeard;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.sabdroidex.R;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class FuturePeriod extends UnknowMappingElement implements JSONBased {
 
@@ -33,13 +33,6 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
         this.missed = missed;
     }
 
-    public boolean hasMissed() {
-        if (missed == null || missed.size() == 0) {
-            return false;
-        }
-        return true;
-    }
-
     public int getTodayTitle() {
         return R.string.coming_today;
     }
@@ -51,13 +44,6 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     @JSONSetter(name = "today", type = JSONType.LIST, listClazz = LinkedList.class, objectClazz = FutureEpisode.class)
     public void setToday(List<FutureEpisode> today) {
         this.today = today;
-    }
-
-    public boolean hasToday() {
-        if (today == null || today.size() == 0) {
-            return false;
-        }
-        return true;
     }
 
     public int getSoonTitle() {
@@ -73,13 +59,6 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
         this.soon = soon;
     }
 
-    public boolean hasSoon() {
-        if (soon == null || soon.size() == 0) {
-            return false;
-        }
-        return true;
-    }
-
     public int getLaterTitle() {
         return R.string.coming_later;
     }
@@ -91,12 +70,5 @@ public class FuturePeriod extends UnknowMappingElement implements JSONBased {
     @JSONSetter(name = "later", type = JSONType.LIST, listClazz = LinkedList.class, objectClazz = FutureEpisode.class)
     public void setLater(List<FutureEpisode> later) {
         this.later = later;
-    }
-
-    public boolean hasLater() {
-        if (later == null || later.size() == 0) {
-            return false;
-        }
-        return true;
     }
 }

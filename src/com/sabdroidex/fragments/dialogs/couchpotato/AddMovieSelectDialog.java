@@ -1,7 +1,5 @@
 package com.sabdroidex.fragments.dialogs.couchpotato;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,13 +7,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
-
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.data.couchpotato.MovieSearchResult;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABHandler;
+
+import java.util.ArrayList;
 
 public class AddMovieSelectDialog extends DialogFragment {
 
@@ -48,7 +47,7 @@ public class AddMovieSelectDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 MovieSearchResult selected = movieList.getMovieSearchResults().get(which);
-                CouchPotatoController.addMovie(messageHandler, Preferences.get(Preferences.COUCHPOTATO_PROFILE), selected.getImdb().toString(),
+                CouchPotatoController.addMovie(messageHandler, Preferences.get(Preferences.COUCHPOTATO_PROFILE), selected.getImdb(),
                         selected.getOriginalTitle());
                 dialog.dismiss();
             }

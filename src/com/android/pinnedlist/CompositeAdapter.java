@@ -15,19 +15,19 @@
  */
 package com.android.pinnedlist;
 
-import java.util.Collection;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import java.util.Collection;
 
 /**
  * A general purpose adapter that is composed of multiple Collections. It just
  * appends them in the order they are added.
  */
 /**
- * This class is used instead of {@link CompositeCursorAdapter} because creating
+ * This class is used instead of {@link CompositeAdapter} because creating
  * a cursor with the needed data would be too much in this case, using the POJOS
  * from start to end is an easier choice
  */
@@ -459,12 +459,7 @@ public abstract class CompositeAdapter extends BaseAdapter {
             int end = start + mPartitions[i].count;
             if (position >= start && position < end) {
                 int offset = position - start;
-                if (mPartitions[i].hasHeader() && offset == 0) {
-                    return false;
-                }
-                else {
-                    return isEnabled(i, offset);
-                }
+                return !(mPartitions[i].hasHeader() && offset == 0) && isEnabled(i, offset);
             }
             start = end;
         }

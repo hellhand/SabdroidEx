@@ -1,12 +1,11 @@
 package com.sabdroidex.utils;
 
-import java.io.File;
-import java.io.IOException;
-
 import android.content.Context;
 import android.util.Log;
-
 import com.sabdroidex.R;
+
+import java.io.File;
+import java.io.IOException;
 
 
 public class ImageUtils {
@@ -18,8 +17,8 @@ public class ImageUtils {
             imageWorker = new ImageWorker(context);
             imageWorker.setSickbeardPosterTemp(R.drawable.temp_poster);
             imageWorker.setSickbeardBannerTemp(R.drawable.temp_banner);
-            imageWorker.setmCouchPosterBitmap(R.drawable.couch_temp_poster);
-            imageWorker.setmCouchBannerBitmap(R.drawable.couch_temp_banner);
+            imageWorker.setCouchPosterBitmap(R.drawable.couch_temp_poster);
+            imageWorker.setCouchBannerBitmap(R.drawable.couch_temp_banner);
         }
     }
     

@@ -1,21 +1,21 @@
 package com.sabdroidex.adapters;
 
-import java.util.List;
-
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.sabdroidex.R;
 import com.sabdroidex.data.sabnzbd.HistoryElement;
 
+import java.util.Collection;
+import java.util.List;
+
 public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
 
-    private LayoutInflater mInflater;
     private HistoryListItem mHistoryListItem;
     private List<HistoryElement> mItems;
 
@@ -27,14 +27,24 @@ public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
     public HistoryListRowAdapter(Context context, List<HistoryElement> items) {
         super(context, R.layout.list_item, items);
         this.mItems = items;
-        this.mInflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public void addAll(Collection<? extends HistoryElement> collection) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            super.addAll(collection);
+        } else {
+            for (HistoryElement element : collection) {
+                super.add(element);
+            }
+        }
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, null);
             mHistoryListItem = new HistoryListItem();
-            mHistoryListItem.filemame = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
+            mHistoryListItem.filename = (TextView) convertView.findViewById(R.id.queueRowLabelFilename);
             mHistoryListItem.eta = (TextView) convertView.findViewById(R.id.queueRowLabelEta);
             mHistoryListItem.completed = (TextView) convertView.findViewById(R.id.queueRowLabelCompleted);
             mHistoryListItem.status = (ImageView) convertView.findViewById(R.id.queueRowStatus);
@@ -49,7 +59,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
         
         HistoryElement element = mItems.get(position);
         
-        mHistoryListItem.filemame.setText(element.getName());
+        mHistoryListItem.filename.setText(element.getName());
         mHistoryListItem.eta.setText(element.getStatus());
         mHistoryListItem.completed.setText(element.getSize());
         mHistoryListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
@@ -66,7 +76,7 @@ public class HistoryListRowAdapter extends ArrayAdapter<HistoryElement> {
 
     class HistoryListItem {
 
-        TextView filemame;
+        TextView filename;
         TextView eta;
         TextView completed;
         ImageView status;

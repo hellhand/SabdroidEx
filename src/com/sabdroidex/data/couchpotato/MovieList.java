@@ -17,15 +17,15 @@
 
 package com.sabdroidex.data.couchpotato;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @JSONElement
 public class MovieList implements JSONBased, Serializable {
@@ -63,7 +63,7 @@ public class MovieList implements JSONBased, Serializable {
 		
 		// Check if there are no invalid entries in list
 		for(Movie movie : movieElements){
-			if (!(movie.getTitle() != null && !movie.getTitle().isEmpty())){
+			if (!(movie.getTitle() != null && !movie.getTitle().equals(""))){
 				movieElements.remove(movie);
 			}
 		

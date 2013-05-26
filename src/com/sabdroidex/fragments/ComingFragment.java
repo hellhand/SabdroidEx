@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ComingListRowAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
@@ -38,7 +37,7 @@ public class ComingFragment extends SABFragment {
                 try {
                     mFuturePeriod = (FuturePeriod) msg.obj;
                     
-                    if (mComingRowAdapter != null) {
+                    if (mComingRowAdapter != null && mFuturePeriod != null) {
                         mComingRowAdapter.setDataSet(mFuturePeriod);
                         mComingRowAdapter.notifyDataSetChanged();
                     }
@@ -48,7 +47,7 @@ public class ComingFragment extends SABFragment {
                 }
             }
             if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
-                if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
+                if (msg.obj instanceof String && !"".equals(msg.obj)) {
                     Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
                 }
             }

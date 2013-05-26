@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,60 +38,11 @@ import android.widget.ListAdapter;
 public class PinnedHeaderListView extends AutoScrollListView
         implements OnScrollListener, OnItemSelectedListener {
 
-    /**
-     * Adapter interface.  The list adapter must implement this interface.
-     */
-    public interface PinnedHeaderAdapter {
-
-        /**
-         * Returns the overall number of pinned headers, visible or not.
-         */
-        int getPinnedHeaderCount();
-
-        /**
-         * Creates or updates the pinned header view.
-         */
-        View getPinnedHeaderView(int viewIndex, View convertView, ViewGroup parent);
-
-        /**
-         * Configures the pinned headers to match the visible list items. The
-         * adapter should call {@link PinnedHeaderListView#setHeaderPinnedAtTop},
-         * {@link PinnedHeaderListView#setHeaderPinnedAtBottom},
-         * {@link PinnedHeaderListView#setFadingHeader} or
-         * {@link PinnedHeaderListView#setHeaderInvisible}, for each header that
-         * needs to change its position or visibility.
-         */
-        void configurePinnedHeaders(PinnedHeaderListView listView);
-
-        /**
-         * Returns the list position to scroll to if the pinned header is touched.
-         * Return -1 if the list does not need to be scrolled.
-         */
-        int getScrollPositionForHeader(int viewIndex);
-    }
-
     private static final int MAX_ALPHA = 255;
     private static final int TOP = 0;
     private static final int BOTTOM = 1;
     private static final int FADING = 2;
-
-    private static final int DEFAULT_ANIMATION_DURATION = 0;
-
-    private static final class PinnedHeader {
-        View view;
-        boolean visible;
-        int y;
-        int height;
-        int alpha;
-        int state;
-
-        boolean animating;
-        boolean targetVisible;
-        int sourceY;
-        int targetY;
-        long targetTime;
-    }
-
+    private static final int DEFAULT_ANIMATION_DURATION = 1;
     private PinnedHeaderAdapter mAdapter;
     private int mSize;
     private PinnedHeader[] mHeaders;
@@ -99,7 +51,6 @@ public class PinnedHeaderListView extends AutoScrollListView
     private OnScrollListener mOnScrollListener;
     private OnItemSelectedListener mOnItemSelectedListener;
     private int mScrollState;
-
     private int mAnimationDuration = DEFAULT_ANIMATION_DURATION;
     private boolean mAnimating;
     private long mAnimationTargetTime;
@@ -129,7 +80,7 @@ public class PinnedHeaderListView extends AutoScrollListView
 
     @Override
     public void setAdapter(ListAdapter adapter) {
-        mAdapter = (PinnedHeaderAdapter)adapter;
+        mAdapter = (PinnedHeaderAdapter) adapter;
         super.setAdapter(adapter);
     }
 
@@ -147,7 +98,7 @@ public class PinnedHeaderListView extends AutoScrollListView
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-            int totalItemCount) {
+                         int totalItemCount) {
         if (mAdapter != null) {
             int count = mAdapter.getPinnedHeaderCount();
             if (count != mSize) {
@@ -245,8 +196,8 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Set header to be pinned at the top.
      *
      * @param viewIndex index of the header view
-     * @param y is position of the header in pixels.
-     * @param animate true if the transition to the new coordinate should be animated
+     * @param y         is position of the header in pixels.
+     * @param animate   true if the transition to the new coordinate should be animated
      */
     public void setHeaderPinnedAtTop(int viewIndex, int y, boolean animate) {
         ensurePinnedHeaderLayout(viewIndex);
@@ -256,15 +207,15 @@ public class PinnedHeaderListView extends AutoScrollListView
         header.state = TOP;
 
         // TODO perhaps we should animate at the top as well
-        header.animating = false;
+        header.animating = true;
     }
 
     /**
      * Set header to be pinned at the bottom.
      *
      * @param viewIndex index of the header view
-     * @param y is position of the header in pixels.
-     * @param animate true if the transition to the new coordinate should be animated
+     * @param y         is position of the header in pixels.
+     * @param animate   true if the transition to the new coordinate should be animated
      */
     public void setHeaderPinnedAtBottom(int viewIndex, int y, boolean animate) {
         ensurePinnedHeaderLayout(viewIndex);
@@ -295,7 +246,7 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Set header to be pinned at the top of the first visible item.
      *
      * @param viewIndex index of the header view
-     * @param position is position of the header in pixels.
+     * @param position  is position of the header in pixels.
      */
     public void setFadingHeader(int viewIndex, int position, boolean fade) {
         ensurePinnedHeaderLayout(viewIndex);
@@ -326,7 +277,7 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Makes header invisible.
      *
      * @param viewIndex index of the header view
-     * @param animate true if the transition to the new coordinate should be animated
+     * @param animate   true if the transition to the new coordinate should be animated
      */
     public void setHeaderInvisible(int viewIndex, boolean animate) {
         PinnedHeader header = mHeaders[viewIndex];
@@ -366,7 +317,7 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Returns the sum of heights of headers pinned to the top.
      */
     public int getTotalTopPinnedHeaderHeight() {
-        for (int i = mSize; --i >= 0;) {
+        for (int i = mSize; --i >= 0; ) {
             PinnedHeader header = mHeaders[i];
             if (header.visible && header.state == TOP) {
                 return header.y + header.height;
@@ -394,15 +345,11 @@ public class PinnedHeaderListView extends AutoScrollListView
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mScrollState == SCROLL_STATE_IDLE) {
-            final int y = (int)ev.getY();
-            for (int i = mSize; --i >= 0;) {
+            final int y = (int) ev.getY();
+            for (int i = mSize; --i >= 0; ) {
                 PinnedHeader header = mHeaders[i];
                 if (header.visible && header.y <= y && header.y + header.height > y) {
-                    if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                        return smoothScrollToPartition(i);
-                    } else {
-                        return true;
-                    }
+                    return ev.getAction() != MotionEvent.ACTION_DOWN || smoothScrollToPartition(i);
                 }
             }
         }
@@ -424,7 +371,9 @@ public class PinnedHeaderListView extends AutoScrollListView
             }
         }
 
-        smoothScrollToPositionFromTop(position + getHeaderViewsCount(), offset);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            smoothScrollToPositionFromTop(position + getHeaderViewsCount(), offset);
+        }
         return true;
     }
 
@@ -473,7 +422,7 @@ public class PinnedHeaderListView extends AutoScrollListView
             canvas.restore();
 
             // First draw top headers, then the bottom ones to handle the Z axis correctly
-            for (int i = mSize; --i >= 0;) {
+            for (int i = mSize; --i >= 0; ) {
                 PinnedHeader header = mHeaders[i];
                 if (header.visible && (header.state == TOP || header.state == FADING)) {
                     drawHeader(canvas, header, currentTime);
@@ -493,7 +442,7 @@ public class PinnedHeaderListView extends AutoScrollListView
 
     private void drawHeader(Canvas canvas, PinnedHeader header, long currentTime) {
         if (header.animating) {
-            int timeLeft = (int)(header.targetTime - currentTime);
+            int timeLeft = (int) (header.targetTime - currentTime);
             if (timeLeft <= 0) {
                 header.y = header.targetY;
                 header.visible = header.targetVisible;
@@ -514,5 +463,51 @@ public class PinnedHeaderListView extends AutoScrollListView
             view.draw(canvas);
             canvas.restoreToCount(saveCount);
         }
+    }
+
+    /**
+     * Adapter interface.  The list adapter must implement this interface.
+     */
+    public interface PinnedHeaderAdapter {
+
+        /**
+         * Returns the overall number of pinned headers, visible or not.
+         */
+        int getPinnedHeaderCount();
+
+        /**
+         * Creates or updates the pinned header view.
+         */
+        View getPinnedHeaderView(int viewIndex, View convertView, ViewGroup parent);
+
+        /**
+         * Configures the pinned headers to match the visible list items. The
+         * adapter should call {@link PinnedHeaderListView#setHeaderPinnedAtTop},
+         * {@link PinnedHeaderListView#setHeaderPinnedAtBottom},
+         * {@link PinnedHeaderListView#setFadingHeader} or
+         * {@link PinnedHeaderListView#setHeaderInvisible}, for each header that
+         * needs to change its position or visibility.
+         */
+        void configurePinnedHeaders(PinnedHeaderListView listView);
+
+        /**
+         * Returns the list position to scroll to if the pinned header is touched.
+         * Return -1 if the list does not need to be scrolled.
+         */
+        int getScrollPositionForHeader(int viewIndex);
+    }
+
+    private static final class PinnedHeader {
+        View view;
+        boolean visible;
+        int y;
+        int height;
+        int alpha;
+        int state;
+        boolean animating;
+        boolean targetVisible;
+        int sourceY;
+        int targetY;
+        long targetTime;
     }
 }

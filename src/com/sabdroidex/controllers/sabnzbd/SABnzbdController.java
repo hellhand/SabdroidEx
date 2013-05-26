@@ -1,14 +1,8 @@
 package com.sabdroidex.controllers.sabnzbd;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-
-import org.json.JSONObject;
-
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.data.sabnzbd.Queue;
@@ -18,6 +12,10 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * @author Marc
@@ -26,7 +24,7 @@ import com.utils.HttpUtil;
 public final class SABnzbdController extends SABController {
     
     public static enum MESSAGE {
-        ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE;
+        ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE
     }
     
     private static final String TAG = "SABnzbdController";
@@ -78,8 +76,8 @@ public final class SABnzbdController extends SABController {
      * 
      * @param messageHandler
      *            The class that will handle the result message.
-     * @param value
-     *            The URL to sent to the Sabnzbd server.
+     * @param name Defines the file name that was read.
+     * @param file Is the read file in a char[] format.
      */
     public static void addFile(final Handler messageHandler, final String name, final char[] file) {
         // Already running or settings not ready
@@ -532,7 +530,7 @@ public final class SABnzbdController extends SABController {
                         jsonObject = jsonObject.getJSONObject("queue");
                         SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Queue.class);
                         Queue queue = (Queue) jsonMarshaller.unmarshal(jsonObject);
-                        paused = queue.getPaused().booleanValue();
+                        paused = queue.getPaused();
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);

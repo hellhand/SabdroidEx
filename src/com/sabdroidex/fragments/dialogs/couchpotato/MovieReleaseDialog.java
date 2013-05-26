@@ -7,11 +7,9 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.Movie;
@@ -60,19 +58,19 @@ public class MovieReleaseDialog extends DialogFragment {
         for (int d = 0; d < releases.length; d++) {
             Object[] curRelease = (Object[]) releases[d];
             TableRow row = (TableRow) inflater.inflate(R.layout.list_movie_release_row, null);
-            if (((String) curRelease[2]).equals("Snatched")) {
-                ((TextView) row.findViewById(R.id.movie_release_ind)).setBackgroundColor(R.color.movie_release_current_release);
+            if ((curRelease[2]).equals("Snatched")) {
+                row.findViewById(R.id.movie_release_ind).setBackgroundColor(R.color.movie_release_current_release);
             }
-            else if (((String) curRelease[2]).equals("Ignored")) {
-                ((TextView) row.findViewById(R.id.movie_release_ind)).setBackgroundColor(R.color.movie_release_ignored_release);
+            else if ((curRelease[2]).equals("Ignored")) {
+                row.findViewById(R.id.movie_release_ind).setBackgroundColor(R.color.movie_release_ignored_release);
             }
             else {
-                ((TextView) row.findViewById(R.id.movie_release_ind)).setBackgroundColor(R.color.movie_release_default);
+                row.findViewById(R.id.movie_release_ind).setBackgroundColor(R.color.movie_release_default);
             }
             ((TextView) row.findViewById(R.id.movie_release_name)).setText((String) curRelease[1]);
             ((TextView) row.findViewById(R.id.movie_release_size)).setText((String) curRelease[4]);
-            ((ImageButton) row.findViewById(R.id.movie_release_download)).setOnClickListener(onClickListener);
-            ((ImageButton) row.findViewById(R.id.movie_release_ignore)).setOnClickListener(onClickListener);
+            row.findViewById(R.id.movie_release_download).setOnClickListener(onClickListener);
+            row.findViewById(R.id.movie_release_ignore).setOnClickListener(onClickListener);
             row.setId((Integer) curRelease[0]);
 
             if ((getActivity().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE

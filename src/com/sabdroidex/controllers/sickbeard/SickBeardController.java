@@ -1,26 +1,20 @@
 package com.sabdroidex.controllers.sickbeard;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.Collections;
-
-import org.json.JSONObject;
-
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 import com.sabdroidex.controllers.SABController;
-import com.sabdroidex.data.sickbeard.FuturePeriod;
-import com.sabdroidex.data.sickbeard.Season;
-import com.sabdroidex.data.sickbeard.Show;
-import com.sabdroidex.data.sickbeard.ShowList;
-import com.sabdroidex.data.sickbeard.ShowSearch;
+import com.sabdroidex.data.sickbeard.*;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Collections;
 
 public final class SickBeardController extends SABController {
     
@@ -177,19 +171,18 @@ public final class SickBeardController extends SABController {
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
-                    
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
                         SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(ShowList.class);
                         showList = (ShowList) jsonMarshaller.unmarshal(jsonObject);
                         Collections.sort(showList.getShowElements());
+                        
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.SHOWS.hashCode();
+                        message.obj = showList;
+                        message.sendToTarget();
                     }
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.SHOWS.hashCode();
-                    message.obj = showList;
-                    message.sendToTarget();
                 }
                 catch (IOException e) {
                     Log.w(TAG, e.getLocalizedMessage());
@@ -245,13 +238,13 @@ public final class SickBeardController extends SABController {
                         jsonObject = jsonObject.getJSONObject("data");
                         SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(FuturePeriod.class);
                         futurePeriod = (FuturePeriod) simpleJsonMarshaller.unmarshal(jsonObject);
+                        
+                        Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.FUTURE.hashCode();
+                        message.obj = futurePeriod;
+                        message.sendToTarget();
                     }
-                    
-                    Message message = new Message();
-                    message.setTarget(messageHandler);
-                    message.what = MESSAGE.FUTURE.hashCode();
-                    message.obj = futurePeriod;
-                    message.sendToTarget();
                 }
                 catch (IOException e) {
                     Log.w(TAG, e.getLocalizedMessage());
@@ -332,9 +325,8 @@ public final class SickBeardController extends SABController {
      * 
      * @param messageHandler
      *            the handler that will be notified upon completion or error.
-     * @param messageHandler
-     * @param string
-     * @param string2
+     * @param showId the imdb ID of the show.
+     * @param seasonId the season ID of the show (season number)
      */
     public static void getSeason(final Handler messageHandler, final String showId, final String seasonId) {
 

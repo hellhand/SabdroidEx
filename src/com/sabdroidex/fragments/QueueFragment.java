@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.QueueListRowAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
@@ -30,9 +28,9 @@ public class QueueFragment extends SABFragment {
     private static final String TAG = "QueueFragment";
     
     private boolean paused = false;
-    private static Queue mQueue;
+    private static Queue queue;
     private Thread updater;
-    private ListView mQueueList;
+    private QueueListRowAdapter queueListRowAdapter;
     
     // Instantiating the Handler associated with the main thread.
     private final SABHandler messageHandler = new SABHandler() {
@@ -41,19 +39,18 @@ public class QueueFragment extends SABFragment {
         public void handleMessage(Message msg) {
             if (msg.what == SABnzbdController.MESSAGE.QUEUE.hashCode()) {
                 try {
-                    mQueue = (Queue) msg.obj;
+                    queue = (Queue) msg.obj;
                     
                     /**
                      * This might happens if a rotation occurs
                      */
-                    if (mQueueList != null || getAdapter(mQueueList) != null) {
-                        ArrayAdapter<Object> adapter = getAdapter(mQueueList);
-                        adapter.clear();
-                        adapter.addAll(mQueue.getQueueElements());
-                        adapter.notifyDataSetChanged();
+                    if (queueListRowAdapter != null || queue != null) {
+                        queueListRowAdapter.clear();
+                        queueListRowAdapter.addAll(queue.getQueueElements());
+                        queueListRowAdapter.notifyDataSetChanged();
                     }
                     
-                    ((UpdateableActivity) getParentActivity()).updateLabels(mQueue);
+                    ((UpdateableActivity) getParentActivity()).updateLabels(queue);
                     ((UpdateableActivity) getParentActivity()).updateState(true);
                 }
                 catch (Exception e) {
@@ -64,7 +61,7 @@ public class QueueFragment extends SABFragment {
             if (msg.what == SABnzbdController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     ((UpdateableActivity) getParentActivity()).updateState(false);
-                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
+                    if (msg.obj instanceof String && !"".equals(msg.obj)) {
                         Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -80,8 +77,12 @@ public class QueueFragment extends SABFragment {
      */
     public QueueFragment() {}
     
+    /**
+     * 
+     * @param downloadRows
+     */
     public QueueFragment(Queue downloadRows) {
-        mQueue = downloadRows;
+        queue = downloadRows;
     }
     
     @Override
@@ -109,15 +110,16 @@ public class QueueFragment extends SABFragment {
         SharedPreferences preferences = getActivity().getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
         
+        queueListRowAdapter = new QueueListRowAdapter(getActivity(), queue.getQueueElements());
+        
         LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
+        ListView queueList = (ListView) downloadView.findViewById(R.id.elementList);
+
+        downloadView.removeAllViews();        
+        queueList.setAdapter(queueListRowAdapter);
+        queueList.setOnItemLongClickListener(new ListItemLongClickListener());
         
-        mQueueList = (ListView) downloadView.findViewById(R.id.elementList);
-        downloadView.removeAllViews();
-        
-        mQueueList.setAdapter(new QueueListRowAdapter(getActivity(), mQueue.getQueueElements()));
-        mQueueList.setOnItemLongClickListener(new ListItemLongClickListener());
-        
-        return mQueueList;
+        return queueList;
     }
     
     @Override
@@ -141,7 +143,7 @@ public class QueueFragment extends SABFragment {
     
     @Override
     public JSONBased getDataCache() {
-        return mQueue;
+        return queue;
     }
     
     /**
@@ -172,7 +174,7 @@ public class QueueFragment extends SABFragment {
         
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-            QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, mQueue
+            QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, queue
                     .getQueueElements().get(position));
             queueElementActionDialog.show(getChildFragmentManager(), "queueaction");
             return true;

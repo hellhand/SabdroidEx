@@ -25,16 +25,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.MovieGridAdapter;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
@@ -50,7 +43,7 @@ import com.sabdroidex.utils.SABHandler;
 public class MoviesFragment extends SABFragment {
 
     private static final String TAG = MoviesFragment.class.getCanonicalName();
-    
+
     private static MovieList movieList;
     private GridView movieGrid;
     private MovieGridAdapter mMovieGridAdapter;
@@ -66,7 +59,7 @@ public class MoviesFragment extends SABFragment {
 
                 movieList = (MovieList) msg.obj;
 
-                if (mMovieGridAdapter != null) {
+                if (mMovieGridAdapter != null && movieList != null) {
                     mMovieGridAdapter.setDataSet(movieList.getMovieElements());
                     mMovieGridAdapter.notifyDataSetChanged();
                     if (movieList.getMovieElements().size() > 0) {
@@ -90,13 +83,11 @@ public class MoviesFragment extends SABFragment {
     /**
      * 
      */
-    public MoviesFragment() {
-        movieList = new MovieList();
-    }
+    public MoviesFragment() {}
 
     /**
-     * 
-     * @param downloadRows
+     * Constructor with default {@link MovieList} to be displayed.
+     * @param movieRows
      */
     public MoviesFragment(MovieList movieRows) {
         movieList = movieRows;
@@ -115,7 +106,7 @@ public class MoviesFragment extends SABFragment {
         if (!Preferences.isEnabled(Preferences.COUCHPOTATO)) {
             return;
         }
-        CouchPotatoController.refreshMovies(messageHandler,"");
+        CouchPotatoController.refreshMovies(messageHandler, "");
     }
 
     @Override
@@ -133,7 +124,7 @@ public class MoviesFragment extends SABFragment {
         messageHandler.setActivity(getActivity());
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -142,7 +133,7 @@ public class MoviesFragment extends SABFragment {
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.movie_list, null);
         movieGrid = (GridView) linearLayout.findViewById(R.id.elementGrid);
         movieGrid.setAdapter(mMovieGridAdapter);
-        
+
         LinearLayout layout = (LinearLayout) linearLayout.findViewById(R.id.movieStatus);
         if (layout != null) {
             movieGrid.setOnItemClickListener(new GridItemClickListener());
@@ -152,7 +143,7 @@ public class MoviesFragment extends SABFragment {
         else {
             movieGrid.setOnItemLongClickListener(new GridItemLongClickListener());
         }
-        
+
         manualRefreshMovies();
 
         return linearLayout;
@@ -160,41 +151,41 @@ public class MoviesFragment extends SABFragment {
 
     public void setupMovieElements(View view, Movie movie) {
         ImageView moviePoster = (ImageView) view.findViewById(R.id.moviePoster);
-        
+
         TextView movieTitle = (TextView) view.findViewById(R.id.movie_name);
         movieTitle.setText(movie.getTitle());
-        
+
         TextView movieProfile = (TextView) view.findViewById(R.id.movie_profile);
         movieProfile.setText(CouchPotatoController.getProfile(movie.getProfileID()));
-        
+
         TextView moviePlot = (TextView) view.findViewById(R.id.movie_plot);
         moviePlot.setText(movie.getPlot());
-        
+
         TextView movieRuntime = (TextView) view.findViewById(R.id.movie_runtime);
         movieRuntime.setText(Integer.toString(movie.getLibrary().getInfo().getRuntime()));
-        
+
         TextView movieStatus = (TextView) view.findViewById(R.id.movie_status);
         movieStatus.setText(CouchPotatoController.getStatus(movie.getStatusID()));
-        
+
         TextView movieReleased = (TextView) view.findViewById(R.id.movie_released);
         movieReleased.setText(movie.getLibrary().getInfo().getReleased());
-        
+
         TextView movieGenre = (TextView) view.findViewById(R.id.movie_genre);
         movieGenre.setText(movie.getGenres());
-        
+
         TextView movieRating = (TextView) view.findViewById(R.id.movie_rating);
         movieRating.setText(movie.getLibrary().getInfo().getRating().getImdbRating().toString());
-        
+
         String imageKey = ImageType.MOVIE_POSTER.name() + movie.getMovieID();
-        ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(),
-                movie.getTitle(), movie.getLibrary().getInfo().getPosters().getOriginalPoster());
+        ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(), movie.getTitle(),
+                movie.getLibrary().getInfo().getPosters().getOriginalPoster());
     }
 
     @Override
     public JSONBased getDataCache() {
         return movieList;
     }
-    
+
     private class GridItemClickListener implements OnItemClickListener {
 
         /**

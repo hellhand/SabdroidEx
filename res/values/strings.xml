@@ -218,19 +218,37 @@
     <string name="movie_genres">Genres: </string>
     <string name="movie_runtime">Runtime: </string>
 
+    <string name="movie_release_name">Release name</string>
+    <string name="movie_release_status">Status</string>
+    <string name="movie_release_quality">Quality</string>
+    <string name="movie_release_size">Size</string>
+    <string name="movie_release_provider">Provider</string>
+    <string name="movie_release_titel">Movie Releases</string>
+
+    <string name="movie_imdb_url_summary">Open the IMDB page of this movie</string>
+    <string name="movie_imdb_url">IMDB Page</string>
+    <string name="movie_available_files_summary">View the files related to this movie</string>
+    <string name="movie_available_files">Available files</string>
+    <string name="movie_readd_summary">Set movie to be re-dowloaded</string>
+    <string name="movie_readd">Re-add movie</string>
+    <string name="movie_info_change_summary">Change movie information, like title and quality</string>
+    <string name="movie_info_change">Change information</string>
+    <string name="movie_remove_summary">Remove the movie from Couchpotato</string>
+    <string name="movie_remove">Remove</string>
+
+    <string name="movie_download_best_summary">Dowload the best release for this movie</string>
+    <string name="movie_download_best">Download best</string>
+    <string name="movie_pick_release_summary">Movie Releases</string>
+    <string name="movie_pick_release">Movie Releases</string>
+    <string name="movie_mark_done_summary">Movie Releases</string>
+    <string name="movie_mark_done">Movie Releases</string>
+
 	<string name="setting_couchpotato_cache">Image Cache</string>
 	<string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
 	<string name="setting_couchpotato_lowres">Lowres Images</string>
 	<string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>
 	<string name="setting_couchpotato_nomedia">.Nomedia</string>
 	<string name="setting_couchpotato_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
-
-    <string name="movie_release_name">Release name</string>
-	<string name="movie_release_status">Status</string>
-	<string name="movie_release_quality">Quality</string>
-	<string name="movie_release_size">Size</string>
-	<string name="movie_release_provider">Provider</string>
-	<string name="movie_release_titel">Movie Releases</string>
 
     <string name="menu_movie_release">Show releases</string>
     <string name="menu_movie_delete">Delete movie</string>

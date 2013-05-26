@@ -10,17 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.sabdroidex.R;
 import com.sabdroidex.activity.ShowActivity;
 import com.sabdroidex.adapters.ShowsGridAdapter;
@@ -53,7 +45,7 @@ public class ShowsFragment extends SABFragment {
 
                 showList = (ShowList) msg.obj;
 
-                if (mShowsGridAdapter != null) {
+                if (mShowsGridAdapter != null && showList != null) {
                     mShowsGridAdapter.setDataSet(showList.getShowElements());
                     mShowsGridAdapter.notifyDataSetChanged();
                     if (showList.getShowElements().size() > 0) {
@@ -63,7 +55,7 @@ public class ShowsFragment extends SABFragment {
             }
             if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
                 try {
-                    if (msg.obj instanceof String && !"".equals((String) msg.obj)) {
+                    if (msg.obj instanceof String && !"".equals(msg.obj)) {
                         Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -77,9 +69,7 @@ public class ShowsFragment extends SABFragment {
     /**
      * 
      */
-    public ShowsFragment() {
-        showList = new ShowList();
-    }
+    public ShowsFragment() {}
 
     /**
      * 
@@ -205,7 +195,6 @@ public class ShowsFragment extends SABFragment {
             setupShowElements(getView(), showList.getShowElements().get(position));
             showGrid.invalidateViews();
         }
-
     }
 
     private class GridItemLongClickListener implements OnItemLongClickListener {
@@ -221,7 +210,6 @@ public class ShowsFragment extends SABFragment {
             showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
             return true;
         }
-
     }
 
     private class MoreButtonClickListener implements OnClickListener {

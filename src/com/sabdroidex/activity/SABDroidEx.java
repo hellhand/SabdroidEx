@@ -1,11 +1,5 @@
 package com.sabdroidex.activity;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Set;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
@@ -35,11 +28,7 @@ import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.SabnzbdStatus;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.ShowList;
-import com.sabdroidex.fragments.ComingFragment;
-import com.sabdroidex.fragments.HistoryFragment;
-import com.sabdroidex.fragments.MoviesFragment;
-import com.sabdroidex.fragments.QueueFragment;
-import com.sabdroidex.fragments.ShowsFragment;
+import com.sabdroidex.fragments.*;
 import com.sabdroidex.fragments.dialogs.DialogFragmentManager;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.ImageUtils;
@@ -49,6 +38,12 @@ import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
 import com.utils.Formatter;
 import com.viewpagerindicator.TabPageIndicator;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Set;
 
 /**
  * Main SabdroidEx Activity
@@ -158,7 +153,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 oos.flush();
             }
             catch (Exception e) {
-                Log.e(TAG, " " + e.getStackTrace());
+                Log.e(TAG, " " + e.getStackTrace().toString());
             }
             finally {
                 try {
@@ -382,19 +377,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (SABnzbdController.paused == true) {
+        if (SABnzbdController.paused) {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_resume);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_play);
         }
         else {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
-        }
-        if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
-            menu.findItem(R.id.menu_couch_settings).setVisible(true);
-        }
-        else {
-            menu.findItem(R.id.menu_couch_settings).setVisible(false);
         }
         if (!Debug.isDebuggerConnected()) {
             menu.findItem(R.id.menu_clear).setVisible(true);
@@ -428,9 +417,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 break;
             case R.id.menu_server_settings:
                 showServerSettings();
-                break;
-            case R.id.menu_couch_settings:
-                showCouchSettings();
                 break;
         }
         return super.onOptionsItemSelected(item);

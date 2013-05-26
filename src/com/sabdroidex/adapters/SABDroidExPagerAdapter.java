@@ -1,14 +1,13 @@
 package com.sabdroidex.adapters;
 
-import java.util.Vector;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
 import com.sabdroidex.fragments.SABFragment;
 import com.viewpagerindicator.TitleProvider;
+
+import java.util.Vector;
 
 public class SABDroidExPagerAdapter extends FragmentPagerAdapter implements TitleProvider {
 
@@ -22,10 +21,6 @@ public class SABDroidExPagerAdapter extends FragmentPagerAdapter implements Titl
 
     public void addFragment(Fragment fragment) {
         mFragments.add((SABFragment) fragment);
-    }
-
-    public void removeFragment(Fragment fragment) {
-        mFragments.remove((SABFragment) fragment);
     }
 
     public boolean contains(Fragment fragment) {

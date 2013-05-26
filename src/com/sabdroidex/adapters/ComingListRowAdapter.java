@@ -1,14 +1,11 @@
 package com.sabdroidex.adapters;
 
-import java.util.Collection;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.pinnedlist.PinnedHeaderListAdapter;
 import com.sabdroidex.R;
 import com.sabdroidex.data.sickbeard.FutureEpisode;
@@ -16,11 +13,14 @@ import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
+import java.util.Collection;
+
 public class ComingListRowAdapter extends PinnedHeaderListAdapter {
 
     public ComingListRowAdapter(Context context, FuturePeriod futurePeriod) {
         super(context);
         setPinnedPartitionHeadersEnabled(true);
+        setDataSet(futurePeriod);
     }
 
     public void setDataSet(FuturePeriod futurePeriod) {

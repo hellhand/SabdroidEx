@@ -100,7 +100,7 @@ public class Preferences {
             return false;
         }
 
-        if (preferences.getString(key, "").toString().trim().equals("")) {
+        if (preferences.getString(key, "").trim().equals("")) {
             return false;
         }
 
