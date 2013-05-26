@@ -5,3 +5,6 @@
 /local.properties
 /SABDroidExTest/bin
 /SABDroidExTest/gen
+/.idea
+/out
+/SABDroidExTest/.idea
