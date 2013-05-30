@@ -10,7 +10,7 @@
         android:cacheColorHint="#999999"
         android:divider="#A0A0A0"
         android:dividerHeight="1px"
-        android:fadingEdgeLength="4dip"
+        android:fadingEdgeLength="0dip"
         android:scrollingCache="false"
         android:fastScrollEnabled="true" />
 

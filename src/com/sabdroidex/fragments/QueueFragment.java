@@ -18,6 +18,7 @@ import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.fragments.dialogs.sabnzbd.QueueElementActionDialog;
+import com.sabdroidex.interfaces.DialogFragmentManagerHolder;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
@@ -94,10 +95,9 @@ public class QueueFragment extends SABFragment {
      * Refreshing the queue during startup or on user request. Asks to configure
      * if still not done
      */
-    @SuppressWarnings("deprecation")
     public void manualRefreshQueue() {
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
-            this.getActivity().showDialog(R.id.dialog_setup_prompt);
+            ((DialogFragmentManagerHolder)getActivity()).getDialogFragmentManager().showSetupDialog();
             return;
         }
         

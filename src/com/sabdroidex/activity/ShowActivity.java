@@ -17,15 +17,16 @@ import android.widget.GridView;
 
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
-import com.sabdroidex.adapters.ShowSeasonAdapater;
+import com.sabdroidex.adapters.ShowSeasonAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.sickbeard.Show;
 
 public class ShowActivity extends ActionBarActivity {
-    
+
     private static final String TAG = ShowActivity.class.getCanonicalName();
-    
-    private ShowSeasonAdapater showSeasonAdapater;
+    public static final String TVDBID = "tvdbid";
+
+    private ShowSeasonAdapter showSeasonAdapter;
     private Integer mShowId;
     private Show mShow;
     
@@ -40,8 +41,8 @@ public class ShowActivity extends ActionBarActivity {
             if (msg.what == SickBeardController.MESSAGE.SHOW.hashCode() && msg.obj instanceof Show) {
                 mShow = (Show) msg.obj;
                 mShow.setTvdbId(mShowId);
-                showSeasonAdapater.setShow(mShow);
-                showSeasonAdapater.notifyDataSetChanged();
+                showSeasonAdapter.setShow(mShow);
+                showSeasonAdapter.notifyDataSetChanged();
                 
                 setTitle(mShow.getShowName());
             }
@@ -73,12 +74,12 @@ public class ShowActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.grid);
-        
-        mShowId = getIntent().getExtras().getInt("tvdbid");
-        showSeasonAdapater = new ShowSeasonAdapater(this, mShow);
+
+        mShowId = getIntent().getExtras().getInt(TVDBID);
+        showSeasonAdapter = new ShowSeasonAdapter(this, mShow);
         
         GridView gridView = (GridView) findViewById(R.id.elementGrid);
-        gridView.setAdapter(showSeasonAdapater);
+        gridView.setAdapter(showSeasonAdapter);
         gridView.setOnItemClickListener(itemClickListener);
         
         refresh();

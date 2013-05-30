@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
@@ -28,8 +29,13 @@ import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.SabnzbdStatus;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.ShowList;
-import com.sabdroidex.fragments.*;
+import com.sabdroidex.fragments.ComingFragment;
+import com.sabdroidex.fragments.HistoryFragment;
+import com.sabdroidex.fragments.MoviesFragment;
+import com.sabdroidex.fragments.QueueFragment;
+import com.sabdroidex.fragments.ShowsFragment;
 import com.sabdroidex.fragments.dialogs.DialogFragmentManager;
+import com.sabdroidex.interfaces.DialogFragmentManagerHolder;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageUtils.NoMediaChecker;
@@ -48,11 +54,26 @@ import java.util.Set;
 /**
  * Main SabdroidEx Activity
  */
-public class SABDroidEx extends ActionBarActivity implements UpdateableActivity {
+public class SABDroidEx extends ActionBarActivity implements UpdateableActivity, DialogFragmentManagerHolder {
 
     private static final String TAG = SABDroidEx.class.getCanonicalName();
     private static String APPLICATION_VERSION;
+    /**
+     * Listener for the search text field contents.
+     */
+    OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
 
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return super.onQueryTextChange(newText);
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            System.out.println(query);
+            return super.onQueryTextSubmit(query);
+        }
+    };
     /**
      * The Fragments that will take place in the ViewPager
      */
@@ -81,8 +102,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
 
         try {
             APPLICATION_VERSION = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        }
-        catch (NameNotFoundException e) {
+        } catch (NameNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }
 
@@ -117,8 +137,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                     cursor.moveToFirst();
                     int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
                     path = cursor.getString(idx);
-                }
-                else {
+                } else {
                     path = data.getPath();
                 }
                 intent.setData(null);
@@ -151,16 +170,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 oos.writeObject(comingFragment.getDataCache());
                 oos.writeObject(moviesFragment.getDataCache());
                 oos.flush();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e(TAG, " " + e.getStackTrace().toString());
-            }
-            finally {
+            } finally {
                 try {
                     oos.close();
                     fos.close();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // we do not care
                 }
             }
@@ -169,7 +185,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     }
 
     /**
-     * 
      * @param queryIntent
      * @param entryPoint
      */
@@ -208,7 +223,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                 // done.
                 // (the user might only have enabled couchpotato and not
                 // sickbeard)
-                for (JSONBased element = null; (element = (JSONBased) ois.readObject()) != null;) {
+                for (JSONBased element = null; (element = (JSONBased) ois.readObject()) != null; ) {
                     if (element instanceof Queue)
                         queue = (Queue) element;
                     if (element instanceof History)
@@ -220,16 +235,13 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                     if (element instanceof MovieList)
                         movies = (MovieList) element;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 try {
                     ois.close();
                     fis.close();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // we do not care
                 }
             }
@@ -308,8 +320,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
                     + " MB");
             ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " " + getString(R.string.header_speed_unit));
             ((TextView) findViewById(R.id.headerEta)).setText(Calculator.calculateETA(mbleft, kbpersec));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             Log.w(TAG, "Error Updating Labels");
         }
     }
@@ -323,21 +334,10 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
     }
 
     /**
-     * This creates the menu items as they will be by default
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main, menu);
-        // setupSearchView(menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
      * Setting up the Search View
-     * 
+     *
      * @param menu
-     * 
+     *
      *            private void setupSearchView(Menu menu) { // Place an action
      *            bar item for searching. if (Build.VERSION.SDK_INT >=
      *            Build.VERSION_CODES.ICE_CREAM_SANDWICH) { MenuItem searchItem
@@ -355,21 +355,15 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      */
 
     /**
-     * Listener for the search text field contents.
+     * This creates the menu items as they will be by default
      */
-    OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            return super.onQueryTextChange(newText);
-        }
-
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            System.out.println(query);
-            return super.onQueryTextSubmit(query);
-        }
-    };
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main, menu);
+        // setupSearchView(menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     /**
      * This is called each time the Menu Button or Menu UI Element is pressed.
@@ -380,8 +374,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
         if (SABnzbdController.paused) {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_resume);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_play);
-        }
-        else {
+        } else {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
         }
@@ -464,5 +457,10 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity 
      */
     private void pauseResume() {
         queueFragment.pauseResumeQueue();
+    }
+
+    @Override
+    public DialogFragmentManager getDialogFragmentManager() {
+        return dialogFragmentManager;
     }
 }

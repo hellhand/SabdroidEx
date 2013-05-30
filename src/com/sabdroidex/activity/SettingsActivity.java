@@ -1,21 +1,25 @@
 package com.sabdroidex.activity;
 
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.view.Window;
+import android.view.MenuItem;
 
+import com.android.actionbarcompat.ActionBarPreferencesActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 
-public class SettingsActivity extends PreferenceActivity {
-	    
-    @SuppressWarnings("deprecation")
+public class SettingsActivity extends ActionBarPreferencesActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         getPreferenceManager().setSharedPreferencesName(SABDroidConstants.PREFERENCES_KEY);
         addPreferencesFromResource(R.xml.preferences);
@@ -31,10 +35,20 @@ public class SettingsActivity extends PreferenceActivity {
         setSummaryChangeListener(Preferences.SICKBEARD_PORT, R.string.setting_sickbeard_port);
         setSummaryChangeListener(Preferences.SICKBEARD_RATE, R.string.setting_refresh_rate);
         setSummaryChangeListener(Preferences.SICKBEARD_API_KEY, R.string.setting_sickbeard_api_key);
-        
+
         setSummaryChangeListener(Preferences.COUCHPOTATO_URL, R.string.setting_couchpotato_url);
         setSummaryChangeListener(Preferences.COUCHPOTATO_URL_EXTENTION, R.string.setting_couchpotato_url_extention);
         setSummaryChangeListener(Preferences.COUCHPOTATO_PORT, R.string.setting_sickbeard_port);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
     }
 
     @SuppressWarnings("deprecation")
@@ -52,8 +66,7 @@ public class SettingsActivity extends PreferenceActivity {
                 if (newValue != null) {
                     preference.setSummary(newValue.toString());
                     return true;
-                }
-                else {
+                } else {
                     preference.setSummary(getString(resId));
                     return false;
                 }

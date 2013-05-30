@@ -93,11 +93,10 @@ public class HistoryFragment extends SABFragment {
      * Refreshing the queue during startup or on user request. Asks to configure
      * if still not done
      */
-    @SuppressWarnings("deprecation")
     public void manualRefreshHistory() {
         // First run setup
         if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
-            getActivity().showDialog(R.id.dialog_setup_prompt);
+            // The error dialog should be displayed by the QueueFragment
             return;
         }
 

@@ -48,13 +48,11 @@ public class SeasonActivity extends ActionBarActivity {
                 
                 String count = Integer.toString(mSeason.getEpisodes().size());
                 episodeCount.setText(count);
-                
                 String title = mShow.getShowName() + " - " + getString(R.string.show_season) + " " + mSeasonNr;
                 setTitle(title);
             }
             if (msg.what == SickBeardController.MESSAGE.EPISODE_SETSTATUS.hashCode()) {
                 try {
-                    //TODO: resource bundle
                     String text = getString(R.string.episode_status_set_to) + " : " + msg.obj;
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
                 }

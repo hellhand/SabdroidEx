@@ -11,6 +11,6 @@
         android:cacheColorHint="#999999"
         android:divider="@drawable/list_item_bg"
         android:dividerHeight="1px"
-        android:fadingEdgeLength="4dip" />
+        android:fadingEdgeLength="0dip" />
 
 </LinearLayout>
