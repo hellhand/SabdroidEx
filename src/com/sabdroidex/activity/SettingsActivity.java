@@ -1,6 +1,5 @@
 package com.sabdroidex.activity;
 
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -13,6 +12,7 @@ import com.sabdroidex.utils.SABDroidConstants;
 
 public class SettingsActivity extends ActionBarPreferencesActivity {
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

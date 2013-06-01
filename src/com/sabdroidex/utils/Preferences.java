@@ -50,7 +50,15 @@ public class Preferences {
     public static final String COUCHPOTATO_PROFILE = "couchpotato_profile";
     public static final String COUCHPOTATO_USERNAME = "couchpotato_auth_username";
     public static final String COUCHPOTATO_PASSWORD = "couchpotato_auth_password";
-    
+
+    public static final String MOVIE_AVAILABLE_FILES = "movie_available_files";
+    public static final String MOVIE_READD = "movie_readd";
+    public static final String MOVIE_CHANGE_MOVIE_INFO = "movie_change_movie_info";
+    public static final String MOVIE_REMOVE = "movie_remove";
+    public static final String MOVIE_DOWLOAD_BEST = "movie_dowload_best";
+    public static final String MOVIE_PICK_RELEASE = "movie_pick_release";
+    public static final String MOVIE_MARK_DONE = "movie_mark_done";
+
     public static final String APACHE = "apache";
     public static final String APACHE_USERNAME = "apache_auth_username";
     public static final String APACHE_PASSWORD = "apache_auth_password";

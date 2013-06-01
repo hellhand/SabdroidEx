@@ -46,6 +46,7 @@ public class ServerSettingsActivity extends ActionBarPreferencesActivity {
             }
         }
     };
+
     private SharedPreferences preferences;
     private TextView empty;
 

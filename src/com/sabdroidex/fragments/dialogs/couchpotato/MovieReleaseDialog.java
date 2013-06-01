@@ -14,6 +14,7 @@ import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.Movie;
 
+//TODO: use this dialog
 public class MovieReleaseDialog extends DialogFragment {
 
     private Movie movie;

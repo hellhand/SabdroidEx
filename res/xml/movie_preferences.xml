@@ -3,10 +3,12 @@
 
     <PreferenceCategory android:title="General Actions" >
         
-        <Preference
+		<!--         
+		<Preference
             android:key="movie_imdb_url"
             android:summary="@string/movie_imdb_url_summary"
-            android:title="@string/movie_imdb_url" />
+            android:title="@string/movie_imdb_url" /> 
+        -->
         
 		<Preference
             android:key="movie_available_files"

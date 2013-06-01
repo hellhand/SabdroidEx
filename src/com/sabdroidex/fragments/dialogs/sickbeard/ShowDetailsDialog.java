@@ -41,6 +41,7 @@ public class ShowDetailsDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 Intent intent = new Intent(getActivity().getBaseContext(), ShowActivity.class);
+                intent.putExtra("showname", mShow.getShowName());
                 intent.putExtra("tvdbid", mShow.getTvdbId());
                 getActivity().startActivity(intent);
                 dialog.dismiss();

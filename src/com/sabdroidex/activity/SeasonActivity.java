@@ -1,6 +1,7 @@
 package com.sabdroidex.activity;
 
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -89,6 +90,10 @@ public class SeasonActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.episode_list);
         
         mShow = (Show) getIntent().getExtras().get("show");

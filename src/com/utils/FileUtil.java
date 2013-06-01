@@ -16,17 +16,19 @@
  */
 package com.utils;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+
+import android.util.Log;
 
 public class FileUtil {
 
@@ -107,6 +109,34 @@ public class FileUtil {
         return dat;
     }
 
+    
+    /**
+     * This method reads the file at a given path and puts it in a char array.
+     * This is mostly used to read nzb files.
+     *
+     * @param path it is the path of the file containing the filename.
+     * @return the char array representing the nzb.
+     */
+    public static char[] saveFileFromCharArray(final String path, char[] dat) {
+
+        try {
+            final File file = new File(path);
+            final FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Charset.defaultCharset()));
+            writer.write(dat);
+
+            writer.close();
+        }
+        catch (final FileNotFoundException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return dat;
+    }
+    
     /**
      * This method retrieves the file name out a complete path.
      *

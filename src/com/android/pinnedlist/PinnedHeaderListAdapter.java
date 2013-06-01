@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * A subclass of {@link CompositeAdapter} that manages pinned partition
+ * A subclass of {@link CompositeCursorAdapter} that manages pinned partition
  * headers.
  */
 public abstract class PinnedHeaderListAdapter extends CompositeAdapter implements PinnedHeaderListView.PinnedHeaderAdapter {
@@ -132,8 +132,12 @@ public abstract class PinnedHeaderListAdapter extends CompositeAdapter implement
             }
         }
 
+        // Starting at the bottom, find and pin headers for partitions following
+        // the visible one(s)
+        int maxBottomHeader = size;
+
         // Headers in between the top-pinned and bottom-pinned should be hidden
-        for (int i = maxTopHeader + 1; i < size; i++) {
+        for (int i = maxTopHeader + 1; i < maxBottomHeader; i++) {
             if (mHeaderVisibility[i]) {
                 listView.setHeaderInvisible(i, isPartitionEmpty(i));
             }

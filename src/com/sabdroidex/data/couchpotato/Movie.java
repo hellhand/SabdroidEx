@@ -18,6 +18,8 @@
 package com.sabdroidex.data.couchpotato;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
@@ -26,7 +28,6 @@ import com.sabdroidex.utils.json.JSONType;
 @JSONElement
 public class Movie implements Serializable, Comparable<Movie> {
 	
-
 	/**
 	 * 
 	 */
@@ -35,7 +36,7 @@ public class Movie implements Serializable, Comparable<Movie> {
 	private Integer profileID;
 	private Integer statusID;
 	private MovieLibrary library;
-	
+	private List<MovieRelease> releases;
 
 	public MovieLibrary getLibrary() {
 		return library;
@@ -73,6 +74,29 @@ public class Movie implements Serializable, Comparable<Movie> {
 		this.movieID = movieID;
 	}
 	
+    public List<MovieRelease> getReleases() {
+        if (releases == null) {
+            releases = new ArrayList<MovieRelease>();
+        }
+        return releases;
+    }
+
+    @JSONSetter(name = "releases", objectClazz = MovieRelease.class)
+    public void setReleases(List<MovieRelease> releases) {
+        this.releases = releases;
+    }
+	
+    /**
+     * This method is used to retrieve the first release.
+     * @return The first available release or an empty object
+     */
+    public MovieRelease getFirstRelease() {
+        if (releases != null && releases.size() > 0) {
+            return releases.get(0);
+        }
+        return new MovieRelease();
+    }
+    
 	/**
 	 * Get Title of Movie
 	 * @return Title of Movie

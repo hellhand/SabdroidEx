@@ -2,6 +2,7 @@ package com.sabdroidex.activity;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -51,7 +52,7 @@ public class ShowActivity extends ActionBarActivity {
     
     /**
      * A {@link OnItemClickListener} listening the season grid. This will have
-     * the duty to display a new {@link FragmentActivity} with the apisodes of
+     * the duty to display a new {@link FragmentActivity} with the episodes of
      * the selected season
      */
     private OnItemClickListener itemClickListener = new OnItemClickListener() {
@@ -59,7 +60,6 @@ public class ShowActivity extends ActionBarActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(getBaseContext(), SeasonActivity.class);
-            intent.putExtra("show", mShow);
             intent.putExtra("season", mShow.getSeasonList().get(position));
             startActivity(intent);
         }
@@ -73,6 +73,10 @@ public class ShowActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.grid);
 
         mShowId = getIntent().getExtras().getInt(TVDBID);
@@ -108,6 +112,9 @@ public class ShowActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method calls the Controller to retrieve the show information
+     */
     private void refresh() {
         SickBeardController.getShow(messageHandler, mShowId.toString());
     }
