@@ -378,7 +378,7 @@ public class HttpUtil {
         return dat.toCharArray();
     }
 
-    private static final URLConnection getConnection(URL url) throws IOException {
+    private static URLConnection getConnection(URL url) throws IOException {
         URLConnection urlc;
 
         urlc = url.openConnection();
@@ -390,12 +390,4 @@ public class HttpUtil {
 
         return urlc;
     }
-
-    /*
-     * private URLConnection getConnection(URL url, Map<String, String>
-     * parameterMap) throws IOException { URLConnection urlc =
-     * getConnection(url); for (String key : parameterMap.keySet()) {
-     * urlc.setRequestProperty(key, parameterMap.get(key)); } return urlc; }
-     */
-
 }

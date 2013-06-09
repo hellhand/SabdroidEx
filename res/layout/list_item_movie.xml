@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal" >
+
+    <com.sabdroidex.utils.AlphaImageView
+        android:id="@+id/movie_poster"
+        android:layout_width="fill_parent"
+        android:layout_height="160dip"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/movie_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/movie_poster"
+        android:background="#88222222"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dip"
+        android:textColor="#EEEEEE"
+        android:textSize="25dip"
+        android:textStyle="bold" />
+
+</RelativeLayout>

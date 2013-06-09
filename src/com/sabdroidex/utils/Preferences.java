@@ -58,6 +58,7 @@ public class Preferences {
     public static final String MOVIE_DOWLOAD_BEST = "movie_dowload_best";
     public static final String MOVIE_PICK_RELEASE = "movie_pick_release";
     public static final String MOVIE_MARK_DONE = "movie_mark_done";
+    public static final String WANTED = "wanted";
 
     public static final String APACHE = "apache";
     public static final String APACHE_USERNAME = "apache_auth_username";

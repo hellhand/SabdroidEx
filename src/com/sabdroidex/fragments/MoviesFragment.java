@@ -25,9 +25,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.MovieGridAdapter;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
@@ -43,11 +49,7 @@ import com.sabdroidex.utils.SABHandler;
 public class MoviesFragment extends SABFragment {
 
     private static final String TAG = MoviesFragment.class.getCanonicalName();
-
     private static MovieList movieList;
-    private GridView movieGrid;
-    private MovieGridAdapter mMovieGridAdapter;
-
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
@@ -62,7 +64,7 @@ public class MoviesFragment extends SABFragment {
                 if (mMovieGridAdapter != null && movieList != null) {
                     mMovieGridAdapter.setDataSet(movieList.getMovieElements());
                     mMovieGridAdapter.notifyDataSetChanged();
-                    if (movieList.getMovieElements().size() > 0) {
+                    if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
                         movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
                     }
                 }
@@ -79,14 +81,18 @@ public class MoviesFragment extends SABFragment {
             }
         }
     };
+    private GridView movieGrid;
+    private MovieGridAdapter mMovieGridAdapter;
 
     /**
-     * 
+     *
      */
-    public MoviesFragment() {}
+    public MoviesFragment() {
+    }
 
     /**
      * Constructor with default {@link MovieList} to be displayed.
+     *
      * @param movieRows
      */
     public MoviesFragment(MovieList movieRows) {
@@ -130,10 +136,11 @@ public class MoviesFragment extends SABFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         mMovieGridAdapter = new MovieGridAdapter(getActivity(), movieList.getMovieElements());
 
-        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.movie_list, null);
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.list_movies, null);
         movieGrid = (GridView) linearLayout.findViewById(R.id.elementGrid);
         movieGrid.setAdapter(mMovieGridAdapter);
 
+        // Based on the existence of that view we choose the listener we will apply
         LinearLayout layout = (LinearLayout) linearLayout.findViewById(R.id.movieStatus);
         if (layout != null) {
             movieGrid.setOnItemClickListener(new GridItemClickListener());
@@ -141,12 +148,19 @@ public class MoviesFragment extends SABFragment {
             mMovieGridAdapter.showOverlay(true);
         }
         else {
-            movieGrid.setOnItemLongClickListener(new GridItemLongClickListener());
+            movieGrid.setOnItemClickListener(new GridItemDialogClickListener());
         }
 
         manualRefreshMovies();
-
         return linearLayout;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
+            movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
+        }
+        super.onViewCreated(view, savedInstanceState);
     }
 
     public void setupMovieElements(View view, Movie movie) {
@@ -177,8 +191,7 @@ public class MoviesFragment extends SABFragment {
         movieRating.setText(movie.getLibrary().getInfo().getRating().getImdbRating().toString());
 
         String imageKey = ImageType.MOVIE_POSTER.name() + movie.getMovieID();
-        ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(), movie.getTitle(),
-                movie.getLibrary().getInfo().getPosters().getOriginalPoster());
+        ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(), movie.getTitle(), movie.getLibrary().getInfo().getPosters().getOriginalPoster());
     }
 
     @Override
@@ -206,19 +219,18 @@ public class MoviesFragment extends SABFragment {
         }
     }
 
-    private class GridItemLongClickListener implements OnItemLongClickListener {
+    private class GridItemDialogClickListener implements OnItemClickListener {
 
         /**
-         * When an item is selected by a long click a Dialog appears to display
+         * When an item is selected by a click on a normal device, a Dialog appears to display
          * the show details.
          */
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
             Movie movie = movieList.getMovieElements().get(position);
             MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog();
             MovieDetailsDialog.setMovie(movie);
             movieDetailsDialog.show(getActivity().getSupportFragmentManager(), movie.getTitle());
-            return true;
         }
     }
 }

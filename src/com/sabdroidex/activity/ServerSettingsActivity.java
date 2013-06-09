@@ -1,5 +1,8 @@
 package com.sabdroidex.activity;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,9 +21,6 @@ import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ServerSettingsActivity extends ActionBarPreferencesActivity {
 
@@ -124,7 +124,7 @@ public class ServerSettingsActivity extends ActionBarPreferencesActivity {
      * @param prefKey
      */
     @SuppressWarnings("deprecation")
-    private final void setChangeListener(String prefKey) {
+    private void setChangeListener(String prefKey) {
         final Preference preference = findPreference(prefKey);
 
         preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

@@ -46,7 +46,7 @@ public class SeasonEpisodeAdapater extends BaseAdapter {
         
         EpisodeItem episodeItem;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.episode_item, null);
+            convertView = inflater.inflate(R.layout.list_item_episode, null);
             episodeItem = new EpisodeItem();
             episodeItem.episode = (TextView) convertView.findViewById(R.id.episode);
             episodeItem.name = (TextView) convertView.findViewById(R.id.episode_name);

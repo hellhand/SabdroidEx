@@ -56,7 +56,7 @@ public class MovieGridAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
     	MovieListItem movieItem = null;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.movie_item, null);
+            convertView = mInflater.inflate(R.layout.list_item_movie, null);
             movieItem = new MovieListItem();
             movieItem.poster = (ImageView) convertView.findViewById(R.id.movie_poster);
             movieItem.title = (TextView) convertView.findViewById(R.id.movie_title);

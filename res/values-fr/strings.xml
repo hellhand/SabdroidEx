@@ -205,6 +205,9 @@
     <string name="add_movie_selection_dialog_title">Select the movie to add to CouchPotato</string>
     <string name="add_movie_not_found">No movie found</string>
 
+    <string name="movie_options_general">General movie options</string>
+    <string name="movie_options_wanted">Wanted movie options</string>
+
 	<string name="movie_poster">Poster</string>
 	<string name="movie_title">Title: </string>
 	<string name="movie_status">Status: </string>
@@ -228,7 +231,7 @@
 	<string name="movie_release_quality">Quality</string>
 	<string name="movie_release_size">Size</string>
 	<string name="movie_release_provider">Provider</string>
-	<string name="movie_release_titel">Movie Releases</string>
+	<string name="movie_release_title">Movie Releases</string>
 
     <string name="menu_movie_release">Show releases</string>
     <string name="menu_movie_delete">Delete movie</string>

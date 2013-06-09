@@ -3,6 +3,7 @@ package com.sabdroidex.fragments.dialogs;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;

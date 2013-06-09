@@ -31,6 +31,7 @@ public class AddDialog extends DialogFragment {
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.add_dialog_title);
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
 
         List<CharSequence> options = new ArrayList<CharSequence>();
@@ -42,7 +43,7 @@ public class AddDialog extends DialogFragment {
             options.add(getResources().getString(R.string.add_movie_dialog_title));
         }
 
-        builder.setItems(options.toArray(new CharSequence[options.size()]), new OnClickListener() {
+        builder.setItems(options.toArray(new CharSequence[options.size()-1]), new OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

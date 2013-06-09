@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/list_item_bg"
+              android:paddingLeft="4dip"
+              android:paddingRight="10dip"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+
+        <TextView
+            android:id="@+id/movie_release_name_"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/movie_release_name"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/movie_release_name"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+
+        <TextView
+            android:id="@+id/movie_release_status_"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/movie_release_status"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/movie_release_status"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+
+        <TextView
+            android:id="@+id/movie_release_size_"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/movie_release_size"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/movie_release_size"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+
+        <TextView
+            android:id="@+id/movie_release_age_"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/movie_release_age"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/movie_release_age"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+
+        <TextView
+            android:id="@+id/movie_release_score_"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/movie_release_score"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/movie_release_score"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+
+        <TextView
+            android:id="@+id/movie_release_provider_"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/movie_release_provider"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/movie_release_provider"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#6a6a6a"
+            android:textSize="@dimen/list_item_small_text"/>
+    </LinearLayout>
+
+</LinearLayout>

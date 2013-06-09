@@ -26,7 +26,7 @@ public class ShowSeasonAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         SeasonItem seasonItem;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.season_item, null);
+            convertView = inflater.inflate(R.layout.list_item_season, null);
             seasonItem = new SeasonItem();
             seasonItem.seasonName = (TextView) convertView.findViewById(R.id.show_season_name);
             seasonItem.showName = (TextView) convertView.findViewById(R.id.show_name);

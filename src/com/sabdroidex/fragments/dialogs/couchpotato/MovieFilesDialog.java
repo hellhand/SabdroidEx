@@ -1,18 +1,17 @@
 package com.sabdroidex.fragments.dialogs.couchpotato;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 
 import com.sabdroidex.R;
 import com.sabdroidex.data.couchpotato.Movie;
+import com.sabdroidex.data.couchpotato.MovieFile;
 
-public class MovieFilesDialog extends DialogFragment {
+import java.util.ArrayList;
+
+public class MovieFilesDialog {
 
     private static Movie movie;
 
@@ -20,10 +19,9 @@ public class MovieFilesDialog extends DialogFragment {
         MovieFilesDialog.movie = movie;
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getActivity().getResources().getString(R.string.menu_movie_edit_profile));
+    public void show(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getResources().getString(R.string.movie_available_files));
 
         final ArrayList<String> files = new ArrayList<String>();
         for (MovieFile file : movie.getFirstRelease().getMovieFiles()) {
@@ -38,7 +36,8 @@ public class MovieFilesDialog extends DialogFragment {
             }
         });
 
-        return builder.create();
+        builder.create();
+        builder.show();
     }
 
 }

@@ -1,5 +1,11 @@
 package com.sabdroidex.activity;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Set;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,12 +50,6 @@ import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
 import com.utils.Formatter;
 import com.viewpagerindicator.TabPageIndicator;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Set;
 
 /**
  * Main SabdroidEx Activity
@@ -236,7 +236,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                         movies = (MovieList) element;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Cannot restore from cache");
             } finally {
                 try {
                     ois.close();

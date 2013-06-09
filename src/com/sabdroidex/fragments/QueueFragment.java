@@ -1,6 +1,5 @@
 package com.sabdroidex.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -12,8 +11,9 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.sabdroidex.R;
-import com.sabdroidex.adapters.QueueListRowAdapter;
+import com.sabdroidex.adapters.QueueAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.Queue;
@@ -21,7 +21,6 @@ import com.sabdroidex.fragments.dialogs.sabnzbd.QueueElementActionDialog;
 import com.sabdroidex.interfaces.DialogFragmentManagerHolder;
 import com.sabdroidex.interfaces.UpdateableActivity;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.SABDroidConstants;
 import com.sabdroidex.utils.SABHandler;
 
 public class QueueFragment extends SABFragment {
@@ -30,8 +29,7 @@ public class QueueFragment extends SABFragment {
     
     private boolean paused = false;
     private static Queue queue;
-    private Thread updater;
-    private QueueListRowAdapter queueListRowAdapter;
+    private QueueAdapter queueAdapter;
     
     // Instantiating the Handler associated with the main thread.
     private final SABHandler messageHandler = new SABHandler() {
@@ -45,10 +43,10 @@ public class QueueFragment extends SABFragment {
                     /**
                      * This might happens if a rotation occurs
                      */
-                    if (queueListRowAdapter != null || queue != null) {
-                        queueListRowAdapter.clear();
-                        queueListRowAdapter.addAll(queue.getQueueElements());
-                        queueListRowAdapter.notifyDataSetChanged();
+                    if (queueAdapter != null || queue != null) {
+                        queueAdapter.clear();
+                        queueAdapter.addAll(queue.getQueueElements());
+                        queueAdapter.notifyDataSetChanged();
                     }
                     
                     ((UpdateableActivity) getParentActivity()).updateLabels(queue);
@@ -107,16 +105,13 @@ public class QueueFragment extends SABFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        SharedPreferences preferences = getActivity().getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
-        Preferences.update(preferences);
-        
-        queueListRowAdapter = new QueueListRowAdapter(getActivity(), queue.getQueueElements());
+        queueAdapter = new QueueAdapter(getActivity(), queue.getQueueElements());
         
         LinearLayout downloadView = (LinearLayout) inflater.inflate(R.layout.list, null);
         ListView queueList = (ListView) downloadView.findViewById(R.id.elementList);
 
         downloadView.removeAllViews();        
-        queueList.setAdapter(queueListRowAdapter);
+        queueList.setAdapter(queueAdapter);
         queueList.setOnItemLongClickListener(new ListItemLongClickListener());
         
         return queueList;
@@ -150,7 +145,7 @@ public class QueueFragment extends SABFragment {
      * Fires up a new Thread to update the queue every X minutes
      */
     private void startAutomaticUpdater() {
-        updater = new Thread() {
+        Thread updater = new Thread() {
             
             @Override
             public void run() {
@@ -160,7 +155,7 @@ public class QueueFragment extends SABFragment {
                         Thread.sleep(rate);
                     }
                     catch (Exception e) {
-                        Log.w(TAG, e.getLocalizedMessage());
+                        Log.e(TAG, "Could not sleep !!");
                     }
                     if (!paused)
                         SABnzbdController.refreshQueue(messageHandler);
@@ -176,7 +171,7 @@ public class QueueFragment extends SABFragment {
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
             QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, queue
                     .getQueueElements().get(position));
-            queueElementActionDialog.show(getChildFragmentManager(), "queueaction");
+            queueElementActionDialog.show(getActivity().getSupportFragmentManager(), "queueaction");
             return true;
         }
     }

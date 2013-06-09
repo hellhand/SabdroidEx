@@ -12,8 +12,9 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.sabdroidex.R;
-import com.sabdroidex.adapters.HistoryListRowAdapter;
+import com.sabdroidex.adapters.HistoryAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.History;
@@ -27,7 +28,7 @@ public class HistoryFragment extends SABFragment {
     private static final String TAG = HistoryFragment.class.getCanonicalName();
 
     private static History history;
-    private HistoryListRowAdapter historyListRowAdapter;
+    private HistoryAdapter historyAdapter;
 
     // Instantiating the Handler associated with the main thread.
     private final SABHandler messageHandler = new SABHandler() {
@@ -42,10 +43,10 @@ public class HistoryFragment extends SABFragment {
                     /**
                      * This might happens if a rotation occurs
                      */
-                    if (historyListRowAdapter != null || history != null) {
-                        historyListRowAdapter.clear();
-                        historyListRowAdapter.addAll(history.getHistoryElements());
-                        historyListRowAdapter.notifyDataSetChanged();
+                    if (historyAdapter != null || history != null) {
+                        historyAdapter.clear();
+                        historyAdapter.addAll(history.getHistoryElements());
+                        historyAdapter.notifyDataSetChanged();
                     }
 
                     ((UpdateableActivity) getParentActivity()).updateLabels(history);
@@ -119,13 +120,13 @@ public class HistoryFragment extends SABFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        historyListRowAdapter = new HistoryListRowAdapter(getActivity(), history.getHistoryElements());
+        historyAdapter = new HistoryAdapter(getActivity(), history.getHistoryElements());
 
         LinearLayout historyView = (LinearLayout) inflater.inflate(R.layout.list, null);
         ListView historyList = (ListView) historyView.findViewById(R.id.elementList);
 
         historyView.removeAllViews();
-        historyList.setAdapter(new HistoryListRowAdapter(getActivity(), history.getHistoryElements()));
+        historyList.setAdapter(new HistoryAdapter(getActivity(), history.getHistoryElements()));
         historyList.setOnItemLongClickListener(new ListItemLongClickListener());
 
         manualRefreshHistory();
@@ -152,7 +153,7 @@ public class HistoryFragment extends SABFragment {
             HistoryRemoveDialog historyRemoveDialog = new HistoryRemoveDialog();
             HistoryRemoveDialog.setMessageHandler(messageHandler);
             HistoryRemoveDialog.setHistoryElement(history.getHistoryElements().get(position));
-            historyRemoveDialog.show(getFragmentManager(), "historyRemove");
+            historyRemoveDialog.show(getActivity().getSupportFragmentManager(), "historyRemove");
             return true;
         }
     }

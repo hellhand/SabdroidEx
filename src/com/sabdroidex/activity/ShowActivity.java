@@ -30,13 +30,13 @@ public class ShowActivity extends ActionBarActivity {
     private ShowSeasonAdapter showSeasonAdapter;
     private Integer mShowId;
     private Show mShow;
-    
+
     /**
      * Instantiating the Handler associated with this {@link Fragment}. It will
      * be notified when the request to retrieve the show data is successful
      */
     private final Handler messageHandler = new Handler() {
-        
+
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.SHOW.hashCode() && msg.obj instanceof Show) {
@@ -44,27 +44,28 @@ public class ShowActivity extends ActionBarActivity {
                 mShow.setTvdbId(mShowId);
                 showSeasonAdapter.setShow(mShow);
                 showSeasonAdapter.notifyDataSetChanged();
-                
+
                 setTitle(mShow.getShowName());
             }
         }
     };
-    
+
     /**
      * A {@link OnItemClickListener} listening the season grid. This will have
      * the duty to display a new {@link FragmentActivity} with the episodes of
      * the selected season
      */
     private OnItemClickListener itemClickListener = new OnItemClickListener() {
-        
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(getBaseContext(), SeasonActivity.class);
+            intent.putExtra("show", mShow);
             intent.putExtra("season", mShow.getSeasonList().get(position));
             startActivity(intent);
         }
     };
-    
+
     /**
      * This method will create the adapter needed for the grid and query the
      * controller to retrieve the full show data.
@@ -73,7 +74,7 @@ public class ShowActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -81,14 +82,14 @@ public class ShowActivity extends ActionBarActivity {
 
         mShowId = getIntent().getExtras().getInt(TVDBID);
         showSeasonAdapter = new ShowSeasonAdapter(this, mShow);
-        
+
         GridView gridView = (GridView) findViewById(R.id.elementGrid);
         gridView.setAdapter(showSeasonAdapter);
         gridView.setOnItemClickListener(itemClickListener);
-        
+
         refresh();
     }
-    
+
     /**
      * This creates the menu items as they will be by default
      */
@@ -98,7 +99,7 @@ public class ShowActivity extends ActionBarActivity {
         menuInflater.inflate(R.menu.refresh, menu);
         return super.onCreateOptionsMenu(menu);
     }
-    
+
     /**
      * Handles item selections in the Menu
      */
@@ -107,6 +108,9 @@ public class ShowActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 refresh();
+                break;
+            case android.R.id.home:
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);

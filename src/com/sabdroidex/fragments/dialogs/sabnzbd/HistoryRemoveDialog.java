@@ -1,16 +1,16 @@
 package com.sabdroidex.fragments.dialogs.sabnzbd;
 
-import com.sabdroidex.R;
-import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
-import com.sabdroidex.data.sabnzbd.HistoryElement;
-import com.sabdroidex.utils.SABHandler;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import com.sabdroidex.R;
+import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.sabnzbd.HistoryElement;
+import com.sabdroidex.utils.SABHandler;
 
 /**
  * This dialog is displayed when a user makes a long press on an history list item.

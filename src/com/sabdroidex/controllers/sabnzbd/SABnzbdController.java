@@ -1,8 +1,14 @@
 package com.sabdroidex.controllers.sabnzbd;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+
+import org.json.JSONObject;
+
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
 import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.data.sabnzbd.Queue;
@@ -12,10 +18,6 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * @author Marc

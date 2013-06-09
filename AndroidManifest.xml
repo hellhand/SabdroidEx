@@ -43,6 +43,8 @@
         <activity android:name=".activity.CouchSettingsActivity"/>
 		<activity android:name=".activity.ShowActivity"/>
         <activity android:name=".activity.SeasonActivity"/>
+        <activity android:name=".activity.MovieActivity"/>
+        <activity android:name=".activity.ReleaseActivity"/>
 		
         <activity android:name=".activity.CouchPotatoActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoDisplay" android:exported="false">
             <intent-filter>

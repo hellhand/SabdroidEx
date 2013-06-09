@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.sabdroidex.R;
-import com.sabdroidex.adapters.SearchListRowAdapter;
+import com.sabdroidex.adapters.SearchAdapter;
 import com.sabdroidex.data.JSONBased;
 
 public class SearchFragment extends SABFragment {
@@ -41,7 +41,7 @@ public class SearchFragment extends SABFragment {
 
         listView = (ListView) searchView.findViewById(R.id.simpleList);
         searchView.removeAllViews();
-        listView.setAdapter(new SearchListRowAdapter(mParent, rows));
+        listView.setAdapter(new SearchAdapter(mParent, rows));
 
         return searchView;
     }

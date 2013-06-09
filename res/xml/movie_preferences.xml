@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="General Actions" >
-        
-		<!--         
-		<Preference
-            android:key="movie_imdb_url"
-            android:summary="@string/movie_imdb_url_summary"
-            android:title="@string/movie_imdb_url" /> 
-        -->
-        
-		<Preference
+    <PreferenceCategory android:title="General Actions">
+
+        <Preference
             android:key="movie_available_files"
             android:summary="@string/movie_available_files_summary"
-            android:title="@string/movie_available_files" />
+            android:title="@string/movie_available_files"/>
 
-		<Preference
+        <Preference
             android:key="movie_readd"
             android:summary="@string/movie_readd_summary"
-            android:title="@string/movie_readd" />
-
+            android:title="@string/movie_readd"/>
+        <!--
 		<Preference
             android:key="movie_change_movie_info"
             android:summary="@string/movie_info_change_summary"
             android:title="@string/movie_info_change" />
-		
-		<Preference
+        -->
+        <Preference
             android:key="movie_remove"
             android:summary="@string/movie_remove_summary"
-            android:title="@string/movie_remove" />
-		                
-    </PreferenceCategory>
-    
-    <PreferenceCategory android:title="Wanted Movie Actions" >
+            android:title="@string/movie_remove"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Wanted Movie Actions"
+        android:key="wanted"
+        android:enabled="false">
+        <!--
         <Preference
             android:key="movie_dowload_best"
             android:summary="@string/movie_download_best_summary"
-            android:title="@string/movie_download_best" />
+            android:title="@string/movie_download_best"
+            android:dependency=""/>
+        -->
 
         <Preference
-                android:key="movie_pick_release"
-                android:summary="@string/movie_pick_release_summary"
-                android:title="@string/movie_pick_release" />
+            android:key="movie_pick_release"
+            android:summary="@string/movie_pick_release_summary"
+            android:title="@string/movie_pick_release"/>
 
+        <!--
         <Preference
-                android:key="movie_mark_done"
-                android:summary="@string/movie_mark_done_summary"
-                android:title="@string/movie_mark_done" />
+            android:key="movie_mark_done"
+            android:summary="@string/movie_mark_done_summary"
+            android:title="@string/movie_mark_done"/>
+        -->
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,20 +1,26 @@
 package com.sabdroidex.controllers.sickbeard;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Collections;
+
+import org.json.JSONObject;
+
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
 import com.sabdroidex.controllers.SABController;
-import com.sabdroidex.data.sickbeard.*;
+import com.sabdroidex.data.sickbeard.FuturePeriod;
+import com.sabdroidex.data.sickbeard.Season;
+import com.sabdroidex.data.sickbeard.Show;
+import com.sabdroidex.data.sickbeard.ShowList;
+import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.Collections;
 
 public final class SickBeardController extends SABController {
     

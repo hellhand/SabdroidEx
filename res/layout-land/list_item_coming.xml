@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dip"
+    android:paddingBottom="10dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF" >
+
+        <com.sabdroidex.utils.AspectRatioImageView
+            android:id="@+id/coming_show_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/show_banner" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dip" >
+
+                <TextView
+                    android:id="@+id/coming_next_episode_"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dip"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/coming_next"
+                    android:textColor="#6a6a6a"
+                    android:textSize="@dimen/list_item_small_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/coming_next_episode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dip"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="#6a6a6a"
+                    android:textSize="@dimen/list_item_small_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="5dip" >
+
+                <TextView
+                        android:id="@+id/coming_air_date_"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dip"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="@string/coming_air_date"
+                        android:textColor="#6a6a6a"
+                        android:textSize="@dimen/list_item_small_text"
+                        android:textStyle="bold" />
+
+                <TextView
+                        android:id="@+id/coming_air_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dip"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:textColor="#6a6a6a"
+                        android:textSize="@dimen/list_item_small_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dip" >
+
+                <TextView
+                    android:id="@+id/coming_airs_"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dip"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/coming_airs"
+                    android:textColor="#6a6a6a"
+                    android:textSize="@dimen/list_item_small_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/coming_airs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dip"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="#6a6a6a"
+                    android:textSize="@dimen/list_item_small_text" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/actionbar_shadow" />
+
+</LinearLayout>

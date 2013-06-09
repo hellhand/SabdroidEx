@@ -3,7 +3,7 @@ package com.sabdroidex.fragments;
 import android.app.Fragment;
 import android.os.Message;
 
-import com.sabdroidex.adapters.ComingListRowAdapter;
+import com.sabdroidex.adapters.ComingAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
@@ -15,7 +15,7 @@ public class WantedFragment extends SABFragment {
     private static final String TAG = WantedFragment.class.getCanonicalName();
     
     private static FuturePeriod mFuturePeriod;
-    private ComingListRowAdapter mComingRowAdapter;
+    private ComingAdapter mComingRowAdapter;
     
     /**
      * Instantiating the Handler associated with this {@link Fragment}.

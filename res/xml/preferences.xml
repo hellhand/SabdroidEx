@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Sabnzbd+ settings" >
-        
+    <PreferenceCategory android:title="Sabnzbd+ settings">
+
         <EditTextPreference
             android:key="sabnzbd_url"
             android:summary="@string/setting_server_url_summary"
-            android:title="@string/setting_server_url" />
+            android:title="@string/setting_server_url"/>
 
         <EditTextPreference
             android:defaultValue="8080"
             android:key="sabnzbd_port"
             android:summary="@string/setting_server_port_summary"
             android:title="@string/setting_server_port"
-            android:numeric="integer" />
+            android:numeric="integer"/>
 
         <EditTextPreference
             android:key="sabnzbd_url_extention"
             android:summary="@string/setting_server_url_extention_summary"
-            android:title="@string/setting_server_url_extention" />
-        
+            android:title="@string/setting_server_url_extention"/>
+
         <CheckBoxPreference
             android:key="sabnzbd_ssl"
             android:summary="@string/setting_server_ssl_summary"
-            android:title="@string/setting_server_ssl" />
+            android:title="@string/setting_server_ssl"/>
 
         <EditTextPreference
             android:defaultValue="5000"
             android:key="sabnzbd_rate"
             android:summary="@string/setting_refresh_rate_summary"
             android:title="@string/setting_refresh_rate"
-            android:numeric="integer" />
-        
+            android:numeric="integer"/>
+
         <EditTextPreference
             android:key="sabnzbd_api_key"
             android:summary="@string/setting_api_key"
-            android:title="@string/setting_api_key" />
+            android:title="@string/setting_api_key"/>
 
         <CheckBoxPreference
             android:key="sabnzbd_auth"
-            android:title="@string/setting_auth" />
+            android:title="@string/setting_auth"/>
 
         <EditTextPreference
             android:dependency="sabnzbd_auth"
             android:key="sabnzbd_auth_username"
             android:summary="@string/setting_auth_username"
-            android:title="@string/setting_auth_username" />
-        
+            android:title="@string/setting_auth_username"/>
+
         <EditTextPreference
             android:dependency="sabnzbd_auth"
             android:key="sabnzbd_auth_password"
             android:password="true"
             android:summary="@string/setting_auth_password"
-            android:title="@string/setting_auth_password" />
+            android:title="@string/setting_auth_password"/>
     </PreferenceCategory>
-    
-    <PreferenceCategory android:title="Sickbeard settings" >
-    
+
+    <PreferenceCategory android:title="Sickbeard settings">
+
         <CheckBoxPreference
             android:key="sickbeard"
-            android:title="@string/setting_sickbeard" />
+            android:title="@string/setting_sickbeard"/>
 
         <EditTextPreference
             android:dependency="sickbeard"
             android:key="sickbeard_url"
             android:summary="@string/setting_sickbeard_url_summary"
-            android:title="@string/setting_sickbeard_url" />
-        
+            android:title="@string/setting_sickbeard_url"/>
+
         <EditTextPreference
             android:defaultValue="8080"
             android:dependency="sickbeard"
             android:key="sickbeard_port"
             android:summary="@string/setting_sickbeard_port_summary"
             android:title="@string/setting_sickbeard_port"
-            android:numeric="integer" />
+            android:numeric="integer"/>
 
         <EditTextPreference
             android:key="sickbeard_url_extention"
             android:summary="@string/setting_sickbeard_url_extention_summary"
-            android:title="@string/setting_sickbeard_url_extention" />
-        
+            android:title="@string/setting_sickbeard_url_extention"/>
+
         <CheckBoxPreference
             android:dependency="sickbeard"
             android:key="sickbeard_ssl"
             android:summary="@string/setting_sickbeard_ssl_summary"
-            android:title="@string/setting_sickbeard_ssl" />
+            android:title="@string/setting_sickbeard_ssl"/>
 
         <EditTextPreference
             android:defaultValue="5000"
@@ -92,120 +92,120 @@
             android:key="sickbeard_rate"
             android:summary="@string/setting_sickbeard_refresh_rate_summary"
             android:title="@string/setting_sickbeard_refresh_rate"
-            android:numeric="integer" />
-        
+            android:numeric="integer"/>
+
         <EditTextPreference
             android:dependency="sickbeard"
             android:key="sickbeard_api_key"
-            android:title="@string/setting_sickbeard_api_key" />
+            android:title="@string/setting_sickbeard_api_key"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="sickbeard_cache"
             android:summary="@string/setting_sickbeard_cache_summary"
-            android:title="@string/setting_sickbeard_cache" />
-        
+            android:title="@string/setting_sickbeard_cache"/>
+
         <CheckBoxPreference
             android:key="sickbeard_lowres"
             android:summary="@string/setting_sickbeard_lowres_summary"
-            android:title="@string/setting_sickbeard_lowres" />
-        
+            android:title="@string/setting_sickbeard_lowres"/>
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="sickbeard_nomedia"
             android:summary="@string/setting_sickbeard_nomedia_summary"
-            android:title="@string/setting_sickbeard_nomedia" />
-        
+            android:title="@string/setting_sickbeard_nomedia"/>
+
     </PreferenceCategory>
-    
+
     <PreferenceCategory android:title="Couchpotato settings">
-        
-        <CheckBoxPreference 
-            android:key="couchpotato" 
+
+        <CheckBoxPreference
+            android:key="couchpotato"
             android:title="@string/setting_couchpotato"/>
-        
-        <EditTextPreference 
-            android:title="@string/setting_couchpotato_url" 
-            android:summary="@string/setting_couchpotato_url_summary" 
-            android:key="couchpotato_url" 
+
+        <EditTextPreference
+            android:title="@string/setting_couchpotato_url"
+            android:summary="@string/setting_couchpotato_url_summary"
+            android:key="couchpotato_url"
             android:dependency="couchpotato"/>
-        
+
         <EditTextPreference
             android:defaultValue="8080"
-            android:title="@string/setting_couchpotato_port" 
-            android:dependency="couchpotato" 
-            android:summary="@string/setting_couchpotato_port_summary" 
+            android:title="@string/setting_couchpotato_port"
+            android:dependency="couchpotato"
+            android:summary="@string/setting_couchpotato_port_summary"
             android:key="couchpotato_port"
-            android:numeric="integer" />
-        
-        <EditTextPreference 
-            android:title="@string/setting_couchpotato_url_extention" 
-            android:summary="@string/setting_couchpotato_url_extention_summary" 
-            android:key="couchpotato_url_extention" 
+            android:numeric="integer"/>
+
+        <EditTextPreference
+            android:title="@string/setting_couchpotato_url_extention"
+            android:summary="@string/setting_couchpotato_url_extention_summary"
+            android:key="couchpotato_url_extention"
             android:dependency="couchpotato"/>
-        
-        <CheckBoxPreference 
-            android:summary="@string/setting_couchpotato_ssl_summary" 
-            android:dependency="couchpotato" 
-            android:key="couchpotato_ssl" 
-            android:title="@string/setting_couchpotato_ssl" />
-        
-        <CheckBoxPreference 
-            android:dependency="couchpotato" 
-            android:title="@string/setting_couchpotato_cache" 
-            android:key="couchpotato_cache" 
-            android:summary="@string/setting_couchpotato_cache_summary" 
+
+        <CheckBoxPreference
+            android:summary="@string/setting_couchpotato_ssl_summary"
+            android:dependency="couchpotato"
+            android:key="couchpotato_ssl"
+            android:title="@string/setting_couchpotato_ssl"/>
+
+        <CheckBoxPreference
+            android:dependency="couchpotato"
+            android:title="@string/setting_couchpotato_cache"
+            android:key="couchpotato_cache"
+            android:summary="@string/setting_couchpotato_cache_summary"
             android:defaultValue="true"/>
-        
-        <CheckBoxPreference 
-            android:dependency="couchpotato" 
-            android:title="@string/setting_couchpotato_lowres" 
-            android:key="couchpotato_lowres" 
+
+        <CheckBoxPreference
+            android:dependency="couchpotato"
+            android:title="@string/setting_couchpotato_lowres"
+            android:key="couchpotato_lowres"
             android:summary="@string/setting_couchpotato_lowres_summary"/>
-        
-        <CheckBoxPreference 
-            android:title="@string/setting_couchpotato_nomedia" 
-            android:key="couchpotato_nomedia" 
-            android:dependency="couchpotato" 
-            android:summary="@string/setting_couchpotato_nomedia_summary" 
+
+        <CheckBoxPreference
+            android:title="@string/setting_couchpotato_nomedia"
+            android:key="couchpotato_nomedia"
+            android:dependency="couchpotato"
+            android:summary="@string/setting_couchpotato_nomedia_summary"
             android:defaultValue="true"/>
-        
-        <CheckBoxPreference 
-            android:dependency="couchpotato" 
-            android:key="couchpotato_auth" 
+
+        <CheckBoxPreference
+            android:dependency="couchpotato"
+            android:key="couchpotato_auth"
             android:title="@string/setting_couchpotato_auth"/>
-        
-        <EditTextPreference 
-            android:title="@string/setting_couchpotato_auth_username" 
-            android:dependency="couchpotato_auth" 
+
+        <EditTextPreference
+            android:title="@string/setting_couchpotato_auth_username"
+            android:dependency="couchpotato_auth"
             android:key="couchpotato_auth_username"/>
-        
-        <EditTextPreference 
-            android:title="@string/setting_couchpotato_auth_password" 
-            android:dependency="couchpotato_auth" 
+
+        <EditTextPreference
+            android:title="@string/setting_couchpotato_auth_password"
+            android:dependency="couchpotato_auth"
             android:key="couchpotato_auth_password"/>
-                
-	</PreferenceCategory>
-    
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Apache settings">
-        <CheckBoxPreference 
-            android:title="@string/setting_apache" 
-            android:key="apache" 
+        <CheckBoxPreference
+            android:title="@string/setting_apache"
+            android:key="apache"
             android:summary="@string/setting_apache_summary"/>
-        
-        <EditTextPreference 
-            android:key="apache_auth_username" 
-            android:title="@string/setting_apache_username" 
-            android:dependency="apache" 
+
+        <EditTextPreference
+            android:key="apache_auth_username"
+            android:title="@string/setting_apache_username"
+            android:dependency="apache"
             android:summary="@string/setting_apache_username"/>
-        
-        <EditTextPreference 
-            android:title="@string/setting_apache_password" 
-            android:key="apache_auth_password" 
+
+        <EditTextPreference
+            android:title="@string/setting_apache_password"
+            android:key="apache_auth_password"
             android:password="true"
-            android:dependency="apache" 
+            android:dependency="apache"
             android:summary="@string/setting_apache_password"/>
-        
+
     </PreferenceCategory>
     <!-- 
     <PreferenceCategory android:title="Search providers settings" >
@@ -218,15 +218,15 @@
         
     </PreferenceCategory>
      -->
-    <PreferenceCategory android:title="Global settings" >
-        
+    <PreferenceCategory android:title="Global settings">
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="data.cache"
             android:summary="@string/setting_data_cache_summary"
-            android:title="@string/setting_data_cache" />
-        
+            android:title="@string/setting_data_cache"/>
+
     </PreferenceCategory>
-    
+
 
 </PreferenceScreen>

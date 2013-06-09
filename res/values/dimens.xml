@@ -28,5 +28,9 @@
     <dimen name="default_title_indicator_title_padding">5dp</dimen>
     <dimen name="default_title_indicator_top_padding">7dp</dimen>
     <dimen name="list_section_divider_min_height">16dip</dimen>
-    
+    <dimen name="preference_list_item_padding_left">16dip</dimen>
+    <dimen name="preference_list_item_padding_right">16dip</dimen>
+    <dimen name="list_item_small_text">12sp</dimen>
+    <dimen name="list_item_medium_text">14sp</dimen>
+    <dimen name="list_item_large_text">16sp</dimen>
 </resources>

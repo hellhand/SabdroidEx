@@ -10,12 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.sabdroidex.R;
 import com.sabdroidex.activity.ShowActivity;
-import com.sabdroidex.adapters.ShowsGridAdapter;
+import com.sabdroidex.adapters.ShowsAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.Show;
@@ -32,7 +39,7 @@ public class ShowsFragment extends SABFragment {
 
     private static ShowList showList;
     private GridView showGrid;
-    private ShowsGridAdapter mShowsGridAdapter;
+    private ShowsAdapter mShowsAdapter;
 
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
@@ -45,10 +52,10 @@ public class ShowsFragment extends SABFragment {
 
                 showList = (ShowList) msg.obj;
 
-                if (mShowsGridAdapter != null && showList != null) {
-                    mShowsGridAdapter.setDataSet(showList.getShowElements());
-                    mShowsGridAdapter.notifyDataSetChanged();
-                    if (showList.getShowElements().size() > 0) {
+                if (mShowsAdapter != null && showList != null) {
+                    mShowsAdapter.setDataSet(showList.getShowElements());
+                    mShowsAdapter.notifyDataSetChanged();
+                    if (showList.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
                         showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
                     }
                 }
@@ -110,20 +117,21 @@ public class ShowsFragment extends SABFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mShowsGridAdapter = new ShowsGridAdapter(getActivity().getApplicationContext(), showList.getShowElements());
+        mShowsAdapter = new ShowsAdapter(getActivity().getApplicationContext(), showList.getShowElements());
 
-        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.show_list, null);
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.list_shows, null);
         showGrid = (GridView) linearLayout.findViewById(R.id.elementGrid);
-        showGrid.setAdapter(mShowsGridAdapter);
+        showGrid.setAdapter(mShowsAdapter);
 
+        // Based on the existence of that view we choose the listener we will apply
         LinearLayout layout = (LinearLayout) linearLayout.findViewById(R.id.showStatus);
         if (layout != null) {
             showGrid.setOnItemClickListener(new GridItemClickListener());
             showGrid.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-            mShowsGridAdapter.showOverlay(true);
+            mShowsAdapter.showOverlay(true);
         }
         else {
-            showGrid.setOnItemLongClickListener(new GridItemLongClickListener());
+            showGrid.setOnItemClickListener(new GridItemDialogClickListener());
         }
 
         manualRefreshShows();
@@ -133,7 +141,7 @@ public class ShowsFragment extends SABFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if (showList.getShowElements().size() > 0) {
+        if (showList.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
             showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
         }
         super.onViewCreated(view, savedInstanceState);
@@ -171,7 +179,7 @@ public class ShowsFragment extends SABFragment {
         showLanguage.setText(show.getLanguage());
 
         Button moreButton = (Button) view.findViewById(R.id.more_button);
-        moreButton.setOnClickListener(new MoreButtonClickListener(show));
+        moreButton.setOnClickListener(new ShowMoreButtonClickListener(show));
 
         String imageKey = ImageType.SHOW_POSTER.name() + show.getTvdbId();
         ImageUtils.getImageWorker().loadImage(showPoster, ImageType.SHOW_POSTER, imageKey, show.getTvdbId(), show.getShowName());
@@ -197,26 +205,25 @@ public class ShowsFragment extends SABFragment {
         }
     }
 
-    private class GridItemLongClickListener implements OnItemLongClickListener {
+    private class GridItemDialogClickListener implements OnItemClickListener {
 
         /**
          * When an item is selected by a long click a Dialog appears to display
          * the show details.
          */
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
             ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog();
             ShowDetailsDialog.setShow(showList.getShowElements().get(position));
             showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
-            return true;
         }
     }
 
-    private class MoreButtonClickListener implements OnClickListener {
+    private class ShowMoreButtonClickListener implements OnClickListener {
 
         private Show show;
 
-        public MoreButtonClickListener(Show show) {
+        public ShowMoreButtonClickListener(Show show) {
             this.show = show;
         }
 

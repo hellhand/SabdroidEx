@@ -83,7 +83,7 @@ public class CouchSettingsActivity extends PreferenceActivity {
     };
     
     @SuppressWarnings("deprecation")
-    private final void setCouchPotatoListener(String prefKey) {
+    private void setCouchPotatoListener(String prefKey) {
         final Preference preference = findPreference(prefKey);
         
         preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -95,7 +95,7 @@ public class CouchSettingsActivity extends PreferenceActivity {
         });
     }
     
-    private final void fillCouchPotatoProfileList() {
+    private void fillCouchPotatoProfileList() {
         CouchPotatoController.getProfiles(messageHandler);
     }
 }

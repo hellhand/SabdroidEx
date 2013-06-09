@@ -1,5 +1,9 @@
 package com.sabdroidex.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.ref.WeakReference;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,14 +20,11 @@ import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.utils.ApacheCredentialProvider;
 import com.utils.FileUtil;
 import com.utils.HttpUtil;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.ref.WeakReference;
 
 public class ImageWorker {
 

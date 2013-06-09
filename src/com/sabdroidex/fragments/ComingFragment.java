@@ -11,8 +11,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.sabdroidex.R;
-import com.sabdroidex.adapters.ComingListRowAdapter;
+import com.sabdroidex.adapters.ComingAdapter;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
@@ -24,7 +25,7 @@ public class ComingFragment extends SABFragment {
     private static final String TAG = ComingFragment.class.getCanonicalName();
     
     private static FuturePeriod mFuturePeriod;
-    private ComingListRowAdapter mComingRowAdapter;
+    private ComingAdapter mComingRowAdapter;
     
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
@@ -97,7 +98,7 @@ public class ComingFragment extends SABFragment {
         LinearLayout comingView = (LinearLayout) inflater.inflate(R.layout.pinned_header_list, null);
         ListView mListView = (ListView) comingView.findViewById(R.id.simpleList);
         
-        mComingRowAdapter = new ComingListRowAdapter(getActivity().getApplicationContext(), mFuturePeriod);
+        mComingRowAdapter = new ComingAdapter(getActivity().getApplicationContext(), mFuturePeriod);
         mListView.setAdapter(mComingRowAdapter);
         comingView.removeAllViews();
         

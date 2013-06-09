@@ -17,25 +17,27 @@
 
 package com.sabdroidex.controllers.couchpotato;
 
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
 import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.HashMap;
 
 public final class CouchPotatoController {
 
-    private static final String TAG = "CouchPotatoController";
+    private static final String TAG = CouchPotatoController.class.getCanonicalName();
 
     private static boolean executingRefreshMovies = false;
     private static boolean executingCommand = false;
@@ -49,7 +51,7 @@ public final class CouchPotatoController {
     private static final String API_TEMPLATE = "[COUCHPOTATO_URL]/[COUCHPOTATO_URL_EXTENTION]getkey/?p=[PASSWORD]&u=[USERNAME]";
 
     public static enum MESSAGE {
-        MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD
+        MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD, SEARCHER_TRY_NEXT
     }
 
     /**
@@ -88,14 +90,12 @@ public final class CouchPotatoController {
         //Using equals("") as isEmpty only starts on apiL9
         if (api_key.equals("")) {
             getApiKey();
-            getStatusList();
-            getProfiles();
         }
 
         /**
          * Correcting the command names to be understood by CouchPotato
          */
-        command = command.replace('_', '.');
+        command = command.replaceFirst("_", ".");
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
         url = url.replace("[API]", api_key);
@@ -484,6 +484,8 @@ public final class CouchPotatoController {
         if (executingRefreshMovies || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
+        getStatusList();
+        getProfiles();
 
         Thread thread = new Thread() {
 
@@ -533,7 +535,7 @@ public final class CouchPotatoController {
      *            ID's of movies to delete
      */
     public static void deleteMovie(final Handler messageHandler, final int... ids) {
-        if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
 
@@ -598,7 +600,7 @@ public final class CouchPotatoController {
      *            Profile ID of profile to edit the movies in
      */
     public static void editMovie(final Handler messageHandler, final int profile_id, final int... ids) {
-        if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
 
@@ -657,7 +659,7 @@ public final class CouchPotatoController {
      *            Movie title to search for
      */
     public static void searchMovie(final Handler messageHandler, final String searchTitle) {
-        if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
 
@@ -711,7 +713,7 @@ public final class CouchPotatoController {
      *            ID of release to ignore
      */
     public static void ignoreRelease(final Handler messageHandler, final int releaseId) {
-        if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
 
@@ -750,7 +752,7 @@ public final class CouchPotatoController {
      *            ID of release to download
      */
     public static void downloadRelease(final Handler messageHandler, final int releaseId) {
-        if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
 
@@ -764,6 +766,44 @@ public final class CouchPotatoController {
                     JSONObject jsonObject = new JSONObject(result);
                     Log.d(TAG, jsonObject.toString());
 
+                }
+                catch (IOException e) {
+                    Log.w(TAG, " " + e.getLocalizedMessage());
+                }
+                catch (Throwable e) {
+                    Log.w(TAG, " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                }
+            }
+        };
+        executingCommand = true;
+        thread.start();
+    }
+
+    /**
+     * Makes a call to mark the snatched results as ignored and try the next best release.
+     *
+     * @param messageHandler
+     *            Handler
+     * @param releaseId
+     *            ID of release to download
+     */
+    public static void snatchNextMovieRelease(final Handler messageHandler, final int releaseId) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+            return;
+        }
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    String result = makeApiCall(MESSAGE.SEARCHER_TRY_NEXT.toString().toLowerCase(), "id=" + releaseId);
+                    JSONObject jsonObject = new JSONObject(result);
+                    Log.d(TAG, jsonObject.toString());
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());

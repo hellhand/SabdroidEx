@@ -52,7 +52,7 @@ public class SettingsActivity extends ActionBarPreferencesActivity {
     }
 
     @SuppressWarnings("deprecation")
-    private final void setSummaryChangeListener(String prefKey, final int resId) {
+    private void setSummaryChangeListener(String prefKey, final int resId) {
         final Preference preference = findPreference(prefKey);
 
         String currentValue = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0).getString(prefKey, null);

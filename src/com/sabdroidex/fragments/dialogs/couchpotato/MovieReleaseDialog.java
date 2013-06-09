@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.Movie;
@@ -29,7 +30,7 @@ public class MovieReleaseDialog extends DialogFragment {
         final Dialog dialog = new Dialog(getActivity());
 
         dialog.setContentView(R.layout.list_movie_release);
-        dialog.setTitle(R.string.movie_release_titel);
+        dialog.setTitle(R.string.movie_release_title);
 
         TableLayout table = (TableLayout) dialog.findViewById(R.id.movie_release_table);
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -54,6 +55,7 @@ public class MovieReleaseDialog extends DialogFragment {
                 }
             }
         };
+
         // TODO: un-werk this
         Object[] releases = new Object[0];
         for (int d = 0; d < releases.length; d++) {

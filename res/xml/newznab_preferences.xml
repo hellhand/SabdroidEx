@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
         android:key="newznab_api"
-        android:title="@string/setting_newznab_api_key" />
-    
+        android:title="@string/setting_newznab_api_key"/>
+
     <EditTextPreference
         android:key="newznab_url"
         android:summary="@string/setting_nzbs_org_hash_summary"
-        android:title="@string/setting_nzbs_org_hash" />
+        android:title="@string/setting_nzbs_org_hash"/>
 
 </PreferenceScreen>

@@ -18,7 +18,6 @@ package com.android.actionbarcompat;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 

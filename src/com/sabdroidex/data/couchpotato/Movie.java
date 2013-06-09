@@ -19,6 +19,7 @@ package com.sabdroidex.data.couchpotato;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.sabdroidex.utils.json.JSONElement;
@@ -78,10 +79,11 @@ public class Movie implements Serializable, Comparable<Movie> {
         if (releases == null) {
             releases = new ArrayList<MovieRelease>();
         }
+        Collections.sort(releases);
         return releases;
     }
 
-    @JSONSetter(name = "releases", objectClazz = MovieRelease.class)
+    @JSONSetter(name = "releases", type = JSONType.LIST, objectClazz = MovieRelease.class)
     public void setReleases(List<MovieRelease> releases) {
         this.releases = releases;
     }

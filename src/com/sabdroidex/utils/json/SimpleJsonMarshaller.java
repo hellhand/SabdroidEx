@@ -34,7 +34,6 @@ import com.sabdroidex.data.UnknowMappingElement;
 public class SimpleJsonMarshaller {
 
     private Class<?> clazz;
-    private Object result;
     private static final String TAG = SimpleJsonMarshaller.class.getCanonicalName();
 
     public SimpleJsonMarshaller(Class<?> clazz) throws JSONException {
@@ -55,7 +54,7 @@ public class SimpleJsonMarshaller {
      */
     @SuppressWarnings("unchecked")
     public Object unmarshal(final JSONObject jsonObject) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        result = clazz.newInstance();
+        Object result = clazz.newInstance();
 
         try {
             Method[] methods = clazz.getMethods();
@@ -137,7 +136,7 @@ public class SimpleJsonMarshaller {
                     else if (setter.type() == JSONType.JSON_OBJECT) {
                         /**
                          * Used for object that are instantiated from JSON
-                         * (String, Integer, etc ...)
+                         * (Show, Movie, etc ...)
                          */
                         try {
                             SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(methods[i].getParameterTypes()[0]);

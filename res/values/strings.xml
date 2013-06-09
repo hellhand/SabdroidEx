@@ -218,13 +218,17 @@
     <string name="movie_genres">Genres: </string>
     <string name="movie_runtime">Runtime: </string>
 
-    <string name="movie_release_name">Release name</string>
-    <string name="movie_release_status">Status</string>
-    <string name="movie_release_quality">Quality</string>
-    <string name="movie_release_size">Size</string>
-    <string name="movie_release_provider">Provider</string>
-    <string name="movie_release_titel">Movie Releases</string>
+    <string name="movie_release_name">Release name: </string>
+    <string name="movie_release_status">Status: </string>
+    <string name="movie_release_quality">Quality: </string>
+    <string name="movie_release_size">Size: </string>
+    <string name="movie_release_provider">Provider: </string>
+    <string name="movie_release_age">Age: </string>
+    <string name="movie_release_score">Score: </string>
+    <string name="movie_release_title">Movie Releases</string>
 
+    <string name="movie_options_general">General movie options</string>
+    <string name="movie_options_wanted">Wanted movie options</string>
     <string name="movie_imdb_url_summary">Open the IMDB page of this movie</string>
     <string name="movie_imdb_url">IMDB Page</string>
     <string name="movie_available_files_summary">View the files related to this movie</string>

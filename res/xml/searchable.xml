@@ -18,10 +18,10 @@
 <!-- for the Search Manager. -->
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="@string/menu_search"
-    android:hint="@string/menu_search"
-    android:searchMode="queryRewriteFromData"
+            android:label="@string/menu_search"
+            android:hint="@string/menu_search"
+            android:searchMode="queryRewriteFromData"
 
-    android:searchSuggestAuthority="com.sabdroidex.utils.SearchProvider"
-    android:searchSuggestSelection=" ? "
-/>
+            android:searchSuggestAuthority="com.sabdroidex.utils.SearchProvider"
+            android:searchSuggestSelection=" ? "
+    />

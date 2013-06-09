@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="@drawable/vpi__tab_selected_holo">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#dddddd"
+            android:columnCount="2"
+            android:rowCount="2">
+
+        <ImageView
+                android:id="@+id/image_header"
+                android:layout_width="120dip"
+                android:layout_height="120dip"
+                android:contentDescription="@string/show_poster"
+                android:scaleType="centerCrop"
+                android:src="@drawable/temp_poster"/>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginTop="10dip">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dip"
+                        android:text="@string/show_season"
+                        android:textStyle="bold|italic"/>
+
+                <TextView
+                        android:id="@+id/season_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold|italic"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip">
+
+                <TextView
+                        android:id="@+id/season_episode_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dip"
+                        android:textStyle="bold|italic"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/episodes"
+                        android:textStyle="bold|italic"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/actionbar_shadow"/>
+
+    <GridView
+            android:id="@+id/episodeGrid"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:horizontalSpacing="1px"
+            android:background="#A0A0A0"
+            android:cacheColorHint="#999999"
+            android:fadingEdgeLength="0dip"
+            android:numColumns="1"
+            android:scrollingCache="false"
+            android:verticalSpacing="1px"/>
+
+</LinearLayout>

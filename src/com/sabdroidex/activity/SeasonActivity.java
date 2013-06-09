@@ -11,8 +11,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SeasonEpisodeAdapater;
@@ -94,7 +99,7 @@ public class SeasonActivity extends ActionBarActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.episode_list);
+        setContentView(R.layout.list_episodes);
         
         mShow = (Show) getIntent().getExtras().get("show");
         mSeasonNr = getIntent().getExtras().getInt("season");
@@ -135,6 +140,9 @@ public class SeasonActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 refreshSeason();
+                break;
+            case android.R.id.home:
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
