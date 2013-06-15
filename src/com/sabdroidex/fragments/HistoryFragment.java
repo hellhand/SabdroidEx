@@ -53,7 +53,7 @@ public class HistoryFragment extends SABFragment {
                     ((UpdateableActivity) getParentActivity()).updateState(true);
                 }
                 catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
 
@@ -65,7 +65,7 @@ public class HistoryFragment extends SABFragment {
                     }
                 }
                 catch (Exception e) {
-                    // Logging this is useless
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
 
             }

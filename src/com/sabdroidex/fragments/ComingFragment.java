@@ -21,54 +21,59 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABHandler;
 
 public class ComingFragment extends SABFragment {
-    
+
     private static final String TAG = ComingFragment.class.getCanonicalName();
-    
     private static FuturePeriod mFuturePeriod;
-    private ComingAdapter mComingRowAdapter;
-    
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
     private final SABHandler messageHandler = new SABHandler() {
-        
+
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.FUTURE.hashCode()) {
                 try {
                     mFuturePeriod = (FuturePeriod) msg.obj;
-                    
+
                     if (mComingRowAdapter != null && mFuturePeriod != null) {
                         mComingRowAdapter.setDataSet(mFuturePeriod);
                         mComingRowAdapter.notifyDataSetChanged();
                     }
                 }
                 catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
             if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
-                if (msg.obj instanceof String && !"".equals(msg.obj)) {
-                    Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                try {
+                    if (msg.obj instanceof String && !"".equals(msg.obj)) {
+                        Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
         }
     };
-    
+
+    private ComingAdapter mComingRowAdapter;
+
     /**
-     * 
+     *
      */
-    public ComingFragment() {}
-    
+    public ComingFragment() {
+    }
+
     public ComingFragment(FuturePeriod futurePeriod) {
         mFuturePeriod = futurePeriod;
     }
-    
+
     @Override
     public int getTitle() {
         return R.string.tab_coming;
     }
-    
+
     /**
      * Refreshing the queue during startup or on user request. Asks to configure
      * if still not done
@@ -79,39 +84,39 @@ public class ComingFragment extends SABFragment {
         }
         SickBeardController.refreshFuture(messageHandler);
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         messageHandler.setActivity(getActivity());
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        
+
         LinearLayout comingView = (LinearLayout) inflater.inflate(R.layout.pinned_header_list, null);
         ListView mListView = (ListView) comingView.findViewById(R.id.simpleList);
-        
+
         mComingRowAdapter = new ComingAdapter(getActivity().getApplicationContext(), mFuturePeriod);
         mListView.setAdapter(mComingRowAdapter);
         comingView.removeAllViews();
-        
+
         manualRefreshComing();
-        
+
         return mListView;
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-    
+
     @Override
     public JSONBased getDataCache() {
         return mFuturePeriod;

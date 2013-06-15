@@ -70,16 +70,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/actionbar_shadow"/>
 
-    <GridView
-            android:id="@+id/episodeGrid"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:horizontalSpacing="1px"
-            android:background="#A0A0A0"
-            android:cacheColorHint="#999999"
-            android:fadingEdgeLength="0dip"
-            android:numColumns="1"
-            android:scrollingCache="false"
-            android:verticalSpacing="1px"/>
+    <include layout="@layout/grid_dark"/>
 
 </LinearLayout>

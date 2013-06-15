@@ -15,7 +15,9 @@
 	<string name="header_time_left_format">--:--:--</string>
 	<string name="header_free_format">-- GB</string>
 	<string name="header_queue_format">--- / ---</string>
-	
+
+    <string name="mb">MB</string>
+    <string name="days">days</string>
 	<string name="separator"> : </string>
 
     <string name="setting_empty">The settings are being retrieved</string>
@@ -226,6 +228,9 @@
     <string name="movie_release_age">Age: </string>
     <string name="movie_release_score">Score: </string>
     <string name="movie_release_title">Movie Releases</string>
+    <string name="movie_release_download">Download movie release</string>
+    <string name="movie_release_download_status">Release download: </string>
+    <string name="movie_release_ignore">Ignore movie release</string>
 
     <string name="movie_options_general">General movie options</string>
     <string name="movie_options_wanted">Wanted movie options</string>
@@ -260,5 +265,7 @@
 
     <string name="close">Close</string>
     <string name="more">More</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
 
 </resources>

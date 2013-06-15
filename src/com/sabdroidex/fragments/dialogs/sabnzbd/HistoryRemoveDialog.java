@@ -33,9 +33,6 @@ public class HistoryRemoveDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        
-        AlertDialog dialog = null;
         OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             
             @Override
@@ -64,6 +61,6 @@ public class HistoryRemoveDialog extends DialogFragment {
             }
         });
         
-        return dialog;
+        return builder.create();
     }
 }

@@ -16,6 +16,8 @@
 	<string name="header_free_format">-- GO</string>
 	<string name="header_queue_format">--- / ---</string>
 
+    <string name="mb">MB</string>
+    <string name="days">days</string>
 	<string name="separator"> : </string>
 	
     <string name="setting_empty">Les préférences sont en cours de récupération</string>
@@ -83,7 +85,7 @@
 	<string name="setting_search_servers">Configure search providers</string>
 	<string name="setting_search_servers_summary">Add, change, delete search providers</string>
 	
-	<string name="setting_newznab_url_">URL Serveur</string>
+	<string name="setting_newznab_url">URL Serveur</string>
 	<string name="setting_newznab_url_summary">URL Serveur à utiliser pour NewzNab</string>
 	<string name="setting_newznab_api_key">NewzNab server api key</string>
 	
@@ -93,6 +95,8 @@
     <string name="menu_refresh">Rafraichir</string>
     <string name="menu_add">Ajouter</string>
     <string name="menu_settings">Préférences</string>
+    <string name="menu_server_settings">Préférences Sabnzbd+</string>
+    <string name="menu_couch_settings">Préférences Couchpotato</string>
     <string name="menu_quit">Quitter</string>
     <string name="menu_back">Retour</string>
 	<string name="menu_search">Recherche</string>
@@ -205,9 +209,6 @@
     <string name="add_movie_selection_dialog_title">Select the movie to add to CouchPotato</string>
     <string name="add_movie_not_found">No movie found</string>
 
-    <string name="movie_options_general">General movie options</string>
-    <string name="movie_options_wanted">Wanted movie options</string>
-
 	<string name="movie_poster">Poster</string>
 	<string name="movie_title">Title: </string>
 	<string name="movie_status">Status: </string>
@@ -219,19 +220,44 @@
     <string name="movie_genres">Genres: </string>
     <string name="movie_runtime">Runtime: </string>
 
-	<string name="setting_couchpotato_cache">Image Cache</string>
+    <string name="movie_release_name">Release name</string>
+    <string name="movie_release_status">Status</string>
+    <string name="movie_release_quality">Quality</string>
+    <string name="movie_release_size">Size</string>
+    <string name="movie_release_provider">Provider</string>
+    <string name="movie_release_age">Age: </string>
+    <string name="movie_release_score">Score: </string>
+    <string name="movie_release_title">Movie Releases</string>
+    <string name="movie_release_download">Télécharger cette release</string>
+    <string name="movie_release_ignore">Ignorer cette release</string>
+    <string name="movie_release_download_status">Téléchargement de la release: </string>
+
+    <string name="movie_options_general">General movie options</string>
+    <string name="movie_options_wanted">Wanted movie options</string>
+    <string name="movie_imdb_url_summary">Open the IMDB page of this movie</string>
+    <string name="movie_imdb_url">IMDB Page</string>
+    <string name="movie_available_files_summary">View the files related to this movie</string>
+    <string name="movie_available_files">Available files</string>
+    <string name="movie_readd_summary">Set movie to be re-dowloaded</string>
+    <string name="movie_readd">Re-add movie</string>
+    <string name="movie_info_change_summary">Change movie information, like title and quality</string>
+    <string name="movie_info_change">Change information</string>
+    <string name="movie_remove_summary">Remove the movie from Couchpotato</string>
+    <string name="movie_remove">Remove</string>
+
+    <string name="movie_download_best_summary">Dowload the best release for this movie</string>
+    <string name="movie_download_best">Download best</string>
+    <string name="movie_pick_release_summary">Movie Releases</string>
+    <string name="movie_pick_release">Movie Releases</string>
+    <string name="movie_mark_done_summary">Movie Releases</string>
+    <string name="movie_mark_done">Movie Releases</string>
+
+    <string name="setting_couchpotato_cache">Image Cache</string>
 	<string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
 	<string name="setting_couchpotato_lowres">Lowres Images</string>
 	<string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>
 	<string name="setting_couchpotato_nomedia">.Nomedia</string>
 	<string name="setting_couchpotato_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
-
-    <string name="movie_release_name">Release name</string>
-	<string name="movie_release_status">Status</string>
-	<string name="movie_release_quality">Quality</string>
-	<string name="movie_release_size">Size</string>
-	<string name="movie_release_provider">Provider</string>
-	<string name="movie_release_title">Movie Releases</string>
 
     <string name="menu_movie_release">Show releases</string>
     <string name="menu_movie_delete">Delete movie</string>
@@ -239,5 +265,7 @@
 
     <string name="close">Close</string>
     <string name="more">More</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
 
 </resources>

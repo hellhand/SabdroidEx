@@ -26,7 +26,7 @@ public class MovieReleaseInfo implements Serializable {
     private String detailUrl;
     private String type;
     private String id;
-    private Long size;
+    private Integer size;
 
     public String getName() {
         return name;
@@ -50,7 +50,7 @@ public class MovieReleaseInfo implements Serializable {
         return age;
     }
 
-    @JSONSetter(name = "url")
+    @JSONSetter(name = "age")
     public void setAge(Integer age) {
         this.age = age;
     }
@@ -127,12 +127,12 @@ public class MovieReleaseInfo implements Serializable {
         this.id = id;
     }
 
-    public Long getSize() {
+    public Integer getSize() {
         return size;
     }
 
     @JSONSetter(name = "size")
-    public void setSize(Long size) {
+    public void setSize(Integer size) {
         this.size = size;
     }
 

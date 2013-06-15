@@ -36,11 +36,7 @@ import com.sabdroidex.utils.SABHandler;
 public class ShowsFragment extends SABFragment {
 
     private static final String TAG = ShowsFragment.class.getCanonicalName();
-
     private static ShowList showList;
-    private GridView showGrid;
-    private ShowsAdapter mShowsAdapter;
-
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
@@ -49,15 +45,19 @@ public class ShowsFragment extends SABFragment {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.SHOWS.hashCode()) {
+                try {
+                    showList = (ShowList) msg.obj;
 
-                showList = (ShowList) msg.obj;
-
-                if (mShowsAdapter != null && showList != null) {
-                    mShowsAdapter.setDataSet(showList.getShowElements());
-                    mShowsAdapter.notifyDataSetChanged();
-                    if (showList.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
-                        showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
+                    if (mShowsAdapter != null && showList != null) {
+                        mShowsAdapter.setDataSet(showList.getShowElements());
+                        mShowsAdapter.notifyDataSetChanged();
+                        if (showList.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
+                            showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
+                        }
                     }
+                }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
             if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
@@ -67,19 +67,21 @@ public class ShowsFragment extends SABFragment {
                     }
                 }
                 catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
         }
     };
+    private GridView showGrid;
+    private ShowsAdapter mShowsAdapter;
 
     /**
-     * 
+     *
      */
-    public ShowsFragment() {}
+    public ShowsFragment() {
+    }
 
     /**
-     * 
      * @param showsRows
      */
     public ShowsFragment(ShowList showsRows) {

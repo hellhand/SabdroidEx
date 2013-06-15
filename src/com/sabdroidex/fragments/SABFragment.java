@@ -1,13 +1,13 @@
 package com.sabdroidex.fragments;
 
-import java.util.ArrayList;
-
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.sabdroidex.data.JSONBased;
+
+import java.util.ArrayList;
 
 public abstract class SABFragment extends Fragment {
 
@@ -21,7 +21,7 @@ public abstract class SABFragment extends Fragment {
      * 
      * @param data
      *            The previously Serialized cache Object[]
-     * @param osition
+     * @param position
      *            The position of the object in the array to recover
      * @return The object in the array to recover
      */

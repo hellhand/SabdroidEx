@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * A subclass of {@link CompositeCursorAdapter} that manages pinned partition
+ * A subclass of {@link CompositeAdapter} that manages pinned partition
  * headers.
  */
 public abstract class PinnedHeaderListAdapter extends CompositeAdapter implements PinnedHeaderListView.PinnedHeaderAdapter {
@@ -32,14 +32,6 @@ public abstract class PinnedHeaderListAdapter extends CompositeAdapter implement
 
     public PinnedHeaderListAdapter(Context context) {
         super(context);
-    }
-
-    public PinnedHeaderListAdapter(Context context, int initialCapacity) {
-        super(context, initialCapacity);
-    }
-
-    public boolean getPinnedPartitionHeadersEnabled() {
-        return mPinnedPartitionHeadersEnabled;
     }
 
     public void setPinnedPartitionHeadersEnabled(boolean flag) {

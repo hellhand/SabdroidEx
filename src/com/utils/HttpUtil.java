@@ -16,30 +16,7 @@
  */
 package com.utils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.zip.GZIPInputStream;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -65,7 +42,30 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import android.util.Log;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Date;
+import java.util.zip.GZIPInputStream;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
 
 public class HttpUtil {
 
@@ -131,7 +131,6 @@ public class HttpUtil {
      * 
      * @return The content of the URL as a String
      * @throws IOException
-     * @throws ServerConnectinoException
      */
     public String getDataAsString(String url) throws IOException {
         URLConnection urlc = null;
@@ -180,8 +179,6 @@ public class HttpUtil {
      * 
      * @return The content of the URL as a byte[]
      * @throws IOException
-     * @throws
-     * @throws ServerConnectinoException
      */
     public byte[] getDataAsByteArray(String url, CredentialsProvider cp) throws IOException {
     	HttpClient httpClient = getNewHttpClient();
@@ -291,7 +288,8 @@ public class HttpUtil {
      * Gets data from URL as char[] throws {@link RuntimeException} If anything
      * goes wrong
      * 
-     * @param parameterMap
+     * @param url the url from which to retrieve the data.
+     * @param cp the credential provider
      * 
      * @return The content of the URL as a char[]
      * @throws IOException

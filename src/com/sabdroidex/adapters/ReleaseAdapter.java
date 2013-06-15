@@ -13,6 +13,7 @@ import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.MovieRelease;
 import com.sabdroidex.data.couchpotato.MovieReleaseInfo;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class ReleaseAdapter extends BaseAdapter {
     private List<MovieRelease> mItems;
 
     public ReleaseAdapter(Context context, List<MovieRelease> items) {
+        Collections.sort(items);
         mItems = items;
         mInflater = LayoutInflater.from(context);
     }
@@ -75,12 +77,29 @@ public class ReleaseAdapter extends BaseAdapter {
             movieReleaseItem = (MovieReleaseItem) convertView.getTag();
         }
 
+        if (position % 2 == 0) {
+            convertView.setBackgroundResource(R.drawable.list_item_bg_dark);
+        }
+        else {
+            convertView.setBackgroundResource(R.drawable.list_item_bg);
+        }
         MovieRelease movieRelease = (MovieRelease) getItem(position);
         MovieReleaseInfo movieReleaseInfo = movieRelease.getMovieReleaseInfo();
+
+        StringBuilder size = new StringBuilder();
+        size.append(String.valueOf(movieReleaseInfo.getSize()));
+        size.append(" ");
+        size.append(mInflater.getContext().getString(R.string.mb));
+
+        StringBuilder age = new StringBuilder();
+        age.append(String.valueOf(movieReleaseInfo.getAge()));
+        size.append(" ");
+        size.append(mInflater.getContext().getString(R.string.days));
+
         movieReleaseItem.releaseName.setText(movieReleaseInfo.getName());
         movieReleaseItem.status.setText(CouchPotatoController.getStatus(movieRelease.getStatusId()));
-        movieReleaseItem.size.setText(String.valueOf(movieReleaseInfo.getSize()));
-        movieReleaseItem.age.setText(String.valueOf(movieReleaseInfo.getAge()));
+        movieReleaseItem.size.setText(size);
+        movieReleaseItem.age.setText(age);
         movieReleaseItem.score.setText(String.valueOf(movieReleaseInfo.getScore()));
         movieReleaseItem.provider.setText(movieReleaseInfo.getProvider());
 

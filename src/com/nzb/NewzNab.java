@@ -1,12 +1,5 @@
 package com.nzb;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +7,13 @@ import android.util.Log;
 
 import com.sabdroidex.utils.Preferences;
 import com.utils.HttpUtil;
+
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 
 public class NewzNab {
@@ -27,9 +27,7 @@ public class NewzNab {
     }
     
     /**
-     * 
-     * @param search The Search {@link String}
-     * @return 
+     *
      * @return a {@link String[][]} containing the result of the research. The inner array contains : 1 Name, 2 Size, 3 Category, 4 Password, 5 Image.
      */
     public static void search(final Handler messageHandler, final Object[] item) {

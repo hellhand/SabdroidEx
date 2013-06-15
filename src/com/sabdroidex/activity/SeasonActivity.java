@@ -30,52 +30,45 @@ import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
 
 public class SeasonActivity extends ActionBarActivity {
-    
+
     private static final String TAG = SeasonActivity.class.getCanonicalName();
-    
-    private Show mShow;
-    private Integer mSeasonNr;
-    private SeasonEpisodeAdapater seasonEpisodeAdapater;
-    private Season mSeason;
-    
-    private TextView episodeCount;
-    
+
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
     private final Handler messageHandler = new Handler() {
-        
+
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.SHOW_SEASONS.hashCode() && msg.obj instanceof Season) {
                 mSeason = (Season) msg.obj;
                 seasonEpisodeAdapater.setSeason(mSeason);
                 seasonEpisodeAdapater.notifyDataSetChanged();
-                
+
                 String count = Integer.toString(mSeason.getEpisodes().size());
                 episodeCount.setText(count);
-                String title = mShow.getShowName() + " - " + getString(R.string.show_season) + " " + mSeasonNr;
+                String title = new StringBuilder().append(mShow.getShowName()).append(" - ").append(getString(R.string.show_season)).append(" ").append(mSeasonNr).toString();
                 setTitle(title);
             }
             if (msg.what == SickBeardController.MESSAGE.EPISODE_SETSTATUS.hashCode()) {
                 try {
-                    String text = getString(R.string.episode_status_set_to) + " : " + msg.obj;
+                    String text = new StringBuilder().append(getString(R.string.episode_status_set_to)).append(" : ").append(msg.obj).toString();
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
                 }
                 catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
         }
     };
-    
+
     /**
      * A {@link OnItemLongClickListener} listening the episode list. This will
      * have the duty to display a {@link DialogFragment} to allow to user to
      * view the episode info and to start a manual search.
      */
-    OnItemLongClickListener longClickListener = new OnItemLongClickListener() {
-        
+    private OnItemLongClickListener longClickListener = new OnItemLongClickListener() {
+
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             Episode episode = mSeason.getEpisodes().get(position);
@@ -86,7 +79,13 @@ public class SeasonActivity extends ActionBarActivity {
             return true;
         }
     };
-    
+
+    private Show mShow;
+    private Integer mSeasonNr;
+    private SeasonEpisodeAdapater seasonEpisodeAdapater;
+    private Season mSeason;
+    private TextView episodeCount;
+
     /**
      * This method will create the adapter needed for the grid and query the
      * controller to retrieve the full season data.
@@ -95,33 +94,33 @@ public class SeasonActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.list_episodes);
-        
+
         mShow = (Show) getIntent().getExtras().get("show");
         mSeasonNr = getIntent().getExtras().getInt("season");
-        
+
         seasonEpisodeAdapater = new SeasonEpisodeAdapater(this, mSeason);
-        
+
         ImageView header = (ImageView) findViewById(R.id.image_header);
         String imageKey = ImageType.SHOW_SEASON_POSTER.name() + mShow.getTvdbId() + mSeasonNr;
         ImageUtils.getImageWorker().loadImage(header, ImageType.SHOW_SEASON_POSTER, imageKey, mShow.getTvdbId(), mShow.getShowName(), mSeasonNr);
-        
-        GridView gridView = (GridView) findViewById(R.id.episodeGrid);
+
+        GridView gridView = (GridView) findViewById(R.id.elementGrid);
         gridView.setAdapter(seasonEpisodeAdapater);
         gridView.setOnItemLongClickListener(longClickListener);
-        
+
         TextView textView = (TextView) findViewById(R.id.season_number);
         textView.setText(mSeasonNr.toString());
-        
+
         episodeCount = (TextView) findViewById(R.id.season_episode_count);
-        
+
         refreshSeason();
     }
-    
+
     /**
      * This creates the menu items as they will be by default
      */
@@ -131,7 +130,7 @@ public class SeasonActivity extends ActionBarActivity {
         menuInflater.inflate(R.menu.refresh, menu);
         return super.onCreateOptionsMenu(menu);
     }
-    
+
     /**
      * Handles item selections in the Menu
      */

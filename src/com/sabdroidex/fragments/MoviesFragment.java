@@ -58,15 +58,19 @@ public class MoviesFragment extends SABFragment {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == CouchPotatoController.MESSAGE.MOVIE_LIST.hashCode()) {
+                try {
+                    movieList = (MovieList) msg.obj;
 
-                movieList = (MovieList) msg.obj;
-
-                if (mMovieGridAdapter != null && movieList != null) {
-                    mMovieGridAdapter.setDataSet(movieList.getMovieElements());
-                    mMovieGridAdapter.notifyDataSetChanged();
-                    if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
-                        movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
+                    if (mMovieGridAdapter != null && movieList != null) {
+                        mMovieGridAdapter.setDataSet(movieList.getMovieElements());
+                        mMovieGridAdapter.notifyDataSetChanged();
+                        if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
+                            movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
+                        }
                     }
+                }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
             else if (msg.what == CouchPotatoController.MESSAGE.UPDATE.hashCode()) {
@@ -76,7 +80,7 @@ public class MoviesFragment extends SABFragment {
                     }
                 }
                 catch (Exception e) {
-                    Log.w(TAG, e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
         }

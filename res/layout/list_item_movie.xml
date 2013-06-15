@@ -1,13 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal" >
+    android:gravity="center_horizontal">
 
     <com.sabdroidex.utils.AlphaImageView
         android:id="@+id/movie_poster"
         android:layout_width="fill_parent"
         android:layout_height="160dip"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/movie_title"
@@ -19,6 +19,6 @@
         android:paddingLeft="10dip"
         android:textColor="#EEEEEE"
         android:textSize="25dip"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 </RelativeLayout>

@@ -17,12 +17,6 @@
 
 package com.sabdroidex.controllers.couchpotato;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
@@ -34,6 +28,12 @@ import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public final class CouchPotatoController {
 
@@ -764,8 +764,12 @@ public final class CouchPotatoController {
                 try {
                     String result = makeApiCall(MESSAGE.RELEASE_DOWNLOAD.toString().toLowerCase(), "id=" + releaseId);
                     JSONObject jsonObject = new JSONObject(result);
-                    Log.d(TAG, jsonObject.toString());
 
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.RELEASE_DOWNLOAD.hashCode();
+                    message.obj = jsonObject.getBoolean("success");
+                    message.sendToTarget();
                 }
                 catch (IOException e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());

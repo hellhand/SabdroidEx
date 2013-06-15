@@ -1,12 +1,12 @@
 package com.sabdroidex.utils;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-
-import android.content.Context;
-import android.util.Log;
 
 public class AssetReader {
 
@@ -15,8 +15,8 @@ public class AssetReader {
      * 
      * @param context
      *            The application context
-     * @param ressourceID
-     *            The raw resource id to read
+     * @param assetName
+     *            The name of the asset to read
      * @return rawText The text contained in the raw file
      */
     public static String readTextAsset(Context context, String assetName) {

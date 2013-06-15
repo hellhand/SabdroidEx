@@ -17,14 +17,13 @@
 
 package com.sabdroidex.data.couchpotato;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @JSONElement
 public class Movie implements Serializable, Comparable<Movie> {
@@ -79,7 +78,6 @@ public class Movie implements Serializable, Comparable<Movie> {
         if (releases == null) {
             releases = new ArrayList<MovieRelease>();
         }
-        Collections.sort(releases);
         return releases;
     }
 
