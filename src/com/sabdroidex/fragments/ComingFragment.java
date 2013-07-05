@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.ComingAdapter;
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
@@ -44,7 +45,7 @@ public class ComingFragment extends SABFragment {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
-            if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
+            if (msg.what == SABController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     if (msg.obj instanceof String && !"".equals(msg.obj)) {
                         Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();

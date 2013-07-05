@@ -19,11 +19,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.pinnedlist.PinnedHeaderListView.PinnedHeaderAdapter;
+
 /**
  * A subclass of {@link CompositeAdapter} that manages pinned partition
  * headers.
  */
-public abstract class PinnedHeaderListAdapter extends CompositeAdapter implements PinnedHeaderListView.PinnedHeaderAdapter {
+public abstract class PinnedHeaderListAdapter extends CompositeAdapter implements PinnedHeaderAdapter {
 
     public static final int PARTITION_HEADER_TYPE = 0;
 
@@ -88,7 +90,7 @@ public abstract class PinnedHeaderListAdapter extends CompositeAdapter implement
 
         int size = getPartitionCount();
 
-        // Cache visibility bits, because we will need them several times later
+        // DataCache visibility bits, because we will need them several times later
         // on
         if (mHeaderVisibility == null || mHeaderVisibility.length != size) {
             mHeaderVisibility = new boolean[size];

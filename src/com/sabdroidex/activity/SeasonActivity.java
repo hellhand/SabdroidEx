@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,7 +32,6 @@ import com.sabdroidex.utils.ImageWorker.ImageType;
 public class SeasonActivity extends ActionBarActivity {
 
     private static final String TAG = SeasonActivity.class.getCanonicalName();
-
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
@@ -61,25 +60,6 @@ public class SeasonActivity extends ActionBarActivity {
             }
         }
     };
-
-    /**
-     * A {@link OnItemLongClickListener} listening the episode list. This will
-     * have the duty to display a {@link DialogFragment} to allow to user to
-     * view the episode info and to start a manual search.
-     */
-    private OnItemLongClickListener longClickListener = new OnItemLongClickListener() {
-
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Episode episode = mSeason.getEpisodes().get(position);
-            episode.setShowId(mShow.getTvdbId());
-            episode.setSeasonNr(mSeason.getSeasonNr());
-            ShowEpisodeDialog showEpisodeDialog = new ShowEpisodeDialog(messageHandler, mSeason.getEpisodes().get(position));
-            showEpisodeDialog.show(getSupportFragmentManager(), "status");
-            return true;
-        }
-    };
-
     private Show mShow;
     private Integer mSeasonNr;
     private SeasonEpisodeAdapater seasonEpisodeAdapater;
@@ -111,7 +91,7 @@ public class SeasonActivity extends ActionBarActivity {
 
         GridView gridView = (GridView) findViewById(R.id.elementGrid);
         gridView.setAdapter(seasonEpisodeAdapater);
-        gridView.setOnItemLongClickListener(longClickListener);
+        gridView.setOnItemClickListener(new EpisodeClickListener());
 
         TextView textView = (TextView) findViewById(R.id.season_number);
         textView.setText(mSeasonNr.toString());
@@ -149,5 +129,22 @@ public class SeasonActivity extends ActionBarActivity {
 
     private void refreshSeason() {
         SickBeardController.getSeason(messageHandler, mShow.getTvdbId().toString(), mSeasonNr.toString());
+    }
+
+    /**
+     * A {@link OnItemLongClickListener} listening the episode list. This will
+     * have the duty to display a {@link DialogFragment} to allow to user to
+     * view the episode info and to start a manual search.
+     */
+    private class EpisodeClickListener implements OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Episode episode = mSeason.getEpisodes().get(position);
+            episode.setShowId(mShow.getTvdbId());
+            episode.setSeasonNr(mSeason.getSeasonNr());
+            ShowEpisodeDialog showEpisodeDialog = new ShowEpisodeDialog(messageHandler, mSeason.getEpisodes().get(position));
+            showEpisodeDialog.show(getSupportFragmentManager(), "status");
+        }
     }
 }

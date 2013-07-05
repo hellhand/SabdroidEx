@@ -1,11 +1,5 @@
 package com.sabdroidex.activity;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Set;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,13 +22,14 @@ import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SABDroidExPagerAdapter;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
+import com.sabdroidex.data.DataCache;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.SabnzbdStatus;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
-import com.sabdroidex.data.sickbeard.ShowList;
+import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.fragments.ComingFragment;
 import com.sabdroidex.fragments.HistoryFragment;
 import com.sabdroidex.fragments.MoviesFragment;
@@ -51,6 +46,12 @@ import com.utils.Calculator;
 import com.utils.Formatter;
 import com.viewpagerindicator.TabPageIndicator;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Set;
+
 /**
  * Main SabdroidEx Activity
  */
@@ -58,10 +59,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
 
     private static final String TAG = SABDroidEx.class.getCanonicalName();
     private static String APPLICATION_VERSION;
+
     /**
      * Listener for the search text field contents.
      */
-    OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
+    private OnQueryTextListenerCompat queryTextListener = new OnQueryTextListenerCompat() {
 
         @Override
         public boolean onQueryTextChange(String newText) {
@@ -74,6 +76,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
             return super.onQueryTextSubmit(query);
         }
     };
+
     /**
      * The Fragments that will take place in the ViewPager
      */
@@ -102,7 +105,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
 
         try {
             APPLICATION_VERSION = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (NameNotFoundException e) {
+        }
+        catch (NameNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }
 
@@ -112,7 +116,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
             dialogFragmentManager.showNewVersionDialog();
             Preferences.put(Preferences.VERSION, APPLICATION_VERSION);
         }
-        createLists();
+        DataCache dataCache = readCacheData();
+        createLists(dataCache);
     }
 
     @Override
@@ -137,7 +142,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                     cursor.moveToFirst();
                     int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
                     path = cursor.getString(idx);
-                } else {
+                }
+                else {
                     path = data.getPath();
                 }
                 intent.setData(null);
@@ -170,13 +176,16 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                 oos.writeObject(comingFragment.getDataCache());
                 oos.writeObject(moviesFragment.getDataCache());
                 oos.flush();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Log.e(TAG, " " + e.getStackTrace().toString());
-            } finally {
+            }
+            finally {
                 try {
                     oos.close();
                     fos.close();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     // we do not care
                 }
             }
@@ -195,19 +204,16 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
     }
 
     /**
-     * Creating the whole ViewPager content If possible we pre-fill with tha
-     * data that was stored in the cache file
+     * This method retrieves the data stored in the cache file.
+     *
+     * @return a DataCache object
      */
-    private void createLists() {
+    private DataCache readCacheData() {
 
         // Creating default empty data.
         // This is needed if the cache is disabled or cannot be accessed in a
         // way or another
-        Queue queue = new Queue();
-        History history = new History();
-        ShowList shows = new ShowList();
-        FuturePeriod coming = new FuturePeriod();
-        MovieList movies = new MovieList();
+        DataCache dataCache = new DataCache();
 
         // Restoring data if the cache is enabled.
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
@@ -224,39 +230,57 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                 // (the user might only have enabled couchpotato and not
                 // sickbeard)
                 for (JSONBased element = null; (element = (JSONBased) ois.readObject()) != null; ) {
-                    if (element instanceof Queue)
-                        queue = (Queue) element;
-                    if (element instanceof History)
-                        history = (History) element;
-                    if (element instanceof ShowList)
-                        shows = (ShowList) element;
-                    if (element instanceof FuturePeriod)
-                        coming = (FuturePeriod) element;
-                    if (element instanceof MovieList)
-                        movies = (MovieList) element;
+                    if (element instanceof Queue) {
+                        dataCache.setQueue((Queue) element);
+                    }
+                    if (element instanceof History) {
+                        dataCache.setHistory((History) element);
+                    }
+                    if (element instanceof Shows) {
+                        dataCache.setShows((Shows) element);
+                    }
+                    if (element instanceof FuturePeriod) {
+                        dataCache.setComing((FuturePeriod) element);
+                    }
+                    if (element instanceof MovieList) {
+                        dataCache.setMovies((MovieList) element);
+                    }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Log.e(TAG, "Cannot restore from cache");
-            } finally {
+            }
+            finally {
                 try {
                     ois.close();
                     fis.close();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     // we do not care
                 }
             }
         }
+        return dataCache;
+    }
 
+    /**
+     *
+     * Creating the whole ViewPager content If possible we pre-fill with tha
+     * data that was stored in the cache file
+     *
+     * @param dataCache the DataCache object
+     */
+    private void createLists(DataCache dataCache) {
         // Instantiating all the fragments that are needed
-        updateLabels(queue);
-        queueFragment = new QueueFragment(queue);
-        historyFragment = new HistoryFragment(history);
+        updateLabels(dataCache.getQueue());
+        queueFragment = new QueueFragment(dataCache.getQueue());
+        historyFragment = new HistoryFragment(dataCache.getHistory());
         if (Preferences.isEnabled(Preferences.SICKBEARD)) {
-            showsFragment = new ShowsFragment(shows);
-            comingFragment = new ComingFragment(coming);
+            showsFragment = new ShowsFragment(dataCache.getShows());
+            comingFragment = new ComingFragment(dataCache.getComing());
         }
         if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
-            moviesFragment = new MoviesFragment(movies);
+            moviesFragment = new MoviesFragment(dataCache.getMovies());
         }
 
         // Creation of the Adapter for the pager and adding all the fragments.
@@ -293,11 +317,17 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
         queueFragment.manualRefreshQueue();
         historyFragment.manualRefreshHistory();
         if (Preferences.isSet(Preferences.SICKBEARD_URL) && Preferences.isEnabled(Preferences.SICKBEARD)) {
-            showsFragment.manualRefreshShows();
-            comingFragment.manualRefreshComing();
+            if (showsFragment != null) {
+                showsFragment.manualRefreshShows();
+            }
+            if (comingFragment != null) {
+                comingFragment.manualRefreshComing();
+            }
         }
         if (Preferences.isSet(Preferences.COUCHPOTATO_URL) && Preferences.isEnabled(Preferences.COUCHPOTATO)) {
-            moviesFragment.manualRefreshMovies();
+            if (moviesFragment != null) {
+                moviesFragment.manualRefreshMovies();
+            }
         }
         getActionBarHelper().setRefreshActionItemState(true);
     }
@@ -307,8 +337,9 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
      */
     @Override
     public void updateLabels(SabnzbdStatus status) {
-        if (status == null)
+        if (status == null) {
             return;
+        }
         try {
             Double mbleft = new Double(status.getMbLeft());
             Double kbpersec = new Double(status.getKbPerSec());
@@ -316,11 +347,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
             String diskspace2 = status.getDiskSpace2();
 
             ((TextView) findViewById(R.id.freeSpace)).setText(Formatter.formatFull(diskspace2) + " " + getString(R.string.header_free_unit));
-            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb))
-                    + " MB");
+            ((TextView) findViewById(R.id.headerDownloaded)).setText(Formatter.formatShort(mbleft) + " / " + Formatter.formatShort(Double.parseDouble(mb)) + " MB");
             ((TextView) findViewById(R.id.headerSpeed)).setText(Formatter.formatShort(kbpersec) + " " + getString(R.string.header_speed_unit));
             ((TextView) findViewById(R.id.headerEta)).setText(Calculator.calculateETA(mbleft, kbpersec));
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             Log.w(TAG, "Error Updating Labels");
         }
     }
@@ -374,7 +405,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
         if (SABnzbdController.paused) {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_resume);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_play);
-        } else {
+        }
+        else {
             menu.findItem(R.id.menu_play_pause).setTitle(R.string.menu_pause);
             menu.findItem(R.id.menu_play_pause).setIcon(android.R.drawable.ic_media_pause);
         }

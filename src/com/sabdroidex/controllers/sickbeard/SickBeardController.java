@@ -1,11 +1,5 @@
 package com.sabdroidex.controllers.sickbeard;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.Collections;
-
-import org.json.JSONObject;
-
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
@@ -15,12 +9,18 @@ import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.Season;
 import com.sabdroidex.data.sickbeard.Show;
-import com.sabdroidex.data.sickbeard.ShowList;
 import com.sabdroidex.data.sickbeard.ShowSearch;
+import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Collections;
 
 public final class SickBeardController extends SABController {
     
@@ -172,21 +172,21 @@ public final class SickBeardController extends SABController {
                 try {
                     String queueData = makeApiCall(MESSAGE.SHOWS.toString().toLowerCase());
                     JSONObject jsonObject = new JSONObject(queueData);
-                    ShowList showList = null;
+                    Shows shows = null;
                     
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(ShowList.class);
-                        showList = (ShowList) jsonMarshaller.unmarshal(jsonObject);
-                        Collections.sort(showList.getShowElements());
+                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Shows.class);
+                        shows = (Shows) jsonMarshaller.unmarshal(jsonObject);
+                        Collections.sort(shows.getShowElements());
                         
                         Message message = new Message();
                         message.setTarget(messageHandler);
                         message.what = MESSAGE.SHOWS.hashCode();
-                        message.obj = showList;
+                        message.obj = shows;
                         message.sendToTarget();
                     }
                 }

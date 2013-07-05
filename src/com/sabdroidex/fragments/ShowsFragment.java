@@ -23,10 +23,11 @@ import android.widget.Toast;
 import com.sabdroidex.R;
 import com.sabdroidex.activity.ShowActivity;
 import com.sabdroidex.adapters.ShowsAdapter;
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sickbeard.Show;
-import com.sabdroidex.data.sickbeard.ShowList;
+import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.fragments.dialogs.sickbeard.ShowDetailsDialog;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
@@ -36,7 +37,7 @@ import com.sabdroidex.utils.SABHandler;
 public class ShowsFragment extends SABFragment {
 
     private static final String TAG = ShowsFragment.class.getCanonicalName();
-    private static ShowList showList;
+    private static Shows shows;
     /**
      * Instantiating the Handler associated with this {@link Fragment}.
      */
@@ -46,12 +47,12 @@ public class ShowsFragment extends SABFragment {
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.SHOWS.hashCode()) {
                 try {
-                    showList = (ShowList) msg.obj;
+                    shows = (Shows) msg.obj;
 
-                    if (mShowsAdapter != null && showList != null) {
-                        mShowsAdapter.setDataSet(showList.getShowElements());
+                    if (mShowsAdapter != null && shows != null) {
+                        mShowsAdapter.setDataSet(shows.getShowElements());
                         mShowsAdapter.notifyDataSetChanged();
-                        if (showList.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
+                        if (shows.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
                             showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
                         }
                     }
@@ -60,7 +61,7 @@ public class ShowsFragment extends SABFragment {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
-            if (msg.what == SickBeardController.MESSAGE.UPDATE.hashCode()) {
+            if (msg.what == SABController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     if (msg.obj instanceof String && !"".equals(msg.obj)) {
                         Toast.makeText(getParentActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
@@ -84,8 +85,8 @@ public class ShowsFragment extends SABFragment {
     /**
      * @param showsRows
      */
-    public ShowsFragment(ShowList showsRows) {
-        showList = showsRows;
+    public ShowsFragment(Shows showsRows) {
+        shows = showsRows;
     }
 
     @Override
@@ -119,7 +120,7 @@ public class ShowsFragment extends SABFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mShowsAdapter = new ShowsAdapter(getActivity().getApplicationContext(), showList.getShowElements());
+        mShowsAdapter = new ShowsAdapter(getActivity().getApplicationContext(), shows.getShowElements());
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.list_shows, null);
         showGrid = (GridView) linearLayout.findViewById(R.id.elementGrid);
@@ -143,7 +144,7 @@ public class ShowsFragment extends SABFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if (showList.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
+        if (shows.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
             showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
         }
         super.onViewCreated(view, savedInstanceState);
@@ -156,7 +157,7 @@ public class ShowsFragment extends SABFragment {
 
     @Override
     public JSONBased getDataCache() {
-        return showList;
+        return shows;
     }
 
     public void setupShowElements(View view, Show show) {
@@ -202,7 +203,7 @@ public class ShowsFragment extends SABFragment {
                  */
                 return;
             }
-            setupShowElements(getView(), showList.getShowElements().get(position));
+            setupShowElements(getView(), shows.getShowElements().get(position));
             showGrid.invalidateViews();
         }
     }
@@ -216,7 +217,7 @@ public class ShowsFragment extends SABFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
             ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog();
-            ShowDetailsDialog.setShow(showList.getShowElements().get(position));
+            ShowDetailsDialog.setShow(shows.getShowElements().get(position));
             showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
         }
     }

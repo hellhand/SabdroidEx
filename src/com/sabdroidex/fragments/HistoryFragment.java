@@ -8,13 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.HistoryAdapter;
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.History;
@@ -46,7 +47,6 @@ public class HistoryFragment extends SABFragment {
                     if (historyAdapter != null || history != null) {
                         historyAdapter.clear();
                         historyAdapter.addAll(history.getHistoryElements());
-                        historyAdapter.notifyDataSetChanged();
                     }
 
                     ((UpdateableActivity) getParentActivity()).updateLabels(history);
@@ -57,7 +57,7 @@ public class HistoryFragment extends SABFragment {
                 }
             }
 
-            if (msg.what == SABnzbdController.MESSAGE.UPDATE.hashCode()) {
+            if (msg.what == SABController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     ((UpdateableActivity) getParentActivity()).updateState(false);
                     if (msg.obj instanceof String && !"".equals(msg.obj)) {
@@ -127,7 +127,7 @@ public class HistoryFragment extends SABFragment {
 
         historyView.removeAllViews();
         historyList.setAdapter(new HistoryAdapter(getActivity(), history.getHistoryElements()));
-        historyList.setOnItemLongClickListener(new ListItemLongClickListener());
+        historyList.setOnItemClickListener(new ListItemClickListener());
 
         manualRefreshHistory();
 
@@ -146,15 +146,14 @@ public class HistoryFragment extends SABFragment {
      * @author Marc
      * 
      */
-    private class ListItemLongClickListener implements OnItemLongClickListener {
+    private class ListItemClickListener implements OnItemClickListener {
 
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             HistoryRemoveDialog historyRemoveDialog = new HistoryRemoveDialog();
             HistoryRemoveDialog.setMessageHandler(messageHandler);
             HistoryRemoveDialog.setHistoryElement(history.getHistoryElements().get(position));
             historyRemoveDialog.show(getActivity().getSupportFragmentManager(), "historyRemove");
-            return true;
         }
     }
 }

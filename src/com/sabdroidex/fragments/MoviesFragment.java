@@ -19,6 +19,7 @@ package com.sabdroidex.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
+import com.sabdroidex.activity.MovieActivity;
 import com.sabdroidex.adapters.MovieGridAdapter;
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.couchpotato.Movie;
@@ -73,7 +77,7 @@ public class MoviesFragment extends SABFragment {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
             }
-            else if (msg.what == CouchPotatoController.MESSAGE.UPDATE.hashCode()) {
+            else if (msg.what == SABController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     if (msg.obj instanceof String && !"".equals(msg.obj)) {
                         Toast.makeText(getActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
@@ -194,6 +198,9 @@ public class MoviesFragment extends SABFragment {
         TextView movieRating = (TextView) view.findViewById(R.id.movie_rating);
         movieRating.setText(movie.getLibrary().getInfo().getRating().getImdbRating().toString());
 
+        Button moreButton = (Button) view.findViewById(R.id.more_button);
+        moreButton.setOnClickListener(new ShowMoreButtonClickListener(movie));
+
         String imageKey = ImageType.MOVIE_POSTER.name() + movie.getMovieID();
         ImageUtils.getImageWorker().loadImage(moviePoster, ImageType.MOVIE_POSTER, imageKey, movie.getMovieID(), movie.getTitle(), movie.getLibrary().getInfo().getPosters().getOriginalPoster());
     }
@@ -235,6 +242,22 @@ public class MoviesFragment extends SABFragment {
             MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog();
             MovieDetailsDialog.setMovie(movie);
             movieDetailsDialog.show(getActivity().getSupportFragmentManager(), movie.getTitle());
+        }
+    }
+
+    private class ShowMoreButtonClickListener implements View.OnClickListener {
+
+        private Movie movie;
+
+        public ShowMoreButtonClickListener(Movie movie) {
+            this.movie = movie;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), MovieActivity.class);
+            intent.putExtra(MovieActivity.MOVIE, movie);
+            startActivity(intent);
         }
     }
 }

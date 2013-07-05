@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
@@ -66,12 +65,6 @@ public class ReleaseAdapter extends BaseAdapter {
             movieReleaseItem.age = (TextView) convertView.findViewById(R.id.movie_release_age);
             movieReleaseItem.score = (TextView) convertView.findViewById(R.id.movie_release_score);
             movieReleaseItem.provider = (TextView) convertView.findViewById(R.id.movie_release_provider);
-
-            /*
-            movieReleaseItem.info = (ImageButton) convertView.findViewById(R.id.movie_release_info);
-            movieReleaseItem.download = (ImageButton) convertView.findViewById(R.id.movie_release_download);
-            movieReleaseItem.delete = (ImageButton) convertView.findViewById(R.id.movie_release_delete);
-            */
         }
         else {
             movieReleaseItem = (MovieReleaseItem) convertView.getTag();
@@ -93,8 +86,8 @@ public class ReleaseAdapter extends BaseAdapter {
 
         StringBuilder age = new StringBuilder();
         age.append(String.valueOf(movieReleaseInfo.getAge()));
-        size.append(" ");
-        size.append(mInflater.getContext().getString(R.string.days));
+        age.append(" ");
+        age.append(mInflater.getContext().getString(R.string.days));
 
         movieReleaseItem.releaseName.setText(movieReleaseInfo.getName());
         movieReleaseItem.status.setText(CouchPotatoController.getStatus(movieRelease.getStatusId()));
@@ -102,27 +95,6 @@ public class ReleaseAdapter extends BaseAdapter {
         movieReleaseItem.age.setText(age);
         movieReleaseItem.score.setText(String.valueOf(movieReleaseInfo.getScore()));
         movieReleaseItem.provider.setText(movieReleaseInfo.getProvider());
-
-        /*
-        movieReleaseItem.info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        movieReleaseItem.download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        movieReleaseItem.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        */
 
         convertView.setId(position);
         convertView.setTag(movieReleaseItem);
@@ -137,8 +109,5 @@ public class ReleaseAdapter extends BaseAdapter {
         TextView age;
         TextView score;
         TextView provider;
-        ImageButton info;
-        ImageButton download;
-        ImageButton delete;
     }
 }

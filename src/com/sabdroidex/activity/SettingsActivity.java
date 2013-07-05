@@ -63,10 +63,11 @@ public class SettingsActivity extends ActionBarPreferencesActivity {
         preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue != null) {
+                if (newValue != null && !(newValue instanceof String && "".equals(newValue))) {
                     preference.setSummary(newValue.toString());
                     return true;
-                } else {
+                }
+                else {
                     preference.setSummary(getString(resId));
                     return false;
                 }

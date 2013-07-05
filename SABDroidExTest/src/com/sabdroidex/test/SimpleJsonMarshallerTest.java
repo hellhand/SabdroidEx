@@ -13,7 +13,7 @@ import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.Season;
 import com.sabdroidex.data.sickbeard.Show;
-import com.sabdroidex.data.sickbeard.ShowList;
+import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.utils.json.SimpleJsonMarshaller;
 
@@ -51,8 +51,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("data");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(ShowList.class);
-        ShowList shows = (ShowList) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(Shows.class);
+        Shows shows = (Shows) simpleJsonMarshaller.unmarshal(jsonObject);
         assertNotNull(shows);
         assertTrue(shows.getShowElements().size() > 0);
         for (Show show : shows.getShowElements()) {

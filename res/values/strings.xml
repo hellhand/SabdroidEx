@@ -21,7 +21,8 @@
 	<string name="separator"> : </string>
 
     <string name="setting_empty">The settings are being retrieved</string>
-	
+    <string name="setting_cannot_retrieve">Cannot retrieve settings</string>
+
     <string name="setting_server_url">Server URL</string>
     <string name="setting_server_url_summary">The SABnzbd server address</string>
     <string name="setting_server_port">Server Port</string>
@@ -39,7 +40,7 @@
     <string name="setting_auth_password">Password</string>
 
 	<string name="setting_server_bandwidth_limit">Bandwidth Limit</string>
-	<string name="setting_server_bandwidth_limit_summary">Set the max download speed for Sabnzbd</string>
+	<string name="setting_server_bandwidth_limit_summary">Set the max bandwidth for Sabnzbd</string>
 	<string name="setting_server_cache_dir">Cache Directory</string>
 	<string name="setting_server_cache_dir_summary">Set the cache directory for Sabnzbd</string>
 	<string name="setting_server_cache_limit">Cache Limit</string>

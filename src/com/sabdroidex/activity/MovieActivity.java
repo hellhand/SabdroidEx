@@ -78,6 +78,7 @@ public class MovieActivity extends ActionBarPreferencesActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         movie = (Movie) getIntent().getExtras().get(MOVIE);
+        setTitle(movie.getTitle());
         addPreferencesFromResource(R.xml.movie_preferences);
     }
 

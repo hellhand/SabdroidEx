@@ -48,23 +48,12 @@ public abstract class CompositeAdapter extends BaseAdapter {
             this.header = header;
         }
 
-        /**
-         * True if the directory should be shown even if no contacts are found.
-         */
-        public boolean getShowIfEmpty() {
-            return showIfEmpty;
-        }
-
         public boolean hasHeader() {
             return header != -1;
         }
         
         public int getHeader() {
             return header;
-        }
-
-        public Collection<?> getElements() {
-            return elements;
         }
 
         public void setElements(Collection<?> elements) {
@@ -78,7 +67,6 @@ public abstract class CompositeAdapter extends BaseAdapter {
     private int mCount = 0;
     private boolean mCacheValid = true;
     private boolean mNotificationsEnabled = true;
-    private boolean mNotificationNeeded;
 
     public CompositeAdapter(Context context) {
         this(context, INITIAL_CAPACITY);
@@ -86,53 +74,16 @@ public abstract class CompositeAdapter extends BaseAdapter {
 
     public CompositeAdapter(Context context, int initialCapacity) {
         mContext = context;
-        mPartitions = new Partition[INITIAL_CAPACITY];
+        mPartitions = new Partition[initialCapacity];
     }
 
     public Context getContext() {
         return mContext;
     }
 
-    /**
-     * Registers a partition. The cursor for that partition can be set later.
-     * Partitions should be added in the order they are supposed to appear in
-     * the list.
-     */
-    public void addPartition(boolean showIfEmpty, int header) {
-        addPartition(new Partition(showIfEmpty, header));
-    }
-
-    public void addPartition(Partition partition) {
-        if (mSize >= mPartitions.length) {
-            int newCapacity = mSize + 2;
-            Partition[] newAdapters = new Partition[newCapacity];
-            System.arraycopy(mPartitions, 0, newAdapters, 0, mSize);
-            mPartitions = newAdapters;
-        }
-        mPartitions[mSize++] = partition;
-        invalidate();
-        notifyDataSetChanged();
-    }
-
     public void setPartitions(Partition... partitions) {
         mPartitions = partitions;
         mSize = mPartitions.length;
-        invalidate();
-        notifyDataSetChanged();
-    }
-    
-    public void removePartition(int partitionIndex) {
-        System.arraycopy(mPartitions, partitionIndex + 1, mPartitions, partitionIndex, mSize - partitionIndex - 1);
-        mSize--;
-        invalidate();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Removes cursors for all partitions.
-     */
-    public void clearPartitions() {
-        mPartitions = new Partition[INITIAL_CAPACITY];
         invalidate();
         notifyDataSetChanged();
     }
@@ -144,16 +95,6 @@ public abstract class CompositeAdapter extends BaseAdapter {
         mSize = 0;
         invalidate();
         notifyDataSetChanged();
-    }
-
-    public void setHeader(int partitionIndex, int header) {
-        mPartitions[partitionIndex].header = header;
-        invalidate();
-    }
-
-    public void setShowIfEmpty(int partitionIndex, boolean flag) {
-        mPartitions[partitionIndex].showIfEmpty = flag;
-        invalidate();
     }
 
     public Partition getPartition(int partitionIndex) {
@@ -215,18 +156,6 @@ public abstract class CompositeAdapter extends BaseAdapter {
     }
 
     /**
-     * Changes the elements for an individual partition.
-     */
-    public void changeElements(int partition, Collection<?> elements) {
-        Collection<?> prevElements = mPartitions[partition].elements;
-        if (prevElements != elements) {
-            mPartitions[partition].elements = elements;
-            invalidate();
-            notifyDataSetChanged();
-        }
-    }
-
-    /**
      * Returns true if the specified partition has no cursor or an empty cursor.
      */
     public boolean isPartitionEmpty(int partition) {
@@ -244,27 +173,6 @@ public abstract class CompositeAdapter extends BaseAdapter {
             int end = start + mPartitions[i].count;
             if (position >= start && position < end) {
                 return i;
-            }
-            start = end;
-        }
-        return -1;
-    }
-
-    /**
-     * Given a list position, return the offset of the corresponding item in its
-     * partition. The header, if any, will have offset -1.
-     */
-    public int getOffsetInPartition(int position) {
-        ensureCacheValid();
-        int start = 0;
-        for (int i = 0; i < mSize; i++) {
-            int end = start + mPartitions[i].count;
-            if (position >= start && position < end) {
-                int offset = position - start;
-                if (mPartitions[i].hasHeader()) {
-                    offset--;
-                }
-                return offset;
             }
             start = end;
         }
@@ -368,14 +276,12 @@ public abstract class CompositeAdapter extends BaseAdapter {
     /**
      * Creates the header view for the specified partition.
      */
-    protected View newHeaderView(Context context, int partition, Collection<?> elements, ViewGroup parent) {
-        return null;
-    }
+    protected abstract View newHeaderView(Context context, int partition, Collection<?> elements, ViewGroup parent);
 
     /**
      * Binds the header view for the specified partition.
      */
-    protected void bindHeaderView(View view, int partition, Collection<?> elements) {}
+    protected abstract void bindHeaderView(View view, int partition, Collection<?> elements);
 
     /**
      * Returns an item view for the specified partition, creating one if needed.
@@ -480,26 +386,10 @@ public abstract class CompositeAdapter extends BaseAdapter {
         return true;
     }
 
-    /**
-     * Enable or disable data change notifications. It may be a good idea to
-     * disable notifications before making changes to several partitions at
-     * once.
-     */
-    public void setNotificationsEnabled(boolean flag) {
-        mNotificationsEnabled = flag;
-        if (flag && mNotificationNeeded) {
-            notifyDataSetChanged();
-        }
-    }
-
     @Override
     public void notifyDataSetChanged() {
         if (mNotificationsEnabled) {
-            mNotificationNeeded = false;
             super.notifyDataSetChanged();
-        }
-        else {
-            mNotificationNeeded = true;
         }
     }
 }

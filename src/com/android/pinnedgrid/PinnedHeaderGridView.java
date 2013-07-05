@@ -1,32 +1,47 @@
+/*
+ * Copyright (C) 2010 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.android.pinnedgrid;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 
-/**
- * Created by Marc on 13/06/13.
- */
-public class PinnedHeaderGridView extends GridView implements OnScrollListener {
+public class PinnedHeaderGridView extends GridView implements OnScrollListener, OnItemSelectedListener {
 
     private long mAnimationTargetTime;
-    private PinnedHeaderGridView mOnScrollListener;
+    private OnScrollListener mOnScrollListener;
     private int mSize;
-    private int mScrollState;
-    private PinnedHeaderGridView mOnItemSelectedListener;
     private static final int TOP = 0;
     private static final int BOTTOM = 1;
     private static final int FADING = 2;
     private static final int MAX_ALPHA = 255;
     private boolean mAnimating;
-    private RectF mClipRect;
-    private RectF mBounds;
+    private RectF mBounds = new RectF();
+    private Rect mClipRect = new Rect();
 
     /**
      * Adapter interface.  The list adapter must implement this interface.
@@ -41,7 +56,7 @@ public class PinnedHeaderGridView extends GridView implements OnScrollListener {
         /**
          * Creates or updates the pinned header view.
          */
-        View getPinnedHeaderView(int viewIndex, View convertView, ViewGroup parent);
+        View getPinnedHeaderView(View convertView, ViewGroup parent);
 
         void configurePinnedHeaders(PinnedHeaderGridView gridView);
 
@@ -74,15 +89,13 @@ public class PinnedHeaderGridView extends GridView implements OnScrollListener {
     }
 
     public PinnedHeaderGridView(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public PinnedHeaderGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public PinnedHeaderGridView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+        super.setOnScrollListener(this);
+        super.setOnItemSelectedListener(this);
     }
 
     public void setPinnedHeaderAnimationDuration(int duration) {
@@ -90,8 +103,34 @@ public class PinnedHeaderGridView extends GridView implements OnScrollListener {
     }
 
     @Override
+    public void setAdapter(ListAdapter adapter) {
+        mAdapter = (PinnedHeaderAdapter)adapter;
+        super.setAdapter(adapter);
+    }
+
+    @Override
+    public void setOnScrollListener(OnScrollListener onScrollListener) {
+        mOnScrollListener = onScrollListener;
+        super.setOnScrollListener(this);
+    }
+
+    @Override
+    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+        super.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
         super.onLayout(changed, l, t, r, b);
         mHeaderPaddingLeft = getPaddingLeft();
         mHeaderWidth = r - l - mHeaderPaddingLeft - getPaddingRight();
@@ -104,6 +143,7 @@ public class PinnedHeaderGridView extends GridView implements OnScrollListener {
             if (mHeader == null) {
                 mHeader = new PinnedHeader();
             }
+            mHeader.view = mAdapter.getPinnedHeaderView(mHeader.view, this);
 
             mAnimationTargetTime = System.currentTimeMillis() + mAnimationDuration;
             mAdapter.configurePinnedHeaders(this);
@@ -123,7 +163,6 @@ public class PinnedHeaderGridView extends GridView implements OnScrollListener {
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        mScrollState = scrollState;
         if (mOnScrollListener != null) {
             mOnScrollListener.onScrollStateChanged(this, scrollState);
         }
@@ -274,24 +313,6 @@ public class PinnedHeaderGridView extends GridView implements OnScrollListener {
             y--;
         } while (y > 0);
         return 0;
-    }
-
-    private boolean smoothScrollToPartition(int partition) {
-        final int position = mAdapter.getScrollPositionForHeader(partition);
-        if (position == -1) {
-            return false;
-        }
-
-        int offset = 0;
-        for (int i = 0; i < partition; i++) {
-            PinnedHeader header = mHeader;
-            if (header.visible) {
-                offset += header.height;
-            }
-        }
-
-        smoothScrollToPositionFromTop(position + 1, offset);
-        return true;
     }
 
     private void invalidateIfAnimating() {

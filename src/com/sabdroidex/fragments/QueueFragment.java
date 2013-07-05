@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.QueueAdapter;
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.sabnzbd.Queue;
@@ -46,7 +47,6 @@ public class QueueFragment extends SABFragment {
                     if (queueAdapter != null || queue != null) {
                         queueAdapter.clear();
                         queueAdapter.addAll(queue.getQueueElements());
-                        queueAdapter.notifyDataSetChanged();
                     }
                     
                     ((UpdateableActivity) getParentActivity()).updateLabels(queue);
@@ -57,7 +57,7 @@ public class QueueFragment extends SABFragment {
                 }
             }
             
-            if (msg.what == SABnzbdController.MESSAGE.UPDATE.hashCode()) {
+            if (msg.what == SABController.MESSAGE.UPDATE.hashCode()) {
                 try {
                     ((UpdateableActivity) getParentActivity()).updateState(false);
                     if (msg.obj instanceof String && !"".equals(msg.obj)) {
@@ -112,7 +112,7 @@ public class QueueFragment extends SABFragment {
 
         downloadView.removeAllViews();        
         queueList.setAdapter(queueAdapter);
-        queueList.setOnItemLongClickListener(new ListItemLongClickListener());
+        queueList.setOnItemClickListener(new ListItemLongClickListener());
         
         return queueList;
     }
@@ -165,14 +165,13 @@ public class QueueFragment extends SABFragment {
         updater.start();
     }
     
-    private class ListItemLongClickListener implements OnItemLongClickListener {
-        
+    private class ListItemLongClickListener implements OnItemClickListener {
+
         @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, queue
                     .getQueueElements().get(position));
             queueElementActionDialog.show(getActivity().getSupportFragmentManager(), "queueaction");
-            return true;
         }
     }
     

@@ -16,12 +16,13 @@
 	<string name="header_free_format">-- GO</string>
 	<string name="header_queue_format">--- / ---</string>
 
-    <string name="mb">MB</string>
-    <string name="days">days</string>
+    <string name="mb">MO</string>
+    <string name="days">Jours</string>
 	<string name="separator"> : </string>
 	
     <string name="setting_empty">Les préférences sont en cours de récupération</string>
-	
+    <string name="setting_cannot_retrieve">Impossible de contacter le serveur</string>
+
     <string name="setting_server_url">URL Serveur</string>
     <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
     <string name="setting_server_port">Port du Serveur</string>
@@ -38,13 +39,13 @@
     <string name="setting_auth_username">Nom Utilisateur</string>
     <string name="setting_auth_password">Mot de Passe</string>
 
-	<string name="setting_server_bandwidth_limit">Sabnzbd max speed</string>
-	<string name="setting_server_bandwidth_limit_summary">Set the max download speed for Sabnzbd</string>
-	<string name="setting_server_cache_dir">Cache Directory</string>
-	<string name="setting_server_cache_dir_summary">Set the cache directory for Sabnzbd</string>
-	<string name="setting_server_cache_limit">Cache Limit</string>
-	<string name="setting_server_cache_limit_summary">Set the cache size limit for Sabnzbd</string>
-	<string name="setting_server_dirscan_dir">Dirscan Directory</string>
+	<string name="setting_server_bandwidth_limit">Bande passante Sabnzbd+</string>
+	<string name="setting_server_bandwidth_limit_summary">Définir la bande passante maximum pour Sabnzbd+</string>
+	<string name="setting_server_cache_dir">Répertoire de cache</string>
+	<string name="setting_server_cache_dir_summary">Définir le répertoire de cache pour Sabnzbd+</string>
+	<string name="setting_server_cache_limit">Limite du cache</string>
+	<string name="setting_server_cache_limit_summary">Définir la limite de cache pour Sabnzbd+</string>
+	<string name="setting_server_dirscan_dir">Répertoire à scanner</string>
 	<string name="setting_server_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
 	<string name="setting_server_dirscan_speed">Dirscan Speed</string>
 	<string name="setting_server_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
@@ -143,7 +144,7 @@
     <string name="coming_missed">Raté</string>
     <string name="coming_today">Aujourd-hui</string>
     <string name="coming_soon">Bientôt</string>
-    <string name="coming_later">Pllus tard</string>
+    <string name="coming_later">Plus tard</string>
     
 	<string name="add_dialog_title">Ajouter</string>
 	
@@ -220,17 +221,17 @@
     <string name="movie_genres">Genres: </string>
     <string name="movie_runtime">Runtime: </string>
 
-    <string name="movie_release_name">Release name</string>
-    <string name="movie_release_status">Status</string>
-    <string name="movie_release_quality">Quality</string>
-    <string name="movie_release_size">Size</string>
-    <string name="movie_release_provider">Provider</string>
+    <string name="movie_release_name">Release name: </string>
+    <string name="movie_release_status">Status: </string>
+    <string name="movie_release_quality">Quality: </string>
+    <string name="movie_release_size">Size: </string>
+    <string name="movie_release_provider">Provider: </string>
     <string name="movie_release_age">Age: </string>
     <string name="movie_release_score">Score: </string>
     <string name="movie_release_title">Movie Releases</string>
-    <string name="movie_release_download">Télécharger cette release</string>
-    <string name="movie_release_ignore">Ignorer cette release</string>
-    <string name="movie_release_download_status">Téléchargement de la release: </string>
+    <string name="movie_release_download">Download movie release</string>
+    <string name="movie_release_download_status">Release download: </string>
+    <string name="movie_release_ignore">Ignore movie release</string>
 
     <string name="movie_options_general">General movie options</string>
     <string name="movie_options_wanted">Wanted movie options</string>

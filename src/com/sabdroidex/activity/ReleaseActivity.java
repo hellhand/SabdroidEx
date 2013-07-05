@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.actionbarcompat.ActionBarActivity;
@@ -18,8 +16,6 @@ import com.sabdroidex.adapters.ReleaseAdapter;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.Movie;
 import com.sabdroidex.fragments.dialogs.couchpotato.MovieReleaseDialog;
-import com.sabdroidex.utils.ImageUtils;
-import com.sabdroidex.utils.ImageWorker;
 import com.sabdroidex.utils.SABHandler;
 
 /**
@@ -70,16 +66,10 @@ public class ReleaseActivity extends ActionBarActivity {
         setContentView(R.layout.list_releases);
 
         movie = (Movie) getIntent().getExtras().get("movie");
+        setTitle(movie.getTitle());
 
-        ImageView imageView = (ImageView) findViewById(R.id.movie_poster);
-        TextView textView = (TextView) findViewById(R.id.movie_title);
         GridView gridView = (GridView) findViewById(R.id.elementGrid);
 
-        String imageKey = ImageWorker.ImageType.MOVIE_POSTER.name() + movie.getMovieID();
-        ImageUtils.getImageWorker().loadImage(imageView, ImageWorker.ImageType.MOVIE_BANNER, imageKey, movie.getMovieID(),
-            movie.getTitle(), movie.getLibrary().getInfo().getPosters().getOriginalPoster());
-
-        textView.setText(movie.getTitle());
         releaseAdapter = new ReleaseAdapter(getApplicationContext(), movie.getReleases());
         gridView.setAdapter(releaseAdapter);
         gridView.setOnItemClickListener(new MovieReleaseClickListener());

@@ -10,7 +10,6 @@
         android:id="@+id/showPoster"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginRight="8dip"
         android:adjustViewBounds="true"
         android:contentDescription="@string/show_poster" />
 
@@ -18,6 +17,8 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginRight="8dip"
+        android:layout_marginLeft="8dip"
         android:paddingTop="10dip" >
 
         <TableRow
@@ -171,7 +172,7 @@
             android:id="@+id/more_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="more"
+            android:text="@string/more"
 			style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small" />
     </LinearLayout>
 

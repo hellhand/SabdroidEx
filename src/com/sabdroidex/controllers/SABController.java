@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
-import com.sabdroidex.controllers.sabnzbd.SABnzbdController.MESSAGE;
-
 public abstract class SABController {
+
+    public enum MESSAGE {
+        UPDATE
+    }
 
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar

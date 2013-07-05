@@ -1,8 +1,5 @@
 package com.sabdroidex.activity;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,15 +31,19 @@ public class ServerSettingsActivity extends ActionBarPreferencesActivity {
             if (msg.what == SABnzbdController.MESSAGE.GET_CONFIG.hashCode()) {
                 SabnzbdConfig config = (SabnzbdConfig) msg.obj;
 
-                setPreferenceValue(Preferences.SERVER_BANDWITH, config.getMisc().getBanwidthLimit());
-                setPreferenceValue(Preferences.SERVER_CACHE_DIR, config.getMisc().getCacheDir());
-                setPreferenceValue(Preferences.SERVER_CACHE_LIMIT, config.getMisc().getCacheLimit());
-                setPreferenceValue(Preferences.SERVER_DIRSCAN_DIR, config.getMisc().getDirscanDir());
-                setPreferenceValue(Preferences.SERVER_DIRSCAN_SPEED, config.getMisc().getDirscanSpeed());
-                setPreferenceValue(Preferences.SERVER_DOWNLOAD_DIR, config.getMisc().getDownloadDir());
-                setPreferenceValue(Preferences.SERVER_COMPLETE_DIR, config.getMisc().getCompleteDir());
-
-                onPostCreate();
+                if (config != null) {
+                    setPreferenceValue(Preferences.SERVER_BANDWITH, config.getMisc().getBanwidthLimit());
+                    setPreferenceValue(Preferences.SERVER_CACHE_DIR, config.getMisc().getCacheDir());
+                    setPreferenceValue(Preferences.SERVER_CACHE_LIMIT, config.getMisc().getCacheLimit());
+                    setPreferenceValue(Preferences.SERVER_DIRSCAN_DIR, config.getMisc().getDirscanDir());
+                    setPreferenceValue(Preferences.SERVER_DIRSCAN_SPEED, config.getMisc().getDirscanSpeed());
+                    setPreferenceValue(Preferences.SERVER_DOWNLOAD_DIR, config.getMisc().getDownloadDir());
+                    setPreferenceValue(Preferences.SERVER_COMPLETE_DIR, config.getMisc().getCompleteDir());
+                    onPostHandler();
+                }
+                else {
+                    ((TextView) findViewById(1337)).setText(R.string.setting_cannot_retrieve);
+                }
             }
         }
     };
@@ -57,21 +58,24 @@ public class ServerSettingsActivity extends ActionBarPreferencesActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, MODE_PRIVATE);
+
         empty = new TextView(getApplicationContext());
         empty.setText(R.string.setting_empty);
         empty.setGravity(Gravity.CENTER);
         empty.setId(1337);
         getWindow().addContentView(empty, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "" + empty.getId());
+    }
 
-        preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, MODE_PRIVATE);
-
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         getValuesFromServer();
-
     }
 
     @SuppressWarnings("deprecation")
-    private void onPostCreate() {
+    private void onPostHandler() {
 
         getWindow().findViewById(empty.getId()).setVisibility(View.GONE);
 

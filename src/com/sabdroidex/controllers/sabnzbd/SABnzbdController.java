@@ -147,6 +147,11 @@ public final class SABnzbdController extends SABController {
                 }
                 catch (final Throwable e) {
                     Log.e(TAG, " " + e.getLocalizedMessage());
+                    final Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.GET_CONFIG.hashCode();
+                    message.obj = null;
+                    message.sendToTarget();
                 }
                 finally {
                     executingCommand = false;
