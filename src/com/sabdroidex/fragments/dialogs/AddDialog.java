@@ -1,8 +1,5 @@
 package com.sabdroidex.fragments.dialogs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,6 +9,9 @@ import android.support.v4.app.DialogFragment;
 
 import com.sabdroidex.R;
 import com.sabdroidex.utils.Preferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddDialog extends DialogFragment {
 

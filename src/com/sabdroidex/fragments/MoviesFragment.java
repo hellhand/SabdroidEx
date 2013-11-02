@@ -238,10 +238,15 @@ public class MoviesFragment extends SABFragment {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            Movie movie = movieList.getMovieElements().get(position);
-            MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog();
-            MovieDetailsDialog.setMovie(movie);
-            movieDetailsDialog.show(getActivity().getSupportFragmentManager(), movie.getTitle());
+            try {
+                Movie movie = movieList.getMovieElements().get(position);
+                MovieDetailsDialog movieDetailsDialog = new MovieDetailsDialog();
+                MovieDetailsDialog.setMovie(movie);
+                movieDetailsDialog.show(getActivity().getSupportFragmentManager(), movie.getTitle());
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
 

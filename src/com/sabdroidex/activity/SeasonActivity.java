@@ -140,11 +140,16 @@ public class SeasonActivity extends ActionBarActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Episode episode = mSeason.getEpisodes().get(position);
-            episode.setShowId(mShow.getTvdbId());
-            episode.setSeasonNr(mSeasonNr);
-            ShowEpisodeDialog showEpisodeDialog = new ShowEpisodeDialog(messageHandler, episode);
-            showEpisodeDialog.show(getSupportFragmentManager(), "status");
+            try {
+                Episode episode = mSeason.getEpisodes().get(position);
+                episode.setShowId(mShow.getTvdbId());
+                episode.setSeasonNr(mSeasonNr);
+                ShowEpisodeDialog showEpisodeDialog = new ShowEpisodeDialog(messageHandler, episode);
+                showEpisodeDialog.show(getSupportFragmentManager(), "status");
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
 }

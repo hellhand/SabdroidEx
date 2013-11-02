@@ -1,9 +1,9 @@
 package com.sabdroidex.data.sickbeard;
 
-import java.io.Serializable;
-
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
+
+import java.io.Serializable;
 
 public class Episode extends UnknowMappingElement implements Serializable, Comparable<Episode> {
     

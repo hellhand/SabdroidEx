@@ -1,12 +1,12 @@
 package com.sabdroidex.data.sickbeard;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Show extends UnknowMappingElement implements Serializable, Comparable<Show> {
     

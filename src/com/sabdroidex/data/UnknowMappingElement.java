@@ -1,8 +1,8 @@
 package com.sabdroidex.data;
 
-import java.io.Serializable;
-
 import com.sabdroidex.utils.json.JSONElement;
+
+import java.io.Serializable;
 
 @JSONElement
 public class UnknowMappingElement implements Serializable {

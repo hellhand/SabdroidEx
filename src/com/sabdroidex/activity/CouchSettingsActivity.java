@@ -1,10 +1,5 @@
 package com.sabdroidex.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +16,11 @@ import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CouchSettingsActivity extends PreferenceActivity {
     

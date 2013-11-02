@@ -45,8 +45,8 @@ public class QueueFragment extends SABFragment {
                      * This might happens if a rotation occurs
                      */
                     if (queueAdapter != null || queue != null) {
-                        queueAdapter.clear();
-                        queueAdapter.addAll(queue.getQueueElements());
+                        queueAdapter.setItems(queue.getQueueElements());
+                        queueAdapter.notifyDataSetChanged();
                     }
                     
                     ((UpdateableActivity) getParentActivity()).updateLabels(queue);
@@ -169,9 +169,13 @@ public class QueueFragment extends SABFragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, queue
-                    .getQueueElements().get(position));
-            queueElementActionDialog.show(getActivity().getSupportFragmentManager(), "queueaction");
+            try {
+                QueueElementActionDialog queueElementActionDialog = new QueueElementActionDialog(messageHandler, queue.getQueueElements().get(position));
+                queueElementActionDialog.show(getActivity().getSupportFragmentManager(), "queueaction");
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
     

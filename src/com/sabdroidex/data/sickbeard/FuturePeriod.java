@@ -1,13 +1,13 @@
 package com.sabdroidex.data.sickbeard;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.sabdroidex.R;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class FuturePeriod extends UnknowMappingElement implements JSONBased {
 

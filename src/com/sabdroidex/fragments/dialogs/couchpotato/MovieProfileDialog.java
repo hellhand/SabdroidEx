@@ -1,8 +1,5 @@
 package com.sabdroidex.fragments.dialogs.couchpotato;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,6 +11,9 @@ import android.support.v4.app.DialogFragment;
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.Movie;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 //TODO: use this dialog
 public class MovieProfileDialog extends DialogFragment {

@@ -17,11 +17,11 @@
 
 package com.sabdroidex.data.couchpotato;
 
-import java.io.Serializable;
-
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.io.Serializable;
 
 @JSONElement
 public class MovieLibrary implements Serializable {

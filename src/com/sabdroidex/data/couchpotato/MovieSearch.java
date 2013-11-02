@@ -1,10 +1,10 @@
 package com.sabdroidex.data.couchpotato;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieSearch {
 

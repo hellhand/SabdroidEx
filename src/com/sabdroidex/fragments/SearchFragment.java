@@ -1,7 +1,5 @@
 package com.sabdroidex.fragments;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -13,6 +11,8 @@ import android.widget.ListView;
 import com.sabdroidex.R;
 import com.sabdroidex.adapters.SearchAdapter;
 import com.sabdroidex.data.JSONBased;
+
+import java.util.ArrayList;
 
 public class SearchFragment extends SABFragment {
 

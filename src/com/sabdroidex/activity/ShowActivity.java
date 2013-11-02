@@ -55,15 +55,18 @@ public class ShowActivity extends ActionBarActivity {
      * the duty to display a new {@link FragmentActivity} with the episodes of
      * the selected season
      */
-    private OnItemClickListener itemClickListener = new OnItemClickListener() {
+    private class ShowItemClickListener implements OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (mShow != null) {
+            try {
                 Intent intent = new Intent(getBaseContext(), SeasonActivity.class);
                 intent.putExtra("show", mShow);
                 intent.putExtra("season", mShow.getSeasonList().get(position));
                 startActivity(intent);
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
             }
         }
     };
@@ -87,7 +90,7 @@ public class ShowActivity extends ActionBarActivity {
 
         GridView gridView = (GridView) findViewById(R.id.elementGrid);
         gridView.setAdapter(showSeasonAdapter);
-        gridView.setOnItemClickListener(itemClickListener);
+        gridView.setOnItemClickListener(new ShowItemClickListener());
 
         refresh();
     }

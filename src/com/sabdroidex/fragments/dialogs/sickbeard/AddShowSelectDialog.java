@@ -1,7 +1,5 @@
 package com.sabdroidex.fragments.dialogs.sickbeard;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,6 +13,8 @@ import com.sabdroidex.R;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.data.sickbeard.ShowSearchResult;
+
+import java.util.ArrayList;
 
 public class AddShowSelectDialog extends DialogFragment {
 

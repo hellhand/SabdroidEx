@@ -107,10 +107,15 @@ public class ReleaseActivity extends ActionBarActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            MovieReleaseDialog movieReleaseDialog = new MovieReleaseDialog();
-            MovieReleaseDialog.setMovieRelease(movie.getReleases().get(position));
-            MovieReleaseDialog.setMessageHandler(messageHandler);
-            movieReleaseDialog.show(getSupportFragmentManager(),"releaseSelection");
+            try {
+                MovieReleaseDialog movieReleaseDialog = new MovieReleaseDialog();
+                MovieReleaseDialog.setMovieRelease(movie.getReleases().get(position));
+                MovieReleaseDialog.setMessageHandler(messageHandler);
+                movieReleaseDialog.show(getSupportFragmentManager(),"releaseSelection");
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
 }

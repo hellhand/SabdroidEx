@@ -45,8 +45,8 @@ public class HistoryFragment extends SABFragment {
                      * This might happens if a rotation occurs
                      */
                     if (historyAdapter != null || history != null) {
-                        historyAdapter.clear();
-                        historyAdapter.addAll(history.getHistoryElements());
+                        historyAdapter.setItems(history.getHistoryElements());
+                        historyAdapter.notifyDataSetChanged();
                     }
 
                     ((UpdateableActivity) getParentActivity()).updateLabels(history);
@@ -67,7 +67,6 @@ public class HistoryFragment extends SABFragment {
                 catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
                 }
-
             }
         }
     };
@@ -150,10 +149,15 @@ public class HistoryFragment extends SABFragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            HistoryRemoveDialog historyRemoveDialog = new HistoryRemoveDialog();
-            HistoryRemoveDialog.setMessageHandler(messageHandler);
-            HistoryRemoveDialog.setHistoryElement(history.getHistoryElements().get(position));
-            historyRemoveDialog.show(getActivity().getSupportFragmentManager(), "historyRemove");
+            try {
+                HistoryRemoveDialog historyRemoveDialog = new HistoryRemoveDialog();
+                HistoryRemoveDialog.setMessageHandler(messageHandler);
+                HistoryRemoveDialog.setHistoryElement(history.getHistoryElements().get(position));
+                historyRemoveDialog.show(getActivity().getSupportFragmentManager(), "historyRemove");
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
 }

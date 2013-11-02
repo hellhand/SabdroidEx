@@ -1,12 +1,12 @@
 package com.utils;
 
 
+import com.sabdroidex.utils.Preferences;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-
-import com.sabdroidex.utils.Preferences;
 
 public class ApacheCredentialProvider {
     

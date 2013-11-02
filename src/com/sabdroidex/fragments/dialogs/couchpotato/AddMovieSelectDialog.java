@@ -1,7 +1,5 @@
 package com.sabdroidex.fragments.dialogs.couchpotato;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,6 +14,8 @@ import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.data.couchpotato.MovieSearchResult;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABHandler;
+
+import java.util.ArrayList;
 
 public class AddMovieSelectDialog extends DialogFragment {
 

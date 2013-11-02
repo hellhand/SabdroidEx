@@ -196,15 +196,13 @@ public class ShowsFragment extends SABFragment {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (getView() == null) {
-                /**
-                 * This can be caused when a click is called in the Handler
-                 * whilst the parent view is null
-                 */
-                return;
+            try {
+                setupShowElements(getView(), shows.getShowElements().get(position));
+                showGrid.invalidateViews();
             }
-            setupShowElements(getView(), shows.getShowElements().get(position));
-            showGrid.invalidateViews();
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
 
@@ -216,9 +214,14 @@ public class ShowsFragment extends SABFragment {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog();
-            ShowDetailsDialog.setShow(shows.getShowElements().get(position));
-            showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
+            try {
+                ShowDetailsDialog showDetailsDialog = new ShowDetailsDialog();
+                ShowDetailsDialog.setShow(shows.getShowElements().get(position));
+                showDetailsDialog.show(getActivity().getSupportFragmentManager(), "show");
+            }
+            catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
         }
     }
 

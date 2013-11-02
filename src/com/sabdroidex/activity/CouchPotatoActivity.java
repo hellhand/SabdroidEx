@@ -1,8 +1,5 @@
 package com.sabdroidex.activity;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +12,9 @@ import android.widget.Toast;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Activity for receiving intent action from IMDB application.

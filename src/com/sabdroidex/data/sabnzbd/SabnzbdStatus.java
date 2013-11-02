@@ -1,9 +1,9 @@
 package com.sabdroidex.data.sabnzbd;
 
-import java.io.Serializable;
-
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
+
+import java.io.Serializable;
 
 @JSONElement
 public class SabnzbdStatus implements Serializable {

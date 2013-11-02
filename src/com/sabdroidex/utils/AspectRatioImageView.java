@@ -1,11 +1,8 @@
 package com.sabdroidex.utils;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 public class AspectRatioImageView extends AlphaImageView {
     

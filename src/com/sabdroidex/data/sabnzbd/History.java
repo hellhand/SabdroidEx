@@ -1,11 +1,11 @@
 package com.sabdroidex.data.sabnzbd;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class History extends SabnzbdStatus implements JSONBased {

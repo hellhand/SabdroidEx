@@ -16,13 +16,6 @@
 
 package com.android.actionbarcompat;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
@@ -41,6 +34,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sabdroidex.R;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A class that implements the action bar pattern for pre-Honeycomb devices.

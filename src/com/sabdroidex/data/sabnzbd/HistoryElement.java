@@ -1,11 +1,11 @@
 package com.sabdroidex.data.sabnzbd;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
 import com.sabdroidex.utils.json.JSONType;
+
+import java.io.Serializable;
+import java.util.List;
 
 @JSONElement
 public class HistoryElement implements Serializable {

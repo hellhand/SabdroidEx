@@ -1,7 +1,5 @@
 package com.sabdroidex.adapters;
 
-import java.util.Collection;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,8 @@ import com.sabdroidex.data.sickbeard.FutureEpisode;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.utils.ImageUtils;
 import com.sabdroidex.utils.ImageWorker.ImageType;
+
+import java.util.Collection;
 
 public class ComingAdapter extends PinnedHeaderListAdapter {
 

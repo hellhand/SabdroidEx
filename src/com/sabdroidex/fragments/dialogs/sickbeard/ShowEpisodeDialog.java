@@ -1,8 +1,5 @@
 package com.sabdroidex.fragments.dialogs.sickbeard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,6 +11,9 @@ import android.support.v4.app.DialogFragment;
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sickbeard.SickBeardController;
 import com.sabdroidex.data.sickbeard.Episode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShowEpisodeDialog extends DialogFragment {
     
