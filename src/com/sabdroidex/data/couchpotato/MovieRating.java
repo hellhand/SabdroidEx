@@ -51,6 +51,6 @@ public class MovieRating implements Serializable {
 	public Double getImdbRating(){
 		if(imdbListRating == null)
 			return 0.0;
-		return (Double) imdbListRating.get(0);
+		return imdbListRating.get(0).doubleValue();
 	}
 }

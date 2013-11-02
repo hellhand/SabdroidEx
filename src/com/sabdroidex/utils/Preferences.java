@@ -105,6 +105,11 @@ public class Preferences {
     }
 
     public static boolean isSet(String key) {
+
+        if (preferences == null) {
+            return false;
+        }
+
         if (preferences.getString(key, null) == null) {
             return false;
         }

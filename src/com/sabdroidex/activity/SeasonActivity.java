@@ -132,7 +132,7 @@ public class SeasonActivity extends ActionBarActivity {
     }
 
     /**
-     * A {@link OnItemLongClickListener} listening the episode list. This will
+     * A {@link android.widget.AdapterView.OnItemLongClickListener} listening the episode list. This will
      * have the duty to display a {@link DialogFragment} to allow to user to
      * view the episode info and to start a manual search.
      */
@@ -142,8 +142,8 @@ public class SeasonActivity extends ActionBarActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Episode episode = mSeason.getEpisodes().get(position);
             episode.setShowId(mShow.getTvdbId());
-            episode.setSeasonNr(mSeason.getSeasonNr());
-            ShowEpisodeDialog showEpisodeDialog = new ShowEpisodeDialog(messageHandler, mSeason.getEpisodes().get(position));
+            episode.setSeasonNr(mSeasonNr);
+            ShowEpisodeDialog showEpisodeDialog = new ShowEpisodeDialog(messageHandler, episode);
             showEpisodeDialog.show(getSupportFragmentManager(), "status");
         }
     }

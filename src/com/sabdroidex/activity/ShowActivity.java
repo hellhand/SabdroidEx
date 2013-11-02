@@ -59,10 +59,12 @@ public class ShowActivity extends ActionBarActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getBaseContext(), SeasonActivity.class);
-            intent.putExtra("show", mShow);
-            intent.putExtra("season", mShow.getSeasonList().get(position));
-            startActivity(intent);
+            if (mShow != null) {
+                Intent intent = new Intent(getBaseContext(), SeasonActivity.class);
+                intent.putExtra("show", mShow);
+                intent.putExtra("season", mShow.getSeasonList().get(position));
+                startActivity(intent);
+            }
         }
     };
 

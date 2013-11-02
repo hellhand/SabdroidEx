@@ -63,7 +63,7 @@ public class SettingsActivity extends ActionBarPreferencesActivity {
         preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue != null && !(newValue instanceof String && "".equals(newValue))) {
+                if (newValue != null) {
                     preference.setSummary(newValue.toString());
                     return true;
                 }
