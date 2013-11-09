@@ -23,6 +23,7 @@
     <string name="setting_empty">Les préférences sont en cours de récupération</string>
     <string name="setting_cannot_retrieve">Impossible de contacter le serveur</string>
 
+    <string name="setting_header_server">Configuration Sabnzbd+</string>
     <string name="setting_server_url">URL Serveur</string>
     <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
     <string name="setting_server_port">Port du Serveur</string>
@@ -52,8 +53,9 @@
 	<string name="setting_server_download_dir">Download Directory</string>
 	<string name="setting_server_download_dir_summary">Set the directory in which Sabnzbd will download</string>
 	<string name="setting_server_complete_dir">Complete Directory</string>
-	<string name="setting_server_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>    
-    
+	<string name="setting_server_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
+
+    <string name="setting_header_sickbeard">Configuration Sickbeard</string>
 	<string name="setting_sickbeard">Utiliser Sickbeard</string>
 	<string name="setting_sickbeard_url">URL Serveur</string>
     <string name="setting_sickbeard_url_summary">URL Serveur à utiliser pour SickBeard</string>
@@ -73,16 +75,39 @@
 	<string name="setting_sickbeard_lowres_summary">Utiliser les images basse résolution</string>
 	<string name="setting_sickbeard_nomedia">.Nomedia</string>
 	<string name="setting_sickbeard_nomedia_summary">Empécher les images de se retrouver dans la Galerie</string>
-	
+
+    <string name="setting_header_couchpotato">Couchpotato settings</string>
+    <string name="setting_couchpotato">Use CouchPotato</string>
+    <string name="setting_couchpotato_url">Server URL</string>
+    <string name="setting_couchpotato_url_summary">The CouchPotato server address</string>
+    <string name="setting_couchpotato_port">Server port</string>
+    <string name="setting_couchpotato_port_summary">The CouchPotato server port</string>
+    <string name="setting_couchpotato_url_extention">Server URl extention</string>
+    <string name="setting_couchpotato_profile">CouchPotato Profile</string>
+    <string name="setting_couchpotato_profile_summary">Select CouchPotato profile for download</string>
+    <string name="setting_couchpotato_url_extention_summary">Extention of the server URL of CouchPotato</string>
+    <string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
+    <string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
+    <string name="setting_couchpotato_auth">Authentification</string>
+    <string name="setting_couchpotato_auth_username">Username</string>
+    <string name="setting_couchpotato_auth_password">Password</string>
+
+    <string name="setting_header_apache">Configuration Apache</string>
+    <string name="setting_apache">HTTP Authentication</string>
+    <string name="setting_apache_username">Username</string>
+    <string name="setting_apache_password">Password</string>
+    <string name="setting_apache_summary">Using HTTP authentication</string>
+
     <string name="setting_nzbs_org_auth">Authentification NZBS.org</string>
     <string name="setting_nzbs_org_uid">UID NZBS.org</string>
     <string name="setting_nzbs_org_uid_summary">L\'UID liée a votre compte NZBS.org</string>
-	<string name="setting_nzbs_org_hash">Hash NZBS.org</string>
-	<string name="setting_nzbs_org_hash_summary">Le Hash liné to votre compte NZBS.org</string>
-	
-	<string name="setting_data_cache">Activer le cache des données</string>
-	<string name="setting_data_cache_summary">Permets de garder le contenu des Onglets même en étant hors ligne</string>
-	
+    <string name="setting_nzbs_org_hash">Hash NZBS.org</string>
+    <string name="setting_nzbs_org_hash_summary">Le Hash liné to votre compte NZBS.org</string>
+
+    <string name="setting_header_global">Configuration Globale</string>
+    <string name="setting_data_cache">Activer le cache des données</string>
+    <string name="setting_data_cache_summary">Permets de garder le contenu des Onglets même en étant hors ligne</string>
+
 	<string name="setting_search_servers">Configure search providers</string>
 	<string name="setting_search_servers_summary">Add, change, delete search providers</string>
 	
@@ -161,11 +186,7 @@
 	
 	<string name="config_server_error">Erreur configuration de SABnzbd</string>
 	<string name="config_sickbeard_error">Sickbeard configuration error</string>
-	<string name="setting_apache">HTTP Authentication</string>
-	<string name="setting_apache_username">Username</string>
-	<string name="setting_apache_password">Password</string>
-	<string name="setting_apache_summary">Using HTTP authentication</string>
-	
+
 	<string name="send_file">Envoyer fichier Nzb</string>
 	<string name="send_validation">Envoyer se fichier Nzb sur le serveur Sabnzbd+ : category_none">None</string>
 
@@ -189,21 +210,6 @@
 	<string name="priority_low">Low</string>
 	<string name="priority_normal">Normal</string>
 	<string name="priority_high">High</string>
-
-	<string name="setting_couchpotato">Use CouchPotato</string>
-	<string name="setting_couchpotato_url">Server URL</string>
-	<string name="setting_couchpotato_url_summary">The CouchPotato server address</string>
-	<string name="setting_couchpotato_port">Server port</string>
-	<string name="setting_couchpotato_port_summary">The CouchPotato server port</string>
-	<string name="setting_couchpotato_url_extention">Server URl extention</string>
-	<string name="setting_couchpotato_profile">CouchPotato Profile</string>
-	<string name="setting_couchpotato_profile_summary">Select CouchPotato profile for download</string>
-	<string name="setting_couchpotato_url_extention_summary">Extention of the server URL of CouchPotato</string>
-	<string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
-	<string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
-	<string name="setting_couchpotato_auth">Authentification</string>
-	<string name="setting_couchpotato_auth_username">Username</string>
-	<string name="setting_couchpotato_auth_password">Password</string>
 
 	<string name="add_movie_dialog_title">Add new Movie</string>
 	<string name="add_movie_dialog_message">Enter name of movie to add</string>
@@ -253,7 +259,7 @@
     <string name="movie_mark_done_summary">Movie Releases</string>
     <string name="movie_mark_done">Movie Releases</string>
 
-    <string name="setting_couchpotato_cache">Image Cache</string>
+	<string name="setting_couchpotato_cache">Image Cache</string>
 	<string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
 	<string name="setting_couchpotato_lowres">Lowres Images</string>
 	<string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>

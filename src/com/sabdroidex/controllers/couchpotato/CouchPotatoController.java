@@ -154,7 +154,7 @@ public final class CouchPotatoController {
     }
 
     /**
-     * Retrieve API_URL of couchpotato by using username & password.
+     * Retrieve API_URL of CouchPotato by using username & password.
      * 
      * @return API_URL
      */
@@ -242,14 +242,10 @@ public final class CouchPotatoController {
     /**
      * Add movie to couchpotato
      * 
-     * @param messageHandler
-     *            Handler
-     * @param profile
-     *            CouchPotato profile
-     * @param idIMDb
-     *            IMDB-ID
-     * @param movieTitle
-     *            Title of movie to add
+     * @param messageHandler Handler
+     * @param profile CouchPotato profile
+     * @param idIMDb IMDB-ID
+     * @param movieTitle Title of movie to add
      */
     public static void addMovie(final Handler messageHandler, final String profile, final String idIMDb, final String movieTitle) {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -261,8 +257,7 @@ public final class CouchPotatoController {
             @Override
             public void run() {
                 try {
-                    String result = makeApiCall(MESSAGE.MOVIE_ADD.toString().toLowerCase(), "profile_id=" + profile, "identifier=" + idIMDb, "title="
-                            + movieTitle);
+                    String result = makeApiCall(MESSAGE.MOVIE_ADD.toString().toLowerCase(), "profile_id=" + profile, "identifier=" + idIMDb, "title=" + movieTitle);
 
                     JSONObject jsonObject = new JSONObject(result);
                     result = (String) jsonObject.get("added");
@@ -495,7 +490,7 @@ public final class CouchPotatoController {
 
                     String result = makeApiCall(MESSAGE.MOVIE_LIST.toString().toLowerCase(), "status=" + status);
                     JSONObject jsonObject = new JSONObject(result);
-                    MovieList movieList = null;
+                    MovieList movieList;
 
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
