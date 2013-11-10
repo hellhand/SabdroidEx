@@ -109,8 +109,7 @@ public final class CouchPotatoController {
         url = url.replace(" ", "%20");
         Log.d(TAG, url);
 
-        final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
-        return result;
+        return new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
     }
 
     /**
@@ -152,7 +151,7 @@ public final class CouchPotatoController {
 
         return url;
     }
-
+    
     /**
      * Retrieve API_URL of CouchPotato by using username & password.
      * 
@@ -196,13 +195,10 @@ public final class CouchPotatoController {
         else {
             url = url.replace("[PASSWORD]", "");
         }
-        if (!"".equals(Preferences.COUCHPOTATO_PASSWORD)) {
-            url = url.replace("[PASSWORD]", "md5(" + Preferences.COUCHPOTATO_PASSWORD + ")");
-        }
-        else {
-            url = url.replace("[PASSWORD]", "");
-        }
 
+        /**
+         * Making sure that the correct url type us used
+         */
         if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
             if (Preferences.isEnabled(Preferences.COUCHPOTATO_SSL)) {
                 url = "https://" + url;
@@ -513,6 +509,7 @@ public final class CouchPotatoController {
                     Log.w(TAG, " " + e.getMessage());
                 }
                 finally {
+                    executingRefreshMovies = false;
                     executingCommand = false;
                 }
             }
@@ -695,6 +692,7 @@ public final class CouchPotatoController {
                 }
             }
         };
+        executingRefreshMovies = true;
         executingCommand = true;
         thread.start();
     }

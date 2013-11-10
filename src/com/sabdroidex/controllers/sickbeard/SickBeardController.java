@@ -466,9 +466,8 @@ public final class SickBeardController extends SABController {
         if (Debug.isDebuggerConnected()) {
             Log.d(TAG, url);
         }
-        
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
-        return result;
+
+        return new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
     }
     
     /**
@@ -547,17 +546,13 @@ public final class SickBeardController extends SABController {
     
     /**
      * This function returns the URL of the poster for a given show
-     * 
-     * @param command
-     *            command The type of command that will be sent to SickBeard
-     * @param tvdbid
-     *            The TvDBid of the show to get the poster for
+     *
+     * @param tvdbid The TvDBid of the show to get the poster for
      * @return The URL of the poster
      */
-    public static String getPosterURL(String command, Integer tvdbid) {
+    public static String getPosterURL(Integer tvdbid) {
         String url = URL_TVDB;
         url = url.replace("[TVDBID]", tvdbid + "-1.jpg");
-        
         return url;
     }
     
@@ -580,10 +575,9 @@ public final class SickBeardController extends SABController {
         return credentials;
     }
     
-    public static String getSeasonPosterURL(String command, Integer tvdbid, Integer season) {
+    public static String getSeasonPosterURL(Integer tvdbid, Integer season) {
         String url = URL_TVDB_SEASONS;
         url = url.replace("[TVDBID]", tvdbid + "-" + season + "-2.jpg");
-        
         return url;
     }
 }

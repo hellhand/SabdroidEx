@@ -13,10 +13,8 @@ public class AssetReader {
     /**
      * This method returns the content of a row file as text.
      * 
-     * @param context
-     *            The application context
-     * @param assetName
-     *            The name of the asset to read
+     * @param context The application context
+     * @param assetName The name of the asset to read
      * @return rawText The text contained in the raw file
      */
     public static String readTextAsset(Context context, String assetName) {
@@ -27,11 +25,10 @@ public class AssetReader {
             InputStream is = context.getResources().getAssets().open(assetName);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()));
 
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 assetText += line;
                 assetText += "\n";
-                line = null;
             }
             reader.close();
             is.close();

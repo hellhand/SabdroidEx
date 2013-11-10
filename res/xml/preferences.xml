@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Sabnzbd+ settings">
+    <PreferenceCategory android:title="@string/setting_header_server">
 
         <EditTextPreference
             android:key="sabnzbd_url"
@@ -55,7 +55,7 @@
             android:title="@string/setting_auth_password"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Sickbeard settings">
+    <PreferenceCategory android:title="@string/setting_header_sickbeard">
 
         <CheckBoxPreference
             android:key="sickbeard"
@@ -118,7 +118,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Couchpotato settings">
+    <PreferenceCategory android:title="@string/setting_header_couchpotato">
 
         <CheckBoxPreference
             android:key="couchpotato"
@@ -218,7 +218,7 @@
         
     </PreferenceCategory>
      -->
-    <PreferenceCategory android:title="Global settings">
+    <PreferenceCategory android:title="@string/setting_header_global">
 
         <CheckBoxPreference
             android:defaultValue="true"

@@ -200,7 +200,7 @@ public class Show extends UnknowMappingElement implements Serializable, Comparab
     
     @Override
     public void setId(String id) {
-        setTvdbId(new Integer(id));
+        setTvdbId(Integer.valueOf(id));
         super.setId(id);
     }
 

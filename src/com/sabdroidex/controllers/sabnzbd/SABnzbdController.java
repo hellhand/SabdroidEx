@@ -318,9 +318,8 @@ public final class SABnzbdController extends SABController {
                 url = url + "&" + xTraParam;
             }
         }
-        
-        final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
-        return result;
+
+        return new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
     }
     
     /**
@@ -355,9 +354,8 @@ public final class SABnzbdController extends SABController {
                 url = url + "&" + xTraParam;
             }
         }
-        
-        final String result = new String(HttpUtil.getInstance().postDataAsCharArray(url, contentType, contentName, content));
-        return result;
+
+        return new String(HttpUtil.getInstance().postDataAsCharArray(url, contentType, contentName, content));
     }
     
     /**
@@ -377,6 +375,7 @@ public final class SABnzbdController extends SABController {
             
             @Override
             public void run() {
+
                 try {
                     if ("Paused".equals(item.getStatus())) {
                         makeApiCall(MESSAGE.QUEUE.toString().toLowerCase(), "name=resume", "value=" + item.getNzoId());
@@ -422,6 +421,7 @@ public final class SABnzbdController extends SABController {
             
             @Override
             public void run() {
+
                 try {
                     if (paused) {
                         makeApiCall(MESSAGE.RESUME.toString().toLowerCase());

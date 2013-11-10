@@ -20,7 +20,6 @@
             android:singleLine="true"
             android:text="@string/movie_release_name"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold"/>
 
         <TextView
@@ -29,8 +28,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"/>
+            android:textColor="#6a6a6a"/>
     </LinearLayout>
 
     <LinearLayout
@@ -46,7 +44,6 @@
             android:singleLine="true"
             android:text="@string/movie_release_status"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold"/>
 
         <TextView
@@ -55,8 +52,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"/>
+            android:textColor="#6a6a6a"/>
 
     </LinearLayout>
 
@@ -74,7 +70,6 @@
             android:singleLine="true"
             android:text="@string/movie_release_size"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold"/>
 
         <TextView
@@ -83,8 +78,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"/>
+            android:textColor="#6a6a6a"/>
     </LinearLayout>
 
     <LinearLayout
@@ -100,7 +94,6 @@
             android:singleLine="true"
             android:text="@string/movie_release_age"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold"/>
 
         <TextView
@@ -109,8 +102,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"/>
+            android:textColor="#6a6a6a"/>
 
     </LinearLayout>
 
@@ -127,7 +119,6 @@
             android:singleLine="true"
             android:text="@string/movie_release_score"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold"/>
 
         <TextView
@@ -136,8 +127,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"/>
+            android:textColor="#6a6a6a"/>
     </LinearLayout>
 
     <LinearLayout
@@ -153,7 +143,6 @@
             android:singleLine="true"
             android:text="@string/movie_release_provider"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold"/>
 
         <TextView
@@ -162,8 +151,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"/>
+            android:textColor="#6a6a6a"/>
     </LinearLayout>
 
 </LinearLayout>

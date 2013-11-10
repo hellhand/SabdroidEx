@@ -386,6 +386,10 @@ public abstract class CompositeAdapter extends BaseAdapter {
         return true;
     }
 
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.mNotificationsEnabled = notificationsEnabled;
+    }
+
     @Override
     public void notifyDataSetChanged() {
         if (mNotificationsEnabled) {

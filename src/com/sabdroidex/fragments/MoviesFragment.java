@@ -17,7 +17,6 @@
 
 package com.sabdroidex.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,14 +63,7 @@ public class MoviesFragment extends SABFragment {
             if (msg.what == CouchPotatoController.MESSAGE.MOVIE_LIST.hashCode()) {
                 try {
                     movieList = (MovieList) msg.obj;
-
-                    if (mMovieGridAdapter != null && movieList != null) {
-                        mMovieGridAdapter.setDataSet(movieList.getMovieElements());
-                        mMovieGridAdapter.notifyDataSetChanged();
-                        if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
-                            movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
-                        }
-                    }
+                    updateMovieList();
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
@@ -89,6 +81,7 @@ public class MoviesFragment extends SABFragment {
             }
         }
     };
+
     private GridView movieGrid;
     private MovieGridAdapter mMovieGridAdapter;
 
@@ -121,11 +114,6 @@ public class MoviesFragment extends SABFragment {
             return;
         }
         CouchPotatoController.refreshMovies(messageHandler, "");
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
@@ -208,6 +196,19 @@ public class MoviesFragment extends SABFragment {
     @Override
     public JSONBased getDataCache() {
         return movieList;
+    }
+
+    /**
+     * Updates the movie {@link android.widget.ListView} with the current data
+     */
+    private void updateMovieList() {
+        if (mMovieGridAdapter != null && movieList != null) {
+            mMovieGridAdapter.setDataSet(movieList.getMovieElements());
+            mMovieGridAdapter.notifyDataSetChanged();
+            if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
+                movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
+            }
+        }
     }
 
     private class GridItemClickListener implements OnItemClickListener {

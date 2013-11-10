@@ -40,17 +40,7 @@ public class QueueFragment extends SABFragment {
             if (msg.what == SABnzbdController.MESSAGE.QUEUE.hashCode()) {
                 try {
                     queue = (Queue) msg.obj;
-                    
-                    /**
-                     * This might happens if a rotation occurs
-                     */
-                    if (queueAdapter != null || queue != null) {
-                        queueAdapter.setItems(queue.getQueueElements());
-                        queueAdapter.notifyDataSetChanged();
-                    }
-                    
-                    ((UpdateableActivity) getParentActivity()).updateLabels(queue);
-                    ((UpdateableActivity) getParentActivity()).updateState(true);
+                    updateQueueList();
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
@@ -70,7 +60,7 @@ public class QueueFragment extends SABFragment {
             }
         }
     };
-    
+
     /**
      * 
      */
@@ -164,7 +154,24 @@ public class QueueFragment extends SABFragment {
         };
         updater.start();
     }
-    
+
+    /**
+     * Updates the queue {@link android.widget.ListView}
+     */
+    private void updateQueueList() {
+        /**
+         * This might happens if a rotation occurs
+         */
+        if (queueAdapter != null || queue != null) {
+            queueAdapter.setItems(queue.getQueueElements());
+            queueAdapter.notifyDataSetChanged();
+        }
+
+        ((UpdateableActivity) getActivity()).updateLabels(queue);
+        ((UpdateableActivity) getActivity()).updateState(true);
+    }
+
+
     private class ListItemLongClickListener implements OnItemClickListener {
 
         @Override

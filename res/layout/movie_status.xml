@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <ImageView
+        <com.sabdroidex.utils.AspectRatioImageView
             android:id="@+id/moviePoster"
             android:layout_width="fill_parent"
             android:layout_height="0dip"

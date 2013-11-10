@@ -1,6 +1,5 @@
 package com.sabdroidex.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,14 +47,7 @@ public class ShowsFragment extends SABFragment {
             if (msg.what == SickBeardController.MESSAGE.SHOWS.hashCode()) {
                 try {
                     shows = (Shows) msg.obj;
-
-                    if (mShowsAdapter != null && shows != null) {
-                        mShowsAdapter.setDataSet(shows.getShowElements());
-                        mShowsAdapter.notifyDataSetChanged();
-                        if (shows.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
-                            showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
-                        }
-                    }
+                    updateShowList();
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
@@ -73,6 +65,7 @@ public class ShowsFragment extends SABFragment {
             }
         }
     };
+
     private GridView showGrid;
     private ShowsAdapter mShowsAdapter;
 
@@ -103,11 +96,6 @@ public class ShowsFragment extends SABFragment {
             return;
         }
         SickBeardController.refreshShows(messageHandler);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
@@ -151,15 +139,28 @@ public class ShowsFragment extends SABFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public JSONBased getDataCache() {
         return shows;
     }
 
+    /**
+     * Update the show {@link android.widget.ListView}
+     */
+    private void updateShowList() {
+        if (mShowsAdapter != null && shows != null) {
+            mShowsAdapter.setDataSet(shows.getShowElements());
+            mShowsAdapter.notifyDataSetChanged();
+            if (shows.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
+                showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
+            }
+        }
+    }
+
+    /**
+     * Prepares the view to display with information from the {@link Show}
+     * @param view
+     * @param show
+     */
     public void setupShowElements(View view, Show show) {
         ImageView showPoster = (ImageView) view.findViewById(R.id.showPoster);
 

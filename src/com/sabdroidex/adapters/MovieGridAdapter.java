@@ -54,7 +54,7 @@ public class MovieGridAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-    	MovieListItem movieItem = null;
+    	MovieListItem movieItem;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_movie, null);
             movieItem = new MovieListItem();

@@ -7,7 +7,7 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dip"
         android:layout_weight="1" >
 
         <LinearLayout
@@ -28,7 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dip"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:inputType="textUri"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -96,18 +97,18 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/download_save"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/ok" />
-
-        <Button
             android:id="@+id/download_cancel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/download_save"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
     </LinearLayout>
 
 </LinearLayout>

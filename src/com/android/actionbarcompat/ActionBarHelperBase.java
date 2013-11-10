@@ -233,7 +233,7 @@ public class ActionBarHelperBase extends ActionBarHelper {
          * Loads action bar metadata from a menu resource, storing a list of menu item IDs that should be shown on-screen (i.e. those with showAsAction set to
          * always or ifRoom).
          * 
-         * @param menuResId
+         * @param menuResId The resource menu ID
          */
         private void loadActionBarMetadata(int menuResId) {
             XmlResourceParser parser = null;

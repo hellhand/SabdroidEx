@@ -68,7 +68,7 @@ public class Episode extends UnknowMappingElement implements Serializable, Compa
     
     @Override
     public void setId(String id) {
-        setEpisode(new Integer(id));
+        setEpisode(Integer.valueOf(id));
         super.setId(id);
     }
     

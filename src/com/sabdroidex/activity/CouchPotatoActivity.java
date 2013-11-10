@@ -44,7 +44,7 @@ public class CouchPotatoActivity extends Activity {
     /**
      * Print text to screen
      *
-     * @param text
+     * @param text The text to display in the Toast
      */
     public static void makeToast(String text) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
@@ -81,7 +81,7 @@ public class CouchPotatoActivity extends Activity {
     /**
      * Handle intent and add to CouchPotato
      *
-     * @param intent
+     * @param intent The Intent containing the imdb id to send to Couchpotato
      */
     private void handleSendIntent(Intent intent) {
         String idMDBi;

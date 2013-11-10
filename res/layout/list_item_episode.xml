@@ -92,7 +92,6 @@
             android:layout_gravity="right"
             android:gravity="right"
             android:singleLine="true"
-            android:text="Downloaded"
             android:textStyle="bold" />
     </TableRow>
 

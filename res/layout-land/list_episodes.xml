@@ -14,7 +14,6 @@
                 android:id="@+id/image_header"
                 android:layout_width="120dip"
                 android:layout_height="120dip"
-                android:layout_rowSpan="2"
                 android:contentDescription="@string/show_poster"
                 android:scaleType="centerCrop"
                 android:src="@drawable/temp_poster"/>

@@ -59,6 +59,14 @@ public abstract class CompositeAdapter extends BaseAdapter {
         public int getCount() {
             return count;
         }
+
+        public boolean isShowIfEmpty() {
+            return showIfEmpty;
+        }
+
+        public void setShowIfEmpty(boolean showIfEmpty) {
+            this.showIfEmpty = showIfEmpty;
+        }
     }
     
     protected CompositeAdapter(Context mContext) {

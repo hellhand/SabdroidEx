@@ -36,7 +36,7 @@ public class SimpleJsonMarshaller {
     private Class<?> clazz;
     private static final String TAG = SimpleJsonMarshaller.class.getCanonicalName();
 
-    public SimpleJsonMarshaller(Class<?> clazz) throws JSONException {
+    public SimpleJsonMarshaller(Class<?> clazz) {
         this.clazz = clazz;
     }
 
@@ -53,7 +53,7 @@ public class SimpleJsonMarshaller {
      * @throws IllegalAccessException
      */
     @SuppressWarnings("unchecked")
-    public Object unmarshal(final JSONObject jsonObject) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public Object unmarshal(final JSONObject jsonObject) throws InstantiationException, IllegalAccessException {
         Object result = clazz.newInstance();
 
         try {

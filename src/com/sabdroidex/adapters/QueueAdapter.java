@@ -30,6 +30,9 @@ public class QueueAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (mItems == null) {
+            return 0;
+        }
         return mItems.size();
     }
 
@@ -58,7 +61,7 @@ public class QueueAdapter extends BaseAdapter {
 
         QueueElement element = (QueueElement) getItem(position);
         String eta = element.getTimeLeft();
-        String completed = Formatter.formatShort(new Double(element.getMbLeft())) + " / " + Formatter.formatShort(new Double(element.getMb())) + " MB";
+        String completed = Formatter.formatShort(Double.valueOf(element.getMbLeft())) + " / " + Formatter.formatShort(Double.valueOf(element.getMb())) + " MB";
         String status = element.getStatus();
         String fileName = element.getFilename();
 
@@ -66,9 +69,9 @@ public class QueueAdapter extends BaseAdapter {
         mQueueListItem.eta.setText(eta);
         mQueueListItem.completed.setText(completed);
         if ("Paused".equals(status))
-            mQueueListItem.status.setImageResource(android.R.drawable.ic_media_pause);
+            mQueueListItem.status.setImageResource(R.drawable.ic_action_pause);
         else
-            mQueueListItem.status.setImageResource(android.R.drawable.ic_media_play);
+            mQueueListItem.status.setImageResource(R.drawable.ic_action_play);
 
         convertView.setId(position);
         convertView.setTag(mQueueListItem);

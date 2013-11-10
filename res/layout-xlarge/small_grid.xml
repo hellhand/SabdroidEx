@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/elementGrid"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:numColumns="2"
+    android:padding="2dip"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="1px" >
+
+</GridView>

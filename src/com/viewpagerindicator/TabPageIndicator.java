@@ -199,7 +199,8 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
     @Override
     public void setCurrentItem(int item) {
         if (mViewPager == null) {
-            throw new IllegalStateException("ViewPager has not been bound.");
+            //throw new IllegalStateException("ViewPager has not been bound.");
+            return;
         }
         mSelectedTabIndex = item;
         final int tabCount = mTabLayout.getChildCount();

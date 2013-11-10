@@ -1,6 +1,5 @@
 package com.sabdroidex.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -40,17 +39,7 @@ public class HistoryFragment extends SABFragment {
             if (msg.what == SABnzbdController.MESSAGE.HISTORY.hashCode()) {
                 try {
                     history = (History) msg.obj;
-
-                    /**
-                     * This might happens if a rotation occurs
-                     */
-                    if (historyAdapter != null || history != null) {
-                        historyAdapter.setItems(history.getHistoryElements());
-                        historyAdapter.notifyDataSetChanged();
-                    }
-
-                    ((UpdateableActivity) getParentActivity()).updateLabels(history);
-                    ((UpdateableActivity) getParentActivity()).updateState(true);
+                    updateHistoryList();
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
@@ -70,6 +59,19 @@ public class HistoryFragment extends SABFragment {
             }
         }
     };
+
+    private void updateHistoryList() {
+        /**
+         * This might happens if a rotation occurs
+         */
+        if (historyAdapter != null || history != null) {
+            historyAdapter.setItems(history.getHistoryElements());
+            historyAdapter.notifyDataSetChanged();
+        }
+
+        ((UpdateableActivity) getActivity()).updateLabels(history);
+        ((UpdateableActivity) getActivity()).updateState(true);
+    }
 
     /**
      * 
@@ -104,14 +106,8 @@ public class HistoryFragment extends SABFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-
         messageHandler.setActivity(getActivity());
     }
 

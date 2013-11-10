@@ -4,7 +4,6 @@
           android:layout_width="fill_parent"
           android:layout_height="fill_parent"
           android:horizontalSpacing="1px"
-          android:background="#A0A0A0"
           android:cacheColorHint="#999999"
           android:fadingEdgeLength="0dip"
           android:numColumns="1"

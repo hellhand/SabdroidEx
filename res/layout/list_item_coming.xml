@@ -27,7 +27,6 @@
             android:singleLine="true"
             android:text="@string/coming_next"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold" />
 
         <TextView
@@ -36,8 +35,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text" />
+            android:textColor="#6a6a6a" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,7 +52,6 @@
                 android:singleLine="true"
                 android:text="@string/coming_air_date"
                 android:textColor="#6a6a6a"
-                android:textSize="@dimen/list_item_small_text"
                 android:textStyle="bold" />
 
         <TextView
@@ -63,8 +60,7 @@
                 android:layout_height="20dip"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:textColor="#6a6a6a"
-                android:textSize="@dimen/list_item_small_text" />
+                android:textColor="#6a6a6a" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +77,6 @@
             android:singleLine="true"
             android:text="@string/coming_airs"
             android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text"
             android:textStyle="bold" />
 
         <TextView
@@ -90,8 +85,7 @@
             android:layout_height="20dip"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textColor="#6a6a6a"
-            android:textSize="@dimen/list_item_small_text" />
+            android:textColor="#6a6a6a" />
     </LinearLayout>
 
     <LinearLayout

@@ -1,6 +1,5 @@
 package com.sabdroidex.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Message;
@@ -87,11 +86,6 @@ public class ComingFragment extends SABFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         messageHandler.setActivity(getActivity());
         super.onCreate(savedInstanceState);
@@ -111,11 +105,6 @@ public class ComingFragment extends SABFragment {
         manualRefreshComing();
 
         return mListView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

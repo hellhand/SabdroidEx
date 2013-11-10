@@ -8,10 +8,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:cacheColorHint="#999999"
+        android:paddingLeft="5dip"
+        android:paddingRight="20dip"
         android:divider="#A0A0A0"
         android:dividerHeight="1px"
         android:fadingEdgeLength="0dip"
         android:scrollingCache="false"
-        android:fastScrollEnabled="true" />
+        android:fastScrollEnabled="true"
+        android:fastScrollAlwaysVisible="true"/>
 
 </LinearLayout>

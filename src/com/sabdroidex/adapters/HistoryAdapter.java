@@ -29,6 +29,9 @@ public class HistoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (mItems == null) {
+            return 0;
+        }
         return mItems.size();
     }
 
@@ -60,7 +63,7 @@ public class HistoryAdapter extends BaseAdapter {
         mHistoryListItem.filename.setText(element.getName());
         mHistoryListItem.eta.setText(element.getStatus());
         mHistoryListItem.completed.setText(element.getSize());
-        mHistoryListItem.status.setImageResource(android.R.drawable.stat_sys_download_done);
+        mHistoryListItem.status.setImageResource(R.drawable.ic_action_accept);
 
         convertView.setId(position);
         convertView.setTag(mHistoryListItem);

@@ -126,12 +126,8 @@ public abstract class PinnedHeaderListAdapter extends CompositeAdapter implement
             }
         }
 
-        // Starting at the bottom, find and pin headers for partitions following
-        // the visible one(s)
-        int maxBottomHeader = size;
-
         // Headers in between the top-pinned and bottom-pinned should be hidden
-        for (int i = maxTopHeader + 1; i < maxBottomHeader; i++) {
+        for (int i = maxTopHeader + 1; i < size; i++) {
             if (mHeaderVisibility[i]) {
                 listView.setHeaderInvisible(i, isPartitionEmpty(i));
             }

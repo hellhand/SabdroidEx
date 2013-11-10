@@ -139,9 +139,11 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                 String path = "";
                 if (data.getScheme().equalsIgnoreCase("content")) {
                     Cursor cursor = getContentResolver().query(data, null, null, null, null);
-                    cursor.moveToFirst();
-                    int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
-                    path = cursor.getString(idx);
+                    if (cursor != null) {
+                        cursor.moveToFirst();
+                        int idx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                        path = cursor.getString(idx);
+                    }
                 }
                 else {
                     path = data.getPath();
@@ -178,7 +180,7 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                 oos.flush();
             }
             catch (Exception e) {
-                Log.e(TAG, " " + e.getStackTrace().toString());
+                Log.e(TAG, " " + e.getLocalizedMessage());
             }
             finally {
                 try {
@@ -341,8 +343,8 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
             return;
         }
         try {
-            Double mbleft = new Double(status.getMbLeft());
-            Double kbpersec = new Double(status.getKbPerSec());
+            Double mbleft = Double.valueOf(status.getMbLeft());
+            Double kbpersec = Double.valueOf(status.getKbPerSec());
             String mb = status.getMb();
             String diskspace2 = status.getDiskSpace2();
 

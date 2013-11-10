@@ -69,7 +69,7 @@ public class ShowActivity extends ActionBarActivity {
                 Log.e(TAG, e.getLocalizedMessage());
             }
         }
-    };
+    }
 
     /**
      * This method will create the adapter needed for the grid and query the

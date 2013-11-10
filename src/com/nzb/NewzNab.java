@@ -123,9 +123,8 @@ public class NewzNab {
                 url = url + "&" + xTraParam;
             }
         }
-        
-        String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, new BasicCredentialsProvider()));
-        return result;
+
+        return new String(HttpUtil.getInstance().getDataAsCharArray(url, new BasicCredentialsProvider()));
     }
     
     /**

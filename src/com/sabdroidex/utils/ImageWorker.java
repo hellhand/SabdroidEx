@@ -311,7 +311,7 @@ public class ImageWorker {
 
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getPosterURL(SickBeardController.MESSAGE.SHOW_GETPOSTER.toString().toLowerCase(), (Integer) params[0]);
+            return SickBeardController.getPosterURL((Integer) params[0]);
         }
 
         @Override
@@ -334,8 +334,7 @@ public class ImageWorker {
 
         @Override
         protected String getImageURL(Object... params) {
-            return SickBeardController.getSeasonPosterURL(SickBeardController.MESSAGE.SHOW_SEASONLIST.toString().toLowerCase(), (Integer) params[0],
-                    (Integer) params[2]);
+            return SickBeardController.getSeasonPosterURL((Integer) params[0], (Integer) params[2]);
         }
 
         @Override

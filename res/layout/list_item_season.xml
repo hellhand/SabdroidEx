@@ -19,7 +19,6 @@
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
         android:lines="1"
-        android:text="Season"
         android:textSize="20dip"
         android:textStyle="bold" />
 
@@ -29,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
-        android:text="show name"
         android:textColor="#6a6a6a" />
 
 </LinearLayout>
