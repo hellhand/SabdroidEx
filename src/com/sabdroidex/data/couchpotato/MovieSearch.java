@@ -1,7 +1,7 @@
 package com.sabdroidex.data.couchpotato;
 
 import com.sabdroidex.utils.json.JSONSetter;
-import com.sabdroidex.utils.json.JSONType;
+import com.sabdroidex.utils.json.impl.JSONType;
 
 import java.util.ArrayList;
 import java.util.List;

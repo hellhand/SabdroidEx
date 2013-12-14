@@ -3,7 +3,7 @@ package com.sabdroidex.data.sickbeard;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
-import com.sabdroidex.utils.json.JSONType;
+import com.sabdroidex.utils.json.impl.JSONType;
 
 import java.io.Serializable;
 import java.util.ArrayList;

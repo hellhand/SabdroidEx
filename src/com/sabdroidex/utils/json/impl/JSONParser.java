@@ -1,4 +1,4 @@
-package com.sabdroidex.utils.json;
+package com.sabdroidex.utils.json.impl;
 
 import java.util.HashMap;
 import java.util.Map;

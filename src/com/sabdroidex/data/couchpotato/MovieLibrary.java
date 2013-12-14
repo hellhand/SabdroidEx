@@ -19,7 +19,7 @@ package com.sabdroidex.data.couchpotato;
 
 import com.sabdroidex.utils.json.JSONElement;
 import com.sabdroidex.utils.json.JSONSetter;
-import com.sabdroidex.utils.json.JSONType;
+import com.sabdroidex.utils.json.impl.JSONType;
 
 import java.io.Serializable;
 

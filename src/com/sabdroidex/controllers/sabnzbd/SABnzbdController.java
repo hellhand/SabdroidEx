@@ -10,7 +10,7 @@ import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.json.SimpleJSONMarshaller;
+import com.sabdroidex.utils.json.impl.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 

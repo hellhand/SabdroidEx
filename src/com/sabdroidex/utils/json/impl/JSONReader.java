@@ -1,4 +1,4 @@
-package com.sabdroidex.utils.json;
+package com.sabdroidex.utils.json.impl;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -6,7 +6,7 @@ import java.io.Reader;
 /**
  * Created by Marc on 17/11/13.
  */
-public class JsonReader extends Reader {
+public class JSONReader extends Reader {
 
     @Override
     public void close() throws IOException {

@@ -2,7 +2,7 @@ package com.sabdroidex.test;
 
 import android.test.AndroidTestCase;
 
-import com.sabdroidex.utils.json.JSONParser;
+import com.sabdroidex.utils.json.impl.JSONParser;
 
 import java.io.IOException;
 import java.io.InputStream;

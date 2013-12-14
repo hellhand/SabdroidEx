@@ -1,4 +1,7 @@
-package com.sabdroidex.utils.json;
+package com.sabdroidex.utils.json.impl;
+
+import com.sabdroidex.utils.json.Marshaller;
+import com.sabdroidex.utils.json.UnMarshaller;
 
 /**
  * Created by Marc on 17/11/13.

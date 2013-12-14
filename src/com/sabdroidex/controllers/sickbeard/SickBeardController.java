@@ -12,7 +12,7 @@ import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.json.SimpleJSONMarshaller;
+import com.sabdroidex.utils.json.impl.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 

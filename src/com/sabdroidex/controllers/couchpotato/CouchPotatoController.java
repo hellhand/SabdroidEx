@@ -26,7 +26,7 @@ import com.sabdroidex.data.couchpotato.MovieList;
 import com.sabdroidex.data.couchpotato.MovieReleases;
 import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.json.SimpleJSONMarshaller;
+import com.sabdroidex.utils.json.impl.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 

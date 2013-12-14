@@ -1,11 +1,5 @@
 package com.sabdroidex.test;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.test.AndroidTestCase;
 
 import com.sabdroidex.data.couchpotato.MovieList;
@@ -13,9 +7,15 @@ import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.Season;
 import com.sabdroidex.data.sickbeard.Show;
-import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.data.sickbeard.ShowSearch;
-import com.sabdroidex.utils.json.SimpleJSONMarshaller;
+import com.sabdroidex.data.sickbeard.Shows;
+import com.sabdroidex.utils.json.impl.SimpleJSONMarshaller;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class SimpleJSONMarshallerTest extends AndroidTestCase  {

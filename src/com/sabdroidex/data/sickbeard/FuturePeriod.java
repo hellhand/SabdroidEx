@@ -4,7 +4,7 @@ import com.sabdroidex.R;
 import com.sabdroidex.data.JSONBased;
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
-import com.sabdroidex.utils.json.JSONType;
+import com.sabdroidex.utils.json.impl.JSONType;
 
 import java.util.LinkedList;
 import java.util.List;

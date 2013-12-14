@@ -1,4 +1,4 @@
-package com.sabdroidex.utils.json;
+package com.sabdroidex.utils.json.impl;
 
 /**
  * Created by Marc on 14/12/13.

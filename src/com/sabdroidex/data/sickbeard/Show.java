@@ -2,7 +2,7 @@ package com.sabdroidex.data.sickbeard;
 
 import com.sabdroidex.data.UnknowMappingElement;
 import com.sabdroidex.utils.json.JSONSetter;
-import com.sabdroidex.utils.json.JSONType;
+import com.sabdroidex.utils.json.impl.JSONType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
