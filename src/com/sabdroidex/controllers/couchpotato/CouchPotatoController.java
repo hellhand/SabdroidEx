@@ -90,7 +90,7 @@ public final class CouchPotatoController {
         command = command.replaceFirst("_", ".");
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
-        url = url.replace("[API]", Preferences.get(Preferences.SICKBEARD_API_KEY));
+        url = url.replace("[API]", Preferences.get(Preferences.COUCHPOTATO_API_KEY));
 
         for (final String xTraParam : extraParams) {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
