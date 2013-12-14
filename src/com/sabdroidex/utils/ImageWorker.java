@@ -37,7 +37,7 @@ public class ImageWorker {
     private Bitmap mCouchBannerBitmap = null;
     private Resources mResources = null;
 
-    public ImageWorker(Context context) {
+    protected ImageWorker(Context context) {
         mResources = context.getResources();
         bgOptions = new Options();
         bgOptions.inPurgeable = true;
@@ -180,7 +180,7 @@ public class ImageWorker {
             Options bgOptions = new Options();
             Bitmap bitmap = null;
 
-            if (Preferences.isEnabled(Preferences.SICKBEARD_LOWRES)) {
+            if (Preferences.isEnabled(Preferences.DATA_IMAGE_LOWRES)) {
                 bgOptions.inSampleSize = 2;
             } else {
                 bgOptions.inSampleSize = 1;
@@ -196,7 +196,7 @@ public class ImageWorker {
              * If the cache is enabled we try to read the file from the device
              * (Default is enabled)
              */
-            if (!isCancelled() && bitmap == null && Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
+            if (!isCancelled() && bitmap == null && Preferences.isEnabled(Preferences.DATA_IMAGE_CACHE)) {
                 if (Debug.isDebuggerConnected()) {
                     Log.i(getClass().getCanonicalName(), "Loading Bitmap for : " + params[1] + " ... trying to open file.");
                 }
@@ -490,7 +490,7 @@ public class ImageWorker {
                 /**
                  * If the cache is enabled ... (Default is enabled)
                  */
-                if (Preferences.isEnabled(Preferences.SICKBEARD_CACHE)) {
+                if (Preferences.isEnabled(Preferences.DATA_IMAGE_CACHE)) {
                     /**
                      * ... save it on the device
                      */

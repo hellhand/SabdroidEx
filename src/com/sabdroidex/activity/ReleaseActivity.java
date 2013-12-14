@@ -15,6 +15,7 @@ import com.sabdroidex.R;
 import com.sabdroidex.adapters.ReleaseAdapter;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.data.couchpotato.Movie;
+import com.sabdroidex.data.couchpotato.MovieReleases;
 import com.sabdroidex.fragments.dialogs.couchpotato.MovieReleaseDialog;
 import com.sabdroidex.utils.SABHandler;
 
@@ -26,12 +27,24 @@ public class ReleaseActivity extends ActionBarActivity {
     private static final String TAG = ReleaseActivity.class.getCanonicalName();
     private ReleaseAdapter releaseAdapter;
     private Movie movie;
+    private MovieReleases movieReleases;
 
     // Instantiating the Handler associated with the main thread.
     private final SABHandler messageHandler = new SABHandler() {
 
         @Override
         public void handleMessage(Message msg) {
+            if (msg.what == CouchPotatoController.MESSAGE.RELEASE_FOR_MOVIE.hashCode()) {
+                try {
+                    if (msg.obj instanceof MovieReleases) {
+                        movieReleases = (MovieReleases) msg.obj;
+                        updateReleases();
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage() == null ? " " : e.getLocalizedMessage());
+                }
+            }
             if (msg.what == CouchPotatoController.MESSAGE.RELEASE_DOWNLOAD.hashCode()) {
                 try {
                     if (msg.obj instanceof Boolean) {
@@ -40,7 +53,7 @@ public class ReleaseActivity extends ActionBarActivity {
                     }
                 }
                 catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? " " : e.getLocalizedMessage());
                 }
             }
             if (msg.what == CouchPotatoController.MESSAGE.UPDATE.hashCode()) {
@@ -50,11 +63,18 @@ public class ReleaseActivity extends ActionBarActivity {
                     }
                 }
                 catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage());
+                    Log.e(TAG, e.getLocalizedMessage() == null ? " " : e.getLocalizedMessage());
                 }
             }
         }
     };
+
+    private void updateReleases() {
+        if (releaseAdapter != null || movieReleases != null) {
+            releaseAdapter.setItems(movieReleases.getReleases());
+            releaseAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +90,19 @@ public class ReleaseActivity extends ActionBarActivity {
 
         GridView gridView = (GridView) findViewById(R.id.elementGrid);
 
-        releaseAdapter = new ReleaseAdapter(getApplicationContext(), movie.getReleases());
+        movieReleases = new MovieReleases();
+        releaseAdapter = new ReleaseAdapter(getApplicationContext(), movieReleases.getReleases());
         gridView.setAdapter(releaseAdapter);
         gridView.setOnItemClickListener(new MovieReleaseClickListener());
+
+        refresh();
+    }
+
+    /**
+     * This method calls the Controller to retrieve the releases
+     */
+    private void refresh() {
+        CouchPotatoController.getReleasesForMovie(messageHandler, movie.getMovieID());
     }
 
     /**
@@ -82,6 +112,7 @@ public class ReleaseActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
+                refresh();
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -109,7 +140,7 @@ public class ReleaseActivity extends ActionBarActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             try {
                 MovieReleaseDialog movieReleaseDialog = new MovieReleaseDialog();
-                MovieReleaseDialog.setMovieRelease(movie.getReleases().get(position));
+                MovieReleaseDialog.setMovieRelease(movieReleases.getReleases().get(position));
                 MovieReleaseDialog.setMessageHandler(messageHandler);
                 movieReleaseDialog.show(getSupportFragmentManager(),"releaseSelection");
             }

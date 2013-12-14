@@ -10,7 +10,7 @@ import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.sabdroidex.utils.json.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
@@ -135,7 +135,7 @@ public final class SABnzbdController extends SABController {
                     else {
                         jsonObject = jsonObject.getJSONObject("config");
                         
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(SabnzbdConfig.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(SabnzbdConfig.class);
                         SabnzbdConfig config = (SabnzbdConfig) jsonMarshaller.unmarshal(jsonObject);
                         
                         final Message message = new Message();
@@ -477,7 +477,7 @@ public final class SABnzbdController extends SABController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("history");
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(History.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(History.class);
                         History history = (History) jsonMarshaller.unmarshal(jsonObject);
                         
                         final Message message = new Message();
@@ -534,7 +534,7 @@ public final class SABnzbdController extends SABController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("queue");
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Queue.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Queue.class);
                         Queue queue = (Queue) jsonMarshaller.unmarshal(jsonObject);
                         paused = queue.getPaused();
                         

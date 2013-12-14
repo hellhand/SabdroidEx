@@ -154,7 +154,9 @@ public class MoviesFragment extends SABFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
+            movieGrid.setSoundEffectsEnabled(false);
             movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
+            movieGrid.setSoundEffectsEnabled(true);
         }
         super.onViewCreated(view, savedInstanceState);
     }
@@ -206,7 +208,9 @@ public class MoviesFragment extends SABFragment {
             mMovieGridAdapter.setDataSet(movieList.getMovieElements());
             mMovieGridAdapter.notifyDataSetChanged();
             if (movieList.getMovieElements().size() > 0 && getView() != null && getView().findViewById(R.id.movieStatus) != null) {
+                movieGrid.setSoundEffectsEnabled(false);
                 movieGrid.performItemClick(movieGrid, 0, movieGrid.getItemIdAtPosition(0));
+                movieGrid.setSoundEffectsEnabled(true);
             }
         }
     }

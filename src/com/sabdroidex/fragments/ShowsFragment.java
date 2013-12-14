@@ -133,7 +133,9 @@ public class ShowsFragment extends SABFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (shows.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
+            showGrid.setSoundEffectsEnabled(false);
             showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
+            showGrid.setSoundEffectsEnabled(true);
         }
         super.onViewCreated(view, savedInstanceState);
     }
@@ -151,7 +153,9 @@ public class ShowsFragment extends SABFragment {
             mShowsAdapter.setDataSet(shows.getShowElements());
             mShowsAdapter.notifyDataSetChanged();
             if (shows.getShowElements().size() > 0 && getView() != null && getView().findViewById(R.id.showStatus) != null) {
+                showGrid.setSoundEffectsEnabled(false);
                 showGrid.performItemClick(showGrid, 0, showGrid.getItemIdAtPosition(0));
+                showGrid.setSoundEffectsEnabled(true);
             }
         }
     }
@@ -210,7 +214,7 @@ public class ShowsFragment extends SABFragment {
     private class GridItemDialogClickListener implements OnItemClickListener {
 
         /**
-         * When an item is selected by a long click a Dialog appears to display
+         * When an item is selected by a click a Dialog appears to display
          * the show details.
          */
         @Override

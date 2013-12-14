@@ -41,14 +41,17 @@ public class ShowActivity extends ActionBarActivity {
         public void handleMessage(Message msg) {
             if (msg.what == SickBeardController.MESSAGE.SHOW.hashCode() && msg.obj instanceof Show) {
                 mShow = (Show) msg.obj;
-                mShow.setTvdbId(mShowId);
-                showSeasonAdapter.setShow(mShow);
-                showSeasonAdapter.notifyDataSetChanged();
-
-                setTitle(mShow.getShowName());
+                updateSeasons();
             }
         }
     };
+
+    private void updateSeasons() {
+        mShow.setTvdbId(mShowId);
+        showSeasonAdapter.setShow(mShow);
+        showSeasonAdapter.notifyDataSetChanged();
+        setTitle(mShow.getShowName());
+    }
 
     /**
      * A {@link OnItemClickListener} listening the season grid. This will have

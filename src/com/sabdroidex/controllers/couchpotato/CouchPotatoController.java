@@ -23,9 +23,10 @@ import android.os.Message;
 import android.util.Log;
 
 import com.sabdroidex.data.couchpotato.MovieList;
+import com.sabdroidex.data.couchpotato.MovieReleases;
 import com.sabdroidex.data.couchpotato.MovieSearch;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.sabdroidex.utils.json.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
@@ -45,13 +46,12 @@ public final class CouchPotatoController {
     private static HashMap<Integer, String> profiles;
     private static HashMap<Integer, String> status;
     public static boolean paused = false;
-    private static String api_key = "";
 
     private static final String URL_TEMPLATE = "[COUCHPOTATO_URL]/[COUCHPOTATO_URL_EXTENTION]api/[API]/[COMMAND]/";
     private static final String API_TEMPLATE = "[COUCHPOTATO_URL]/[COUCHPOTATO_URL_EXTENTION]getkey/?p=[PASSWORD]&u=[USERNAME]";
 
     public static enum MESSAGE {
-        MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD, SEARCHER_TRY_NEXT
+        MOVIE_ADD, MOVIE_DELETE, MOVIE_EDIT, MOVIE_REFRESH, MOVIE_GET, MOVIE_LIST, MOVIE_SEARCH, PROFILE_LIST, UPDATE, STATUS_LIST, APP_RESTART, APP_SHUTDOWN, RELEASE_DELETE, RELEASE_IGNORE, RELEASE_DOWNLOAD, SEARCHER_TRY_NEXT, RELEASE_FOR_MOVIE
     }
 
     /**
@@ -85,20 +85,12 @@ public final class CouchPotatoController {
     public static String makeApiCall(String command, String... extraParams) throws Exception {
 
         /**
-         * Check if the API key is already retrieved, otherwise retrieve it
-         */
-        //Using equals("") as isEmpty only starts on apiL9
-        if (api_key.equals("")) {
-            getApiKey();
-        }
-
-        /**
          * Correcting the command names to be understood by CouchPotato
          */
         command = command.replaceFirst("_", ".");
         String url = getFormattedUrl();
         url = url.replace("[COMMAND]", command);
-        url = url.replace("[API]", api_key);
+        url = url.replace("[API]", Preferences.get(Preferences.SICKBEARD_API_KEY));
 
         for (final String xTraParam : extraParams) {
             if (xTraParam != null && !xTraParam.trim().equals("")) {
@@ -150,89 +142,6 @@ public final class CouchPotatoController {
         }
 
         return url;
-    }
-    
-    /**
-     * Retrieve API_URL of CouchPotato by using username & password.
-     * 
-     * @return API_URL
-     */
-    private static String getApiUrl() {
-        String url = API_TEMPLATE;
-
-        /**
-         * Checking if there is a port to concatenate to the URL
-         */
-        if ("".equals(Preferences.get(Preferences.COUCHPOTATO_PORT))) {
-            url = url.replace("[COUCHPOTATO_URL]", Preferences.get(Preferences.COUCHPOTATO_URL));
-        }
-        else {
-            url = url.replace("[COUCHPOTATO_URL]", Preferences.get(Preferences.COUCHPOTATO_URL) + ":" + Preferences.get(Preferences.COUCHPOTATO_PORT));
-        }
-
-        /**
-         * Checking the url extention
-         */
-        if ("".equals(Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION))) {
-            url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION));
-        }
-        else {
-            url = url.replace("[COUCHPOTATO_URL_EXTENTION]", Preferences.get(Preferences.COUCHPOTATO_URL_EXTENTION) + "/");
-        }
-
-        /**
-         * Check if user credentials are being used
-         */
-        if (!"".equals(Preferences.get(Preferences.COUCHPOTATO_USERNAME, ""))) {
-            url = url.replace("[USERNAME]", "md5(" + Preferences.COUCHPOTATO_USERNAME + ")");
-        }
-        else {
-            url = url.replace("[USERNAME]", "");
-        }
-        if (!"".equals(Preferences.get(Preferences.COUCHPOTATO_PASSWORD, ""))) {
-            url = url.replace("[PASSWORD]", "md5(" + Preferences.COUCHPOTATO_PASSWORD + ")");
-        }
-        else {
-            url = url.replace("[PASSWORD]", "");
-        }
-
-        /**
-         * Making sure that the correct url type us used
-         */
-        if (!url.toUpperCase().startsWith("HTTP://") && !url.toUpperCase().startsWith("HTTPS://")) {
-            if (Preferences.isEnabled(Preferences.COUCHPOTATO_SSL)) {
-                url = "https://" + url;
-            }
-            else {
-                url = "http://" + url;
-            }
-        }
-        Log.d(TAG, url);
-        return url;
-    }
-
-    /**
-     * Retrieving API key from CouchPotato
-     * 
-     * @return API_KEY
-     */
-    private static void getApiKey() {
-        String url = getApiUrl();
-        try {
-
-            final String result = new String(HttpUtil.getInstance().getDataAsCharArray(url, ApacheCredentialProvider.getCredentialsProvider()));
-
-            JSONObject jsonObject = new JSONObject(result);
-            if (jsonObject.getBoolean("success")) {
-                api_key = jsonObject.getString("api_key");
-            }
-        }
-        catch (RuntimeException e) {
-            Log.w(TAG, " " + e.getLocalizedMessage());
-        }
-        catch (Throwable e) {
-            Log.w(TAG, " " + e.getLocalizedMessage());
-        }
     }
 
     /**
@@ -492,7 +401,7 @@ public final class CouchPotatoController {
                         sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
                     }
                     else {
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(MovieList.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(MovieList.class);
                         movieList = (MovieList) jsonMarshaller.unmarshal(jsonObject);
                         
                         Message message = new Message();
@@ -645,10 +554,8 @@ public final class CouchPotatoController {
     /**
      * Search for a movie based on title
      * 
-     * @param messageHandler
-     *            Handler
-     * @param searchTitle
-     *            Movie title to search for
+     * @param messageHandler Handler
+     * @param searchTitle Movie title to search for
      */
     public static void searchMovie(final Handler messageHandler, final String searchTitle) {
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -667,11 +574,10 @@ public final class CouchPotatoController {
                     MovieSearch movieList = null;
 
                     if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
-                        // TODO: Resource bundle
-                        sendUpdateMessageStatus(messageHandler, "SickBeard : " + jsonObject.getString("message"));
+                        sendUpdateMessageStatus(messageHandler, "CouchPotato : " + jsonObject.getString("message"));
                     }
                     else {
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(MovieSearch.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(MovieSearch.class);
                         movieList = (MovieSearch) jsonMarshaller.unmarshal(jsonObject);
                     }
 
@@ -698,12 +604,57 @@ public final class CouchPotatoController {
     }
 
     /**
+     * This download the release information for a specific movie.
+     *
+     * @param messageHandler The message handler that will receive the result.
+     * @param movieId The movie Id to get the information for.
+     */
+    public static void getReleasesForMovie(final Handler messageHandler, final int movieId) {
+        if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
+            return;
+        }
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    String result = makeApiCall(MESSAGE.RELEASE_FOR_MOVIE.toString().toLowerCase(), "id=" + movieId);
+                    JSONObject jsonObject = new JSONObject(result);
+                    MovieReleases movieReleases = null;
+
+                    if (!jsonObject.isNull("message") && !"".equals(jsonObject.getString("message"))) {
+                        sendUpdateMessageStatus(messageHandler, "CouchPotato : " + jsonObject.getString("message"));
+                    }
+                    else {
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(MovieReleases.class);
+                        movieReleases = (MovieReleases) jsonMarshaller.unmarshal(jsonObject);
+                    }
+
+                    Message message = new Message();
+                    message.setTarget(messageHandler);
+                    message.what = MESSAGE.RELEASE_FOR_MOVIE.hashCode();
+                    message.obj = movieReleases;
+                    message.sendToTarget();
+                }
+                catch (RuntimeException e) {
+                    Log.w(TAG, " " + e.getLocalizedMessage());
+                }
+                catch (Throwable e) {
+                    Log.w(TAG, " " + e.getLocalizedMessage());
+                }
+            }
+        };
+
+        thread.start();
+    }
+
+    /**
      * Ignore a release
      * 
-     * @param messageHandler
-     *            Handler
-     * @param releaseId
-     *            ID of release to ignore
+     * @param messageHandler Handler
+     * @param releaseId ID of release to ignore
      */
     public static void ignoreRelease(final Handler messageHandler, final int releaseId) {
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -727,22 +678,16 @@ public final class CouchPotatoController {
                 catch (Throwable e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
                 }
-                finally {
-                    executingCommand = false;
-                }
             }
         };
-        executingCommand = true;
         thread.start();
     }
 
     /**
      * Download a release of a movie
      * 
-     * @param messageHandler
-     *            Handler
-     * @param releaseId
-     *            ID of release to download
+     * @param messageHandler Handler
+     * @param releaseId ID of release to download
      */
     public static void downloadRelease(final Handler messageHandler, final int releaseId) {
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -770,22 +715,16 @@ public final class CouchPotatoController {
                 catch (Throwable e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
                 }
-                finally {
-                    executingCommand = false;
-                }
             }
         };
-        executingCommand = true;
         thread.start();
     }
 
     /**
      * Makes a call to mark the snatched results as ignored and try the next best release.
      *
-     * @param messageHandler
-     *            Handler
-     * @param releaseId
-     *            ID of release to download
+     * @param messageHandler Handler
+     * @param releaseId ID of release to download
      */
     public static void snatchNextMovieRelease(final Handler messageHandler, final int releaseId) {
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -808,20 +747,15 @@ public final class CouchPotatoController {
                 catch (Throwable e) {
                     Log.w(TAG, " " + e.getLocalizedMessage());
                 }
-                finally {
-                    executingCommand = false;
-                }
             }
         };
-        executingCommand = true;
         thread.start();
     }
 
     /**
      * Get Profile based on ID key
      * 
-     * @param key
-     *            Identifier of Profile
+     * @param key Identifier of Profile
      * @return Profile
      */
     public synchronized static String getProfile(Integer key) {
@@ -840,8 +774,7 @@ public final class CouchPotatoController {
     /**
      * Get Status based on ID key
      * 
-     * @param key
-     *            Identifier of status
+     * @param key Identifier of status
      * @return Status
      */
     public synchronized static String getStatus(Integer key) {
@@ -869,10 +802,8 @@ public final class CouchPotatoController {
     /**
      * Sends a message to the calling {@link Activity} to update it's status bar
      * 
-     * @param messageHandler
-     *            The message handler to be notified
-     * @param text
-     *            The text to write in the message
+     * @param messageHandler The message handler to be notified
+     * @param text The text to write in the message
      */
     private static void sendUpdateMessageStatus(Handler messageHandler, String text) {
 

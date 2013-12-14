@@ -68,8 +68,6 @@
         android:id="@+id/elementGrid"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#A0A0A0"
-        android:cacheColorHint="#999999"
         android:fadingEdgeLength="4dip"
         android:horizontalSpacing="1px"
         android:numColumns="1"

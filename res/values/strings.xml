@@ -23,37 +23,36 @@
     <string name="setting_empty">The settings are being retrieved</string>
     <string name="setting_cannot_retrieve">Cannot retrieve settings</string>
 
-    <string name="setting_header_server">Sabnzbd+ settings</string>
-    <string name="setting_server_url">Server URL</string>
-    <string name="setting_server_url_summary">The SABnzbd server address</string>
-    <string name="setting_server_port">Server Port</string>
-    <string name="setting_server_port_summary">The SABnzbd server port</string>
-    <string name="setting_server_url_extention">Server URL Extension</string>
-    <string name="setting_server_url_extention_summary">Extension of the server URL for Sabnzbd</string>
-    <string name="setting_server_ssl">Use SSL/HTTPS</string>
-    <string name="setting_server_ssl_summary">Use a secure connection to connect to SABnzbd</string>
-    
-    <string name="setting_refresh_rate">Refresh Rate in milliseconds</string>
-    <string name="setting_refresh_rate_summary">Time between each refresh</string>
-    <string name="setting_api_key">Your SABnzbd API key</string>
-	<string name="setting_auth">Authentification</string>
+    <string name="setting_auth">Authentification</string>
     <string name="setting_auth_username">Username</string>
     <string name="setting_auth_password">Password</string>
 
-	<string name="setting_server_bandwidth_limit">Bandwidth Limit</string>
-	<string name="setting_server_bandwidth_limit_summary">Set the max bandwidth for Sabnzbd</string>
-	<string name="setting_server_cache_dir">Cache Directory</string>
-	<string name="setting_server_cache_dir_summary">Set the cache directory for Sabnzbd</string>
-	<string name="setting_server_cache_limit">Cache Limit</string>
-	<string name="setting_server_cache_limit_summary">Set the cache size limit for Sabnzbd</string>
-	<string name="setting_server_dirscan_dir">Dirscan Directory</string>
-	<string name="setting_server_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
-	<string name="setting_server_dirscan_speed">Dirscan Speed</string>
-	<string name="setting_server_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
-	<string name="setting_server_download_dir">Download Directory</string>
-	<string name="setting_server_download_dir_summary">Set the directory in which Sabnzbd will download</string>
-	<string name="setting_server_complete_dir">Complete Directory</string>
-	<string name="setting_server_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
+    <string name="setting_header_server">Sabnzbd+ settings</string>
+    <string name="setting_sabnzbd_url">Server URL</string>
+    <string name="setting_sabnzbd_url_summary">The SABnzbd server address</string>
+    <string name="setting_sabnzbd_port">Server Port</string>
+    <string name="setting_sabnzbd_port_summary">The SABnzbd server port</string>
+    <string name="setting_sabnzbd_url_extention">Server URL Extension</string>
+    <string name="setting_sabnzbd_url_extention_summary">Extension of the server URL for Sabnzbd</string>
+    <string name="setting_sabnzbd_ssl">Use SSL/HTTPS</string>
+    <string name="setting_sabnzbd_ssl_summary">Use a secure connection to connect to SABnzbd</string>
+    <string name="setting_sabnzbd_refresh_rate">Refresh Rate in milliseconds</string>
+    <string name="setting_sabnzbd_refresh_rate_summary">Time between each refresh</string>
+    <string name="setting_sabnzbd_api_key">Your SABnzbd API key</string>
+	<string name="setting_sabnzbd_bandwidth_limit">Bandwidth Limit</string>
+	<string name="setting_sabnzbd_bandwidth_limit_summary">Set the max bandwidth for Sabnzbd</string>
+	<string name="setting_sabnzbd_cache_dir">Cache Directory</string>
+	<string name="setting_sabnzbd_cache_dir_summary">Set the cache directory for Sabnzbd</string>
+	<string name="setting_sabnzbd_cache_limit">Cache Limit</string>
+	<string name="setting_sabnzbd_cache_limit_summary">Set the cache size limit for Sabnzbd</string>
+	<string name="setting_sabnzbd_dirscan_dir">Dirscan Directory</string>
+	<string name="setting_sabnzbd_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
+	<string name="setting_sabnzbd_dirscan_speed">Dirscan Speed</string>
+	<string name="setting_sabnzbd_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
+	<string name="setting_sabnzbd_download_dir">Download Directory</string>
+	<string name="setting_sabnzbd_download_dir_summary">Set the directory in which Sabnzbd will download</string>
+	<string name="setting_sabnzbd_complete_dir">Complete Directory</string>
+	<string name="setting_sabnzbd_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
 
     <string name="setting_header_sickbeard">Sickbeard settings</string>
 	<string name="setting_sickbeard">Use Sickbeard</string>
@@ -65,16 +64,9 @@
     <string name="setting_sickbeard_url_extention_summary">Extension of the server URL for Sickbeard</string>
     <string name="setting_sickbeard_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
     <string name="setting_sickbeard_ssl_summary">Use a secure connection to connect to Sickbeard</string>
-
     <string name="setting_sickbeard_refresh_rate">Refresh Rate in milliseconds</string>
     <string name="setting_sickbeard_refresh_rate_summary">Time between each refresh</string>
 	<string name="setting_sickbeard_api_key">Your Sickbeard API key</string>
-	<string name="setting_sickbeard_cache">Image Cache</string>
-	<string name="setting_sickbeard_cache_summary">Use local cache for Images</string>
-	<string name="setting_sickbeard_lowres">Lowres Images</string>
-	<string name="setting_sickbeard_lowres_summary">Use low resolution Images</string>
-	<string name="setting_sickbeard_nomedia">.Nomedia</string>
-	<string name="setting_sickbeard_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
 
     <string name="setting_header_couchpotato">Couchpotato settings</string>
     <string name="setting_couchpotato">Use CouchPotato</string>
@@ -88,6 +80,7 @@
     <string name="setting_couchpotato_url_extention_summary">Extension of the server URL of CouchPotato</string>
     <string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to CouchPotato</string>
     <string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
+    <string name="setting_couchpotato_api_key">Your Couchpotato API key</string>
     <string name="setting_couchpotato_auth">Authentification</string>
     <string name="setting_couchpotato_auth_username">Username</string>
     <string name="setting_couchpotato_auth_password">Password</string>
@@ -107,7 +100,13 @@
     <string name="setting_header_global">Global settings</string>
 	<string name="setting_data_cache">Enable data cache</string>
 	<string name="setting_data_cache_summary">Allows to keep the content of the tabs even if being offline</string>
-	
+    <string name="setting_data_image_cache">Image Cache</string>
+    <string name="setting_data_image_cache_summary">Use local cache for Images</string>
+    <string name="setting_data_image_lowres">Lowres Images</string>
+    <string name="setting_data_image_lowres_summary">Use low resolution Images</string>
+    <string name="setting_data_nomedia">.Nomedia</string>
+    <string name="setting_data_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
+
 	<string name="setting_search_servers">Configure search providers</string>
 	<string name="setting_search_servers_summary">Add, change, delete search providers</string>
 	
@@ -136,9 +135,9 @@
     <string name="tab_movies">Movies</string>
 
     <string name="adapter_done">Done</string>
-    
+
     <string name="no_poster">No poster found</string>
-    
+
 	<string name="show_banner">Banner</string>
     <string name="show_poster">Poster</string>    
 	<string name="show_name">Name : </string>
@@ -149,7 +148,7 @@
 	<string name="show_language">Language : </string>
 	<string name="show_season">Season</string>
     <string name="show_specials">Specials</string>
-	
+
     <string name="episode">Episode : </string>
     <string name="episode_name">Episode name : </string>
     <string name="episode_airdate">Air date : </string>
@@ -162,7 +161,7 @@
     <string name="episode_status_ignored">Ignored</string>
     <string name="episode_status_set">Set episode status</string>
     <string name="episode_status_set_to">Episode status change</string>
-                                    
+
 	<string name="coming_next">Next Episode : </string>
 	<string name="coming_airs">Airs : </string>
     <string name="coming_air_date">Air date : </string>
@@ -170,9 +169,9 @@
     <string name="coming_today">Today</string>
     <string name="coming_soon">Soon</string>
     <string name="coming_later">Later</string>
-	
+
 	<string name="add_dialog_title">Add</string>
-	
+
 	<string name="add_show_dialog_title">Add new Show</string>
 	<string name="add_show_dialog_message">Enter the Name of the Show to add to Sickbeard:</string>
 	<string name="add_show_background_search">Background search started</string>
@@ -186,7 +185,7 @@
 
 	<string name="config_server_error">SABnzbd configuration error</string>
 	<string name="config_sickbeard_error">Sickbeard configuration error</string>
-	
+
 	<string name="send_file">Send Nzb File</string>
 	<string name="send_validation">Send this file to the Sabnzbd+ server : </string>
 
@@ -203,7 +202,7 @@
 	<string name="category_pda">Pda</string>
 	<string name="category_resources">Resources</string>
 	<string name="category_tv">Tv</string>
-	
+
 	<string name="priority">Priority</string>
 	<string name="priority_default">Default</string>
 	<string name="priority_paused">Paused</string>

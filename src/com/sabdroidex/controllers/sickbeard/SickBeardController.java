@@ -12,7 +12,7 @@ import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.data.sickbeard.ShowSearch;
 import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.utils.Preferences;
-import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.sabdroidex.utils.json.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
@@ -123,8 +123,8 @@ public final class SickBeardController extends SABController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(ShowSearch.class);
-                        ShowSearch showSearch = (ShowSearch) simpleJsonMarshaller.unmarshal(jsonObject);
+                        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(ShowSearch.class);
+                        ShowSearch showSearch = (ShowSearch) simpleJSONMarshaller.unmarshal(jsonObject);
                         
                         Message message = new Message();
                         message.setTarget(messageHandler);
@@ -179,7 +179,7 @@ public final class SickBeardController extends SABController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Shows.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Shows.class);
                         shows = (Shows) jsonMarshaller.unmarshal(jsonObject);
                         Collections.sort(shows.getShowElements());
                         
@@ -242,8 +242,8 @@ public final class SickBeardController extends SABController {
                     }
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
-                        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(FuturePeriod.class);
-                        futurePeriod = (FuturePeriod) simpleJsonMarshaller.unmarshal(jsonObject);
+                        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(FuturePeriod.class);
+                        futurePeriod = (FuturePeriod) simpleJSONMarshaller.unmarshal(jsonObject);
                         
                         Message message = new Message();
                         message.setTarget(messageHandler);
@@ -302,7 +302,7 @@ public final class SickBeardController extends SABController {
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
                         
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Show.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Show.class);
                         show = (Show) jsonMarshaller.unmarshal(jsonObject);
                         Collections.sort(show.getSeasonList());
                     }
@@ -359,7 +359,7 @@ public final class SickBeardController extends SABController {
                     else {
                         jsonObject = jsonObject.getJSONObject("data");
                         
-                        SimpleJsonMarshaller jsonMarshaller = new SimpleJsonMarshaller(Season.class);
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Season.class);
                         season = (Season) jsonMarshaller.unmarshal(jsonObject);
                         Collections.sort(season.getEpisodes());
                     }

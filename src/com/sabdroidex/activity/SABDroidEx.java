@@ -43,6 +43,7 @@ import com.sabdroidex.utils.ImageUtils.NoMediaChecker;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
 import com.utils.Calculator;
+import com.utils.FileUtil;
 import com.utils.Formatter;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -98,8 +99,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
         setContentView(R.layout.header);
         SharedPreferences preferences = getSharedPreferences(SABDroidConstants.PREFERENCES_KEY, 0);
         Preferences.update(preferences);
-        NoMediaChecker.check(Environment.getExternalStorageDirectory().getAbsolutePath());
-        ImageUtils.initImageWorker(getApplicationContext());
 
         dialogFragmentManager = new DialogFragmentManager(this);
 
@@ -112,10 +111,15 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
 
         if (!Preferences.get(Preferences.VERSION).equals(APPLICATION_VERSION)) {
             Log.i(TAG, "New version detected : Opening version popup");
-            deleteFile(Preferences.DATA_CACHE);
-            dialogFragmentManager.showNewVersionDialog();
+            FileUtil.deleteFile(Preferences.DATA_CACHE);
             Preferences.put(Preferences.VERSION, APPLICATION_VERSION);
+            Preferences.setUpNewVersion();
+            dialogFragmentManager.showNewVersionDialog();
         }
+
+        NoMediaChecker.check(Environment.getExternalStorageDirectory().getAbsolutePath());
+        ImageUtils.initImageWorker(getApplicationContext());
+
         DataCache dataCache = readCacheData();
         createLists(dataCache);
     }
@@ -130,12 +134,16 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
         }
     }
 
+    /**
+     * Upon start a check is made to see if we received some data to open (normally an nzb file)
+     */
     @Override
     protected void onStart() {
         final Intent intent = getIntent();
         if (intent != null) {
             final Uri data = intent.getData();
             if (data != null) {
+                Log.d(TAG, "Data received : " + data.toString());
                 String path = "";
                 if (data.getScheme().equalsIgnoreCase("content")) {
                     Cursor cursor = getContentResolver().query(data, null, null, null, null);
@@ -149,19 +157,33 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
                     path = data.getPath();
                 }
                 intent.setData(null);
-                Log.v(TAG, "Data received : " + data.toString());
                 dialogFragmentManager.showAddNzbFileDialog(path);
             }
         }
         super.onStart();
     }
 
+    @Override
+    protected void onPause() {
+        saveCacheData();
+        super.onPause();
+    }
+
+    /**
+     * @param queryIntent
+     * @param entryPoint
+     */
+    private void doSearchQuery(final Intent queryIntent, final String entryPoint) {
+        Bundle bundle = queryIntent.getExtras();
+        Set<String> keySet = bundle.keySet();
+        System.out.println((String) bundle.get((String) keySet.toArray()[1]));
+    }
+
     /**
      * When the activity is stopped the status is saved so that data stays
      * available off-line if the data cache has been enabled.
      */
-    @Override
-    protected void onStop() {
+    protected void saveCacheData() {
         if (Preferences.isEnabled(Preferences.DATA_CACHE)) {
             /**
              * Saving data for off line use.
@@ -193,16 +215,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
             }
         }
         super.onStop();
-    }
-
-    /**
-     * @param queryIntent
-     * @param entryPoint
-     */
-    private void doSearchQuery(final Intent queryIntent, final String entryPoint) {
-        Bundle bundle = queryIntent.getExtras();
-        Set<String> keySet = bundle.keySet();
-        System.out.println((String) bundle.get((String) keySet.toArray()[1]));
     }
 
     /**

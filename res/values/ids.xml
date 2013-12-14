@@ -25,7 +25,6 @@
     <item name="menu_refresh" type="id"/>
     <item name="menu_search" type="id"/>
     <item name="menu_settings" type="id"/>
-    <item name="menu_quit" type="id"/>
     <item name="menu_play_pause" type="id"/>
     <item name="menu_add_nzb" type="id"/>
 	<item name="dialog_setup_prompt" type="id"/>

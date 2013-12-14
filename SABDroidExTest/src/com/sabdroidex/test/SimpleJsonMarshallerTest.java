@@ -15,10 +15,10 @@ import com.sabdroidex.data.sickbeard.Season;
 import com.sabdroidex.data.sickbeard.Show;
 import com.sabdroidex.data.sickbeard.Shows;
 import com.sabdroidex.data.sickbeard.ShowSearch;
-import com.sabdroidex.utils.json.SimpleJsonMarshaller;
+import com.sabdroidex.utils.json.SimpleJSONMarshaller;
 
 
-public class SimpleJsonMarshallerTest extends AndroidTestCase  {
+public class SimpleJSONMarshallerTest extends AndroidTestCase  {
     
     public void testMarshaller_Show() throws JSONException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         
@@ -33,8 +33,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("data");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(Show.class);
-        Show show = (Show) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(Show.class);
+        Show show = (Show) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(show);
         System.out.println(show.getShowName());
     }
@@ -51,8 +51,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("data");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(Shows.class);
-        Shows shows = (Shows) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(Shows.class);
+        Shows shows = (Shows) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(shows);
         assertTrue(shows.getShowElements().size() > 0);
         for (Show show : shows.getShowElements()) {
@@ -72,8 +72,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("config");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(SabnzbdConfig.class);
-        SabnzbdConfig config = (SabnzbdConfig) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(SabnzbdConfig.class);
+        SabnzbdConfig config = (SabnzbdConfig) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(config);
         assertNotNull(config.getMisc());
     }
@@ -90,8 +90,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("data");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(ShowSearch.class);
-        ShowSearch showSearch = (ShowSearch) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(ShowSearch.class);
+        ShowSearch showSearch = (ShowSearch) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(showSearch);
         assertTrue(showSearch.getResults().size() > 0);
     }
@@ -108,8 +108,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("data");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(Season.class);
-        Season season = (Season) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(Season.class);
+        Season season = (Season) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(season);
         assertTrue(season.getEpisodes().size() > 0);
     }
@@ -126,8 +126,8 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         jsonObject = jsonObject.getJSONObject("data");
         
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(FuturePeriod.class);
-        FuturePeriod futurePeriod = (FuturePeriod) simpleJsonMarshaller.unmarshal(jsonObject);
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(FuturePeriod.class);
+        FuturePeriod futurePeriod = (FuturePeriod) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(futurePeriod);
         assertTrue(futurePeriod.getMissed().size() > 0);
         assertTrue(futurePeriod.getToday().size() > 0);
@@ -135,17 +135,35 @@ public class SimpleJsonMarshallerTest extends AndroidTestCase  {
     
     public void testMarshaller_MovieList() throws IOException, JSONException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         StringBuffer stringBuffer = new StringBuffer();
-        
+
         InputStream stream = getClass().getResourceAsStream("movielist.json");
         int c;
         while ((c = stream.read()) != -1) {
             stringBuffer.append((char) c);
         }
-        
-        JSONObject jsonObject = new JSONObject(stringBuffer.toString());        
-        SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(MovieList.class);
-        MovieList movieList = (MovieList) simpleJsonMarshaller.unmarshal(jsonObject);
+
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(MovieList.class);
+        MovieList movieList = (MovieList) simpleJSONMarshaller.unmarshal(jsonObject);
         assertNotNull(movieList);
         assertTrue(movieList.getMovieElements().size() > 0);
+    }
+
+    public void testMarshaller_MovieList2() throws IOException, JSONException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        StringBuffer stringBuffer = new StringBuffer();
+
+        InputStream stream = getClass().getResourceAsStream("movielist2.json");
+        int c;
+        while ((c = stream.read()) != -1) {
+            stringBuffer.append((char) c);
+        }
+
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(MovieList.class);
+        MovieList movieList = (MovieList) simpleJSONMarshaller.unmarshal(jsonObject);
+        assertNotNull(movieList);
+        assertTrue(movieList.getMovieElements().size() > 0);
+        assertTrue(movieList.getMovieElements().get(0).getReleases() != null);
+        assertTrue(movieList.getMovieElements().get(0).getReleases().size() > 0);
     }
 }

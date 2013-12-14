@@ -29,6 +29,11 @@ public class ReleaseAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
     }
 
+    public void setItems(List<MovieRelease> items) {
+        Collections.sort(items);
+        this.mItems = items;
+    }
+
     @Override
     public boolean isEnabled(int position) {
         return true;

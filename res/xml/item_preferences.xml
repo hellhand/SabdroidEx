@@ -5,37 +5,37 @@
 
         <EditTextPreference
             android:key="download_name"
-            android:summary="@string/setting_server_url_summary"
-            android:title="@string/setting_server_url"/>
+            android:summary="@string/setting_sabnzbd_url_summary"
+            android:title="@string/setting_sabnzbd_url"/>
 
         <EditTextPreference
             android:defaultValue="8080"
             android:key="sabnzbd_port"
-            android:summary="@string/setting_server_port_summary"
-            android:title="@string/setting_server_port"
+            android:summary="@string/setting_sabnzbd_port_summary"
+            android:title="@string/setting_sabnzbd_port"
             android:numeric="integer"/>
 
         <EditTextPreference
             android:key="sabnzbd_url_extention"
-            android:summary="@string/setting_server_url_extention_summary"
-            android:title="@string/setting_server_url_extention"/>
+            android:summary="@string/setting_sabnzbd_url_extention_summary"
+            android:title="@string/setting_sabnzbd_url_extention"/>
 
         <CheckBoxPreference
             android:key="sabnzbd_ssl"
-            android:summary="@string/setting_server_ssl_summary"
-            android:title="@string/setting_server_ssl"/>
+            android:summary="@string/setting_sabnzbd_ssl_summary"
+            android:title="@string/setting_sabnzbd_ssl"/>
 
         <EditTextPreference
             android:defaultValue="5000"
             android:key="sabnzbd_rate"
-            android:summary="@string/setting_refresh_rate_summary"
-            android:title="@string/setting_refresh_rate"
+            android:summary="@string/setting_sabnzbd_refresh_rate_summary"
+            android:title="@string/setting_sabnzbd_refresh_rate"
             android:numeric="integer"/>
 
         <EditTextPreference
             android:key="sabnzbd_api_key"
-            android:summary="@string/setting_api_key"
-            android:title="@string/setting_api_key"/>
+            android:summary="@string/setting_sabnzbd_api_key"
+            android:title="@string/setting_sabnzbd_api_key"/>
 
         <CheckBoxPreference
             android:key="sabnzbd_auth"

@@ -10,7 +10,7 @@
 
 	<string name="header_speed_unit">KO/s</string>
 	<string name="header_free_unit">GO</string>
-		
+
 	<string name="header_speed_format">--- KO/s</string>
 	<string name="header_time_left_format">--:--:--</string>
 	<string name="header_free_format">-- GO</string>
@@ -23,37 +23,36 @@
     <string name="setting_empty">Les préférences sont en cours de récupération</string>
     <string name="setting_cannot_retrieve">Impossible de contacter le serveur</string>
 
-    <string name="setting_header_server">Configuration Sabnzbd+</string>
-    <string name="setting_server_url">URL Serveur</string>
-    <string name="setting_server_url_summary">URL Serveur à utiliser pour SABnzbd</string>
-    <string name="setting_server_port">Port du Serveur</string>
-    <string name="setting_server_port_summary">Port du Serveur à utiliser pour SABnzbd</string>
-	<string name="setting_server_url_extention">Extention URL Serveur</string>
-    <string name="setting_server_url_extention_summary">Extention d\'URL à utiliser pour SABnzbd</string>
-    <string name="setting_server_ssl">Utiliser SSL/HTTPS</string>
-    <string name="setting_server_ssl_summary">Utiliser une connection cryptée pour se connecter à SABnzbd</string>
-    
-    <string name="setting_refresh_rate">Taux de Rafraichissements</string>
-    <string name="setting_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
-    <string name="setting_api_key">Clef d\'API de SABnzbd</string>
-	<string name="setting_auth">Authentification</string>
+    <string name="setting_auth">Authentification</string>
     <string name="setting_auth_username">Nom Utilisateur</string>
     <string name="setting_auth_password">Mot de Passe</string>
 
-	<string name="setting_server_bandwidth_limit">Bande passante Sabnzbd+</string>
-	<string name="setting_server_bandwidth_limit_summary">Définir la bande passante maximum pour Sabnzbd+</string>
-	<string name="setting_server_cache_dir">Répertoire de cache</string>
-	<string name="setting_server_cache_dir_summary">Définir le répertoire de cache pour Sabnzbd+</string>
-	<string name="setting_server_cache_limit">Limite du cache</string>
-	<string name="setting_server_cache_limit_summary">Définir la limite de cache pour Sabnzbd+</string>
-	<string name="setting_server_dirscan_dir">Répertoire à scanner</string>
-	<string name="setting_server_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
-	<string name="setting_server_dirscan_speed">Dirscan Speed</string>
-	<string name="setting_server_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
-	<string name="setting_server_download_dir">Download Directory</string>
-	<string name="setting_server_download_dir_summary">Set the directory in which Sabnzbd will download</string>
-	<string name="setting_server_complete_dir">Complete Directory</string>
-	<string name="setting_server_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
+    <string name="setting_header_server">Configuration Sabnzbd+</string>
+    <string name="setting_sabnzbd_url">URL Serveur</string>
+    <string name="setting_sabnzbd_url_summary">URL Serveur à utiliser pour SABnzbd</string>
+    <string name="setting_sabnzbd_port">Port du Serveur</string>
+    <string name="setting_sabnzbd_port_summary">Port du Serveur à utiliser pour SABnzbd</string>
+	<string name="setting_sabnzbd_url_extention">Extention URL Serveur</string>
+    <string name="setting_sabnzbd_url_extention_summary">Extention d\'URL à utiliser pour SABnzbd</string>
+    <string name="setting_sabnzbd_ssl">Utiliser SSL/HTTPS</string>
+    <string name="setting_sabnzbd_ssl_summary">Utiliser une connection cryptée pour se connecter à SABnzbd</string>
+    <string name="setting_sabnzbd_refresh_rate">Taux de Rafraichissements</string>
+    <string name="setting_sabnzbd_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
+    <string name="setting_sabnzbd_api_key">Clef d\'API de SABnzbd</string>
+	<string name="setting_sabnzbd_bandwidth_limit">Bande passante Sabnzbd+</string>
+	<string name="setting_sabnzbd_bandwidth_limit_summary">Définir la bande passante maximum pour Sabnzbd+</string>
+	<string name="setting_sabnzbd_cache_dir">Répertoire de cache</string>
+	<string name="setting_sabnzbd_cache_dir_summary">Définir le répertoire de cache pour Sabnzbd+</string>
+	<string name="setting_sabnzbd_cache_limit">Limite du cache</string>
+	<string name="setting_sabnzbd_cache_limit_summary">Définir la limite de cache pour Sabnzbd+</string>
+	<string name="setting_sabnzbd_dirscan_dir">Répertoire à scanner</string>
+	<string name="setting_sabnzbd_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
+	<string name="setting_sabnzbd_dirscan_speed">Dirscan Speed</string>
+	<string name="setting_sabnzbd_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
+	<string name="setting_sabnzbd_download_dir">Download Directory</string>
+	<string name="setting_sabnzbd_download_dir_summary">Set the directory in which Sabnzbd will download</string>
+	<string name="setting_sabnzbd_complete_dir">Complete Directory</string>
+	<string name="setting_sabnzbd_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
 
     <string name="setting_header_sickbeard">Configuration Sickbeard</string>
 	<string name="setting_sickbeard">Utiliser Sickbeard</string>
@@ -65,16 +64,9 @@
     <string name="setting_sickbeard_url_extention_summary">Extention d\'URL à utiliser pour SickBeard</string>
     <string name="setting_sickbeard_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
     <string name="setting_sickbeard_ssl_summary">Use a secure connection to connect to Sickbeard</string>
-    
     <string name="setting_sickbeard_refresh_rate">Taux de Rafraichissements</string>
     <string name="setting_sickbeard_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
 	<string name="setting_sickbeard_api_key">Clef d\'API de Sickbeard</string>
-	<string name="setting_sickbeard_cache">Cache Images</string>
-	<string name="setting_sickbeard_cache_summary">Mettre les images en cache local</string>
-	<string name="setting_sickbeard_lowres">Images Basse Qualité</string>
-	<string name="setting_sickbeard_lowres_summary">Utiliser les images basse résolution</string>
-	<string name="setting_sickbeard_nomedia">.Nomedia</string>
-	<string name="setting_sickbeard_nomedia_summary">Empécher les images de se retrouver dans la Galerie</string>
 
     <string name="setting_header_couchpotato">Couchpotato settings</string>
     <string name="setting_couchpotato">Use CouchPotato</string>
@@ -88,6 +80,7 @@
     <string name="setting_couchpotato_url_extention_summary">Extention of the server URL of CouchPotato</string>
     <string name="setting_couchpotato_ssl">Use SSL/HTTPS to connect to Sickbeard</string>
     <string name="setting_couchpotato_ssl_summary">Use a secure connection to connect to CouchPotato</string>
+    <string name="setting_couchpotato_api_key">Clef d\'API de CouchPotato</string>
     <string name="setting_couchpotato_auth">Authentification</string>
     <string name="setting_couchpotato_auth_username">Username</string>
     <string name="setting_couchpotato_auth_password">Password</string>
@@ -107,6 +100,12 @@
     <string name="setting_header_global">Configuration Globale</string>
     <string name="setting_data_cache">Activer le cache des données</string>
     <string name="setting_data_cache_summary">Permets de garder le contenu des Onglets même en étant hors ligne</string>
+    <string name="setting_data_image_cache">Cache Images</string>
+    <string name="setting_data_image_cache_summary">Mettre les images en cache local</string>
+    <string name="setting_data_image_lowres">Images Basse Qualité</string>
+    <string name="setting_data_image_lowres_summary">Utiliser les images basse résolution</string>
+    <string name="setting_data_nomedia">.Nomedia</string>
+    <string name="setting_data_nomedia_summary">Empécher les images de se retrouver dans la Galerie</string>
 
 	<string name="setting_search_servers">Configure search providers</string>
 	<string name="setting_search_servers_summary">Add, change, delete search providers</string>
@@ -136,9 +135,9 @@
     <string name="tab_movies">Movies</string>
 
 	<string name="adapter_done">Terminé</string>
-	
+
 	<string name="no_poster">Pas de poster trouvé</string>
-	
+
 	<string name="show_banner">Bannière</string>
     <string name="show_poster">Poster</string>	    	    
     <string name="show_name">Nom : </string>
@@ -149,7 +148,7 @@
 	<string name="show_language">Langue : </string>
 	<string name="show_season">Saison</string>
     <string name="show_specials">Spéciaux</string>
-	
+
     <string name="episode">Episode : </string>
     <string name="episode_name">Nom épisode : </string>
     <string name="episode_airdate">Date sortie : </string>
@@ -162,7 +161,7 @@
     <string name="episode_status_ignored">Ignoré</string>
     <string name="episode_status_set">Définir le status de l\'épisode</string>
     <string name="episode_status_set_to">Changement du status de l\'épisode</string>
-    
+
 	<string name="coming_next">Prochain Episode : </string>
 	<string name="coming_airs">Sur les ondes : </string>
     <string name="coming_air_date">Air date : </string>
@@ -170,9 +169,9 @@
     <string name="coming_today">Aujourd-hui</string>
     <string name="coming_soon">Bientôt</string>
     <string name="coming_later">Plus tard</string>
-    
+
 	<string name="add_dialog_title">Ajouter</string>
-	
+
 	<string name="add_show_dialog_title">Ajouter nouvelle série</string>
 	<string name="add_show_dialog_message">Entrez le nom de la série a ajouter à Sickbeard:</string>
 	<string name="add_show_background_search">Recherche lancée en arrière plan</string>
@@ -181,9 +180,9 @@
 	
     <string name="add_nzb_dialog_title">Ajouter nouveau NZB</string>
     <string name="add_nzb_dialog_message">Entez l\'URL du NZB a être téléchargé : </string>
-    
+
 	<string name="config">Voulez-vous configurer SABDroidEx maintenant ?</string>
-	
+
 	<string name="config_server_error">Erreur configuration de SABnzbd</string>
 	<string name="config_sickbeard_error">Sickbeard configuration error</string>
 

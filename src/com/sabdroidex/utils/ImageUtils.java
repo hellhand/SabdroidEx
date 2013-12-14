@@ -34,7 +34,7 @@ public class ImageUtils {
         public static void check(String folder) {
             File noMedia = new File(folder + File.separator + "SABDroidEx" + File.separator + ".Nomedia");
             try {
-                if (Preferences.isEnabled(Preferences.SICKBEARD_NOMEDIA)) {
+                if (Preferences.isEnabled(Preferences.DATA_NO_MEDIA)) {
                     if (!noMedia.exists()) {
                         noMedia.createNewFile();
                     }

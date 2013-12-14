@@ -1,8 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:background="@drawable/vpi__tab_selected_holo">
+              android:orientation="vertical">
 
     <include layout="@layout/grid_dark"/>
 

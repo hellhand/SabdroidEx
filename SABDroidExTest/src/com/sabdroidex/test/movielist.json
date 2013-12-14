@@ -1776,7 +1776,7 @@
                         "titles" :
                            [
                               "Django Unchained",
-                              "決殺令"
+                              "???"
                            ],
                         "imdb" : "tt1853728",
                         "year" : 2012,
@@ -1827,7 +1827,7 @@
                            "default" : false,
                            "simple_title" : "# ",
                            "id" : 188,
-                           "title" : "決殺令"
+                           "title" : "???"
                         }
                      ],
                   "year" : 2012,
@@ -4148,7 +4148,7 @@
                            [
                               "The Lost Bladesman",
                               "Guan yun chang",
-                              "关云长"
+                              "???"
                            ],
                         "imdb" : "tt1648093",
                         "year" : 2011,
@@ -4204,7 +4204,7 @@
                            "default" : false,
                            "simple_title" : "# ",
                            "id" : 130,
-                           "title" : "关云长"
+                           "title" : "???"
                         }
                      ],
                   "year" : 2011,
@@ -5772,7 +5772,7 @@
                         "titles" :
                            [
                               "Pandorum",
-                              "颤栗异次元"
+                              "?????"
                            ],
                         "imdb" : "tt1188729",
                         "year" : 2009,
@@ -5823,7 +5823,7 @@
                            "default" : false,
                            "simple_title" : "# ",
                            "id" : 45,
-                           "title" : "颤栗异次元"
+                           "title" : "?????"
                         }
                      ],
                   "year" : 2009,
@@ -7604,7 +7604,7 @@
                         "titles" :
                            [
                               "Shooter",
-                              "狙擊生死線"
+                              "?????"
                            ],
                         "imdb" : "tt0822854",
                         "year" : 2007,
@@ -7656,7 +7656,7 @@
                            "default" : false,
                            "simple_title" : "# ",
                            "id" : 193,
-                           "title" : "狙擊生死線"
+                           "title" : "?????"
                         }
                      ],
                   "year" : 2007,
@@ -8994,7 +8994,7 @@
                         "titles" :
                            [
                               "Taken 2",
-                              "即刻救援2"
+                              "????2"
                            ],
                         "imdb" : "tt1397280",
                         "year" : 2012,
@@ -9045,7 +9045,7 @@
                            "default" : false,
                            "simple_title" : "# 2",
                            "id" : 121,
-                           "title" : "即刻救援2"
+                           "title" : "????2"
                         }
                      ],
                   "year" : 2012,

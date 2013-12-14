@@ -5,37 +5,37 @@
 
         <EditTextPreference
             android:key="sabnzbd_url"
-            android:summary="@string/setting_server_url_summary"
-            android:title="@string/setting_server_url"/>
+            android:summary="@string/setting_sabnzbd_url_summary"
+            android:title="@string/setting_sabnzbd_url"/>
 
         <EditTextPreference
             android:defaultValue="8080"
             android:key="sabnzbd_port"
-            android:summary="@string/setting_server_port_summary"
-            android:title="@string/setting_server_port"
+            android:summary="@string/setting_sabnzbd_port_summary"
+            android:title="@string/setting_sabnzbd_port"
             android:numeric="integer"/>
 
         <EditTextPreference
             android:key="sabnzbd_url_extention"
-            android:summary="@string/setting_server_url_extention_summary"
-            android:title="@string/setting_server_url_extention"/>
+            android:summary="@string/setting_sabnzbd_url_extention_summary"
+            android:title="@string/setting_sabnzbd_url_extention"/>
 
         <CheckBoxPreference
             android:key="sabnzbd_ssl"
-            android:summary="@string/setting_server_ssl_summary"
-            android:title="@string/setting_server_ssl"/>
+            android:summary="@string/setting_sabnzbd_ssl_summary"
+            android:title="@string/setting_sabnzbd_ssl"/>
 
         <EditTextPreference
             android:defaultValue="5000"
             android:key="sabnzbd_rate"
-            android:summary="@string/setting_refresh_rate_summary"
-            android:title="@string/setting_refresh_rate"
+            android:summary="@string/setting_sabnzbd_refresh_rate_summary"
+            android:title="@string/setting_sabnzbd_refresh_rate"
             android:numeric="integer"/>
 
         <EditTextPreference
             android:key="sabnzbd_api_key"
-            android:summary="@string/setting_api_key"
-            android:title="@string/setting_api_key"/>
+            android:summary="@string/setting_sabnzbd_api_key"
+            android:title="@string/setting_sabnzbd_api_key"/>
 
         <CheckBoxPreference
             android:key="sabnzbd_auth"
@@ -99,23 +99,6 @@
             android:key="sickbeard_api_key"
             android:title="@string/setting_sickbeard_api_key"/>
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="sickbeard_cache"
-            android:summary="@string/setting_sickbeard_cache_summary"
-            android:title="@string/setting_sickbeard_cache"/>
-
-        <CheckBoxPreference
-            android:key="sickbeard_lowres"
-            android:summary="@string/setting_sickbeard_lowres_summary"
-            android:title="@string/setting_sickbeard_lowres"/>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="sickbeard_nomedia"
-            android:summary="@string/setting_sickbeard_nomedia_summary"
-            android:title="@string/setting_sickbeard_nomedia"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/setting_header_couchpotato">
@@ -150,25 +133,10 @@
             android:key="couchpotato_ssl"
             android:title="@string/setting_couchpotato_ssl"/>
 
-        <CheckBoxPreference
+        <EditTextPreference
             android:dependency="couchpotato"
-            android:title="@string/setting_couchpotato_cache"
-            android:key="couchpotato_cache"
-            android:summary="@string/setting_couchpotato_cache_summary"
-            android:defaultValue="true"/>
-
-        <CheckBoxPreference
-            android:dependency="couchpotato"
-            android:title="@string/setting_couchpotato_lowres"
-            android:key="couchpotato_lowres"
-            android:summary="@string/setting_couchpotato_lowres_summary"/>
-
-        <CheckBoxPreference
-            android:title="@string/setting_couchpotato_nomedia"
-            android:key="couchpotato_nomedia"
-            android:dependency="couchpotato"
-            android:summary="@string/setting_couchpotato_nomedia_summary"
-            android:defaultValue="true"/>
+            android:key="couchpotato_api_key"
+            android:title="@string/setting_couchpotato_api_key"/>
 
         <CheckBoxPreference
             android:dependency="couchpotato"
@@ -222,9 +190,26 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="data.cache"
+            android:key="data_cache"
             android:summary="@string/setting_data_cache_summary"
             android:title="@string/setting_data_cache"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="data_image_cache"
+            android:summary="@string/setting_data_image_cache_summary"
+            android:title="@string/setting_data_image_cache"/>
+
+        <CheckBoxPreference
+            android:key="data_image_lowres"
+            android:summary="@string/setting_data_image_lowres_summary"
+            android:title="@string/setting_data_image_lowres"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="data_nomedia"
+            android:summary="@string/setting_data_nomedia_summary"
+            android:title="@string/setting_data_nomedia"/>
 
     </PreferenceCategory>
 

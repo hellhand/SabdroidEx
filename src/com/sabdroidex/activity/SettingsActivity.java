@@ -24,21 +24,22 @@ public class SettingsActivity extends ActionBarPreferencesActivity {
         getPreferenceManager().setSharedPreferencesName(SABDroidConstants.PREFERENCES_KEY);
         addPreferencesFromResource(R.xml.preferences);
 
-        setSummaryChangeListener(Preferences.SABNZBD_URL, R.string.setting_server_url);
-        setSummaryChangeListener(Preferences.SABNZBD_URL_EXTENTION, R.string.setting_server_url_extention);
-        setSummaryChangeListener(Preferences.SABNZBD_PORT, R.string.setting_server_port);
-        setSummaryChangeListener(Preferences.SABNZBD_RATE, R.string.setting_refresh_rate);
-        setSummaryChangeListener(Preferences.SABNZBD_API_KEY, R.string.setting_api_key);
+        setSummaryChangeListener(Preferences.SABNZBD_URL, R.string.setting_sabnzbd_url);
+        setSummaryChangeListener(Preferences.SABNZBD_URL_EXTENTION, R.string.setting_sabnzbd_url_extention);
+        setSummaryChangeListener(Preferences.SABNZBD_PORT, R.string.setting_sabnzbd_port);
+        setSummaryChangeListener(Preferences.SABNZBD_RATE, R.string.setting_sabnzbd_refresh_rate);
+        setSummaryChangeListener(Preferences.SABNZBD_API_KEY, R.string.setting_sabnzbd_api_key);
 
         setSummaryChangeListener(Preferences.SICKBEARD_URL, R.string.setting_sickbeard_url);
         setSummaryChangeListener(Preferences.SICKBEARD_URL_EXTENTION, R.string.setting_sickbeard_url_extention);
         setSummaryChangeListener(Preferences.SICKBEARD_PORT, R.string.setting_sickbeard_port);
-        setSummaryChangeListener(Preferences.SICKBEARD_RATE, R.string.setting_refresh_rate);
+        setSummaryChangeListener(Preferences.SICKBEARD_RATE, R.string.setting_sabnzbd_refresh_rate);
         setSummaryChangeListener(Preferences.SICKBEARD_API_KEY, R.string.setting_sickbeard_api_key);
 
         setSummaryChangeListener(Preferences.COUCHPOTATO_URL, R.string.setting_couchpotato_url);
         setSummaryChangeListener(Preferences.COUCHPOTATO_URL_EXTENTION, R.string.setting_couchpotato_url_extention);
         setSummaryChangeListener(Preferences.COUCHPOTATO_PORT, R.string.setting_sickbeard_port);
+        setSummaryChangeListener(Preferences.COUCHPOTATO_API_KEY, R.string.setting_couchpotato_api_key);
     }
 
     @Override

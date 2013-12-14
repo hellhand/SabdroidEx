@@ -31,12 +31,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class SimpleJsonMarshaller {
+public class SimpleJSONMarshaller {
 
     private Class<?> clazz;
-    private static final String TAG = SimpleJsonMarshaller.class.getCanonicalName();
+    private static final String TAG = SimpleJSONMarshaller.class.getCanonicalName();
 
-    public SimpleJsonMarshaller(Class<?> clazz) {
+    public SimpleJSONMarshaller(Class<?> clazz) {
         this.clazz = clazz;
     }
 
@@ -139,9 +139,9 @@ public class SimpleJsonMarshaller {
                          * (Show, Movie, etc ...)
                          */
                         try {
-                            SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(methods[i].getParameterTypes()[0]);
+                            SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(methods[i].getParameterTypes()[0]);
                             JSONObject jsonElement = jsonObject.getJSONObject(setter.name());
-                            Object parameter = simpleJsonMarshaller.unmarshal(jsonElement);
+                            Object parameter = simpleJSONMarshaller.unmarshal(jsonElement);
                             methods[i].invoke(result, parameter);
                         }
                         catch (JSONException exception) {
@@ -203,8 +203,8 @@ public class SimpleJsonMarshaller {
                             for (int j = 0; j < jsonArray.length(); j++) {
                                 Object element = jsonArray.get(j);
                                 if (setter.objectClazz() != Void.class) {
-                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(setter.objectClazz());
-                                    element = simpleJsonMarshaller.unmarshal((JSONObject) element);
+                                    SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(setter.objectClazz());
+                                    element = simpleJSONMarshaller.unmarshal((JSONObject) element);
                                 }
                                 collection.add(element);
                             }
@@ -236,8 +236,8 @@ public class SimpleJsonMarshaller {
                                 String key = (String) iterator.next();
                                 Object element = jsonObject.get(key);
                                 if (setter.objectClazz() != Void.class) {
-                                    SimpleJsonMarshaller simpleJsonMarshaller = new SimpleJsonMarshaller(setter.objectClazz());
-                                    element = simpleJsonMarshaller.unmarshal((JSONObject) element);
+                                    SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(setter.objectClazz());
+                                    element = simpleJSONMarshaller.unmarshal((JSONObject) element);
                                     if (element instanceof UnknowMappingElement) {
                                         ((UnknowMappingElement) element).setId(key);
                                     }

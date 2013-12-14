@@ -98,13 +98,6 @@ public class AdvReleaseAdapter extends PinnedHeaderGridAdapter {
             movieReleaseItem = (MovieReleaseItem) v.getTag();
         }
 
-        if (position % 2 == 0) {
-            v.setBackgroundResource(R.drawable.list_item_bg_dark);
-        }
-        else {
-            v.setBackgroundResource(R.drawable.list_item_bg);
-        }
-
         MovieRelease movieRelease = (MovieRelease) getItem(position);
         MovieReleaseInfo movieReleaseInfo = movieRelease.getMovieReleaseInfo();
 

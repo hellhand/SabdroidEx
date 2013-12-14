@@ -91,6 +91,11 @@ public class MovieRelease implements Serializable, Comparable<MovieRelease> {
 
     @Override
     public int compareTo(MovieRelease another) {
-        return another.getMovieReleaseInfo().getScore().compareTo(getMovieReleaseInfo().getScore());
+        if (getMovieReleaseInfo() != null && another.getMovieReleaseInfo() != null) {
+            if (another.getMovieReleaseInfo().getScore() != null && getMovieReleaseInfo().getScore() != null) {
+                return another.getMovieReleaseInfo().getScore().compareTo(getMovieReleaseInfo().getScore());
+            }
+        }
+        return 0;
     }
 }

@@ -154,9 +154,25 @@ public class FileUtil {
      * The path can be made of multiple non-existent directories.
      * @param path the path to be created.
      */
-    public static void createDirectory(final String path) {
+    public static boolean createDirectory(final String path) {
 
         final File file = new File(path);
-        file.mkdirs();
+        return file.mkdirs();
+    }
+
+    /**
+     * This method is used to detele a given file or folder
+     * @param path
+     * @return true if the deletion is successful otherwise false
+     */
+    public static boolean deleteFile(String path) {
+        try {
+            final File file = new File(path);
+            return file.delete();
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return false;
+        }
     }
 }
