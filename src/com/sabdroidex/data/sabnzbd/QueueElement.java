@@ -18,6 +18,9 @@ public class QueueElement implements Serializable {
     private String status;
     private String nzoId;
     private String timeLeft;
+    private String priority;
+    private String category;
+    private String script;
     
     public String getFilename() {
         return filename;
@@ -72,5 +75,31 @@ public class QueueElement implements Serializable {
     public void setTimeLeft(String timeLeft) {
         this.timeLeft = timeLeft;
     }
-    
+
+    public String getPriority() {
+        return priority;
+    }
+
+    @JSONSetter(name="priority")
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    @JSONSetter(name="cat")
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    @JSONSetter(name="script")
+    public void setScript(String script) {
+        this.script = script;
+    }
 }

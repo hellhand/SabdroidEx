@@ -102,7 +102,7 @@ public class QueueFragment extends SABFragment {
 
         downloadView.removeAllViews();        
         queueList.setAdapter(queueAdapter);
-        queueList.setOnItemClickListener(new ListItemLongClickListener());
+        queueList.setOnItemClickListener(new QueueItemClickListener());
         
         return queueList;
     }
@@ -172,7 +172,7 @@ public class QueueFragment extends SABFragment {
     }
 
 
-    private class ListItemLongClickListener implements OnItemClickListener {
+    private class QueueItemClickListener implements OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

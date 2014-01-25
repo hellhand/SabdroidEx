@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Debug;
-import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
@@ -186,7 +185,7 @@ public class ImageWorker {
                 bgOptions.inSampleSize = 1;
             }
 
-            String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SABDroidEx" + File.separator + params[1]
+            String folderPath = FileUtil.SABDROIDEX + File.separator + params[1]
                     + File.separator;
             folderPath = folderPath.replace(":", "");
 

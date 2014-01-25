@@ -5,10 +5,12 @@ import android.os.Message;
 import android.util.Log;
 
 import com.sabdroidex.controllers.SABController;
+import com.sabdroidex.data.sabnzbd.Categories;
 import com.sabdroidex.data.sabnzbd.History;
 import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
+import com.sabdroidex.data.sabnzbd.Scripts;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.json.impl.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
@@ -26,7 +28,7 @@ import java.net.URLEncoder;
 public final class SABnzbdController extends SABController {
     
     public static enum MESSAGE {
-        ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE
+        ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE, GET_CATS, GET_SCRIPTS
     }
     
     private static final String TAG = "SABnzbdController";
@@ -164,7 +166,8 @@ public final class SABnzbdController extends SABController {
         sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
-    
+
+    //TODO: rework this if needed
     /**
      * Gets a specific configuration on the Sabnzbd Server
      * 
@@ -209,7 +212,105 @@ public final class SABnzbdController extends SABController {
         sendUpdateMessageStatus(messageHandler, "");
         thread.start();
     }
-    
+
+    /**
+     * Gets the categories from the Sabnzbd Server
+     *
+     * @param messageHandler The class that will handle the result message.
+     */
+    public static void getCategories(final Handler messageHandler) {
+
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
+            return;
+        }
+
+        final Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    final String result = makeApiCall(MESSAGE.GET_CATS.toString().toLowerCase());
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    if (!jsonObject.isNull("error")) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    }
+                    else {
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Categories.class);
+                        Categories categories = (Categories) jsonMarshaller.unmarshal(jsonObject);
+
+                        final Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.GET_CATS.hashCode();
+                        message.obj = categories;
+                        message.sendToTarget();
+                    }
+                }
+                catch (final Throwable e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        executingCommand = true;
+        thread.start();
+    }
+
+    /**
+     * Gets the scripts from the Sabnzbd Server
+     *
+     * @param messageHandler The class that will handle the result message.
+     */
+    public static void getScripts(final Handler messageHandler) {
+
+        // Already running or settings not ready
+        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
+            return;
+        }
+
+        final Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    final String result = makeApiCall(MESSAGE.GET_SCRIPTS.toString().toLowerCase());
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    if (!jsonObject.isNull("error")) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    }
+                    else {
+                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Scripts.class);
+                        Scripts scripts = (Scripts) jsonMarshaller.unmarshal(jsonObject);
+
+                        final Message message = new Message();
+                        message.setTarget(messageHandler);
+                        message.what = MESSAGE.GET_SCRIPTS.hashCode();
+                        message.obj = scripts;
+                        message.sendToTarget();
+                    }
+                }
+                catch (final Throwable e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
+                }
+                finally {
+                    executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        executingCommand = true;
+        thread.start();
+    }
+
     /**
      * This function gets the URL used to connect to the Sabnzbd server
      * 

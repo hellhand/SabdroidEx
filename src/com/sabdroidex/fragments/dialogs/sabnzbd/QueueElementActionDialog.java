@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 
 import com.sabdroidex.R;
+import com.sabdroidex.activity.QueueItemEditActivity;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.sabnzbd.QueueElement;
 
@@ -36,7 +38,7 @@ public class QueueElementActionDialog extends DialogFragment {
         builder.setNegativeButton(android.R.string.cancel, onClickListener);
         builder.setTitle(element.getFilename());
         
-        String[] options = new String[2];
+        String[] options = new String[3];
         if ("Paused".equals(element.getStatus())) {
             options[0] = getActivity().getResources().getString(R.string.menu_resume);
         }
@@ -44,6 +46,7 @@ public class QueueElementActionDialog extends DialogFragment {
             options[0] = getActivity().getResources().getString(R.string.menu_pause);
         }
         options[1] = getActivity().getResources().getString(R.string.menu_delete);
+        options[2] = getActivity().getResources().getString(R.string.queue_item_edit);
         
         builder.setItems(options, new OnClickListener() {
             
@@ -52,9 +55,17 @@ public class QueueElementActionDialog extends DialogFragment {
                 switch (which) {
                     case 0:
                         SABnzbdController.pauseResumeItem(messageHandler, element);
+                        dialog.dismiss();
                         break;
                     case 1:
                         SABnzbdController.removeQueueItem(messageHandler, element);
+                        dialog.dismiss();
+                        break;
+                    case 2:
+                        Intent intent = new Intent(getActivity().getBaseContext(), QueueItemEditActivity.class);
+                        intent.putExtra("element", element);
+                        getActivity().startActivity(intent);
+                        dialog.dismiss();
                         break;
                     default:
                         break;

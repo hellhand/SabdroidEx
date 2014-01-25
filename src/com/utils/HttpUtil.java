@@ -69,6 +69,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class HttpUtil {
 
+    public static final String TEXT_PLAIN = "text/plain";
+
     private static final String BNL = "\r\n";
     private static final String ACCEPT_ENCODING = "Accept-Encoding";
     private static final String USER_AGENT = "User-Agent";

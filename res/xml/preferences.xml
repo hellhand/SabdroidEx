@@ -213,5 +213,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/setting_backup">
+
+        <Preference
+            android:key="backup_preferences"
+            android:title="@string/setting_backup_save"/>
+
+        <Preference
+            android:key="restore_preferences"
+            android:title="@string/setting_backup_restore"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

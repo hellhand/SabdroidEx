@@ -9,9 +9,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.controllers.couchpotato.CouchPotatoController;
 import com.sabdroidex.utils.Preferences;
 import com.sabdroidex.utils.SABDroidConstants;
+import com.utils.HttpUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,10 +30,12 @@ public class CouchPotatoActivity extends Activity {
 
         public void handleMessage(Message msg) {
             if (msg.what == CouchPotatoController.MESSAGE.UPDATE.hashCode()) {
-                if ("Error".equals(msg.obj)) {
+                if (SABController.MESSAGE.ERROR.equals(msg.obj)) {
+                    //TODO: Resources
                     makeToast("Failed to add movie\nCheck settings!");
                     finish();
-                } else if (!"".equals(msg.obj)) {
+                } else if (!SABController.MESSAGE.EMPTY.equals(msg.obj)) {
+                    //TODO: Resources
                     makeToast("Added: " + msg.obj);
                     finish();
                 }
@@ -66,12 +70,13 @@ public class CouchPotatoActivity extends Activity {
         context = getApplicationContext();
         if (Preferences.isEnabled(Preferences.COUCHPOTATO)) {
             if (Intent.ACTION_SEND.equals(action) && type != null) {
-                if ("text/plain".equals(type)) {
+                if (HttpUtil.TEXT_PLAIN.equals(type)) {
                     handleSendIntent(intent);
                     finish();
                 }
             }
         } else {
+            //TODO resource BUNDLE
             makeToast("Couchpotato is not configured yet.\n Please configure");
             startActivity(new Intent(this, SABDroidEx.class));
             finish();

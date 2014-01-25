@@ -21,7 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="@string/queueitem_name" />
 
             <EditText
                 android:id="@+id/download_name"
@@ -35,7 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="@string/queueitem_processing" />
 
             <Spinner
                 android:id="@+id/download_processing"
@@ -50,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:singleLine="true"
-                android:text="@string/priority" />
+                android:text="@string/queueitem_priority" />
 
             <Spinner
                 android:id="@+id/download_priority"
@@ -60,6 +62,7 @@
                 android:layout_marginTop="6dip"
                 android:spinnerMode="dropdown" />
 
+<!--
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,13 +76,14 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginTop="6dip"
                 android:spinnerMode="dropdown" />
+-->
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:singleLine="true"
-                android:text="@string/category" />
+                android:text="@string/queueitem_category" />
 
             <Spinner
                 android:id="@+id/download_category"

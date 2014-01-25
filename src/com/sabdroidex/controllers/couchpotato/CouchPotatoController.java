@@ -58,8 +58,7 @@ public final class CouchPotatoController {
      * This function handle the API calls to Sabnzbd to define the URL and
      * parameters
      * 
-     * @param command
-     *            The type of command that will be sent to Sabnzbd
+     * @param command The type of command that will be sent to Sabnzbd
      * @return The result of the API call
      * @throws RuntimeException
      *             Thrown if there is any unexpected problem during the
@@ -73,10 +72,8 @@ public final class CouchPotatoController {
      * This function handle the API calls to Couchpotato to define the URL and
      * parameters
      * 
-     * @param command
-     *            The type of command that will be sent to Sabnzbd
-     * @param extraParams
-     *            Any parameter that will have to be part of the URL
+     * @param command The type of command that will be sent to Sabnzbd
+     * @param extraParams Any parameter that will have to be part of the URL
      * @return The result of the API call
      * @throws RuntimeException
      *             Thrown if there is any unexpected problem during the
@@ -236,8 +233,7 @@ public final class CouchPotatoController {
     /**
      * Retrieve possible download profiles from CouchPotato
      * 
-     * @param messageHandler
-     *            Handler
+     * @param messageHandler Handler
      */
     public synchronized static void getStatusList(final Handler messageHandler) {
         if (executingCommand || "".equals(Preferences.get(Preferences.COUCHPOTATO_URL))) {
@@ -324,8 +320,7 @@ public final class CouchPotatoController {
     /**
      * Retrieve possible download profiles from CouchPotat
      * 
-     * @param messageHandler
-     *            Handler
+     * @param messageHandler Handler
      */
     public synchronized static void getProfiles(final Handler messageHandler) {
         if (executingCommand || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -375,17 +370,19 @@ public final class CouchPotatoController {
     /**
      * This function refreshes the elements from movies.
      * 
-     * @param messageHandler
-     *            The message handler that will receive the result
-     * @param status
-     *            The status we want to fetch
+     * @param messageHandler The message handler that will receive the result
+     * @param status The status we want to fetch
      */
     public static void refreshMovies(final Handler messageHandler, final String status) {
         if (executingRefreshMovies || !Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
             return;
         }
-        getStatusList();
-        getProfiles();
+        if (status == null) {
+            getStatusList();
+        }
+        if (profiles == null) {
+            getProfiles();
+        }
 
         Thread thread = new Thread() {
 
@@ -430,10 +427,8 @@ public final class CouchPotatoController {
     /**
      * Delete a move Based on ID
      * 
-     * @param messageHandler
-     *            Handler
-     * @param ids
-     *            ID's of movies to delete
+     * @param messageHandler Handler
+     * @param ids ID's of movies to delete
      */
     public static void deleteMovie(final Handler messageHandler, final int... ids) {
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -493,12 +488,9 @@ public final class CouchPotatoController {
     /**
      * Edit a move Based on ID and Profile_ID
      * 
-     * @param messageHandler
-     *            Handler
-     * @param ids
-     *            ID's of movies to edit
-     * @param profile_id
-     *            Profile ID of profile to edit the movies in
+     * @param messageHandler Handler
+     * @param ids ID's of movies to edit
+     * @param profile_id Profile ID of profile to edit the movies in
      */
     public static void editMovie(final Handler messageHandler, final int profile_id, final int... ids) {
         if (!Preferences.isSet(Preferences.COUCHPOTATO_URL)) {
@@ -760,14 +752,12 @@ public final class CouchPotatoController {
      */
     public synchronized static String getProfile(Integer key) {
         String result = "";
-        if (profiles == null)
+        if (profiles == null) {
             getProfiles();
-        else
+        }
+        else {
             result = profiles.get(key);
-        //todo: resource bundle
-        //Using equals("") as isEmpty only starts on apiL9
-        if (result == null || result.equals(""))
-            result = "Unknown";
+        }
         return result;
     }
 
@@ -779,14 +769,12 @@ public final class CouchPotatoController {
      */
     public synchronized static String getStatus(Integer key) {
         String result = "";
-        if (status == null)
+        if (status == null) {
             getStatusList();
-        else
+        }
+        else {
             result = status.get(key);
-        //todo: resource bundle
-        //Using equals("") as isEmpty only starts on apiL9
-        if (result == null || result.equals(""))
-            result = "Unknown";
+        }
         return result;
     }
 

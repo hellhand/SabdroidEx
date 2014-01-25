@@ -69,7 +69,11 @@ public class Preferences {
     public static final String DATA_IMAGE_CACHE = "data_image_cache";
     public static final String DATA_IMAGE_LOWRES = "data_image_lowres";
     public static final String DATA_NO_MEDIA = "data_nomedia";
-    
+
+    public static final String BACKUP = "backup_preferences";
+    public static final String RESTORE = "restore_preferences";
+    public static final String BACKUP_FILE = "preferences.json";
+
     public static final String VERSION = "data_version";
 
     private static SharedPreferences preferences;

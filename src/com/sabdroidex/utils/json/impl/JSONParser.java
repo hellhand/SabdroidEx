@@ -11,6 +11,9 @@ public class JSONParser {
     public Map parse(String json) {
 
         Map<String, String> jsonMap = new HashMap<String, String>();
+
+        json.split(":\\n");
+
         return jsonMap;
     }
 }

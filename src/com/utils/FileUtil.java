@@ -16,6 +16,7 @@
  */
 package com.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -33,6 +34,8 @@ import java.nio.charset.Charset;
 public class FileUtil {
 
     private static final String TAG = FileUtil.class.getSimpleName();
+
+    public static final String SABDROIDEX = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SABDroidEx";
 
     /**
      * This method reads the file at a given path and puts it in a byte array.

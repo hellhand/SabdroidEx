@@ -84,7 +84,7 @@ public class ComingAdapter extends PinnedHeaderListAdapter {
         String imageKey = ImageType.SHOW_BANNER.name() + futureEpisode.getTvdbId();
         ImageUtils.getImageWorker().loadImage(comingItem.banner, ImageType.SHOW_BANNER, imageKey, futureEpisode.getTvdbId(), futureEpisode.getShowName());
 
-        String nextDescriptor = String.format("%02dx%02d", futureEpisode.getEpisode(), futureEpisode.getSeason());
+        String nextDescriptor = String.format("%02dx%02d", futureEpisode.getSeason(), futureEpisode.getEpisode());
         String next = nextDescriptor + " - " + futureEpisode.getEpName();
         String airs = String.format("%s %s [%s]", futureEpisode.getAirs(), futureEpisode.getNetwork(), futureEpisode.getQuality());
 

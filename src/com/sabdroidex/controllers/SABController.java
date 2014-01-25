@@ -7,7 +7,12 @@ import android.os.Message;
 public abstract class SABController {
 
     public enum MESSAGE {
-        UPDATE
+        UPDATE("Update"), ERROR("Error"), EMPTY("");
+
+        private String message;
+        private MESSAGE(String message) {
+            this.message = message;
+        }
     }
 
     /**

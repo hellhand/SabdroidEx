@@ -20,7 +20,7 @@
 				<action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="application/x-nzb" />
-            </intent-filter>            
+            </intent-filter>
             <intent-filter android:icon="@drawable/ic_launcher" android:label="@string/app_name" >
 				<action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -45,6 +45,7 @@
         <activity android:name=".activity.SeasonActivity"/>
         <activity android:name=".activity.MovieActivity"/>
         <activity android:name=".activity.ReleaseActivity"/>
+        <activity android:name=".activity.QueueItemEditActivity"/>
 		
         <activity android:name=".activity.CouchPotatoActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoDisplay" android:exported="false">
             <intent-filter>
