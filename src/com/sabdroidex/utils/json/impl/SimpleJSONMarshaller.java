@@ -54,7 +54,7 @@ public class SimpleJSONMarshaller {
      * @throws IllegalAccessException
      */
     @SuppressWarnings("unchecked")
-    public Object unmarshal(final JSONObject jsonObject) throws InstantiationException, IllegalAccessException {
+    public Object unMarshal(final JSONObject jsonObject) throws InstantiationException, IllegalAccessException {
         Object result = clazz.newInstance();
 
         try {
@@ -142,7 +142,7 @@ public class SimpleJSONMarshaller {
                         try {
                             SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(methods[i].getParameterTypes()[0]);
                             JSONObject jsonElement = jsonObject.getJSONObject(setter.name());
-                            Object parameter = simpleJSONMarshaller.unmarshal(jsonElement);
+                            Object parameter = simpleJSONMarshaller.unMarshal(jsonElement);
                             methods[i].invoke(result, parameter);
                         }
                         catch (JSONException exception) {
@@ -205,7 +205,7 @@ public class SimpleJSONMarshaller {
                                 Object element = jsonArray.get(j);
                                 if (setter.objectClazz() != Void.class) {
                                     SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(setter.objectClazz());
-                                    element = simpleJSONMarshaller.unmarshal((JSONObject) element);
+                                    element = simpleJSONMarshaller.unMarshal((JSONObject) element);
                                 }
                                 collection.add(element);
                             }
@@ -238,7 +238,7 @@ public class SimpleJSONMarshaller {
                                 Object element = jsonObject.get(key);
                                 if (setter.objectClazz() != Void.class) {
                                     SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(setter.objectClazz());
-                                    element = simpleJSONMarshaller.unmarshal((JSONObject) element);
+                                    element = simpleJSONMarshaller.unMarshal((JSONObject) element);
                                     if (element instanceof UnknowMappingElement) {
                                         ((UnknowMappingElement) element).setId(key);
                                     }

@@ -399,7 +399,7 @@ public final class CouchPotatoController {
                     }
                     else {
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(MovieList.class);
-                        movieList = (MovieList) jsonMarshaller.unmarshal(jsonObject);
+                        movieList = (MovieList) jsonMarshaller.unMarshal(jsonObject);
                         
                         Message message = new Message();
                         message.setTarget(messageHandler);
@@ -570,7 +570,7 @@ public final class CouchPotatoController {
                     }
                     else {
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(MovieSearch.class);
-                        movieList = (MovieSearch) jsonMarshaller.unmarshal(jsonObject);
+                        movieList = (MovieSearch) jsonMarshaller.unMarshal(jsonObject);
                     }
 
                     Message message = new Message();
@@ -621,7 +621,7 @@ public final class CouchPotatoController {
                     }
                     else {
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(MovieReleases.class);
-                        movieReleases = (MovieReleases) jsonMarshaller.unmarshal(jsonObject);
+                        movieReleases = (MovieReleases) jsonMarshaller.unMarshal(jsonObject);
                     }
 
                     Message message = new Message();

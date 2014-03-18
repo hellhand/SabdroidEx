@@ -138,7 +138,7 @@ public final class SABnzbdController extends SABController {
                         jsonObject = jsonObject.getJSONObject("config");
                         
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(SabnzbdConfig.class);
-                        SabnzbdConfig config = (SabnzbdConfig) jsonMarshaller.unmarshal(jsonObject);
+                        SabnzbdConfig config = (SabnzbdConfig) jsonMarshaller.unMarshal(jsonObject);
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -239,7 +239,7 @@ public final class SABnzbdController extends SABController {
                     }
                     else {
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Categories.class);
-                        Categories categories = (Categories) jsonMarshaller.unmarshal(jsonObject);
+                        Categories categories = (Categories) jsonMarshaller.unMarshal(jsonObject);
 
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -288,7 +288,7 @@ public final class SABnzbdController extends SABController {
                     }
                     else {
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Scripts.class);
-                        Scripts scripts = (Scripts) jsonMarshaller.unmarshal(jsonObject);
+                        Scripts scripts = (Scripts) jsonMarshaller.unMarshal(jsonObject);
 
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -579,7 +579,7 @@ public final class SABnzbdController extends SABController {
                     else {
                         jsonObject = jsonObject.getJSONObject("history");
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(History.class);
-                        History history = (History) jsonMarshaller.unmarshal(jsonObject);
+                        History history = (History) jsonMarshaller.unMarshal(jsonObject);
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -636,7 +636,7 @@ public final class SABnzbdController extends SABController {
                     else {
                         jsonObject = jsonObject.getJSONObject("queue");
                         SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Queue.class);
-                        Queue queue = (Queue) jsonMarshaller.unmarshal(jsonObject);
+                        Queue queue = (Queue) jsonMarshaller.unMarshal(jsonObject);
                         paused = queue.getPaused();
                         
                         final Message message = new Message();

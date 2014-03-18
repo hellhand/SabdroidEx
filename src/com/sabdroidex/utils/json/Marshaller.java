@@ -5,5 +5,5 @@ package com.sabdroidex.utils.json;
  */
 public interface Marshaller {
 
-    public Object marshall(Object element);
+    Object marshall(Object element, Class clazz);
 }

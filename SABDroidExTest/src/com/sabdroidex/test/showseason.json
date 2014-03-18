@@ -1,36 +1,36 @@
 {
     "data": {
         "1": {
-            "airdate": "2011-09-04", 
-            "name": "Something Wicked This Fae Comes", 
-            "quality": "HD TV", 
+            "airdate": "2011-09-04",
+            "name": "Something Wicked This Fae Comes",
+            "quality": "HD TV",
             "status": "Downloaded"
-        }, 
+        },
         "2": {
-            "airdate": "2011-09-11", 
-            "name": "I Fought the Fae (And the Fae Won)", 
-            "quality": "N/A", 
+            "airdate": "2011-09-11",
+            "name": "I Fought the Fae (And the Fae Won)",
+            "quality": "N/A",
             "status": "Wanted"
-        }, 
+        },
         "3": {
-            "airdate": "2011-09-18", 
-            "name": "Scream a Little Dream", 
-            "quality": "N/A", 
+            "airdate": "2011-09-18",
+            "name": "Scream a Little Dream",
+            "quality": "N/A",
             "status": "Unaired"
-        }, 
+        },
         "4": {
-            "airdate": "2011-09-25", 
-            "name": "Episode 4", 
-            "quality": "N/A", 
+            "airdate": "2011-09-25",
+            "name": "Episode 4",
+            "quality": "N/A",
             "status": "Unaired"
-        }, 
+        },
         "5": {
-            "airdate": "", 
-            "name": "Episode 5", 
-            "quality": "N/A", 
+            "airdate": "",
+            "name": "Episode 5",
+            "quality": "N/A",
             "status": "Skipped"
         }
-    }, 
+    },
     "message": "", 
     "result": "success"
 }

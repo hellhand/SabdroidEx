@@ -34,7 +34,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         jsonObject = jsonObject.getJSONObject("data");
         
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(Show.class);
-        Show show = (Show) simpleJSONMarshaller.unmarshal(jsonObject);
+        Show show = (Show) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(show);
         System.out.println(show.getShowName());
     }
@@ -52,7 +52,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         jsonObject = jsonObject.getJSONObject("data");
         
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(Shows.class);
-        Shows shows = (Shows) simpleJSONMarshaller.unmarshal(jsonObject);
+        Shows shows = (Shows) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(shows);
         assertTrue(shows.getShowElements().size() > 0);
         for (Show show : shows.getShowElements()) {
@@ -73,7 +73,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         jsonObject = jsonObject.getJSONObject("config");
         
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(SabnzbdConfig.class);
-        SabnzbdConfig config = (SabnzbdConfig) simpleJSONMarshaller.unmarshal(jsonObject);
+        SabnzbdConfig config = (SabnzbdConfig) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(config);
         assertNotNull(config.getMisc());
     }
@@ -91,7 +91,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         jsonObject = jsonObject.getJSONObject("data");
         
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(ShowSearch.class);
-        ShowSearch showSearch = (ShowSearch) simpleJSONMarshaller.unmarshal(jsonObject);
+        ShowSearch showSearch = (ShowSearch) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(showSearch);
         assertTrue(showSearch.getResults().size() > 0);
     }
@@ -109,7 +109,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         jsonObject = jsonObject.getJSONObject("data");
         
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(Season.class);
-        Season season = (Season) simpleJSONMarshaller.unmarshal(jsonObject);
+        Season season = (Season) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(season);
         assertTrue(season.getEpisodes().size() > 0);
     }
@@ -127,7 +127,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         jsonObject = jsonObject.getJSONObject("data");
         
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(FuturePeriod.class);
-        FuturePeriod futurePeriod = (FuturePeriod) simpleJSONMarshaller.unmarshal(jsonObject);
+        FuturePeriod futurePeriod = (FuturePeriod) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(futurePeriod);
         assertTrue(futurePeriod.getMissed().size() > 0);
         assertTrue(futurePeriod.getToday().size() > 0);
@@ -144,7 +144,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
 
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(MovieList.class);
-        MovieList movieList = (MovieList) simpleJSONMarshaller.unmarshal(jsonObject);
+        MovieList movieList = (MovieList) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(movieList);
         assertTrue(movieList.getMovieElements().size() > 0);
     }
@@ -160,7 +160,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
 
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(MovieList.class);
-        MovieList movieList = (MovieList) simpleJSONMarshaller.unmarshal(jsonObject);
+        MovieList movieList = (MovieList) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(movieList);
         assertTrue(movieList.getMovieElements().size() > 0);
         assertTrue(movieList.getMovieElements().get(0).getReleases() != null);

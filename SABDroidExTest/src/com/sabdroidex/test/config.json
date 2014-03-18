@@ -1,6 +1,6 @@
 {
     "config":{
-        categories=[
+        scripts=[
             {
                 "script":"Default",
                 "pp":"",

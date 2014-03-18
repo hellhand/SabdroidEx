@@ -1,0 +1,18 @@
+{
+    "initial": [
+        "sdtv",
+        "sddvd",
+        "hdtv",
+        "hdwebdl",
+        "hdbluray"
+    ],
+    "one": [1],
+    "empty": [],
+    "message": "", 
+    "result": "success",
+    "num": -2.1,
+    "map": {
+        "el1": "val1",
+        "el2": "va2"
+    }
+}
