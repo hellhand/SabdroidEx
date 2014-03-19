@@ -19,7 +19,7 @@ public class JSONParserTest extends AndroidTestCase {
     public void testParser() throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        InputStream stream = getClass().getResourceAsStream("show.json");
+        InputStream stream = getClass().getResourceAsStream("movielist.json");
         int c;
         while ((c = stream.read()) != -1) {
             byteArrayOutputStream.write((char) c);

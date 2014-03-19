@@ -155,6 +155,9 @@ public class JSONParser {
         while ((c = inputStream.read()) != -1) {
             offset.incrementAndGet();
             switch (c) {
+                case OPEN_BRACE:
+                    parse(inputStream, offset, jsonContext);
+                    break;
                 case FIELD:
                     parseString(inputStream, offset, jsonContext);
                     break;
