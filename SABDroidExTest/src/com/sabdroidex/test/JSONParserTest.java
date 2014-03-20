@@ -22,7 +22,7 @@ public class JSONParserTest extends AndroidTestCase {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        InputStream stream = getClass().getResourceAsStream("movielist2.json");
+        InputStream stream = getClass().getResourceAsStream("showlist.json");
         int c;
         while ((c = stream.read()) != -1) {
             byteArrayOutputStream.write((char) c);
@@ -32,6 +32,7 @@ public class JSONParserTest extends AndroidTestCase {
 
         JSONParser jsonParser = new JSONParser();
         Map<String, Object> result = (Map<String, Object>) jsonParser.parse(inputStream, new AtomicInteger(0), null);
+        junit.framework.Assert.assertNotNull(result);
 
         l = System.currentTimeMillis() - l;
         System.out.println(l + " ms");

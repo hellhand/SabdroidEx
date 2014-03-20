@@ -227,7 +227,10 @@ public class JSONParser {
                     return;
                 case BACKSLASH:
                     escaped = true;
+                    stringWriter.append((char) c);
+                    break;
                 default:
+                    escaped = false;
                     stringWriter.append((char) c);
                     break;
             }
