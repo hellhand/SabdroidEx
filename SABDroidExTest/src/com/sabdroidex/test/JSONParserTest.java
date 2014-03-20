@@ -17,9 +17,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class JSONParserTest extends AndroidTestCase {
 
     public void testParser() throws IOException {
+
+        long l = System.currentTimeMillis();
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        InputStream stream = getClass().getResourceAsStream("movielist.json");
+        InputStream stream = getClass().getResourceAsStream("movielist2.json");
         int c;
         while ((c = stream.read()) != -1) {
             byteArrayOutputStream.write((char) c);
@@ -30,6 +33,7 @@ public class JSONParserTest extends AndroidTestCase {
         JSONParser jsonParser = new JSONParser();
         Map<String, Object> result = (Map<String, Object>) jsonParser.parse(inputStream, new AtomicInteger(0), null);
 
-        System.out.println(result);
+        l = System.currentTimeMillis() - l;
+        System.out.println(l + " ms");
     }
 }

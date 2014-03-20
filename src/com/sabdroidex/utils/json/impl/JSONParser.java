@@ -24,6 +24,12 @@ public class JSONParser {
 
     private static final int FIELD = '"';
 
+    private static final int TRUE = 't';
+    private static final int TRUE_ = 'T';
+    private static final int FALSE = 'f';
+    private static final int FALSE_ = 'F';
+    private static final int NULL = 'n';
+
     private static final int MINUS = '-';
     private static final int PLUS = '+';
     private static final int ZERO = '0';
@@ -37,6 +43,12 @@ public class JSONParser {
     private static final int EIGHT = '8';
     private static final int NINE = '9';
     private static final int DECIMAL = '.';
+    private static final int BACKSLASH = '\\';
+
+    private static void setStreamAbsolutePosition(InputStream inputStream, AtomicInteger offset) throws IOException {
+        inputStream.reset();
+        inputStream.skip(offset.get());
+    }
 
     public Object parse(InputStream inputStream, AtomicInteger offset, JSONContext parentContext) throws IOException {
 
@@ -88,8 +100,16 @@ public class JSONParser {
                 case EIGHT:
                 case NINE:
                 case DECIMAL:
-                    offset.decrementAndGet();
                     parseNumber(inputStream, offset, jsonContext);
+                    break;
+                case TRUE:
+                case TRUE_:
+                case FALSE:
+                case FALSE_:
+                    parseBoolean(inputStream, offset, jsonContext);
+                    break;
+                case NULL:
+                    parseNull(inputStream, offset, jsonContext);
                     break;
             }
         }
@@ -104,6 +124,7 @@ public class JSONParser {
 
     private void parseNumber(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException {
 
+        offset.decrementAndGet();
         setStreamAbsolutePosition(inputStream, offset);
 
         int c = -1;
@@ -142,11 +163,6 @@ public class JSONParser {
         }
     }
 
-    private static void setStreamAbsolutePosition(InputStream inputStream, AtomicInteger offset) throws IOException {
-        inputStream.reset();
-        inputStream.skip(offset.get());
-    }
-
     private void parseArray(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException {
 
         List elements = new ArrayList();
@@ -173,7 +189,6 @@ public class JSONParser {
                 case EIGHT:
                 case NINE:
                 case DECIMAL:
-                    offset.decrementAndGet();
                     parseNumber(inputStream, offset, jsonContext);
                     break;
                 case COMMA:
@@ -191,12 +206,18 @@ public class JSONParser {
     private void parseString(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException {
 
         StringWriter stringWriter = new StringWriter();
-        
+
+        boolean escaped = false;
         int c = -1;
         while ((c = inputStream.read()) != -1) {
             offset.incrementAndGet();
             switch (c) {
                 case FIELD:
+                    if (escaped) {
+                        escaped = false;
+                        stringWriter.append((char) c);
+                        break;
+                    }
                     if (jsonContext.getElementName() == null) {
                         jsonContext.setElementName(stringWriter.toString());
                     }
@@ -204,8 +225,47 @@ public class JSONParser {
                         jsonContext.setElementValue(stringWriter.toString());
                     }
                     return;
+                case BACKSLASH:
+                    escaped = true;
                 default:
                     stringWriter.append((char) c);
+                    break;
+            }
+        }
+    }
+
+    private void parseNull(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws java.io.IOException {
+
+        int c = -1;
+        while ((c = inputStream.read()) != -1) {
+            offset.incrementAndGet();
+            switch (c) {
+                default:
+                    jsonContext.setElementValue(null);
+                    offset.decrementAndGet();
+                    setStreamAbsolutePosition(inputStream, offset);
+                    return;
+            }
+        }
+    }
+
+    private void parseBoolean(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws java.io.IOException {
+
+        offset.decrementAndGet();
+        setStreamAbsolutePosition(inputStream, offset);
+
+        int c = -1;
+        while ((c = inputStream.read()) != -1) {
+            offset.incrementAndGet();
+            switch (c) {
+                case TRUE:
+                    jsonContext.setElementValue(true);
+                    break;
+                case FALSE:
+                    jsonContext.setElementValue(false);
+                    break;
+                default:
+                    return;
             }
         }
     }
