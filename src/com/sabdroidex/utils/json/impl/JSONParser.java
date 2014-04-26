@@ -3,6 +3,8 @@ package com.sabdroidex.utils.json.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ public class JSONParser {
     private static final int COMMA = ',';
 
     private static final int FIELD = '"';
+    private static final int BAD_FIELD = '\'';
 
     private static final int TRUE = 't';
     private static final int TRUE_ = 'T';
@@ -45,12 +48,27 @@ public class JSONParser {
     private static final int DECIMAL = '.';
     private static final int BACKSLASH = '\\';
 
+    private boolean badFormat = false;
+
+    public boolean isBadFormat() {
+        return badFormat;
+    }
+
+    public void setBadFormat(boolean badFormat) {
+        this.badFormat = badFormat;
+    }
+
     private static void setStreamAbsolutePosition(InputStream inputStream, AtomicInteger offset) throws IOException {
         inputStream.reset();
         inputStream.skip(offset.get());
     }
 
-    public Object parse(InputStream inputStream, AtomicInteger offset, JSONContext parentContext) throws IOException {
+    public Object parse(InputStream inputStream) throws IOException, ParseException {
+        return parse(inputStream, new AtomicInteger(0), null);
+    }
+
+
+    public Object parse(InputStream inputStream, AtomicInteger offset, JSONContext parentContext) throws IOException, ParseException {
 
         if (inputStream == null) {
             throw new InvalidJSONFormatException("Null parameter");
@@ -81,6 +99,7 @@ public class JSONParser {
                     map.put(jsonContext.getElementName(), jsonContext.getElementValue());
                     jsonContext.clear();
                     break;
+                case BAD_FIELD:
                 case FIELD:
                     parseString(inputStream, offset, jsonContext);
                     break;
@@ -122,7 +141,7 @@ public class JSONParser {
         return map;
     }
 
-    private void parseNumber(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException {
+    private void parseNumber(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException, ParseException {
 
         offset.decrementAndGet();
         setStreamAbsolutePosition(inputStream, offset);
@@ -154,7 +173,15 @@ public class JSONParser {
                         jsonContext.setElementValue(Double.valueOf((String) jsonContext.getElementValue()));
                     }
                     else {
-                        jsonContext.setElementValue(Integer.valueOf((String) jsonContext.getElementValue()));
+
+                        NumberFormat format = NumberFormat.getIntegerInstance();
+                        Number number = format.parse((String) jsonContext.getElementValue());
+
+                        if (!(number.longValue() < Integer.MIN_VALUE || number.longValue() > Integer.MAX_VALUE)) {
+                            number = Integer.valueOf(number.intValue());
+                        }
+
+                        jsonContext.setElementValue(number);
                     }
                     offset.decrementAndGet();
                     setStreamAbsolutePosition(inputStream, offset);
@@ -163,7 +190,7 @@ public class JSONParser {
         }
     }
 
-    private void parseArray(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException {
+    private void parseArray(InputStream inputStream, AtomicInteger offset, JSONContext jsonContext) throws IOException, ParseException {
 
         List elements = new ArrayList();
 
@@ -174,6 +201,7 @@ public class JSONParser {
                 case OPEN_BRACE:
                     parse(inputStream, offset, jsonContext);
                     break;
+                case BAD_FIELD:
                 case FIELD:
                     parseString(inputStream, offset, jsonContext);
                     break;
@@ -212,6 +240,12 @@ public class JSONParser {
         while ((c = inputStream.read()) != -1) {
             offset.incrementAndGet();
             switch (c) {
+                case BAD_FIELD:
+                    if (!badFormat) {
+                        escaped = false;
+                        stringWriter.append((char) c);
+                        break;
+                    }
                 case FIELD:
                     if (escaped) {
                         escaped = false;

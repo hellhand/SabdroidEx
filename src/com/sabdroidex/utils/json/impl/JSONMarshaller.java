@@ -5,6 +5,7 @@ import com.sabdroidex.utils.json.UnMarshaller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,20 +18,19 @@ public class JSONMarshaller implements Marshaller, UnMarshaller {
     public JSONMarshaller() {}
 
     @Override
-    public Object marshall(Object element, Class clazz) {
+    public Object marshall(CharSequence element, Class clazz) {
         throw new NoSuchMethodError();
     }
 
     @Override
-    public Object unMarshall(Object element, Class clazz) throws InstantiationException, IllegalAccessException, IOException {
-        if (!(element instanceof String))
-        {
-            throw new IllegalArgumentException();
-        }
+    public Object unMarshall(CharSequence json, Class clazz) throws InstantiationException, IllegalAccessException, IOException, ParseException {
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(((String) element).getBytes());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(((String) json).getBytes());
 
         JSONParser jsonParser = new JSONParser();
-        return jsonParser.parse(byteArrayInputStream, new AtomicInteger(0), null);
+        java.util.HashMap<String, Object> objectHashMap = (java.util.HashMap<String, Object>) jsonParser.parse(byteArrayInputStream, new java.util.concurrent.atomic.AtomicInteger(0), null);
+
+        JSONPojoMapper simpleJSONMarshaller = new JSONPojoMapper(clazz);
+        return simpleJSONMarshaller.unMarshal(objectHashMap);
     }
 }

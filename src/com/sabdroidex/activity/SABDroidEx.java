@@ -491,13 +491,6 @@ public class SABDroidEx extends ActionBarActivity implements UpdateableActivity,
     }
 
     /**
-     * Displaying the Couchpotato server settings
-     */
-    private void showCouchSettings() {
-        startActivity(new Intent(getApplicationContext(), CouchSettingsActivity.class));
-    }
-
-    /**
      * This method invokes either the pause or resume functionality of sabnzbd
      * regarding of the known status
      */

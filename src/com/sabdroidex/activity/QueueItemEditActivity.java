@@ -1,28 +1,29 @@
 package com.sabdroidex.activity;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.android.actionbarcompat.ActionBarPreferencesActivity;
+import com.android.actionbarcompat.ActionBarActivity;
 import com.sabdroidex.R;
 import com.sabdroidex.controllers.sabnzbd.SABnzbdController;
 import com.sabdroidex.data.sabnzbd.Categories;
+import com.sabdroidex.data.sabnzbd.Priorities;
 import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.sabdroidex.data.sabnzbd.Scripts;
 
 /**
  * Created by Marc on 27/12/13.
  */
-public class QueueItemEditActivity extends ActionBarPreferencesActivity {
+public class QueueItemEditActivity extends ActionBarActivity {
 
     private static final String TAG = ShowActivity.class.getCanonicalName();
     private static final String ELEMENT = "element";
@@ -45,6 +46,20 @@ public class QueueItemEditActivity extends ActionBarPreferencesActivity {
                 Scripts scripts = (Scripts) msg.obj;
                 QueueItemEditActivity.this.updateScripts(scripts);
             }
+            if (msg.what == SABnzbdController.MESSAGE.GET_PRIORITIES.hashCode() && msg.obj instanceof Priorities) {
+                Priorities priorities = (Priorities) msg.obj;
+                QueueItemEditActivity.this.updatePriorities(priorities);
+            }
+
+            if (msg.what == SABnzbdController.MESSAGE.CHANGE_CAT .hashCode() && msg.obj instanceof Boolean) {
+
+            }
+            if (msg.what == SABnzbdController.MESSAGE.CHANGE_SCRIPT.hashCode() && msg.obj instanceof Boolean) {
+
+            }
+            if (msg.what == SABnzbdController.MESSAGE.PRIORITY.hashCode() && msg.obj instanceof Boolean) {
+
+            }
         }
     };
 
@@ -52,26 +67,73 @@ public class QueueItemEditActivity extends ActionBarPreferencesActivity {
      *
      * @param categories
      */
-    private void updateCategories(Categories categories) {
+    private void updateCategories(final Categories categories) {
         Spinner categorySpinner = (Spinner) findViewById(R.id.download_category);
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categories.getCategories());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categories.getCategories());
         categorySpinner.setAdapter(adapter);
         categorySpinner.setSelection(categories.getCategories().indexOf(element.getCategory()));
+        if (categorySpinner.getOnItemSelectedListener() == null) {
+            categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    SABnzbdController.setCategory(messageHandler, element.getNzoId(), categories.getCategories().get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
     /**
      *
      * @param scripts
      */
-    private void updateScripts(Scripts scripts) {
+    private void updateScripts(final Scripts scripts) {
         Spinner scriptSpinner = (Spinner) findViewById(R.id.download_processing);
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scripts.getScripts());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scripts.getScripts());
         scriptSpinner.setAdapter(adapter);
         scriptSpinner.setSelection(scripts.getScripts().indexOf(element.getScript()));
+        if (scriptSpinner.getOnItemSelectedListener() == null) {
+            scriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    SABnzbdController.setScript(messageHandler, element.getNzoId(), scripts.getScripts().get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
-    private SharedPreferences preferences;
-    private TextView empty;
+    /**
+     *
+     * @param priorities
+     */
+    private void updatePriorities(final Priorities priorities) {
+        final Spinner prioritySpinner = (Spinner) findViewById(R.id.download_priority);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorities.getPriorities());
+        prioritySpinner.setAdapter(adapter);
+        prioritySpinner.setSelection(priorities.getPriorities().indexOf(element.getScript()));
+        if (prioritySpinner.getOnItemSelectedListener() == null) {
+            prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    SABnzbdController.setPriority(messageHandler, element.getNzoId(), priorities.getPriorities().get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
 
     /**
      *
@@ -97,6 +159,7 @@ public class QueueItemEditActivity extends ActionBarPreferencesActivity {
 
         SABnzbdController.getCategories(messageHandler);
         SABnzbdController.getScripts(messageHandler);
+        SABnzbdController.getPriorities(messageHandler);
     }
 
     /**

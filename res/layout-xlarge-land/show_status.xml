@@ -173,7 +173,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/more"
-			style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small" />
+            style="?android:attr/buttonBarButtonStyle"/>
+
     </LinearLayout>
 
 </LinearLayout>

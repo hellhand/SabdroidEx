@@ -40,8 +40,7 @@
 
         <activity android:name=".activity.SettingsActivity"/>
 		<activity android:name=".activity.ServerSettingsActivity"/>
-        <activity android:name=".activity.CouchSettingsActivity"/>
-		<activity android:name=".activity.ShowActivity"/>
+        <activity android:name=".activity.ShowActivity"/>
         <activity android:name=".activity.SeasonActivity"/>
         <activity android:name=".activity.MovieActivity"/>
         <activity android:name=".activity.ReleaseActivity"/>

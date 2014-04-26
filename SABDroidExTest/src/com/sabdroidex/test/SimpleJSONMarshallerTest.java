@@ -3,6 +3,7 @@ package com.sabdroidex.test;
 import android.test.AndroidTestCase;
 
 import com.sabdroidex.data.couchpotato.MovieList;
+import com.sabdroidex.data.couchpotato.MovieReleases;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.data.sickbeard.FuturePeriod;
 import com.sabdroidex.data.sickbeard.Season;
@@ -70,8 +71,7 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         }
         
         JSONObject jsonObject = new JSONObject(stringBuffer.toString());
-        jsonObject = jsonObject.getJSONObject("config");
-        
+
         SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(SabnzbdConfig.class);
         SabnzbdConfig config = (SabnzbdConfig) simpleJSONMarshaller.unMarshal(jsonObject);
         assertNotNull(config);
@@ -113,7 +113,26 @@ public class SimpleJSONMarshallerTest extends AndroidTestCase  {
         assertNotNull(season);
         assertTrue(season.getEpisodes().size() > 0);
     }
-    
+
+    //@Ignored
+    private void testMarshaller_MovieReleases() throws JSONException, IOException, IllegalAccessException, InstantiationException {
+        StringBuffer stringBuffer = new StringBuffer();
+
+        InputStream stream = getClass().getResourceAsStream("moviereleases.json");
+        int c;
+        while ((c = stream.read()) != -1) {
+            stringBuffer.append((char) c);
+        }
+
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+        jsonObject = jsonObject.getJSONObject("data");
+
+        SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(MovieReleases.class);
+        MovieReleases movieReleases = (MovieReleases) simpleJSONMarshaller.unMarshal(jsonObject);
+        assertNotNull(movieReleases);
+        assertTrue(movieReleases.getReleases().size() > 0);
+    }
+
     public void testMarshaller_Future() throws IOException, JSONException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         StringBuffer stringBuffer = new StringBuffer();
         

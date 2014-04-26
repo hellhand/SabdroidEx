@@ -19,32 +19,27 @@ package com.sabdroidex.utils.json.impl;
 import android.os.Debug;
 import android.util.Log;
 
-import com.sabdroidex.data.UnknowMappingElement;
-import com.sabdroidex.utils.json.JSONSetter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class SimpleJSONMarshaller {
+public class JSONPojoMapper {
 
     private Class<?> clazz;
-    private static final String TAG = SimpleJSONMarshaller.class.getCanonicalName();
+    private static final String TAG = JSONPojoMapper.class.getCanonicalName();
 
-    public SimpleJSONMarshaller(Class<?> clazz) {
+    public JSONPojoMapper(Class<?> clazz) {
         this.clazz = clazz;
     }
 
     /**
      * This method creates an instance of the object targeted by the Class passed to the constructor,
      * it then tries to call all the methods with the JSONSetter annotation with the corresponding field.
-     * 
+     *
      * @param jsonObject
      *            This is the JSON object that will be used to fill-up an
      *            instance of the Class that is targeted.
@@ -54,14 +49,14 @@ public class SimpleJSONMarshaller {
      * @throws IllegalAccessException
      */
     @SuppressWarnings("unchecked")
-    public Object unMarshal(final JSONObject jsonObject) throws InstantiationException, IllegalAccessException {
+    public Object unMarshal(final Map<String, Object> jsonObject) throws InstantiationException, IllegalAccessException {
         Object result = clazz.newInstance();
 
         try {
             Method[] methods = clazz.getMethods();
 
             for (int i = 0; i < methods.length; i++) {
-                JSONSetter setter = methods[i].getAnnotation(JSONSetter.class);
+                com.sabdroidex.utils.json.JSONSetter setter = methods[i].getAnnotation(com.sabdroidex.utils.json.JSONSetter.class);
                 /**
                  * Checking if the method has the JSONSetter annotation This
                  * only allows one parameter per setter method
@@ -78,7 +73,7 @@ public class SimpleJSONMarshaller {
                             Object parameter = jsonObject.get(setter.name());
                             methods[i].invoke(result, parameter);
                         }
-                        catch (JSONException exception) {
+                        catch (NullPointerException exception) {
                             if (Debug.isDebuggerConnected()) {
                                 Log.d(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
@@ -89,7 +84,7 @@ public class SimpleJSONMarshaller {
                              * is a null, it would be defined as a JSONObject
                              * and thus cause an IllegalArgumentException when
                              * calling the targeted method.
-                             * 
+                             *
                              * This is yet another problem in an Android API
                              * which is bypassed by creating an empty object of
                              * the awaited type.
@@ -140,12 +135,12 @@ public class SimpleJSONMarshaller {
                          * (Show, Movie, etc ...)
                          */
                         try {
-                            SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(methods[i].getParameterTypes()[0]);
-                            JSONObject jsonElement = jsonObject.getJSONObject(setter.name());
+                            JSONPojoMapper simpleJSONMarshaller = new JSONPojoMapper(methods[i].getParameterTypes()[0]);
+                            Map<String, Object> jsonElement = (Map<String, Object>) jsonObject.get(setter.name());
                             Object parameter = simpleJSONMarshaller.unMarshal(jsonElement);
                             methods[i].invoke(result, parameter);
                         }
-                        catch (JSONException exception) {
+                        catch (Exception exception) {
                             if (Debug.isDebuggerConnected()) {
                                 Log.d(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
@@ -192,7 +187,7 @@ public class SimpleJSONMarshaller {
                          * ArrayList, Vector, etc ...)
                          */
                         try {
-                            JSONArray jsonArray = jsonObject.getJSONArray(setter.name());
+                            List jsonArray = (List) jsonObject.get(setter.name());
                             Collection<Object> collection = null;
                             if (methods[i].getParameterTypes()[0] == List.class) {
                                 collection = (Collection<Object>) setter.listClazz().newInstance();
@@ -201,17 +196,17 @@ public class SimpleJSONMarshaller {
                                 collection = (Collection<Object>) methods[i].getParameterTypes()[0].newInstance();
                             }
 
-                            for (int j = 0; j < jsonArray.length(); j++) {
+                            for (int j = 0; j < jsonArray.size(); j++) {
                                 Object element = jsonArray.get(j);
                                 if (setter.objectClazz() != Void.class) {
-                                    SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(setter.objectClazz());
-                                    element = simpleJSONMarshaller.unMarshal((JSONObject) element);
+                                    JSONPojoMapper simpleJSONMarshaller = new JSONPojoMapper(setter.objectClazz());
+                                    element = simpleJSONMarshaller.unMarshal((Map<String, Object>) element);
                                 }
                                 collection.add(element);
                             }
                             methods[i].invoke(result, collection);
                         }
-                        catch (JSONException exception) {
+                        catch (Exception exception) {
                             if (Debug.isDebuggerConnected()) {
                                 Log.d(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }
@@ -232,22 +227,22 @@ public class SimpleJSONMarshaller {
                                 collection = (Collection<Object>) methods[i].getParameterTypes()[0].newInstance();
                             }
 
-                            Iterator<?> iterator = jsonObject.keys();
+                            Iterator iterator = jsonObject.keySet().iterator();
                             while (iterator.hasNext()) {
                                 String key = (String) iterator.next();
                                 Object element = jsonObject.get(key);
                                 if (setter.objectClazz() != Void.class) {
-                                    SimpleJSONMarshaller simpleJSONMarshaller = new SimpleJSONMarshaller(setter.objectClazz());
-                                    element = simpleJSONMarshaller.unMarshal((JSONObject) element);
-                                    if (element instanceof UnknowMappingElement) {
-                                        ((UnknowMappingElement) element).setId(key);
+                                    JSONPojoMapper simpleJSONMarshaller = new JSONPojoMapper(setter.objectClazz());
+                                    element = simpleJSONMarshaller.unMarshal((Map<String, Object>) element);
+                                    if (element instanceof com.sabdroidex.data.UnknowMappingElement) {
+                                        ((com.sabdroidex.data.UnknowMappingElement) element).setId(key);
                                     }
                                 }
                                 collection.add(element);
                             }
                             methods[i].invoke(result, collection);
                         }
-                        catch (JSONException exception) {
+                        catch (Exception exception) {
                             if (Debug.isDebuggerConnected()) {
                                 Log.d(TAG, methods[i].getName() + " " + exception.getLocalizedMessage());
                             }

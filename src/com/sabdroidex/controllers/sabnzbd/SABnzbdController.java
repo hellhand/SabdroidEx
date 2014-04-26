@@ -7,19 +7,26 @@ import android.util.Log;
 import com.sabdroidex.controllers.SABController;
 import com.sabdroidex.data.sabnzbd.Categories;
 import com.sabdroidex.data.sabnzbd.History;
+import com.sabdroidex.data.sabnzbd.Priorities;
 import com.sabdroidex.data.sabnzbd.Queue;
 import com.sabdroidex.data.sabnzbd.QueueElement;
 import com.sabdroidex.data.sabnzbd.SabnzbdConfig;
 import com.sabdroidex.data.sabnzbd.Scripts;
 import com.sabdroidex.utils.Preferences;
+import com.sabdroidex.utils.json.impl.JSONParser;
+import com.sabdroidex.utils.json.impl.JSONPojoMapper;
 import com.sabdroidex.utils.json.impl.SimpleJSONMarshaller;
 import com.utils.ApacheCredentialProvider;
 import com.utils.HttpUtil;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Marc
@@ -28,7 +35,7 @@ import java.net.URLEncoder;
 public final class SABnzbdController extends SABController {
     
     public static enum MESSAGE {
-        ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE, GET_CATS, GET_SCRIPTS
+        ADDFILE, ADDURL, HISTORY, PAUSE, QUEUE, REMOVE, RESUME, CONFIG, SET_CONFIG, GET_CONFIG, UPDATE, GET_CATS, GET_SCRIPTS, GET_PRIORITIES, CHANGE_CAT, CHANGE_SCRIPT, PRIORITY
     }
     
     private static final String TAG = "SABnzbdController";
@@ -129,16 +136,19 @@ public final class SABnzbdController extends SABController {
                 
                 try {
                     final String result = makeApiCall(MESSAGE.GET_CONFIG.toString().toLowerCase());
-                    JSONObject jsonObject = new JSONObject(result);
-                    
-                    if (!jsonObject.isNull("error")) {
-                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+
+                    InputStream inputStream = new ByteArrayInputStream(result.getBytes());
+                    JSONParser jsonParser = new JSONParser();
+                    jsonParser.setBadFormat(true);
+                    Map<String, Object> jsonMap = (Map<String, Object>) jsonParser.parse(inputStream);
+
+                    if (jsonMap.get("error") != null) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonMap.get("error"));
                     }
                     else {
-                        jsonObject = jsonObject.getJSONObject("config");
-                        
-                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(SabnzbdConfig.class);
-                        SabnzbdConfig config = (SabnzbdConfig) jsonMarshaller.unMarshal(jsonObject);
+
+                        JSONPojoMapper jsonPojoMapper = new JSONPojoMapper(SabnzbdConfig.class);
+                        SabnzbdConfig config = (SabnzbdConfig) jsonPojoMapper.unMarshal(jsonMap);
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -167,35 +177,22 @@ public final class SABnzbdController extends SABController {
         thread.start();
     }
 
-    //TODO: rework this if needed
     /**
-     * Gets a specific configuration on the Sabnzbd Server
-     * 
+     *
      * @param messageHandler
-     *            The class that will handle the result message.
-     * @param item
-     *            An array that contains the configuration section, the
-     *            configuration name and the new value.
      */
-    public static void getConfig(final Handler messageHandler, final Object[] item) {
-        
-        // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
-            return;
-        }
-        
+    public static void getPriorities(final Handler messageHandler) {
+
         final Thread thread = new Thread() {
-            
+
             @Override
             public void run() {
-                
+
                 try {
-                    final String results = makeApiCall(MESSAGE.GET_CONFIG.toString().toLowerCase(), "section=" + item[0], "keyword=" + item[1]);
-                    
                     final Message message = new Message();
                     message.setTarget(messageHandler);
-                    message.what = MESSAGE.GET_CONFIG.hashCode();
-                    message.obj = results;
+                    message.what = MESSAGE.GET_PRIORITIES.hashCode();
+                    message.obj = new Priorities();
                     message.sendToTarget();
                 }
                 catch (final Throwable e) {
@@ -207,9 +204,42 @@ public final class SABnzbdController extends SABController {
                 }
             }
         };
-        
+
         executingCommand = true;
-        sendUpdateMessageStatus(messageHandler, "");
+        thread.start();
+    }
+
+    /**
+     * Sets the priority for a specific download
+     *
+     * @param messageHandler The class that will handle the result message.
+     */
+    public static void setPriority(final Handler messageHandler, final String id, final String priority) {
+
+        // Settings not ready
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
+            return;
+        }
+
+        final Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    Priorities.Priority p = Priorities.Priority.valueOf(priority.toUpperCase());
+                    makeApiCall(MESSAGE.PRIORITY.toString().toLowerCase(), "value=" + id, "value2=" + p.getValue());
+                }
+                catch (final Throwable e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
+                }
+                finally {
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        executingCommand = true;
         thread.start();
     }
 
@@ -220,8 +250,8 @@ public final class SABnzbdController extends SABController {
      */
     public static void getCategories(final Handler messageHandler) {
 
-        // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
+        // Settings not ready
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             return;
         }
 
@@ -232,14 +262,18 @@ public final class SABnzbdController extends SABController {
 
                 try {
                     final String result = makeApiCall(MESSAGE.GET_CATS.toString().toLowerCase());
-                    JSONObject jsonObject = new JSONObject(result);
 
-                    if (!jsonObject.isNull("error")) {
-                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    InputStream inputStream = new ByteArrayInputStream(result.getBytes());
+                    JSONParser jsonParser = new JSONParser();
+                    Map<String, Object> jsonMap = (Map<String, Object>) jsonParser.parse(inputStream);
+
+                    if (jsonMap.get("error") != null) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonMap.get("error"));
                     }
                     else {
-                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Categories.class);
-                        Categories categories = (Categories) jsonMarshaller.unMarshal(jsonObject);
+
+                        JSONPojoMapper jsonPojoMapper = new JSONPojoMapper(Categories.class);
+                        Categories categories = (Categories) jsonPojoMapper.unMarshal(jsonMap);
 
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -263,14 +297,47 @@ public final class SABnzbdController extends SABController {
     }
 
     /**
+     * Sets the category for a specific download
+     *
+     * @param messageHandler The class that will handle the result message.
+     */
+    public static void setCategory(final Handler messageHandler, final String ... parameters) {
+
+        // Settings not ready
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
+            return;
+        }
+
+        final Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    makeApiCall(MESSAGE.CHANGE_CAT.toString().toLowerCase(), "value=" +parameters[1], "value2=" + parameters[1]);
+                }
+                catch (final Throwable e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
+                }
+                finally {
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        executingCommand = true;
+        thread.start();
+    }
+
+    /**
      * Gets the scripts from the Sabnzbd Server
      *
      * @param messageHandler The class that will handle the result message.
      */
     public static void getScripts(final Handler messageHandler) {
 
-        // Already running or settings not ready
-        if (executingCommand || !Preferences.isSet(Preferences.SABNZBD_URL)) {
+        // Settings not ready
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
             return;
         }
 
@@ -281,14 +348,17 @@ public final class SABnzbdController extends SABController {
 
                 try {
                     final String result = makeApiCall(MESSAGE.GET_SCRIPTS.toString().toLowerCase());
-                    JSONObject jsonObject = new JSONObject(result);
 
-                    if (!jsonObject.isNull("error")) {
-                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    InputStream inputStream = new ByteArrayInputStream(result.getBytes());
+                    JSONParser jsonParser = new JSONParser();
+                    Map<String, Object> jsonMap = (Map<String, Object>) jsonParser.parse(inputStream);
+
+                    if (jsonMap.get("error") != null) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonMap.get("error"));
                     }
                     else {
-                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Scripts.class);
-                        Scripts scripts = (Scripts) jsonMarshaller.unMarshal(jsonObject);
+                        JSONPojoMapper jsonPojoMapper = new JSONPojoMapper(Scripts.class);
+                        Scripts scripts = (Scripts) jsonPojoMapper.unMarshal(jsonMap);
 
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -302,6 +372,39 @@ public final class SABnzbdController extends SABController {
                 }
                 finally {
                     executingCommand = false;
+                    sendUpdateMessageStatus(messageHandler, "");
+                }
+            }
+        };
+
+        executingCommand = true;
+        thread.start();
+    }
+
+    /**
+     * Sets the script for a specific download
+     *
+     * @param messageHandler The class that will handle the result message.
+     */
+    public static void setScript(final Handler messageHandler, final String ... parameters) {
+
+        // Settings not ready
+        if (!Preferences.isSet(Preferences.SABNZBD_URL)) {
+            return;
+        }
+
+        final Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    makeApiCall(MESSAGE.CHANGE_SCRIPT.toString().toLowerCase(), "value=" +parameters[1], "value2=" + parameters[1]);
+                }
+                catch (final Throwable e) {
+                    Log.e(TAG, " " + e.getLocalizedMessage());
+                }
+                finally {
                     sendUpdateMessageStatus(messageHandler, "");
                 }
             }
@@ -571,15 +674,16 @@ public final class SABnzbdController extends SABController {
                 
                 try {
                     final String result = makeApiCall(MESSAGE.HISTORY.toString().toLowerCase());
-                    JSONObject jsonObject = new JSONObject(result);
-                    
-                    if (!jsonObject.isNull("error")) {
-                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonObject.getString("error"));
+                    InputStream inputStream = new ByteArrayInputStream(result.getBytes());
+                    JSONParser jsonParser = new JSONParser();
+                    Map<String, Object> jsonMap = (Map<String, Object>) jsonParser.parse(inputStream);
+
+                    if (jsonMap.get("error") != null) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonMap.get("error"));
                     }
                     else {
-                        jsonObject = jsonObject.getJSONObject("history");
-                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(History.class);
-                        History history = (History) jsonMarshaller.unMarshal(jsonObject);
+                        JSONPojoMapper jsonPojoMapper = new JSONPojoMapper(History.class);
+                        History history = (History) jsonPojoMapper.unMarshal((Map<String, Object>) jsonMap.get("history"));
                         
                         final Message message = new Message();
                         message.setTarget(messageHandler);
@@ -628,15 +732,16 @@ public final class SABnzbdController extends SABController {
                 
                 try {
                     final String result = makeApiCall(MESSAGE.QUEUE.toString().toLowerCase());
-                    JSONObject jsonObject = new JSONObject(result);
-                    
-                    if (!jsonObject.isNull("error")) {
-                        statusMessage = "SABnzbd : " + jsonObject.getString("error");
+                    InputStream inputStream = new ByteArrayInputStream(result.getBytes());
+                    JSONParser jsonParser = new JSONParser();
+                    Map<String, Object> jsonMap = (Map<String, Object>) jsonParser.parse(inputStream);
+
+                    if (jsonMap.get("error") != null) {
+                        sendUpdateMessageStatus(messageHandler, "SABnzbd : " + jsonMap.get("error"));
                     }
                     else {
-                        jsonObject = jsonObject.getJSONObject("queue");
-                        SimpleJSONMarshaller jsonMarshaller = new SimpleJSONMarshaller(Queue.class);
-                        Queue queue = (Queue) jsonMarshaller.unMarshal(jsonObject);
+                        JSONPojoMapper jsonPojoMapper = new JSONPojoMapper(Queue.class);
+                        Queue queue = (Queue) jsonPojoMapper.unMarshal((Map<String, Object>) jsonMap.get("queue"));
                         paused = queue.getPaused();
                         
                         final Message message = new Message();

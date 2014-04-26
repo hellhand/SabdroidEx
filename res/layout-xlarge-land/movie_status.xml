@@ -209,10 +209,11 @@
 
         <Button
             android:id="@+id/more_button"
-            style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/more" />
+            android:text="@string/more"
+            style="?android:attr/buttonBarButtonStyle"/>
+
     </LinearLayout>
 
 </LinearLayout>

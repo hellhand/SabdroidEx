@@ -37,8 +37,8 @@ public class ReleaseActivity extends ActionBarActivity {
             if (msg.what == CouchPotatoController.MESSAGE.RELEASE_FOR_MOVIE.hashCode()) {
                 try {
                     if (msg.obj instanceof MovieReleases) {
-                        movieReleases = (MovieReleases) msg.obj;
-                        updateReleases();
+                        ReleaseActivity.this.movieReleases = (MovieReleases) msg.obj;
+                        ReleaseActivity.this.updateReleases();
                     }
                 }
                 catch (Exception e) {
