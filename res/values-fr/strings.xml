@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SabdroidEx</string>
-	<string name="new_version">Infos Nouvelle Version</string>
+    <string name="new_version">Infos Nouvelle Version</string>
 
-	<string name="header_speed">Vitesse </string>
-	<string name="header_time_left">Temps restant </string>
-	<string name="header_free">Libre </string>
-	<string name="header_queue">Total </string>
+    <string name="header_speed">Vitesse </string>
+    <string name="header_time_left">Temps restant </string>
+    <string name="header_free">Libre </string>
+    <string name="header_queue">Total </string>
 
-	<string name="header_speed_unit">KO/s</string>
-	<string name="header_free_unit">GO</string>
+    <string name="header_speed_unit">KO/s</string>
+    <string name="header_free_unit">GO</string>
 
-	<string name="header_speed_format">--- KO/s</string>
-	<string name="header_time_left_format">--:--:--</string>
-	<string name="header_free_format">-- GO</string>
-	<string name="header_queue_format">--- / ---</string>
+    <string name="header_speed_format">--- KO/s</string>
+    <string name="header_time_left_format">--:--:--</string>
+    <string name="header_free_format">-- GO</string>
+    <string name="header_queue_format">--- / ---</string>
 
     <string name="mb">MO</string>
     <string name="days">Jours</string>
-	<string name="separator"> : </string>
-	
+    <string name="separator"> : </string>
+    
     <string name="setting_empty">Les préférences sont en cours de récupération</string>
     <string name="setting_cannot_retrieve">Impossible de contacter le serveur</string>
 
@@ -32,31 +32,31 @@
     <string name="setting_sabnzbd_url_summary">URL Serveur à utiliser pour SABnzbd</string>
     <string name="setting_sabnzbd_port">Port du Serveur</string>
     <string name="setting_sabnzbd_port_summary">Port du Serveur à utiliser pour SABnzbd</string>
-	<string name="setting_sabnzbd_url_extention">Extention URL Serveur</string>
+    <string name="setting_sabnzbd_url_extention">Extention URL Serveur</string>
     <string name="setting_sabnzbd_url_extention_summary">Extention d\'URL à utiliser pour SABnzbd</string>
     <string name="setting_sabnzbd_ssl">Utiliser SSL/HTTPS</string>
     <string name="setting_sabnzbd_ssl_summary">Utiliser une connection cryptée pour se connecter à SABnzbd</string>
     <string name="setting_sabnzbd_refresh_rate">Taux de Rafraichissements</string>
     <string name="setting_sabnzbd_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
     <string name="setting_sabnzbd_api_key">Clef d\'API de SABnzbd</string>
-	<string name="setting_sabnzbd_bandwidth_limit">Bande passante Sabnzbd+</string>
-	<string name="setting_sabnzbd_bandwidth_limit_summary">Définir la bande passante maximum pour Sabnzbd+</string>
-	<string name="setting_sabnzbd_cache_dir">Répertoire de cache</string>
-	<string name="setting_sabnzbd_cache_dir_summary">Définir le répertoire de cache pour Sabnzbd+</string>
-	<string name="setting_sabnzbd_cache_limit">Limite du cache</string>
-	<string name="setting_sabnzbd_cache_limit_summary">Définir la limite de cache pour Sabnzbd+</string>
-	<string name="setting_sabnzbd_dirscan_dir">Répertoire à scanner</string>
-	<string name="setting_sabnzbd_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
-	<string name="setting_sabnzbd_dirscan_speed">Dirscan Speed</string>
-	<string name="setting_sabnzbd_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
-	<string name="setting_sabnzbd_download_dir">Download Directory</string>
-	<string name="setting_sabnzbd_download_dir_summary">Set the directory in which Sabnzbd will download</string>
-	<string name="setting_sabnzbd_complete_dir">Complete Directory</string>
-	<string name="setting_sabnzbd_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
+    <string name="setting_sabnzbd_bandwidth_limit">Bande passante Sabnzbd+</string>
+    <string name="setting_sabnzbd_bandwidth_limit_summary">Définir la bande passante maximum pour Sabnzbd+</string>
+    <string name="setting_sabnzbd_cache_dir">Répertoire de cache</string>
+    <string name="setting_sabnzbd_cache_dir_summary">Définir le répertoire de cache pour Sabnzbd+</string>
+    <string name="setting_sabnzbd_cache_limit">Limite du cache</string>
+    <string name="setting_sabnzbd_cache_limit_summary">Définir la limite de cache pour Sabnzbd+</string>
+    <string name="setting_sabnzbd_dirscan_dir">Répertoire à scanner</string>
+    <string name="setting_sabnzbd_dirscan_dir_summary">Set the directory Sabnzbd will scan for Nzbs</string>
+    <string name="setting_sabnzbd_dirscan_speed">Dirscan Speed</string>
+    <string name="setting_sabnzbd_dirscan_speed_summary">Set the interval for Sabnzbd to scan for Nzbs</string>
+    <string name="setting_sabnzbd_download_dir">Download Directory</string>
+    <string name="setting_sabnzbd_download_dir_summary">Set the directory in which Sabnzbd will download</string>
+    <string name="setting_sabnzbd_complete_dir">Complete Directory</string>
+    <string name="setting_sabnzbd_complete_dir_summary">Set the directory in which Sabnzbd will move completed downloads</string>
 
     <string name="setting_header_sickbeard">Configuration Sickbeard</string>
-	<string name="setting_sickbeard">Utiliser Sickbeard</string>
-	<string name="setting_sickbeard_url">URL Serveur</string>
+    <string name="setting_sickbeard">Utiliser Sickbeard</string>
+    <string name="setting_sickbeard_url">URL Serveur</string>
     <string name="setting_sickbeard_url_summary">URL Serveur à utiliser pour SickBeard</string>
     <string name="setting_sickbeard_port">Port du Serveur</string>
     <string name="setting_sickbeard_port_summary">Port du Serveur à utiliser pour SickBeard</string>
@@ -66,7 +66,7 @@
     <string name="setting_sickbeard_ssl_summary">Use a secure connection to connect to Sickbeard</string>
     <string name="setting_sickbeard_refresh_rate">Taux de Rafraichissements</string>
     <string name="setting_sickbeard_refresh_rate_summary">Durée d\'attente entre rafraichissements en millisecondes</string>
-	<string name="setting_sickbeard_api_key">Clef d\'API de Sickbeard</string>
+    <string name="setting_sickbeard_api_key">Clef d\'API de Sickbeard</string>
 
     <string name="setting_header_couchpotato">Couchpotato settings</string>
     <string name="setting_couchpotato">Use CouchPotato</string>
@@ -107,12 +107,12 @@
     <string name="setting_data_nomedia">.Nomedia</string>
     <string name="setting_data_nomedia_summary">Empécher les images de se retrouver dans la Galerie</string>
 
-	<string name="setting_search_servers">Configure search providers</string>
-	<string name="setting_search_servers_summary">Add, change, delete search providers</string>
-	
-	<string name="setting_newznab_url">URL Serveur</string>
-	<string name="setting_newznab_url_summary">URL Serveur à utiliser pour NewzNab</string>
-	<string name="setting_newznab_api_key">NewzNab server api key</string>
+    <string name="setting_search_servers">Configure search providers</string>
+    <string name="setting_search_servers_summary">Add, change, delete search providers</string>
+    
+    <string name="setting_newznab_url">URL Serveur</string>
+    <string name="setting_newznab_url_summary">URL Serveur à utiliser pour NewzNab</string>
+    <string name="setting_newznab_api_key">NewzNab server api key</string>
 
     <string name="setting_backup">Backup</string>
     <string name="setting_backup_save">Save settings backup</string>
@@ -130,29 +130,29 @@
     <string name="menu_couch_settings">Préférences Couchpotato</string>
     <string name="menu_quit">Quitter</string>
     <string name="menu_back">Retour</string>
-	<string name="menu_search">Recherche</string>
-	<string name="menu_delete">Effacer</string>
+    <string name="menu_search">Recherche</string>
+    <string name="menu_delete">Effacer</string>
 
     <string name="tab_history">Historique</string>
     <string name="tab_queue">Liste</string>
-	<string name="tab_search">Recherche</string>
+    <string name="tab_search">Recherche</string>
     <string name="tab_shows">Shows</string>
     <string name="tab_coming">A venir</string>
     <string name="tab_movies">Movies</string>
 
-	<string name="adapter_done">Terminé</string>
+    <string name="adapter_done">Terminé</string>
 
-	<string name="no_poster">Pas de poster trouvé</string>
+    <string name="no_poster">Pas de poster trouvé</string>
 
-	<string name="show_banner">Bannière</string>
-    <string name="show_poster">Poster</string>	    	    
+    <string name="show_banner">Bannière</string>
+    <string name="show_poster">Poster</string>                
     <string name="show_name">Nom : </string>
     <string name="show_status">Statut : </string>
     <string name="show_quality">Qualité : </string>
     <string name="show_network">Réseau : </string>
     <string name="show_next_episode">Prochain Épisode : </string>
-	<string name="show_language">Langue : </string>
-	<string name="show_season">Saison</string>
+    <string name="show_language">Langue : </string>
+    <string name="show_season">Saison</string>
     <string name="show_specials">Spéciaux</string>
 
     <string name="episode">Episode : </string>
@@ -168,32 +168,32 @@
     <string name="episode_status_set">Définir le status de l\'épisode</string>
     <string name="episode_status_set_to">Changement du status de l\'épisode</string>
 
-	<string name="coming_next">Prochain Episode : </string>
-	<string name="coming_airs">Sur les ondes : </string>
+    <string name="coming_next">Prochain Episode : </string>
+    <string name="coming_airs">Sur les ondes : </string>
     <string name="coming_air_date">Air date : </string>
     <string name="coming_missed">Raté</string>
     <string name="coming_today">Aujourd-hui</string>
     <string name="coming_soon">Bientôt</string>
     <string name="coming_later">Plus tard</string>
 
-	<string name="add_dialog_title">Ajouter</string>
+    <string name="add_dialog_title">Ajouter</string>
 
-	<string name="add_show_dialog_title">Ajouter nouvelle série</string>
-	<string name="add_show_dialog_message">Entrez le nom de la série a ajouter à Sickbeard:</string>
-	<string name="add_show_background_search">Recherche lancée en arrière plan</string>
-	<string name="add_show_not_found">Aucune série trouvée avec ce nom</string>
-	<string name="add_show_selection_dialog_title">Selectionnez la série a ajouter à Sickbeard</string>	
-	
+    <string name="add_show_dialog_title">Ajouter nouvelle série</string>
+    <string name="add_show_dialog_message">Entrez le nom de la série a ajouter à Sickbeard:</string>
+    <string name="add_show_background_search">Recherche lancée en arrière plan</string>
+    <string name="add_show_not_found">Aucune série trouvée avec ce nom</string>
+    <string name="add_show_selection_dialog_title">Selectionnez la série a ajouter à Sickbeard</string>    
+    
     <string name="add_nzb_dialog_title">Ajouter nouveau NZB</string>
     <string name="add_nzb_dialog_message">Entez l\'URL du NZB a être téléchargé : </string>
 
-	<string name="config">Voulez-vous configurer SABDroidEx maintenant ?</string>
+    <string name="config">Voulez-vous configurer SABDroidEx maintenant ?</string>
 
-	<string name="config_server_error">Erreur configuration de SABnzbd</string>
-	<string name="config_sickbeard_error">Sickbeard configuration error</string>
+    <string name="config_server_error">Erreur configuration de SABnzbd</string>
+    <string name="config_sickbeard_error">Sickbeard configuration error</string>
 
-	<string name="send_file">Envoyer fichier Nzb</string>
-	<string name="send_validation">Envoyer se fichier Nzb sur le serveur Sabnzbd+ : category_none">None</string>
+    <string name="send_file">Envoyer fichier Nzb</string>
+    <string name="send_validation">Envoyer se fichier Nzb sur le serveur Sabnzbd+ : category_none">None</string>
 
     <string name="queueitem_category">Category</string>
     <string name="queueitem_category_none">None</string>
@@ -216,18 +216,18 @@
     <string name="queueitem_priority_normal">Normal</string>
     <string name="queueitem_priority_high">High</string>
 
-	<string name="add_movie_dialog_title">Add new Movie</string>
-	<string name="add_movie_dialog_message">Enter name of movie to add</string>
+    <string name="add_movie_dialog_title">Add new Movie</string>
+    <string name="add_movie_dialog_message">Enter name of movie to add</string>
     <string name="add_movie_selection_dialog_title">Select the movie to add to CouchPotato</string>
     <string name="add_movie_not_found">No movie found</string>
 
-	<string name="movie_poster">Poster</string>
-	<string name="movie_title">Title: </string>
-	<string name="movie_status">Status: </string>
-	<string name="movie_rating">Rating: </string>
-	<string name="movie_release">Released: </string>
-	<string name="movie_plot">Plot: </string>
-	<string name="movie_year">Year: </string>
+    <string name="movie_poster">Poster</string>
+    <string name="movie_title">Title: </string>
+    <string name="movie_status">Status: </string>
+    <string name="movie_rating">Rating: </string>
+    <string name="movie_release">Released: </string>
+    <string name="movie_plot">Plot: </string>
+    <string name="movie_year">Year: </string>
     <string name="movie_profile">Profile: </string>
     <string name="movie_genres">Genres: </string>
     <string name="movie_runtime">Runtime: </string>
@@ -264,12 +264,12 @@
     <string name="movie_mark_done_summary">Movie Releases</string>
     <string name="movie_mark_done">Movie Releases</string>
 
-	<string name="setting_couchpotato_cache">Image Cache</string>
-	<string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
-	<string name="setting_couchpotato_lowres">Lowres Images</string>
-	<string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>
-	<string name="setting_couchpotato_nomedia">.Nomedia</string>
-	<string name="setting_couchpotato_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
+    <string name="setting_couchpotato_cache">Image Cache</string>
+    <string name="setting_couchpotato_cache_summary">Use local cache for Images</string>
+    <string name="setting_couchpotato_lowres">Lowres Images</string>
+    <string name="setting_couchpotato_lowres_summary">Use low resolution Images</string>
+    <string name="setting_couchpotato_nomedia">.Nomedia</string>
+    <string name="setting_couchpotato_nomedia_summary">Prevents Images to be displayed in the Gallery</string>
 
     <string name="menu_movie_release">Show releases</string>
     <string name="menu_movie_delete">Delete movie</string>

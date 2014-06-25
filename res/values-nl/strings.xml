@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SabdroidEx</string>
+    <string name="new_version">Nieuwe Versie Informatie</string>
+
+    <string name="header_speed">Snelheid </string>
+    <string name="header_time_left">Resterende Tijd </string>
+    <string name="header_free">Vrij</string>
+    <string name="header_queue">Wachtrij</string>
+
+    <string name="header_speed_unit">KB/s</string>
+    <string name="header_free_unit">GB</string>
+
+    <string name="header_speed_format">--- KB/s</string>
+    <string name="header_time_left_format">--:--:--</string>
+    <string name="header_free_format">-- GB</string>
+    <string name="header_queue_format">--- / ---</string>
+
+    <string name="mb">MB</string>
+    <string name="days">dagen</string>
+    <string name="separator"> : </string>
+
+    <string name="setting_empty">De instellingen worden opgehaalt</string>
+    <string name="setting_cannot_retrieve">Kan instellingen niet ophalen</string>
+
+    <string name="setting_auth">Verificatie</string>
+    <string name="setting_auth_username">Gebruikersnaam</string>
+    <string name="setting_auth_password">Wachtwoord</string>
+
+    <string name="setting_header_server">Sabnzbd+ instellingen</string>
+    <string name="setting_sabnzbd_url">Server URL</string>
+    <string name="setting_sabnzbd_url_summary">Het SABnzbd server adres</string>
+    <string name="setting_sabnzbd_port">Server Poort</string>
+    <string name="setting_sabnzbd_port_summary">De SABnzbd server poort</string>
+    <string name="setting_sabnzbd_url_extention">Server URL Extensie</string>
+    <string name="setting_sabnzbd_url_extention_summary">Extensie van de server URL  voor Sabnzbd</string>
+    <string name="setting_sabnzbd_ssl">Gebruik SSL/HTTPS</string>
+    <string name="setting_sabnzbd_ssl_summary">Gebruik een beveiligde verbinding voor SABnzbd</string>
+    <string name="setting_sabnzbd_refresh_rate">Verversing in miliseconden</string>
+    <string name="setting_sabnzbd_refresh_rate_summary">Tijd tussen elke verversing</string>
+    <string name="setting_sabnzbd_api_key">Je SABnzbd API key</string>
+    <string name="setting_sabnzbd_bandwidth_limit">Bandbreedte Limiet</string>
+    <string name="setting_sabnzbd_bandwidth_limit_summary">Stel maximale bandbreedte in voor Sabnzbd</string>
+    <string name="setting_sabnzbd_cache_dir">Cache Map</string>
+    <string name="setting_sabnzbd_cache_dir_summary">Stel cachemap in voor Sabnzbd</string>
+    <string name="setting_sabnzbd_cache_limit">Cache Limiet</string>
+    <string name="setting_sabnzbd_cache_limit_summary">Stel cache limiet grootte in voor Sabnzbd</string>
+    <string name="setting_sabnzbd_dirscan_dir">Mapscan</string>
+    <string name="setting_sabnzbd_dirscan_dir_summary">Stel de NZB scanmap voor Sabnzbd in</string>
+    <string name="setting_sabnzbd_dirscan_speed">Mapscan Snelheid</string>
+    <string name="setting_sabnzbd_dirscan_speed_summary">Stel de Nzbs scaninterval in voor Sabnzbd</string>
+    <string name="setting_sabnzbd_download_dir">Downloadmap</string>
+    <string name="setting_sabnzbd_download_dir_summary">Stel de Sabnzbd downloadmap in</string>
+    <string name="setting_sabnzbd_complete_dir">Map voor Compelete Downloads</string>
+    <string name="setting_sabnzbd_complete_dir_summary">Stel map in waar Sabdnzbd de complete downloads naar verplaatst</string>
+
+    <string name="setting_header_sickbeard">Sickbeard instellingen</string>
+    <string name="setting_sickbeard">Gebruik Sickbeard</string>
+    <string name="setting_sickbeard_url">Server URL</string>
+    <string name="setting_sickbeard_url_summary">Het Sickbeard server adres</string>
+    <string name="setting_sickbeard_port">Server Poort</string>
+    <string name="setting_sickbeard_port_summary">De Sickbeard server poort</string>
+    <string name="setting_sickbeard_url_extention">Server URL Extensie</string>
+    <string name="setting_sickbeard_url_extention_summary">Extensie van de server URL voor Sickbeard</string>
+    <string name="setting_sickbeard_ssl">Gebruik SSL/HTTPS om met Sickbeard te verbinden</string>
+    <string name="setting_sickbeard_ssl_summary">Gebruik een veilige verbinding voor Sickbeard</string>
+    <string name="setting_sickbeard_refresh_rate">Verversing in miliseconden</string>
+    <string name="setting_sickbeard_refresh_rate_summary">Tijd tussen elke verversing</string>
+    <string name="setting_sickbeard_api_key">Je Sickbeard API key</string>
+
+    <string name="setting_header_couchpotato">Couchpotato instellingen</string>
+    <string name="setting_couchpotato">Gebruik CouchPotato</string>
+    <string name="setting_couchpotato_url">Server URL</string>
+    <string name="setting_couchpotato_url_summary">Het CouchPotato server adres</string>
+    <string name="setting_couchpotato_port">Server poort</string>
+    <string name="setting_couchpotato_port_summary">De CouchPotato server poort</string>
+    <string name="setting_couchpotato_url_extention">Server URl extensie</string>
+    <string name="setting_couchpotato_profile">CouchPotato Profiel</string>
+    <string name="setting_couchpotato_profile_summary">Selecteer CouchPotato profiel voor download</string>
+    <string name="setting_couchpotato_url_extention_summary">Extensie van de URL van CouchPotato</string>
+    <string name="setting_couchpotato_ssl">Gebruik SSL/HTTPS om met CouchPotato te verbinden</string>
+    <string name="setting_couchpotato_ssl_summary">Gebruik een veilige verbinding  voor CouchPotato</string>
+    <string name="setting_couchpotato_api_key">Je Couchpotato API key</string>
+    <string name="setting_couchpotato_auth">Verificatie</string>
+    <string name="setting_couchpotato_auth_username">Gebruikersnaam</string>
+    <string name="setting_couchpotato_auth_password">Wachtwoord</string>
+
+    <string name="setting_header_apache">Apache instellingen</string>
+    <string name="setting_apache">HTTP Verificatie</string>
+    <string name="setting_apache_username">Gebruikersnaam</string>
+    <string name="setting_apache_password">Wachtwoord</string>
+    <string name="setting_apache_summary">Gebruik HTTP verificatie</string>
+
+    <string name="setting_nzbs_org_auth">NZBS.org Identificatie</string>
+    <string name="setting_nzbs_org_uid">NZBS.org UID</string>
+    <string name="setting_nzbs_org_uid_summary">De gekoppelde UID van je NZBS.org account</string>
+    <string name="setting_nzbs_org_hash">NZBS.org Hash</string>
+    <string name="setting_nzbs_org_hash_summary">De gekoppeld Hash van je NZBS.org account</string>
+
+    <string name="setting_header_global">Algemene instellingen</string>
+    <string name="setting_data_cache">Sta data cache toe</string>
+    <string name="setting_data_cache_summary">Behoudt content ook als je offline bent</string>
+    <string name="setting_data_image_cache">Afbeeldingen Cache</string>
+    <string name="setting_data_image_cache_summary">Gebruik lokale cache voor afbeeldingen</string>
+    <string name="setting_data_image_lowres">Lage resolutie afbeeldingen</string>
+    <string name="setting_data_image_lowres_summary">Gebruik lage resolutie voor afbeeldingen</string>
+    <string name="setting_data_nomedia">.Nomedia</string>
+    <string name="setting_data_nomedia_summary">Laat geen afbeeldingen zien in de Gallerij</string>
+
+    <string name="setting_search_servers">Configureer zoek providers</string>
+    <string name="setting_search_servers_summary">Voeg toe, wijzig, verwijder zoek providers</string>
+
+    <string name="setting_newznab_url">NewzNab server URL</string>
+    <string name="setting_newznab_url_summary">Het NewzNab server adres</string>
+    <string name="setting_newznab_api_key">NewzNab server api key</string>
+
+    <string name="setting_backup">Backup</string>
+    <string name="setting_backup_save">Sla backup instellingen op</string>
+    <string name="setting_backup_restore">Herstel backup instellingen</string>
+    <string name="setting_backup_done">Backup instellingen klaar</string>
+    <string name="setting_backup_restored">Backup instellingen hersteld</string>
+
+    <string name="menu_play">Afspelen</string>
+    <string name="menu_pause">Pauze</string>
+    <string name="menu_resume">Hervatten</string>
+    <string name="menu_refresh">Ververs</string>
+    <string name="menu_add">Voeg toe</string>
+    <string name="menu_settings">Instellingen</string>
+    <string name="menu_server_settings">Server Instellingen</string>
+    <string name="menu_couch_settings">Couchpotato Intellingen</string>
+    <string name="menu_quit">Stop</string>
+    <string name="menu_back">Terug</string>
+    <string name="menu_search">Zoek</string>
+    <string name="menu_delete">Verwijder</string>
+
+    <string name="queue_item_edit">Bewerk</string>
+
+    <string name="tab_history">Historie</string>
+    <string name="tab_queue">Wachtrij</string>
+    <string name="tab_search">Zoek</string>
+    <string name="tab_shows">Series</string>
+    <string name="tab_coming">Verwacht</string>
+    <string name="tab_movies">Films</string>
+
+    <string name="adapter_done">Klaar</string>
+
+    <string name="no_poster">Geen poster gevonden</string>
+
+    <string name="show_banner">Banner</string>
+    <string name="show_poster">Poster</string>    
+    <string name="show_name">Naam : </string>
+    <string name="show_status">Status : </string>
+    <string name="show_quality">Kwaliteit : </string>
+    <string name="show_network">Netwerk : </string>
+    <string name="show_next_episode">Volgende Aflevering : </string>
+    <string name="show_language">Taal : </string>
+    <string name="show_season">Seizoen</string>
+    <string name="show_specials">Specials</string>
+
+    <string name="episode">Aflevering : </string>
+    <string name="episode_name">Naam aflevering : </string>
+    <string name="episode_airdate">Uitzend datum : </string>
+    <string name="episode_quality">Kwaliteit : </string>
+    <string name="episodes">afleveringen</string>
+    
+    <string name="episode_status_wanted">Gezocht</string>
+    <string name="episode_status_skipped">Overgeslagen</string>
+    <string name="episode_status_archieved">Gearchiveerd</string>
+    <string name="episode_status_ignored">Genegeerd</string>
+    <string name="episode_status_set">Stel aflevering status in</string>
+    <string name="episode_status_set_to">Wijzig aflevering status</string>
+
+    <string name="coming_next">Volgende aflevering : </string>
+    <string name="coming_airs">Uitzending : </string>
+    <string name="coming_air_date">Uitzend datum : </string>
+    <string name="coming_missed">Gemist</string>
+    <string name="coming_today">Vandaag</string>
+    <string name="coming_soon">Binnenkort</string>
+    <string name="coming_later">Later</string>
+
+    <string name="add_dialog_title">Voeg toe</string>
+
+    <string name="add_show_dialog_title">Voeg nieuwe serie toe</string>
+    <string name="add_show_dialog_message">Vul de naam van de aflevering in om aan Sickbeard toe te voegen:</string>
+    <string name="add_show_background_search">Achtergrond zoekfunctie gestart</string>
+    <string name="add_show_not_found">Serie niet gevonden</string>
+    <string name="add_show_selection_dialog_title">Selecteer de Serie om toe te voegen aan Sickbeard</string>
+
+    <string name="add_nzb_dialog_title">Voeg nieuwe NZB toe</string>
+    <string name="add_nzb_dialog_message">Vul de URL van de NZB in om te downloaden met SABnzbd:</string>
+
+    <string name="config">Wil je de instellingen wijzigen van SABDroidEx now ?</string>
+
+    <string name="config_server_error">SABnzbd configuratiefout</string>
+    <string name="config_sickbeard_error">Sickbeard configuratiefout</string>
+
+    <string name="send_file">Verzend Nzb Bestand</string>
+    <string name="send_validation">Verzend dit bestand naar de Sabnzbd+ server : </string>
+
+    <string name="queueitem_name">Naam</string>
+    <string name="queueitem_processing">Verwerken</string>
+    <string name="queueitem_category">Categorie</string>
+    <string name="queueitem_category_none">Geen</string>
+    <string name="queueitem_category_apps">Programmas</string>
+    <string name="queueitem_category_books">Boeken</string>
+    <string name="queueitem_category_consoles">Consoles</string>
+    <string name="queueitem_category_emulation">Emulatie</string>
+    <string name="queueitem_category_games">Spellen</string>
+    <string name="queueitem_category_misc">Diversen</string>
+    <string name="queueitem_category_movies">Films</string>
+    <string name="queueitem_category_music">Muziek</string>
+    <string name="queueitem_category_pda">Pda</string>
+    <string name="queueitem_category_resources">Bronnen</string>
+    <string name="queueitem_category_tv">Tv</string>
+    <string name="queueitem_priority">Prioriteit</string>
+    <string name="queueitem_priority_default">StandaardDefault</string>
+    <string name="queueitem_priority_paused">Gepauseerd</string>
+    <string name="queueitem_priority_low">Laag</string>
+    <string name="queueitem_priority_normal">Normaal</string>
+    <string name="queueitem_priority_high">Hoog</string>
+
+
+    <string name="add_movie_dialog_title">Voeg nieuwe Film toe</string>
+    <string name="add_movie_dialog_message">Voer naam in van toe te voegen film</string>
+    <string name="add_movie_selection_dialog_title">Selecteer de film om toe te voegen aan CouchPotato</string>
+    <string name="add_movie_not_found">Geen film gevonden</string>
+
+    <string name="movie_poster">Poster</string>
+    <string name="movie_title">Titel: </string>
+    <string name="movie_status">Status: </string>
+    <string name="movie_rating">Waardering: </string>
+    <string name="movie_release">Uitgegeven: </string>
+    <string name="movie_plot">Omschrijving: </string>
+    <string name="movie_year">Jaar: </string>
+    <string name="movie_profile">Profiel: </string>
+    <string name="movie_genres">Genres: </string>
+    <string name="movie_runtime">Looptijd: </string>
+
+    <string name="movie_release_name">Uitgavenaam: </string>
+    <string name="movie_release_status">Status: </string>
+    <string name="movie_release_quality">Kwaliteit: </string>
+    <string name="movie_release_size">Grootte: </string>
+    <string name="movie_release_provider">Provider: </string>
+    <string name="movie_release_age">Leeftijd: </string>
+    <string name="movie_release_score">Score: </string>
+    <string name="movie_release_title">Film Uitgaves</string>
+    <string name="movie_release_download">Download film uitgave</string>
+    <string name="movie_release_download_status">Uitgave download: </string>
+    <string name="movie_release_ignore">Negeer film uitgave</string>
+
+    <string name="movie_options_general">Algemene film opties</string>
+    <string name="movie_options_wanted">Gezochte film opties</string>
+    <string name="movie_imdb_url_summary">Open de IMDB pagina van deze film</string>
+    <string name="movie_imdb_url">IMDB Pagina</string>
+    <string name="movie_available_files_summary">Bekijk gerelateerde bestanden van deze film</string>
+    <string name="movie_available_files">Beschikbare bestanden</string>
+    <string name="movie_readd_summary">Stel film in om nogmaals te downloaden</string>
+    <string name="movie_readd">Film nogmaals toegevoegd</string>
+    <string name="movie_info_change_summary">Wijzig film informatie zoals titel en kwaliteit</string>
+    <string name="movie_info_change">Wijzig informatie</string>
+    <string name="movie_remove_summary">Verwijder de film in Couchpotato</string>
+    <string name="movie_remove">Verwijder</string>
+
+    <string name="movie_download_best_summary">Dowload de beste uitgave van deze film</string>
+    <string name="movie_download_best">Download beste</string>
+    <string name="movie_pick_release_summary">Film Uitgaves</string>
+    <string name="movie_pick_release">Film Uitgaves</string>
+    <string name="movie_mark_done_summary">Film Uitgaves</string>
+    <string name="movie_mark_done">Film Uitgaves</string>
+
+    <string name="setting_couchpotato_cache">Afbeeldingen Cache</string>
+    <string name="setting_couchpotato_cache_summary">Gebruik lokale cache voor afbeeldingen</string>
+    <string name="setting_couchpotato_lowres">Lage resolutie afbeeldingen</string>
+    <string name="setting_couchpotato_lowres_summary">Gebruik lage resolutie afbeeldingen</string>
+    <string name="setting_couchpotato_nomedia">.Nomedia</string>
+    <string name="setting_couchpotato_nomedia_summary">Laat geen afbeeldingen zien in de Gallerij</string>
+
+    <string name="menu_movie_release">Serie uitgaven</string>
+    <string name="menu_movie_delete">Verwijder film</string>
+    <string name="menu_movie_edit_profile">Bewerk profiel</string>
+
+    <string name="close">Afsluiten</string>
+    <string name="more">Meer</string>
+    <string name="success">Succes</string>
+    <string name="failed">Mislukt</string>
+
+</resources>
